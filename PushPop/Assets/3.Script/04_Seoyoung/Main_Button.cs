@@ -20,19 +20,19 @@ public class Main_Button : MonoBehaviour
     [SerializeField]
     private Button Mode2P_btn;
 
-    [SerializeField]
-    GameObject Profile_Panel;
 
 
     private void Start()
-    {
-        Profile_Panel.ins
+    { 
+        Profile_Panel.instance.gameObject.SetActive(false);
+        Profile_btn.onClick.AddListener(Profile_Btn_Clicked);
+
     }
 
 
     public void Profile_Btn_Clicked()
     {
-        Profile_Panel.SetActive(true);
+        Profile_Panel.instance.gameObject.SetActive(true);
     }
 
 }

@@ -4,21 +4,34 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Profile_Panel : MonoBehaviour
-{
-    //proofile 끝까지 가져가야하고 어디서나 접근 필수 -> Sigleton
+{ 
     public static Profile_Panel instance = null;
+
+    //처음 접속 시 보이는 패널
+    [SerializeField] GameObject Profile_panel;
+
+    //프로필 생성 패널
+    [SerializeField] GameObject CreateName_panel;
+
+    [SerializeField] GameObject CreateImage_panel;
+
 
     private void Awake()
     {
         if(instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(this.gameObject);
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        
     }
 
 }
