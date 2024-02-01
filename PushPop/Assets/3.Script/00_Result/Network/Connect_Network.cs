@@ -133,12 +133,7 @@ public class Connect_Network : MonoBehaviour
 
     public void Start_Server()
     {
-        if (Application.platform == RuntimePlatform.WebGLPlayer)
-        {
-            Debug.Log("WebGL cannot be Server");
-        }
-        else
-        {
+        
             manager.StartServer();
             Debug.Log($"{manager.networkAddress} StartServer....");
             NetworkServer.OnConnectedEvent += (NetworkConnectionToClient) =>
@@ -149,13 +144,13 @@ public class Connect_Network : MonoBehaviour
             {
                 Debug.Log($"client DisConnect : {NetworkConnectionToClient.address}");
             };
-        }
     }
 
 
     public void Start_Client()
     {
         Debug.Log($"{manager.networkAddress} : Startclient...");
+        manager.StartClient();
     }
 
 
