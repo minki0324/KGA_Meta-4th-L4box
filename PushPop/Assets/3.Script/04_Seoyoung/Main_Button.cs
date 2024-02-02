@@ -21,18 +21,17 @@ public class Main_Button : MonoBehaviour
     private Button Mode2P_btn;
 
 
-
     private void Start()
     { 
-        Profile_Panel.instance.gameObject.SetActive(false);
+        Profile.instance.gameObject.SetActive(false);
         Profile_btn.onClick.AddListener(Profile_Btn_Clicked);
-
     }
 
 
     public void Profile_Btn_Clicked()
     {
-        Profile_Panel.instance.gameObject.SetActive(true);
+        Profile.instance.profileMode = ProfileMode.Logined;
+        Profile.instance.gameObject.SetActive(true);
     }
 
 }
