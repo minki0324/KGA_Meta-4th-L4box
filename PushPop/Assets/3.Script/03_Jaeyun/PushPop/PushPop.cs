@@ -22,7 +22,7 @@ public class PushPop : MonoBehaviour
     public Vector2 grid = Vector2.zero;
     public float percentage = 0; // gameobject에 따른 gird 비율
 
-    public float cellSize = 0; // x, y 동일
+    public Vector2 buttonSize = Vector2.zero; // x, y 동일
 
     [Header("Grid Pos")]
     public GameObject posPrefab = null; // pos object prefab
@@ -70,9 +70,10 @@ public class PushPop : MonoBehaviour
         for (int i = 0; i < pos.Count; i++)
         {
             posButton.Add(Instantiate(pushPopButton, pushPopCanvas.gameObject.transform));
+            posButton[i].GetComponent<RectTransform>().sizeDelta = buttonSize;
             posButton[i].transform.position = Camera.main.WorldToScreenPoint(pos[i].transform.position);
         }
-    }
+    } 
 
     public void DestroyObject()
     {

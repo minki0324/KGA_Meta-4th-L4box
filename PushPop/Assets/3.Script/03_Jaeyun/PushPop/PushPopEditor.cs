@@ -14,6 +14,7 @@ public class PushPopEditor : Editor
     SerializedProperty grid;
     SerializedProperty percentage;
     SerializedProperty posPrefab;
+    SerializedProperty buttonSize;
 
     private void OnEnable()
     {
@@ -24,6 +25,7 @@ public class PushPopEditor : Editor
         boardObject = serializedObject.FindProperty("boardObject");
         boardSprite = serializedObject.FindProperty("boardSprite");
         boardSize = serializedObject.FindProperty("boardSize");
+        buttonSize = serializedObject.FindProperty("buttonSize");
 
         grid = serializedObject.FindProperty("grid");
 
@@ -44,6 +46,7 @@ public class PushPopEditor : Editor
         EditorGUILayout.PropertyField(grid);
 
         EditorGUILayout.PropertyField(boardSize);
+        EditorGUILayout.PropertyField(buttonSize);
         EditorGUILayout.PropertyField(percentage);
 
         EditorGUILayout.PropertyField(posPrefab);
