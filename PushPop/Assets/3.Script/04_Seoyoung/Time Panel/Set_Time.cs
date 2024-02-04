@@ -8,11 +8,14 @@ using TMPro;
 
 public class Set_Time : MonoBehaviour
 {
+    [Header("시간 증가/감소 버튼")]
     [SerializeField] Button IncreaseTime_Btn;
     [SerializeField] Button DecreaseTime_Btn;
 
+    [Header("시간 텍스트")]
     [SerializeField] TMP_Text time_textMesh;
 
+    [Header("시작/뒤로가기 버튼")]
     [SerializeField] Button Confirm_Btn;
     [SerializeField] Button Back_Btn;
 
@@ -24,15 +27,24 @@ public class Set_Time : MonoBehaviour
     {
         Init();
         Calculate_Time();
+       
     }
 
+    private void OnEnable()
+    {
+        Time = 330;
+    }
 
     private void Init()
     {
+        
         IncreaseTime_Btn.onClick.AddListener(IncreaseTimeBtn_Clicked);
         DecreaseTime_Btn.onClick.AddListener(DecreaseTimeBtn_Clicked);
         Confirm_Btn.onClick.AddListener(ConfirmBtn_Clicked);
-        Back_Btn.onClick.AddListener(() => { gameObject.SetActive(false); });
+        Back_Btn.onClick.AddListener(() => { 
+            gameObject.SetActive(false);
+            GameManger_2.instance.gameMode = GameMode.None;
+        });
     }
 
     private void Calculate_Time()
@@ -59,6 +71,19 @@ public class Set_Time : MonoBehaviour
 
     public void ConfirmBtn_Clicked()
     {
-        //게임패널 on or 씬넘어가기
+        GameManger_2.instance.TimerTime = Time;
+        if (GameManger_2.instance.gameMode.Equals(GameMode.PushPush))
+        {
+            //푸쉬푸쉬 모드
+        }
+        else if (GameManger_2.instance.gameMode.Equals(GameMode.Speed))
+        {
+            //스피드 모드
+        }
+        else if(GameManger_2.instance.gameMode.Equals(GameMode.Memory))
+        {
+            //메모리 모드
+        }
+
     }
 }
