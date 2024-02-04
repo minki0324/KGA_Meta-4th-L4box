@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+public struct IconButton
+{
+    //아콘 버튼 구조체
+    public Button button;
+    public bool isSelected;
+}
+
+
 public class CreateImage_Panel : MonoBehaviour
 {
 
@@ -22,10 +31,39 @@ public class CreateImage_Panel : MonoBehaviour
     [Header("아이콘 선택 패널")]
     [SerializeField] GameObject icon_Panel;
 
+    [SerializeField] Button SelectIcon_Btn;
+
+    [SerializeField] Button Back_Btn;
+
     [SerializeField] GameObject Content;
 
-
     [SerializeField] private List<Button> button_List;
+
+    [SerializeField] private List<IconButton> Icon_List;
+
+    public int SelectIndex = 0;
+
+
+    private void Start()
+    {
+        gameObject.SetActive(false);
+        for (int i = 0; i < Content.transform.childCount; i++)
+        {
+            //Content 게임 오브젝트의 갯수를 가져옴
+            for (int j = 0; j < 4; j++)
+            {
+                button_List.Add(Content.transform.GetChild(i).transform.GetChild(j).GetComponent<Button>());
+                
+            }
+        }
+
+        for (int i = 0; i < button_List.Count; i++)
+        {
+            button_List[i].onClick.AddListener(delegate { Icon_Clicked(i); });
+        }
+    }
+
+
 
     private void OnEnable()
     {
@@ -38,16 +76,10 @@ public class CreateImage_Panel : MonoBehaviour
     {
         takeImage_Btn.onClick.AddListener(takeImageBtn_Clicked);
         SelectImage_Btn.onClick.AddListener(() => {
-            Debug.Log("ㅆㅃ");
             icon_Panel.SetActive(true); 
         });
 
-      
-
-        for(int i = 0; i < button_List.Count; i++)
-        {
-
-        }
+        SelectIcon_Btn.onClick.AddListener(SelectIconBtn_Clicked);
     }
 
     private void takeImageBtn_Clicked()
@@ -58,5 +90,18 @@ public class CreateImage_Panel : MonoBehaviour
         
     }
 
+
+    private void SelectIconBtn_Clicked()
+    {
+
+    }
+
+    private void Icon_Clicked(int indexnum)
+    {
+        //아이콘 클릭했을 때
+        //클릭된 아이콘 비활성화
+        SelectIndex = indexnum;
+        Debug.Log(button_List[indexnum].name);
+    }
 
 }

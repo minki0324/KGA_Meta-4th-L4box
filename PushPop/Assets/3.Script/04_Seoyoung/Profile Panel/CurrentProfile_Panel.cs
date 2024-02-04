@@ -12,7 +12,7 @@ public class CurrentProfile_Panel : MonoBehaviour
     [SerializeField] Button Change_Btn;
 
     private void Start()
-    {
+    {   
         gameObject.SetActive(false);
     }
 
@@ -39,7 +39,8 @@ public class CurrentProfile_Panel : MonoBehaviour
     private void ChangeBtn_Clicked()
     {
         Profile.instance.profileMode = ProfileMode.Logined;
+        Profile.instance.createName_Panel.SetActive(true);
         gameObject.SetActive(false);
-        Profile.instance.createProfile_Panel.SetActive(true);
+      
     }
 }

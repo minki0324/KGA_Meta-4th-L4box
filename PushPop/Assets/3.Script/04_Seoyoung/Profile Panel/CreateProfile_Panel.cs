@@ -11,18 +11,7 @@ public class CreateProfile_Panel : MonoBehaviour
     [SerializeField] GameObject CreateName_Panel;
     [SerializeField] GameObject CreateImage_Panel;
 
-    private void Start()
-    {
-        CreateImage_Panel.SetActive(false);
-        CreateName_Panel.SetActive(false);
-        gameObject.SetActive(false);
-        
-    }
 
-    private void OnEnable()
-    {
-        CreateName_Panel.SetActive(true);
-    }
 
     //private void OnEnable()
     //{

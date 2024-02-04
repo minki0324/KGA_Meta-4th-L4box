@@ -17,17 +17,19 @@ public class Profile : MonoBehaviour
     public ProfileMode profileMode;
 
     //처음 접속 시 보이는 패널
+    [Header("프로필 선택 패널")]
     [SerializeField] public GameObject selectProfile_Panel;
 
     //프로필 생성 패널
-    [SerializeField] public GameObject createProfile_Panel;
+    [Header("프로필 생성 패널")]
+    [SerializeField] public GameObject createName_Panel;
 
-    //[SerializeField] GameObject CreateName_panel;
+    [SerializeField] public GameObject createImage_Panel;
 
-    //[SerializeField] GameObject CreateImage_panel;
 
+    [Header("현재 프로필 패널")]
     //현재 프로필 UI
-    [SerializeField] GameObject currnetProfile_Panel;
+    [SerializeField] public GameObject currnetProfile_Panel;
 
     [SerializeField] Button Back_Btn;
 
@@ -46,34 +48,38 @@ public class Profile : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        profileMode = ProfileMode.Logined;
-    }
 
 
     private void OnEnable()
     {
-        Init();
-        currnetProfile_Panel.SetActive(true);
-        //if (profileMode == ProfileMode.Logined)
-        //{
-        //    currnetProfile_Panel.SetActive(true);
-        //}
-        //else if(profileMode == ProfileMode.UnLogined)
-        //{
+        
+      //   currnetProfile_Panel.SetActive(true);
+        if (profileMode == ProfileMode.Logined)
+        {
+            currnetProfile_Panel.SetActive(true);
+            Init_Logined();
+        }
+        else if (profileMode == ProfileMode.UnLogined)
+        {
 
-        //}
+        }
     }
 
-    private void Init()
+    private void Init_Logined()
     {
         Back_Btn.onClick.AddListener(() => {
 
             selectProfile_Panel.SetActive(false);
-            createProfile_Panel.SetActive(false);
             currnetProfile_Panel.SetActive(false);
+            createName_Panel.SetActive(false);
+            createImage_Panel.SetActive(false);
 
             gameObject.SetActive(false); });
+    }
+ 
+
+    private void Init_UnLogined()
+    {
+
     }
 }

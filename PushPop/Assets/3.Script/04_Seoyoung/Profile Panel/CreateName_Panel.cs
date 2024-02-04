@@ -25,16 +25,31 @@ public class CreateName_Panel : MonoBehaviour
     //이름입력을 받았는가 체크
     public bool isGetName = false;
 
+
+    private void Start()
+    {
+        gameObject.SetActive(false);
+    }
+
     private void OnEnable()
     {
+        Debug.Log("들어옴22??");
         Init();
+        name_InputField.text = string.Empty;
         name_InputField.ActivateInputField();
     }
+
+
 
     private void Init()
     {
         Confirm_Btn.onClick.AddListener(ConfirmBtn_Clicked);
-        Back_Btn.onClick.AddListener(() => { gameObject.SetActive(false); });
+        Back_Btn.onClick.AddListener(() => {
+            Profile.instance.currnetProfile_Panel.SetActive(true);
+            name_InputField.text = string.Empty;
+            gameObject.SetActive(false);
+
+        });
     }
 
 
