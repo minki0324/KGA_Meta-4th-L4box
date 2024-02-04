@@ -6,17 +6,21 @@ using UnityEngine;
 public class PushPopEditor : Editor
 {
     // Inspector 창에 나타낼 요소
+    SerializedProperty pushPopCanvas;
+    SerializedProperty pushPopButton;
     SerializedProperty boardObject;
     SerializedProperty boardSprite;
     SerializedProperty boardSize;
     SerializedProperty grid;
     SerializedProperty percentage;
     SerializedProperty posPrefab;
-    SerializedProperty spacing;
 
     private void OnEnable()
     {
         // Inspector
+        pushPopCanvas = serializedObject.FindProperty("pushPopCanvas");
+        pushPopButton = serializedObject.FindProperty("pushPopButton");
+
         boardObject = serializedObject.FindProperty("boardObject");
         boardSprite = serializedObject.FindProperty("boardSprite");
         boardSize = serializedObject.FindProperty("boardSize");
@@ -25,19 +29,19 @@ public class PushPopEditor : Editor
 
         percentage = serializedObject.FindProperty("percentage");
         posPrefab = serializedObject.FindProperty("posPrefab");
-
-        spacing = serializedObject.FindProperty("spacing");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
+        EditorGUILayout.PropertyField(pushPopCanvas);
+        EditorGUILayout.PropertyField(pushPopButton);
+
         EditorGUILayout.PropertyField(boardObject);
         EditorGUILayout.PropertyField(boardSprite);
 
         EditorGUILayout.PropertyField(grid);
-        EditorGUILayout.PropertyField(spacing);
 
         EditorGUILayout.PropertyField(boardSize);
         EditorGUILayout.PropertyField(percentage);
@@ -62,6 +66,16 @@ public class PushPopEditor : Editor
         if (GUILayout.Button("Create Grid"))
         {
             pushPop.DrawGrid();
+        }
+
+        if (GUILayout.Button("Button Setting"))
+        {
+            pushPop.SettingPushPopButton();
+        }
+
+        if (GUILayout.Button("Delete PushPop"))
+        {
+            pushPop.DestroyObject();
         }
     }
 }
