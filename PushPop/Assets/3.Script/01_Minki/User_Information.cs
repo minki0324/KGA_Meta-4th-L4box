@@ -112,8 +112,10 @@ public class User_Information : MonoBehaviour
     // Join했을 때 씬 옮기는 테스트 메소드입니다.
     public void test_Change_Scene()
     {
-        ranking.SetActive(true);
-        infomation.SetActive(false);
+        bool rank = ranking.activeSelf;
+        bool info = infomation.activeSelf;
+        ranking.SetActive(!rank);
+        infomation.SetActive(!info);
     }
     #endregion
 
