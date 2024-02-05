@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -60,6 +59,15 @@ public class PushPop : MonoBehaviour
 
                 pos.Add(Instantiate(posPrefab, pushObject.transform));
                 pos[pos.Count - 1].transform.position = boardObject.transform.position + new Vector3(boardSize.x / 2, boardSize.y / 2, 0f) + new Vector3(posX, posY, 1f);
+
+                if (pos[pos.Count - 1].GetComponent<CircleCollider2D>().bounds.Contains(collider.bounds.min) && pos[pos.Count - 1].GetComponent<CircleCollider2D>().bounds.Contains(collider.bounds.max))
+                {
+                    Debug.Log("In Collider pos");
+                }
+                if (collider.bounds.Contains(pos[pos.Count - 1].GetComponent<CircleCollider2D>().bounds.min) && collider.bounds.Contains(pos[pos.Count - 1].GetComponent<CircleCollider2D>().bounds.max))
+                {
+                    Debug.Log("In Collider col");
+                }
             }
         }
     }
@@ -73,7 +81,7 @@ public class PushPop : MonoBehaviour
             posButton[i].GetComponent<RectTransform>().sizeDelta = buttonSize;
             posButton[i].transform.position = Camera.main.WorldToScreenPoint(pos[i].transform.position);
         }
-    } 
+    }
 
     public void DestroyObject()
     {
