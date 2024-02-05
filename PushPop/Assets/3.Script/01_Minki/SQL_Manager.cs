@@ -126,6 +126,11 @@ public class SQL_Manager : MonoBehaviour
             Debug.Log(e.Message);
         }
     }
+
+    private void OnApplicationQuit()
+    {
+        
+    }
     #endregion
 
     #region Other Method
@@ -210,6 +215,36 @@ public class SQL_Manager : MonoBehaviour
         return false;
     }
 
+    // Login 되어 있는지 체크 Method
+    private bool Login_Check(string ID, int Connect)
+    {
+        try
+        {
+            string SQL_command = string.Format(@"SELECT User_ID, Connect FROM User_Info WHERE User_ID='{0}' AND Connect='{1}';", ID, Connect);
+            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                int connect = reader.GetInt32("Connect");
+                if (connect == 1)
+                {
+                    // 접속 중인 상황
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+            // 예외 발생 시 처리
+            // 이 경우, 회원가입 과정을 중단하게 됨
+            return false;
+        }
+    }
+
     /// <summary>
     ///  회원가입 메소드.
     ///  SQL 접속여부 확인, ID 중복체크 후에 SQL DB로 회원가입 시도
@@ -264,6 +299,8 @@ public class SQL_Manager : MonoBehaviour
                 return false;
             }
 
+            //2. ID 중복 접속 체크
+
             string SQL_command = string.Format(@"SELECT User_ID,User_PW, UID FROM User_Info WHERE User_ID='{0}' AND User_PW = '{1}' ;", ID, PW);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             reader = cmd.ExecuteReader();
@@ -276,13 +313,22 @@ public class SQL_Manager : MonoBehaviour
                 {
                     string id = reader.GetString("User_ID");
                     string pw = reader.GetString("User_PW");
+                    int connect = reader.GetInt32("Connect");
                     if (!id.Equals(string.Empty) || !pw.Equals(string.Empty))
                     {
-                        //정상적으로 Data를 불러온 상황
-                        UID = reader.GetInt32("UID");
-                        info = new User_Info(ID, UID);
-                        if (!reader.IsClosed) reader.Close();
-                        return true;
+                        if(Login_Check(id, connect))
+                        {
+                            Debug.Log("접속중인 ID 입니다.");
+                            return false;
+                        }
+                        else
+                        {
+                            //정상적으로 Data를 불러온 상황
+                            UID = reader.GetInt32("UID");
+                            info = new User_Info(ID, UID);
+                            if (!reader.IsClosed) reader.Close();
+                            return true;
+                        }
                     }
                     else//로그인실패
                     {
