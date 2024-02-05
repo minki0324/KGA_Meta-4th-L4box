@@ -166,5 +166,8 @@ public class Connect_Network : MonoBehaviour
             manager.StopServer();
         }
     }
-
+    public void GotoLobby()
+    {
+        manager.StopClient();
+    }
 }
