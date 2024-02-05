@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class PushPop_Test : MonoBehaviour
+public class PushPopTest : MonoBehaviour
 {
     [Header("PushPop Canvas")]
     public Canvas pushPopCanvas; // [SerializeField] private

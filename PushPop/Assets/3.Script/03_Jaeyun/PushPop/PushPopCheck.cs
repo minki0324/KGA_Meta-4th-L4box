@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PushPop_Check : MonoBehaviour
-{
-    [SerializeField] private Transform[] point = new Transform[4];
-    private void Update()
+public class PushPopCheck : MonoBehaviour
+{ // Pos Prefabs에 참조
+    [SerializeField] private Transform[] point = new Transform[4]; // position gameObject
+
+    private void OnEnable()
     {
-        PointContains();
+       // PointContains(); // 생성될 때
     }
 
-    private void PointContains()
+    // Grid Position이 PushPop Board에 전부 포함되는지 확인하는 Method
+    public void PointContains()
     {
         int contains = 0;
         for (int i = 0; i < point.Length; i++)
@@ -26,6 +28,11 @@ public class PushPop_Check : MonoBehaviour
         if (!contains.Equals(4))
         {
             this.gameObject.SetActive(false);
+        }
+        else
+        {
+            PushPop.instance.activePos.Add(this.gameObject); // active pos add
+            Debug.Log("Point Add");
         }
     }
 }

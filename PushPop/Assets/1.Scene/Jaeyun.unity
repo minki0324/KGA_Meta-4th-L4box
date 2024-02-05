@@ -452,13 +452,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pushPopCanvas: {fileID: 424720032}
   pushPopButton: {fileID: 7161972215700324124, guid: 1381da20a7f6349438dc19f56e561b10, type: 3}
-  boardObject: {fileID: 3633448892475870983, guid: b42c40511bead9941bc7f9901e85999e, type: 3}
+  boardPrefab: {fileID: 3633448892475870983, guid: b42c40511bead9941bc7f9901e85999e, type: 3}
   boardSprite: {fileID: 21300000, guid: c373d7c96b5a3f143857fd1457bcd311, type: 3}
-  boardSize: {x: 3.52, y: 3.52, z: 1}
   grid: {x: 7, y: 7}
   percentage: 0.5
   buttonSize: {x: 80, y: 80}
   posPrefab: {fileID: 4701027180370166461, guid: 908e83bf5cbab784199690367c9362ca, type: 3}
+  activePos: []
 --- !u!1 &1319318452
 GameObject:
   m_ObjectHideFlags: 0
