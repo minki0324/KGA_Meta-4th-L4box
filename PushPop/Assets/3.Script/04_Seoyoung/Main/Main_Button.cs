@@ -37,6 +37,7 @@ public class Main_Button : MonoBehaviour
         option_Btn.onClick.AddListener(OptionBtn_Clicked);
         collection_Btn.onClick.AddListener(CollectionBtn_Clicked);
         mode2P_Btn.onClick.AddListener(Mode2PBtn_Clicked);
+        home_Btn.onClick.AddListener(HomeBtn_Clicked);
     }
 
 
@@ -58,7 +59,12 @@ public class Main_Button : MonoBehaviour
 
     public void Mode2PBtn_Clicked()
     {
-
+       
+    }
+    
+    public void HomeBtn_Clicked()
+    {
+        Application.OpenURL("https://www.l4box.com/");
     }
 
 }

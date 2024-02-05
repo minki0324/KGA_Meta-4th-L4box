@@ -58,14 +58,19 @@ public class Option_Panel : MonoBehaviour
         SFX_Slider.minValue = -40f;
 
         //볼륨 최대값 조절
-        Master_Slider.maxValue = 0f;
-        BGM_Slider.maxValue = 0f;
-        SFX_Slider.maxValue = 0f;
+        Master_Slider.maxValue = 10f;
+        BGM_Slider.maxValue = 10f;
+        SFX_Slider.maxValue = 10f;
 
         //시작 볼륨값 중간으로 조정
         Master_Slider.value = (Master_Slider.minValue + Master_Slider.maxValue) * 0.5f;
         BGM_Slider.value = (BGM_Slider.minValue + BGM_Slider.maxValue) * 0.5f;
         SFX_Slider.value = (SFX_Slider.minValue + SFX_Slider.maxValue) * 0.5f;
+
+        //오디오 믹서 기본 볼륨 조정
+        audioMixer.SetFloat("Master", Master_Slider.value);
+        audioMixer.SetFloat("BGM", BGM_Slider.value);
+        audioMixer.SetFloat("SFX", SFX_Slider.value);
 
 
         //볼륨값 변경 시 AddListener 추가

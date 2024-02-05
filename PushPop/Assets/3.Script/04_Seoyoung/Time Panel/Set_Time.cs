@@ -74,15 +74,15 @@ public class Set_Time : MonoBehaviour
         GameManger_2.instance.TimerTime = Time;
         if (GameManger_2.instance.gameMode.Equals(GameMode.PushPush))
         {
-            //푸쉬푸쉬 모드
+            //푸쉬푸쉬 모드 스테이지 선택창 열기
         }
         else if (GameManger_2.instance.gameMode.Equals(GameMode.Speed))
         {
-            //스피드 모드
+            //스피드 모드 스테이지 선택창 열기
         }
         else if(GameManger_2.instance.gameMode.Equals(GameMode.Memory))
         {
-            //메모리 모드
+            //메모리 모드 스테이지 선택창 열기
         }
 
     }
