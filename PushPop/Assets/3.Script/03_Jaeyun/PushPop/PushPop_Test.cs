@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PushPop : MonoBehaviour
+[ExecuteInEditMode]
+public class PushPop_Test : MonoBehaviour
 {
     [Header("PushPop Canvas")]
     public Canvas pushPopCanvas; // [SerializeField] private
@@ -13,7 +15,7 @@ public class PushPop : MonoBehaviour
     public Vector3 boardSize = Vector3.zero;
 
     private GameObject pushObject = null; // instantiate object
-    private PolygonCollider2D collider;
+    public PolygonCollider2D collider;
 
     // grid size
     [Header("Grid Size")]
@@ -24,7 +26,7 @@ public class PushPop : MonoBehaviour
 
     [Header("Grid Pos")]
     public GameObject posPrefab = null; // pos object prefab
-    List<GameObject> pos;
+    public List<GameObject> pos;
     List<GameObject> posButton;
 
     public void CreateGameObject()
@@ -48,9 +50,9 @@ public class PushPop : MonoBehaviour
         // Create Grid
         pos = new List<GameObject>();
 
-        for (int row = 0; row <= grid.y; row++)
+        for (int row = 0; row <= grid.x; row++)
         {
-            for (int col = 0; col <= grid.x; col++)
+            for (int col = 0; col <= grid.y; col++)
             {
                 // grid pos setting
                 float posX = -boardSize.x / grid.x * row;
@@ -58,15 +60,6 @@ public class PushPop : MonoBehaviour
 
                 pos.Add(Instantiate(posPrefab, pushObject.transform));
                 pos[pos.Count - 1].transform.position = boardObject.transform.position + new Vector3(boardSize.x / 2, boardSize.y / 2, 0f) + new Vector3(posX, posY, 1f);
-
-                if (pos[pos.Count - 1].GetComponent<CircleCollider2D>().bounds.Contains(collider.bounds.min) && pos[pos.Count - 1].GetComponent<CircleCollider2D>().bounds.Contains(collider.bounds.max))
-                {
-                    Debug.Log("In Collider pos");
-                }
-                if (collider.bounds.Contains(pos[pos.Count - 1].GetComponent<CircleCollider2D>().bounds.min) && collider.bounds.Contains(pos[pos.Count - 1].GetComponent<CircleCollider2D>().bounds.max))
-                {
-                    Debug.Log("In Collider col");
-                }
             }
         }
     }

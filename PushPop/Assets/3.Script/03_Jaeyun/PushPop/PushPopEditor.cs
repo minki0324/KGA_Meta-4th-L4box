@@ -2,7 +2,7 @@ using UnityEditor; // Editor
 using UnityEngine;
 
 [CanEditMultipleObjects]
-[CustomEditor(typeof(PushPop))]
+[CustomEditor(typeof(PushPop_Test))]
 public class PushPopEditor : Editor
 {
     // Inspector 창에 나타낼 요소
@@ -54,7 +54,7 @@ public class PushPopEditor : Editor
 
         serializedObject.ApplyModifiedProperties();
 
-        PushPop pushPop = (PushPop)target;
+        PushPop_Test pushPop = (PushPop_Test)target;
 
         if (GUILayout.Button("Create Board"))
         {
