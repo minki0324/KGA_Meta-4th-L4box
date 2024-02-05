@@ -9,8 +9,8 @@ using TMPro;
 public class Set_Time : MonoBehaviour
 {
     [Header("시간 증가/감소 버튼")]
-    [SerializeField] Button IncreaseTime_Btn;
-    [SerializeField] Button DecreaseTime_Btn;
+    [SerializeField] private Button IncreaseTime_Btn;
+    [SerializeField] private Button DecreaseTime_Btn;
 
     [Header("시간 텍스트")]
     [SerializeField] TMP_Text time_textMesh;
@@ -27,7 +27,6 @@ public class Set_Time : MonoBehaviour
     {
         Init();
         Calculate_Time();
-       
     }
 
     private void OnEnable()
@@ -43,13 +42,12 @@ public class Set_Time : MonoBehaviour
         Confirm_Btn.onClick.AddListener(ConfirmBtn_Clicked);
         Back_Btn.onClick.AddListener(() => { 
             gameObject.SetActive(false);
-            GameManger_2.instance.gameMode = GameMode.None;
+            GameManager.instance.gameMode = GameMode.None;
         });
     }
 
     private void Calculate_Time()
     {
-
         sec = Time % 60;    //60으로 나눈 나머지 = 초
         min = Time / 60;
         time_textMesh.text = $"{string.Format("{0:0}", min)}분 {sec}초";
@@ -71,16 +69,16 @@ public class Set_Time : MonoBehaviour
 
     public void ConfirmBtn_Clicked()
     {
-        GameManger_2.instance.TimerTime = Time;
-        if (GameManger_2.instance.gameMode.Equals(GameMode.PushPush))
+        GameManager.instance.TimerTime = Time;
+        if (GameManager.instance.gameMode.Equals(GameMode.PushPush))
         {
             //푸쉬푸쉬 모드 스테이지 선택창 열기
         }
-        else if (GameManger_2.instance.gameMode.Equals(GameMode.Speed))
+        else if (GameManager.instance.gameMode.Equals(GameMode.Speed))
         {
             //스피드 모드 스테이지 선택창 열기
         }
-        else if(GameManger_2.instance.gameMode.Equals(GameMode.Memory))
+        else if(GameManager.instance.gameMode.Equals(GameMode.Memory))
         {
             //메모리 모드 스테이지 선택창 열기
         }
