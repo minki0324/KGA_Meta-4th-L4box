@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Main_Button : MonoBehaviour
 {
@@ -44,6 +45,7 @@ public class Main_Button : MonoBehaviour
                 break;
         }
     }
+
     public void Profile_Btn_Clicked()
     {
         Profile_Panel.SetActive(true);
@@ -56,7 +58,9 @@ public class Main_Button : MonoBehaviour
 
     public void CollectionBtn_Clicked()
     {
-        Collection_Panel.SetActive(true);
+        //네트워크 씬으로 이동 + 필요한 함수 호출해주세요 :)
+        
+        Debug.Log("네트워크 씬으로 넘어가기");
     }
 
     public void Mode2PBtn_Clicked()

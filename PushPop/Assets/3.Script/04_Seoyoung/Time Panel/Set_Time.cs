@@ -13,7 +13,7 @@ public class Set_Time : MonoBehaviour
     [SerializeField] private Button DecreaseTime_Btn;
 
     [Header("시간 텍스트")]
-    [SerializeField] TMP_Text time_textMesh;
+    [SerializeField] TMP_InputField TimeText_InputField;
 
     [Header("시작/뒤로가기 버튼")]
     [SerializeField] Button Confirm_Btn;
@@ -36,7 +36,7 @@ public class Set_Time : MonoBehaviour
 
     private void Init()
     {
-        
+        TimeText_InputField.onValueChanged.AddListener(delegate { TextFieldValue_Changed(TimeText_InputField.text); });
         IncreaseTime_Btn.onClick.AddListener(IncreaseTimeBtn_Clicked);
         DecreaseTime_Btn.onClick.AddListener(DecreaseTimeBtn_Clicked);
         Confirm_Btn.onClick.AddListener(ConfirmBtn_Clicked);
@@ -50,7 +50,7 @@ public class Set_Time : MonoBehaviour
     {
         sec = Time % 60;    //60으로 나눈 나머지 = 초
         min = Time / 60;
-        time_textMesh.text = $"{string.Format("{0:0}", min)}분 {sec}초";
+        TimeText_InputField.text = $"{string.Format("{0:0}", min)}분 {sec}초";
     }
 
 
@@ -64,6 +64,11 @@ public class Set_Time : MonoBehaviour
     {
         Time -= 30;
         Calculate_Time();
+    }
+
+    public void TextFieldValue_Changed(string text)
+    {
+        //:)
     }
 
 

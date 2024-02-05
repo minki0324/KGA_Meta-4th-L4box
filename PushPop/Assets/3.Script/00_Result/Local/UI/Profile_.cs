@@ -83,6 +83,17 @@ public class Profile_ : MonoBehaviour
 
     }
 
+    //프로필 뒤로가기Btn 연동 Method
+    public void Back_Profile()
+    {
+        selectProfile_Panel.SetActive(false);
+        createImage_Panel.SetActive(false);
+        createName_Panel.SetActive(false);
+        currnetProfile_Panel.SetActive(false);
+        gameObject.SetActive(false);
+    }
+
+
     // 프로필 선택 후 씬 변경 Method
     public void Next_Scene()
     {
