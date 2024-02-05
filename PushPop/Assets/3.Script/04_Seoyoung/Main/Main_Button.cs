@@ -24,6 +24,10 @@ public class Main_Button : MonoBehaviour
     [SerializeField]
     private Button mode2P_Btn;
 
+    [Header("ÆÐ³Î")]
+    [SerializeField]
+    private GameObject collection_Panel;
+
 
 
     private void Start()
@@ -49,7 +53,7 @@ public class Main_Button : MonoBehaviour
 
     public void CollectionBtn_Clicked()
     {
-
+        collection_Panel.SetActive(true);
     }
 
     public void Mode2PBtn_Clicked()
