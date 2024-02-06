@@ -49,11 +49,13 @@ public class Main_Button : MonoBehaviour
     public void Profile_Btn_Clicked()
     {
         Profile_Panel.SetActive(true);
+        AudioManager123.instance.SetAudioClip_SFX(0);
     }
 
     public void OptionBtn_Clicked()
     {
         Option_Panel.SetActive(true);
+        AudioManager123.instance.SetAudioClip_SFX(0);
     }
 
     public void CollectionBtn_Clicked()
@@ -61,16 +63,18 @@ public class Main_Button : MonoBehaviour
         //네트워크 씬으로 이동 + 필요한 함수 호출해주세요 :)
         
         Debug.Log("네트워크 씬으로 넘어가기");
+        AudioManager123.instance.SetAudioClip_SFX(0);
     }
 
     public void Mode2PBtn_Clicked()
     {
-       
+        AudioManager123.instance.SetAudioClip_SFX(0);
     }
     
     public void HomeBtn_Clicked()
     {
         Application.OpenURL("https://www.l4box.com/");
+         AudioManager123.instance.SetAudioClip_SFX(0);
     }
     #endregion
 }
