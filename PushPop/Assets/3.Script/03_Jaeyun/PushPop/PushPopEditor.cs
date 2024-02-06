@@ -1,4 +1,4 @@
-using UnityEditor; // Editor
+/*using UnityEditor; // Editor
 using UnityEngine;
 
 [CanEditMultipleObjects]
@@ -70,3 +70,4 @@ public class PushPopEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 }
+*/

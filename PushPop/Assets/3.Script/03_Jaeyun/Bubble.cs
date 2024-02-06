@@ -12,4 +12,9 @@ public enum Mode
 public class Bubble : MonoBehaviour, IBubble
 {
     protected Mode mode; // game mode
+
+    public void BubbleMovement()
+    {
+
+    }
 }
