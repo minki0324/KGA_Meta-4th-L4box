@@ -18,6 +18,13 @@ public class Option : MonoBehaviour
     [SerializeField] private Button Back_Btn;
 
     #region Unity Callback
+
+    private void Awake()
+    {
+       
+
+    }
+
     private void Start()
     {
         Init();
@@ -38,9 +45,36 @@ public class Option : MonoBehaviour
         SFX_Slider.maxValue = 10f;
 
         //시작 볼륨값 중간으로 조정
-        Master_Slider.value = (Master_Slider.minValue + Master_Slider.maxValue) * 0.5f;
-        BGM_Slider.value = (BGM_Slider.minValue + BGM_Slider.maxValue) * 0.5f;
-        SFX_Slider.value = (SFX_Slider.minValue + SFX_Slider.maxValue) * 0.5f;
+        #region 볼륨값 불러오기
+        if (PlayerPrefs.HasKey("MasterVolume"))
+        {
+            Master_Slider.value = PlayerPrefs.GetFloat("MasterVolume");
+        }
+        else
+        {
+            Master_Slider.value = (Master_Slider.minValue + Master_Slider.maxValue) * 0.5f;
+        }
+
+        if (PlayerPrefs.HasKey("BGMVolume"))
+        {
+            Master_Slider.value = PlayerPrefs.GetFloat("BGMVolume");
+        }
+        else
+        {
+            BGM_Slider.value = (BGM_Slider.minValue + BGM_Slider.maxValue) * 0.5f;
+        }
+
+        if (PlayerPrefs.HasKey("SFXVolume"))
+        {
+            Master_Slider.value = PlayerPrefs.GetFloat("SFXVolume");
+        }
+        else
+        {
+            SFX_Slider.value = (SFX_Slider.minValue + SFX_Slider.maxValue) * 0.5f;
+        }
+
+        #endregion
+
 
         //오디오 믹서 기본 볼륨 조정
         audioMixer.SetFloat("Master", Master_Slider.value);
@@ -62,16 +96,19 @@ public class Option : MonoBehaviour
         {
             case "Master":
                 volume = Master_Slider.value;
+                PlayerPrefs.SetFloat("MasterVolume", volume);
                 break;
 
 
             case "BGM":
                 volume = BGM_Slider.value;
+                PlayerPrefs.SetFloat("BGMVolume", volume);
                 break;
 
 
             case "SFX":
                 volume = SFX_Slider.value;
+                PlayerPrefs.SetFloat("SFXVolume", volume);
                 break;
         }
 

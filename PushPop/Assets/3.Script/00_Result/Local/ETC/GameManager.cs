@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Other Method
+
+    //게임 시작되면 호출
     public IEnumerator Timer_co()
     {
         int t = TimerTime;

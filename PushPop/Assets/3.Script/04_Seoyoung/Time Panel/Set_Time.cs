@@ -19,19 +19,34 @@ public class Set_Time : MonoBehaviour
     [SerializeField] Button Confirm_Btn;
     [SerializeField] Button Back_Btn;
 
-    int Time = 330;
+    int time = 330;
     int min;
     int sec;
+
+    bool bCanStart = false;
 
     private void Start()
     {
         Init();
         Calculate_Time();
+        gameObject.SetActive(false);
     }
 
     private void OnEnable()
     {
-        Time = 330;
+        time = 330;
+    }
+
+    private void Update()
+    {
+        if (time <= 0)
+        {
+            DecreaseTime_Btn.enabled = false;
+        }
+        else
+        {
+            DecreaseTime_Btn.enabled = true ;
+        }
     }
 
     private void Init()
@@ -48,45 +63,89 @@ public class Set_Time : MonoBehaviour
 
     private void Calculate_Time()
     {
-        sec = Time % 60;    //60으로 나눈 나머지 = 초
-        min = Time / 60;
+        sec = time % 60;    //60으로 나눈 나머지 = 초
+        min = time / 60;
         TimeText_InputField.text = $"{string.Format("{0:0}", min)}분 {sec}초";
     }
 
 
     public void IncreaseTimeBtn_Clicked()
     {
-        Time += 30;
+        time += 30;
         Calculate_Time();
     }
 
     public void DecreaseTimeBtn_Clicked()
     {
-        Time -= 30;
+        time -= 30;
         Calculate_Time();
     }
 
+
+    //InputField에 시간 직접 입력
     public void TextFieldValue_Changed(string text)
     {
-        //:)
+        int InputNum = 0;
+        bool bIsNumber;
+
+        bIsNumber = int.TryParse(text, out InputNum);
+
+        if(bIsNumber)
+        {
+            time = InputNum;
+            StartCoroutine(Calculate_Time_co());
+        }
+        else
+        {
+           
+            if(TimeText_InputField.text == $"{string.Format("{0:0}", min)}분 {sec}초")
+            {
+
+            }
+            else if(TimeText_InputField.text == string.Empty)
+            {
+                Debug.Log("시간 미입력 시");
+            }
+            else
+            {
+                Debug.Log("숫자가 아닙니다");
+            }
+        }
+
+    }
+
+    private IEnumerator Calculate_Time_co()
+    {
+        yield return new WaitForSeconds(1.5f);
+        Calculate_Time();
     }
 
 
     public void ConfirmBtn_Clicked()
     {
-        GameManager.instance.TimerTime = Time;
-        if (GameManager.instance.gameMode.Equals(GameMode.PushPush))
+        if(bCanStart)
         {
-            //푸쉬푸쉬 모드 스테이지 선택창 열기
+
+            GameManager.instance.TimerTime = time;
+            if (GameManager.instance.gameMode.Equals(GameMode.PushPush))
+            {
+                //푸쉬푸쉬 모드 스테이지 선택창 열기
+            }
+            else if (GameManager.instance.gameMode.Equals(GameMode.Speed))
+            {
+                //스피드 모드 스테이지 선택창 열기
+            }
+            else if (GameManager.instance.gameMode.Equals(GameMode.Memory))
+            {
+                //메모리 모드 스테이지 선택창 열기
+            }
         }
-        else if (GameManager.instance.gameMode.Equals(GameMode.Speed))
+        else
         {
-            //스피드 모드 스테이지 선택창 열기
+            Debug.Log("시간 입력 좀 해주세요..");
+            bCanStart = false;
         }
-        else if(GameManager.instance.gameMode.Equals(GameMode.Memory))
-        {
-            //메모리 모드 스테이지 선택창 열기
-        }
+
 
     }
 }
