@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class PushPopCheck : MonoBehaviour
 { // Pos Prefabs에 참조
-    [SerializeField] private Transform[] point = new Transform[4]; // position gameObject
+    private Transform[] point = new Transform[4]; // position gameObject
 
-    private void OnEnable()
+    private void Awake()
     {
-       // PointContains(); // 생성될 때
+        for (int i = 0; i < point.Length; i++)
+        {
+            point[i] = transform.GetChild(i).transform;
+        }
     }
 
     // Grid Position이 PushPop Board에 전부 포함되는지 확인하는 Method
@@ -17,7 +20,7 @@ public class PushPopCheck : MonoBehaviour
         int contains = 0;
         for (int i = 0; i < point.Length; i++)
         {
-            Collider2D collider = Physics2D.OverlapPoint(point[i].position);
+            Collider2D collider = Physics2D.OverlapPoint(point[i].position); // position check
             if (collider == null) continue;
             if (collider.CompareTag("PushPop"))
             {
@@ -32,7 +35,6 @@ public class PushPopCheck : MonoBehaviour
         else
         {
             PushPop.instance.activePos.Add(this.gameObject); // active pos add
-            Debug.Log("Point Add");
         }
     }
 }
