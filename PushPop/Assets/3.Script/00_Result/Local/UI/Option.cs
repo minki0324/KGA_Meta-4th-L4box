@@ -1,13 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class Option : MonoBehaviour
 {
-    [Header("Audio Mixer")]
-    public AudioMixer audioMixer;
 
     [Header("Slider")]
     public Slider Master_Slider;
@@ -19,15 +16,13 @@ public class Option : MonoBehaviour
 
     #region Unity Callback
 
-    private void Awake()
-    {
-       
 
-    }
 
     private void Start()
     {
         Init();
+        gameObject.SetActive(false);
+       // PlayerPrefs.DeleteAll();
     }
     #endregion
 
@@ -52,7 +47,8 @@ public class Option : MonoBehaviour
         }
         else
         {
-            Master_Slider.value = (Master_Slider.minValue + Master_Slider.maxValue) * 0.5f;
+            Master_Slider.value = Master_Slider.maxValue;
+                //(Master_Slider.minValue + Master_Slider.maxValue) * 0.5f;
         }
 
         if (PlayerPrefs.HasKey("BGMVolume"))
@@ -77,9 +73,9 @@ public class Option : MonoBehaviour
 
 
         //오디오 믹서 기본 볼륨 조정
-        audioMixer.SetFloat("Master", Master_Slider.value);
-        audioMixer.SetFloat("BGM", BGM_Slider.value);
-        audioMixer.SetFloat("SFX", SFX_Slider.value);
+        AudioManager123.instance.audioMixer.SetFloat("Master", Master_Slider.value);
+        AudioManager123.instance.audioMixer.SetFloat("BGM", BGM_Slider.value);
+        AudioManager123.instance.audioMixer.SetFloat("SFX", SFX_Slider.value);
 
 
         //볼륨값 변경 시 AddListener 추가
@@ -96,29 +92,32 @@ public class Option : MonoBehaviour
         {
             case "Master":
                 volume = Master_Slider.value;
-                PlayerPrefs.SetFloat("MasterVolume", volume);
+                PlayerPrefs.DeleteKey("MasterVolume");
+                    PlayerPrefs.SetFloat("MasterVolume", volume);
                 break;
 
 
             case "BGM":
                 volume = BGM_Slider.value;
+                PlayerPrefs.DeleteKey("BGMVolume");
                 PlayerPrefs.SetFloat("BGMVolume", volume);
                 break;
 
 
             case "SFX":
                 volume = SFX_Slider.value;
+                PlayerPrefs.DeleteKey("SFXVolume");
                 PlayerPrefs.SetFloat("SFXVolume", volume);
                 break;
         }
 
         if (volume == -40f)
         {
-            audioMixer.SetFloat(soundtype, -80f);
+            AudioManager123.instance.audioMixer.SetFloat(soundtype, -80f);
         }
         else
         {
-            audioMixer.SetFloat(soundtype, volume);
+            AudioManager123.instance.audioMixer.SetFloat(soundtype, volume);
         }
     }
     #endregion

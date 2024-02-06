@@ -12,14 +12,14 @@ public class Set_Time : MonoBehaviour
     [SerializeField] private Button IncreaseTime_Btn;
     [SerializeField] private Button DecreaseTime_Btn;
 
-    [Header("시간 텍스트")]
+    [Header("시간 텍스트 (최소 5분/최대 15분)")]
     [SerializeField] TMP_InputField TimeText_InputField;
 
     [Header("시작/뒤로가기 버튼")]
     [SerializeField] Button Confirm_Btn;
     [SerializeField] Button Back_Btn;
 
-    int time = 330;
+    int time = 300;
     int min;
     int sec;
 
@@ -34,18 +34,27 @@ public class Set_Time : MonoBehaviour
 
     private void OnEnable()
     {
-        time = 330;
+        time = 300;
     }
 
     private void Update()
     {
-        if (time <= 0)
+        if (time <= 300)
         {
             DecreaseTime_Btn.enabled = false;
         }
         else
         {
             DecreaseTime_Btn.enabled = true ;
+        }
+
+        if (time >= 900)
+        {
+            IncreaseTime_Btn.enabled = false;
+        }
+        else
+        {
+            IncreaseTime_Btn.enabled = true;
         }
     }
 
@@ -71,13 +80,13 @@ public class Set_Time : MonoBehaviour
 
     public void IncreaseTimeBtn_Clicked()
     {
-        time += 30;
+        time += 60;
         Calculate_Time();
     }
 
     public void DecreaseTimeBtn_Clicked()
     {
-        time -= 30;
+        time -= 60;
         Calculate_Time();
     }
 
@@ -96,28 +105,46 @@ public class Set_Time : MonoBehaviour
             StartCoroutine(Calculate_Time_co());
         }
         else
-        {
-           
+        {          
             if(TimeText_InputField.text == $"{string.Format("{0:0}", min)}분 {sec}초")
             {
 
             }
-            else if(TimeText_InputField.text == string.Empty)
-            {
-                Debug.Log("시간 미입력 시");
-            }
             else
             {
                 Debug.Log("숫자가 아닙니다");
+                time = 300;
+                Calculate_Time();
+                StartCoroutine(Calculate_Time_co());
             }
+
+
+            if(TimeText_InputField.text == string.Empty || time < 300)
+            {
+                Debug.Log("시간 미입력 시");
+                time = 300;
+                Calculate_Time();
+                StartCoroutine(Calculate_Time_co());
+            }
+            
+            if(time > 900)
+            {
+                time = 900;
+                Calculate_Time();
+                StartCoroutine(Calculate_Time_co());
+            }
+           
         }
 
+       
     }
 
     private IEnumerator Calculate_Time_co()
     {
         yield return new WaitForSeconds(1.5f);
+        TimeText_InputField.enabled = false;
         Calculate_Time();
+        TimeText_InputField.enabled = true;
     }
 
 
