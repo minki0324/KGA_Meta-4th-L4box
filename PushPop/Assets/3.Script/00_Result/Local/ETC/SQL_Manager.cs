@@ -81,15 +81,16 @@ public class server_info
 public class SQL_Manager : MonoBehaviour
 {
     public static SQL_Manager instance = null;
-    public User_Info info;
+    public User_Info Info;
 
     public MySqlConnection connection;
     public MySqlDataReader reader;
+    
 
     public string DB_path = string.Empty;   // Json경로 (DB)
     public int UID;
     public List<Profile> Profile_list = new List<Profile>();
-    public List<Rank> Rank_List = new List<Rank>(); 
+    public List<Rank> Rank_List = new List<Rank>();
 
     #region Unity Callback
     private void Awake()
@@ -134,6 +135,7 @@ public class SQL_Manager : MonoBehaviour
     #endregion
 
     #region Other Method
+    #region ConnectServer
     //경로에 파일이 없다면 기본 Default 파일 생성 Method
     private void Default_Data(string path)
     {
@@ -187,156 +189,72 @@ public class SQL_Manager : MonoBehaviour
         }
         return true;
     }
+    #endregion
 
-    //Signup ID 중복체크 Method 
-    private bool ID_Duplicate_Check(string ID)
-    {
-        try
-        {
-            string SQL_command = string.Format(@"SELECT User_ID FROM User_Info WHERE User_ID='{0}';", ID);
-            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
-            using (MySqlDataReader reader = cmd.ExecuteReader())
-            {
-                // 중복되는 ID가 있으면 true 반환
-                if (reader.HasRows)
-                {
-                    return true;
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-            // 예외 발생 시 처리
-            // 이 경우, 회원가입 과정을 중단하게 됨
-            return false;
-        }
-        // 중복되는 ID가 없으면 false 반환
-        return false;
-    }
-
-    // Login 되어 있는지 체크 Method
-    private bool Login_Check(string ID, int Connect)
-    {
-        try
-        {
-            string SQL_command = string.Format(@"SELECT User_ID, Connect FROM User_Info WHERE User_ID='{0}' AND Connect='{1}';", ID, Connect);
-            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
-            using (MySqlDataReader reader = cmd.ExecuteReader())
-            {
-                int connect = reader.GetInt32("Connect");
-                if (connect == 1)
-                {
-                    // 접속 중인 상황
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-            // 예외 발생 시 처리
-            // 이 경우, 회원가입 과정을 중단하게 됨
-            return false;
-        }
-    }
-
+    #region Profile
     /// <summary>
-    ///  회원가입 메소드.
-    ///  SQL 접속여부 확인, ID 중복체크 후에 SQL DB로 회원가입 시도
+    /// 접속시 GUID를 확인하여 첫 접속이면 GUID를 부여해 로그인하고, 기존 GUID가 있다면 해당 GUID를 통해 로그인 하는 Method
     /// </summary>
-    /// <param name="ID"></param>
-    /// <param name="PW"></param>
-    /// <returns></returns>
-    public bool SQL_SignUp(string ID, string PW)
+    /// <param name="GUID"></param>
+    public void Add_User(string GUID)
     {
         try
         {
             // 1. SQL 서버에 접속 되어 있는지 확인
             if (!Connection_Check(connection))
             {
-                return false;
+                return;
             }
 
-            // 2. ID 중복 체크
-            if (ID_Duplicate_Check(ID))
+            // 이미 생성된 GUID가 있는지 확인
+            if (!GUID_DuplicateCheck(GUID))
             {
-                // 중복된 ID UI 출력
-                Debug.Log("중복된 ID가 있습니다.");
-                return false; // 중복된 ID가 있으므로 회원가입 실패
+                // 2. 기기 UID 생성
+                string SQL_command = string.Format(@"INSERT INTO User_Info (GUID) VALUES('{0}')
+                                                                                    ON DUPLICATE KEY UPDATE GUID = VALUES(GUID);", GUID);
+                MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
+                cmd.ExecuteNonQuery();
             }
 
-            // 3. 신규 가입
-            string SQL_command = string.Format(@"INSERT INTO User_Info (User_ID, User_PW) VALUES('{0}', '{1}');", ID, PW);
-            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
-            cmd.ExecuteNonQuery();
-
-            return true; // 회원가입 성공
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-            return false;
-        }
-    }
-
-    /// <summary>
-    ///직접 DB에서 Data를 가지고 오는 Method
-    ///조회가 되는 Data가 없다면 bool값 = false
-    ///조회가 되는 Data가 있다면 info에 담아주고 bool값 = true
-    /// </summary>
-    public bool SQL_Login(string ID, string PW)
-    {
-        try
-        {
-            //1.connection open 상황인지 확인
-            if (!Connection_Check(connection))
-            {
-                return false;
-            }
-
-            //2. ID 중복 접속 체크 해야함
-
-            string SQL_command = string.Format(@"SELECT User_ID,User_PW, UID FROM User_Info WHERE User_ID='{0}' AND User_PW = '{1}' ;", ID, PW);
-            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
-            reader = cmd.ExecuteReader();
-
-            //Reader 읽은 데이터가 1개 이상 존재하는가?
+            // 3. UID 정보 받아오기
+            string sql_cmd = string.Format(@"SELECT UID FROM User_Info;");
+            MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
+            reader = cmd_.ExecuteReader();
+      
             if (reader.HasRows)
             {
-                //읽은 데이터를 하나씩 나열함
-                while (reader.Read())
-                {
-                    string id = reader.GetString("User_ID");
-                    string pw = reader.GetString("User_PW");
-                    if (!id.Equals(string.Empty) || !pw.Equals(string.Empty))
-                    {
-                        //정상적으로 Data를 불러온 상황
-                        UID = reader.GetInt32("UID");
-                        info = new User_Info(ID, UID);
-                        if (!reader.IsClosed) reader.Close();
-                        return true;
-                    }
-                    else//로그인실패
-                    {
-                        Debug.Log("로그인 실패");
-                        if (!reader.IsClosed) reader.Close();
-                        break;
-                    }
-                }//while
-            }//if
-            Debug.Log("reader에 읽은 데이터가 없음");
+                // 4. UID를 클래스의 멤버 변수에 할당
+                reader.Read(); 
+                UID = reader.GetInt32("UID");
+                GameManager.instance.UID = UID;
+                Info = new User_Info(GUID, UID);
+            }
             if (!reader.IsClosed) reader.Close();
-            return false;
-    }
+            return; // 회원가입 성공
+        }
         catch (Exception e)
         {
             if (!reader.IsClosed) reader.Close();
-            Debug.Log(e.Message);
+            //Debug.Log(e.Message);
+            return;
+        }
+    }
+
+    // GUID 중복체크 Method
+    private bool GUID_DuplicateCheck(string GUID)
+    {
+        string sql_cmd = string.Format(@"SELECT GUID FROM User_Info WHERE GUID='{0}';", GUID);
+        MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
+        reader = cmd_.ExecuteReader();
+
+        if(reader.HasRows)
+        {
+            if (!reader.IsClosed) reader.Close();
+            return true;
+        }
+        else
+        {
+            if (!reader.IsClosed) reader.Close();
             return false;
         }
     }
@@ -346,7 +264,7 @@ public class SQL_Manager : MonoBehaviour
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public bool SQL_Add_Profile(string name)
+    public bool SQL_AddProfile(string name)
     {
         try
         {
@@ -357,23 +275,56 @@ public class SQL_Manager : MonoBehaviour
             }
 
             // 2. 프로필 생성
-            string SQL_command = string.Format(@"INSERT INTO Profile (UID, User_name) VALUES('{0}', '{1}');", info.UID, name);
+            string SQL_command = string.Format(@"INSERT INTO Profile (UID, User_name) VALUES('{0}', '{1}');", Info.UID, name);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             cmd.ExecuteNonQuery();
 
-            return true; // 회원가입 성공
+            return true; // 프로필 생성 성공
+        }
+        catch (Exception e)
+        {
+            //Debug.Log(e.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 프로필 삭제 Method, UID와 name을 확인해서 삭제
+    /// </summary>
+    /// <param name="name"></param>
+    public void SQL_DeleteProfile(string name, int index)
+    {
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!Connection_Check(connection))
+            {
+                return;
+            }
+
+            // 2. 프로필 삭제
+            string SQL_command = string.Format(@"DELETE FROM Profile WHERE UID = '{0}' AND User_name = '{1}';", Info.UID, name);
+            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
+            cmd.ExecuteNonQuery();
+
+            // 3. 이미지 삭제
+            string sql_cmd = string.Format(@"DELETE FROM Image WHERE UID = '{0}' AND Profile_Index = '{1}';", Info.UID, index);
+            MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
+            cmd_.ExecuteNonQuery();
+
+            // 삭제 성공
+            Debug.Log("프로필 삭제 성공");
         }
         catch (Exception e)
         {
             Debug.Log(e.Message);
-            return false;
         }
     }
 
     /// <summary>
     /// 로그인 후 UID에 조회되는 프로필 목록 출력하는 Method
     /// </summary>
-    public void SQL_Profile_ListSet()
+    public void SQL_ProfileListSet()
     {
         try
         {
@@ -386,7 +337,7 @@ public class SQL_Manager : MonoBehaviour
 
             Profile_list.Clear();
             // UID에 연결된 프로필 조회 쿼리 실행
-            string SQL_command = string.Format(@"SELECT User_name, Profile_Index FROM Profile WHERE UID = '{0}';", info.UID);
+            string SQL_command = string.Format(@"SELECT User_name, Profile_Index FROM Profile WHERE UID = '{0}';", Info.UID);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             reader = cmd.ExecuteReader();
 
@@ -419,10 +370,135 @@ public class SQL_Manager : MonoBehaviour
     }
 
     /// <summary>
+    /// UID, Index를 매개변수로 전달하여 Image를 Binary값으로 DB에 저장하는 Method
+    /// </summary>
+    /// <param name="filename"></param>
+    /// <param name="uid"></param>
+    /// <param name="index"></param>
+    public void SQL_AddProfileImage(string filename, int uid, int index)
+    {
+        FileStream fileStream;
+        BinaryReader binaryReader;
+
+        try
+        {
+            // 1. 데이터베이스 연결 확인
+            if (!Connection_Check(connection))
+            {
+                Debug.Log("데이터베이스 연결 실패");
+                return;
+            }
+
+            byte[] ImageData;
+            fileStream = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            binaryReader = new BinaryReader(fileStream);
+
+            ImageData = binaryReader.ReadBytes((int)fileStream.Length);
+
+            fileStream.Close();
+            binaryReader.Close();
+
+            string SQL_command = "INSERT INTO Image (UID, Profile_Index, ImageData) VALUES (@UID, @Index, @ImageData)";
+            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
+
+            // 파라미터 추가
+            cmd.Parameters.AddWithValue("@UID", uid);
+            cmd.Parameters.AddWithValue("@Index", index);
+            cmd.Parameters.AddWithValue("@ImageData", ImageData);
+
+            cmd.ExecuteNonQuery();
+        }
+        catch (Exception e)
+        {
+            Debug.Log($"프로필 조회 중 오류 발생: {e.Message}");
+            if (!reader.IsClosed) reader.Close();
+            return;
+        }
+    }
+
+    /// <summary>
+    /// Profile_index에 따른 프로필 이미지를 출력하는 Method
+    /// </summary>
+    /// <param name="uid"></param>
+    /// <param name="profileIndex"></param>
+    /// <returns></returns>
+    public Texture2D SQL_LoadProfileImage(int uid, int profileIndex)
+    {
+        string SQL_command = "SELECT ImageData FROM Image WHERE UID = @UID AND Profile_Index = @ProfileIndex";
+        MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
+
+        // 파라미터 추가
+        cmd.Parameters.AddWithValue("@UID", uid);
+        cmd.Parameters.AddWithValue("@ProfileIndex", profileIndex);
+
+        // 이미지 데이터를 읽기 위해 ExecuteScalar() 메서드를 사용합니다.
+        byte[] imageData = (byte[])cmd.ExecuteScalar();
+
+        // ImageData를 Texture2D로 변환
+        Texture2D texture = new Texture2D(1, 1);
+        texture.LoadImage(imageData); // 바이트 배열로부터 텍스처를 로드합니다.
+
+        return texture;
+    }
+
+    /// <summary>
+    /// 프로필 업데이트 Method, UID와 name을 확인해서 삭제하고, 새로운 name과 image로 update
+    /// </summary>
+    public void SQL_UpdateProfile(int previousIndex, string previousname, string name, int uid, string filename)
+    {
+        FileStream fileStream;
+        BinaryReader binaryReader;
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!Connection_Check(connection))
+            {
+                return;
+            }
+
+            // 2. 기존 name찾아서 name 변경
+            string sql_cmd = string.Format(@"UPDATE Profile SET (UID, User_name) VALUES('{0}', '{1}');", Info.UID, name);
+            MySqlCommand cmd = new MySqlCommand(sql_cmd, connection);
+            cmd.ExecuteNonQuery();
+
+            // 3. 이미지 변경
+            byte[] ImageData;
+            fileStream = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            binaryReader = new BinaryReader(fileStream);
+
+            ImageData = binaryReader.ReadBytes((int)fileStream.Length);
+
+            fileStream.Close();
+            binaryReader.Close();
+
+            string SQL_command = @$"UPDATE Image SET ImageData = '{ImageData}' WHERE UID = '{uid}' AND Profile_Index = '{previousIndex}';";
+            MySqlCommand cmd_ = new MySqlCommand(SQL_command, connection);
+
+            // 파라미터 추가
+            cmd_.Parameters.AddWithValue("@UID", uid);
+            cmd_.Parameters.AddWithValue("@Index", previousIndex);
+            cmd_.Parameters.AddWithValue("@ImageData", ImageData);
+
+            cmd_.ExecuteNonQuery();
+
+            return; // 업데이트 성공
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+            return;
+        }
+    }
+
+    
+    #endregion
+
+    #region Rank
+    /// <summary>
     /// Ranking Table에 Score, Timer를 넘겨주는 Method.
     /// score를 보내줘야 할때는 Timer를 null로 설정하고, timer를 보내줘야 할때는 score를 null로 설정해서 사용
     /// </summary>
-    public void SQL_Set_Score(string profile_name, int profile_index, int? newScore, float? newTimer, int UID)
+    public void SQL_SetScore(string profile_name, int profile_index, int? newScore, float? newTimer, int UID)
     {
         try
         {
@@ -502,7 +578,7 @@ public class SQL_Manager : MonoBehaviour
     /// 호출시 같은 UID상에 존재하는 Profile들의 랭킹을 List에 담는 Method
     /// </summary>
     /// <param name="Mode"></param>
-    public void SQL_Print_Ranking()
+    public void SQL_PrintRanking()
     {
         try
         {
@@ -512,7 +588,7 @@ public class SQL_Manager : MonoBehaviour
                 return;
             }
 
-            string SQL_command = string.Format(@"SELECT Profile_Name, Profile_Index, Score, Timer FROM Ranking WHERE UID = '{0}';", info.UID);
+            string SQL_command = string.Format(@"SELECT Profile_Name, Profile_Index, Score, Timer FROM Ranking WHERE UID = '{0}';", Info.UID);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             reader = cmd.ExecuteReader();
 
@@ -548,5 +624,6 @@ public class SQL_Manager : MonoBehaviour
             return;
         }
     }
+    #endregion
     #endregion
 }

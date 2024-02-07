@@ -10,6 +10,8 @@ using TMPro;
 public class Profile_Information : MonoBehaviour
 {
     public TMP_Text Profile_name;
+    public Image ProfileImage;
+    public GameObject DelBtn;
 
     #region Unity Callback
     #endregion
@@ -26,12 +28,23 @@ public class Profile_Information : MonoBehaviour
     {
         GameManager.instance.Profile_name = SQL_Manager.instance.Profile_list[Receive_Index()].name;
         GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[Receive_Index()].index;
-        GameManager.instance.UID = SQL_Manager.instance.info.UID;
+        GameManager.instance.UID = SQL_Manager.instance.Info.UID;
 
         Profile_ profile = FindObjectOfType<Profile_>();
-        profile.selectProfile_Panel.SetActive(false);
+        profile.SelectProfilePanel.SetActive(false);
         profile.Select_Name.text = GameManager.instance.Profile_name;
         profile.currnetProfile_Panel.SetActive(true);
+    }
+
+    // 선택한 버튼의 name, UID GameManager에 넘겨주면서 삭제 확인 PopUp창 켜주는 Method
+    public void DeleteInfo()
+    {
+        GameManager.instance.Profile_name = SQL_Manager.instance.Profile_list[Receive_Index()].name;
+        GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[Receive_Index()].index;
+        GameManager.instance.UID = SQL_Manager.instance.Info.UID;
+
+        Profile_ profile = FindObjectOfType<Profile_>();
+        profile._deletePanel.SetActive(true);
     }
     #endregion
 }

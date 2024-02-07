@@ -28,7 +28,7 @@ public class Ranking : MonoBehaviour
     {
         score = int.Parse(score_txt.text.ToString());
 
-        SQL_Manager.instance.SQL_Set_Score(GameManager.instance.Profile_name, GameManager.instance.Profile_Index, score, null, GameManager.instance.UID);
+        SQL_Manager.instance.SQL_SetScore(GameManager.instance.Profile_name, GameManager.instance.Profile_Index, score, null, GameManager.instance.UID);
     }
 
     // 타이머 저장 btn연동 테스트 메소드
@@ -36,14 +36,14 @@ public class Ranking : MonoBehaviour
     {
         timer = float.Parse(timer_txt.text.ToString());
 
-        SQL_Manager.instance.SQL_Set_Score(GameManager.instance.Profile_name, GameManager.instance.Profile_Index, null, timer, GameManager.instance.UID);
+        SQL_Manager.instance.SQL_SetScore(GameManager.instance.Profile_name, GameManager.instance.Profile_Index, null, timer, GameManager.instance.UID);
     }
 
     // 특정 시점에 어떤 mode인지(speed, memory) 매개변수를 받아서 랭킹을 호출해주는 메소드
     public void test_Print_Rank(string mode)
     {
         // 1. 랭킹 정보 가져오기
-        SQL_Manager.instance.SQL_Print_Ranking();
+        SQL_Manager.instance.SQL_PrintRanking();
 
         List<Rank> sortedRankList = new List<Rank>();
 
