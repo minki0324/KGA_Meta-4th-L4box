@@ -10,9 +10,9 @@ public class CameraManager : MonoBehaviour
 	[SerializeField] private Image captureImage;
 	private Texture2D captureTexture; // Create Image
 
-	public void CameraOpen() // button method
+	public void CameraOpen() // Camera Open method
     {
-		if (NativeCamera.IsCameraBusy()) return;
+		if (NativeCamera.IsCameraBusy()) return; // camera X 
 		TakePicture();
 	}
 
@@ -24,9 +24,9 @@ public class CameraManager : MonoBehaviour
 			Directory.CreateDirectory(_filePath);
 		}
 
+		// Camera
 		NativeCamera.Permission permission = NativeCamera.TakePicture((path) =>
 		{
-			Debug.Log("Image path: " + _filePath);
 			if (path != null)
 			{
 				// Create Image
@@ -55,12 +55,7 @@ public class CameraManager : MonoBehaviour
 				captureImage.sprite = Sprite.Create(captureTexture, rect, new Vector2(0.5f, 0.5f));
 
 				// capture texture save
-				Texture2D readableTexture = GetReadableTexture(texture); // current Texture
-				
-				/*Texture2D snap = new Texture2D(readableTexture.width, readableTexture.height); // copy Texture
-				snap.SetPixels(readableTexture.GetPixels());
-				snap.Apply();*/
-
+				Texture2D readableTexture = GetReadableTexture(texture); // Texture º¯È¯
 				byte[] texturePNGByte = readableTexture.EncodeToPNG(); // texture to pngByte encode
 				string fileName = $"{_filePath}/00_00.png";
 				// File.WriteAllBytes($"{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png", snap.EncodeToPNG());
