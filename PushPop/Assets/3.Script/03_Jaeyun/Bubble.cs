@@ -1,15 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public enum Mode
 {
-    PUSHPUSH = 0,
-    SPEED,
-    BOOM,
+    PushPush = 0,
+    Speed,
+    Memory,
+    Bomb,
 }
 
-public class Bubble : MonoBehaviour, IBubble
+public class PushBubble : IBubble
 {
+    public virtual void BubbleTouch(GameObject bubble)
+    {
+        bubble = EventSystem.current.currentSelectedGameObject; // select한 object
+
+    }
+
+    public virtual void BubbleMovement()
+    {
+
+    }
+}
+
+public class SpeedBubble : IBubble
+{
+
+}
+
+public class MemoryBubble : IBubble
+{
+
+}
+
+public class BombBubble : IBubble
+{
+
+}
+
+public class Bubble : MonoBehaviour
+{ // bubble prefab마다 달아줄 script
     protected Mode mode; // game mode
+
 }
