@@ -50,7 +50,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     private void Start()
     {
         _imagePath = Application.persistentDataPath + "/PushPop_";
-        // ±â±âÀÇ °íÀ¯ ID¸¦ ºÒ·¯¿À°Å³ª »ý¼º
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ IDï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½
         LoadOrCreateGUID();
 
         Debug.Log("Device GUID: " + _uniqueID);
@@ -73,21 +73,21 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     #endregion
 
     #region Other Method
-    // Á¢¼ÓÇßÀ» ¶§ GUID°¡ ÀÖ´ÂÁö È®ÀÎÇÏ°í, ¾øÀ¸¸é »ý¼º
-    // GUID¸¦ DB¿Í ¿¬µ¿ÇÏ¿© UID¿¡ µû¸¥ ÇÁ·ÎÇÊ ¿¬µ¿ÇÏ´Â Method
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ GUIDï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï°ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // GUIDï¿½ï¿½ DBï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ UIDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Method
     private void LoadOrCreateGUID()
     {
-        // ÀúÀåµÈ GUID ºÒ·¯¿À±â
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ GUID ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
         if (PlayerPrefs.HasKey("DeviceGUID"))
         {
             _uniqueID = PlayerPrefs.GetString("DeviceGUID");
         }
         else
         {
-            // »õ·Î¿î GUID »ý¼º
+            // ï¿½ï¿½ï¿½Î¿ï¿½ GUID ï¿½ï¿½ï¿½ï¿½
             _uniqueID = Guid.NewGuid().ToString();
 
-            // »ý¼ºµÈ GUID ÀúÀå
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GUID ï¿½ï¿½ï¿½ï¿½
             PlayerPrefs.SetString("DeviceGUID", _uniqueID);
             PlayerPrefs.Save();
         }
@@ -95,7 +95,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         PrintProfile();
     }
 
-    // ÇÁ·ÎÇÊ »ý¼º Btn ¿¬µ¿ Method
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Btn ï¿½ï¿½ï¿½ï¿½ Method
     public void Add_Profile()
     {
         if (!string.IsNullOrWhiteSpace(_profileName))
@@ -106,24 +106,24 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         {
             if (string.IsNullOrWhiteSpace(_profileName))
             {
-                Debug.Log("¿Ã¹Ù¸¥ ÇÁ·ÎÇÊ ´Ð³×ÀÓÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä.");
+                Debug.Log("ï¿½Ã¹Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð³ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
             }
         }
     }
 
-    // ÇÁ·ÎÇÊ Ãâ·Â Btn ¿¬µ¿ Method
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Btn ï¿½ï¿½ï¿½ï¿½ Method
     public void PrintProfile()
     {
         SQL_Manager.instance.SQL_ProfileListSet();
 
-        // µÚ·Î°¡±â ¹öÆ° µîÀ¸·Î ÀÌ¹Ì »ý¼º µÇ¾îÀÖÀ» °æ¿ì ÃÊ±âÈ­
+        // ï¿½Ú·Î°ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         for (int i = 0; i < Panel_List.Count; i++)
         {
             Destroy(Panel_List[i].gameObject);
         }
         Panel_List.Clear();
 
-        // ListÀÇ Count´ë·Î Panel»ý¼º
+        // Listï¿½ï¿½ Countï¿½ï¿½ï¿½ Panelï¿½ï¿½ï¿½ï¿½
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
         {
             GameObject panel = Instantiate(Profile_Panel);
@@ -131,7 +131,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             Panel_List.Add(panel);
         }
 
-        // Profile Index¿¡ ¸Â°Ô ÇÁ·ÎÇÊ name Ãâ·Â
+        // Profile Indexï¿½ï¿½ ï¿½Â°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ name ï¿½ï¿½ï¿½
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
         {
             Profile_Information info = Panel_List[i].GetComponent<Profile_Information>();
@@ -142,38 +142,48 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // ÇÁ·ÎÇÊ »èÁ¦ Btn ¿¬µ¿ Method
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Btn ï¿½ï¿½ï¿½ï¿½ Method
     public void DeleteProfile()
     {
         SQL_Manager.instance.SQL_DeleteProfile(GameManager.instance.Profile_name, GameManager.instance.Profile_Index);
     }
 
-    // ÇÁ·ÎÇÊ ¼öÁ¤ Btn ¿¬µ¿ Method
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Btn ï¿½ï¿½ï¿½ï¿½ Method
     public void Update_Profile()
     {
 
     }
 
-    // ÇÁ·ÎÇÊ ÀÌ¹ÌÁö ÀúÀåÇÏ´Â Btn ¿¬µ¿ Method (¸Å°³ º¯¼ö 0 ÀÌ¸é »çÁø ÃÔ¿µ Btn, ¸Å°³ º¯¼ö 1 ÀÌ¸é Image Select Btn)
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·Î°ï¿½ï¿½ï¿½Btn ï¿½ï¿½ï¿½ï¿½ Method
+    public void Back_Profile()
+    {
+        selectProfile_Panel.SetActive(false);
+        createImage_Panel.SetActive(false);
+        createName_Panel.SetActive(false);
+        currnetProfile_Panel.SetActive(false);
+        gameObject.SetActive(false);
+    }
+
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Btn ï¿½ï¿½ï¿½ï¿½ Method (ï¿½Å°ï¿½ ï¿½ï¿½ï¿½ï¿½ 0 ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¿ï¿½ Btn, ï¿½Å°ï¿½ ï¿½ï¿½ï¿½ï¿½ 1 ï¿½Ì¸ï¿½ Image Select Btn)
     public void ImageSet(int index)
     {
-        // °æ·Î°¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎÇÏ°í ¾ø´Ù¸é »ý¼º
+        // ï¿½ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (!Directory.Exists(_imagePath))
         {
             Directory.CreateDirectory(_imagePath);
         }
 
-        // ¸¸¾à¿¡ »çÁøÃÔ¿µÀ» ÇßÀ» ¶§
+        // ï¿½ï¿½ï¿½à¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         if(index == 0)
         {
             /*SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}/{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png", GameManager.instance.UID, GameManager.instance.Profile_Index);*/
         }
-        // »çÁø ÃÔ¿µ ¸»°í ±âº» ÀÌ¹ÌÁö ¼±ÅÃÀ» °ñ¶úÀ» ¶§
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½âº» ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         else if(index == 1)
         {
             if (!_isImageSelect)
             {
-                // ÀÌ¹ÌÁö¸¦ °ñ¶óÁÖ¼¼¿ä ÆË¾÷ ¹®±¸ »ý¼º
+                // ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 if(log != null)
                 {
                     StopCoroutine(log);
@@ -195,7 +205,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     }
 
-    // »èÁ¦ btn ÄÑ´Â Method
+    // ï¿½ï¿½ï¿½ï¿½ btn ï¿½Ñ´ï¿½ Method
     public void DeleteBtnOpen()
     {
         bool active = Panel_List[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
@@ -205,29 +215,29 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // ÇÁ·ÎÇÊ ¼±ÅÃ ÈÄ ¾À º¯°æ Method
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Method
     public void Next_Scene()
     {
         SceneManager.LoadScene(1);
     }
 
-    // SQL¿¡¼­ ¹Þ¾Æ¿Â Texture¸¦ SpriteÇü½ÄÀ¸·Î º¯È¯ÇÏ´Â Method
+    // SQLï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ Textureï¿½ï¿½ Spriteï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï´ï¿½ Method
     private Sprite TextureToSprite(Texture2D texture)
     {
-        // Texture2D¸¦ Sprite·Î º¯È¯ÇÕ´Ï´Ù.
+        // Texture2Dï¿½ï¿½ Spriteï¿½ï¿½ ï¿½ï¿½È¯ï¿½Õ´Ï´ï¿½.
         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
 
         return sprite;
     }
 
-    // Profile AddÇÒ¶§ ÀûÈù Text¸¦ ¸â¹öº¯¼ö¿¡ ÇÒ´ç
+    // Profile Addï¿½Ò¶ï¿½ ï¿½ï¿½ï¿½ï¿½ Textï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½
     public void SendProfile()
     {
         _profileName = _profileNameAdd.text;
         _profileNameAdd.text = string.Empty;
     }
 
-    // Profile Image ¼±ÅÃÇßÀ» ¶§ Btn ¿¬µ¿ Method
+    // Profile Image ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Btn ï¿½ï¿½ï¿½ï¿½ Method
     public void SelectImage(int index)
     {
         _imageIndex = index;

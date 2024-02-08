@@ -5000,7 +5000,7 @@ MonoBehaviour:
   CreateNamePanel: {fileID: 0}
   createImage_Panel: {fileID: 285640606}
   currnetProfile_Panel: {fileID: 1456613538}
-  _backBtn: {fileID: 0}
+  Back_Btn: {fileID: 1633819232}
   Profile_Create: {fileID: 208994934}
   Profile_name: {fileID: 1853879921}
   Profile_Panel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
@@ -9849,7 +9849,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1633819233}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1014920689}
+        m_TargetAssemblyTypeName: Profile_, Assembly-CSharp
+        m_MethodName: Back_Profile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1633819233
 MonoBehaviour:
   m_ObjectHideFlags: 0
