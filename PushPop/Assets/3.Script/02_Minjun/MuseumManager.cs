@@ -11,6 +11,7 @@ public class MuseumManager : NetworkBehaviour
         //DB그대로 이동하게끔하기
         if (NetworkManager.singleton != null)
         {
+            //로비이동
             NetworkManager.singleton.StopClient();
         }
         else
