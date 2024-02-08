@@ -1,90 +1,151 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-[ExecuteInEditMode]
 public class PushPop : MonoBehaviour
 {
+    public static PushPop instance = null;
+
     [Header("PushPop Canvas")]
-    public Canvas pushPopCanvas; // [SerializeField] private
-    public GameObject pushPopButton;
+    [SerializeField] private Transform pushPopCanvas;
+    [SerializeField] private GameObject pushPopButtonPrefab;
 
-    [Header("Board")]
-    public GameObject boardObject = null; // Board Prefab
-    public Sprite boardSprite = null;
-    public Vector3 boardSize = Vector3.zero;
-
+    [Header("PushPop Board")]
+    [SerializeField] private GameObject boardPrefab = null; // board Prefab
+    [SerializeField] private Sprite boardSprite = null; // board sprite, custom sprite out line setting 필요 
+    private Vector3 boardSize = Vector3.zero;
+    private PolygonCollider2D boardCollider; // board collider
     private GameObject pushObject = null; // instantiate object
-    private PolygonCollider2D collider;
 
-    // grid size
     [Header("Grid Size")]
-    public Vector2 grid = Vector2.zero;
-    public float percentage = 0; // gameobject에 따른 gird 비율
-
-    public Vector2 buttonSize = Vector2.zero; // x, y 동일
+    private Vector2 grid = Vector2.zero;
+    [SerializeField] private float percentage = 0; // gameobject에 따른 gird 비율
+    [SerializeField] private Vector2 buttonSize = Vector2.zero; // x, y 동일
 
     [Header("Grid Pos")]
-    public GameObject posPrefab = null; // pos object prefab
-    List<GameObject> pos;
-    List<GameObject> posButton;
+    public GameObject posPrefab = null; // grid에 지정할 pos prefab
+    private List<GameObject> pos = new List<GameObject>(); // grid 배치된 posPrefab
 
-    public void CreateGameObject()
-    { // Sprite 모양에 따른 Polygon collider setting
-        pushObject = Instantiate(boardObject);
+    private List<GameObject> pushPopButton = new List<GameObject>();
+    public List<GameObject> activePos = new List<GameObject>();
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
+    // PushPop Game Start
+    public void CreatePushPop()
+    {
+        CreatePushPopBoard();
+        CreateGrid();
+        PushPopButtonSetting();
+    }
+
+    // Sprite 모양에 따른 Polygon collider setting
+    private void CreatePushPopBoard()
+    {
+        pushObject = Instantiate(boardPrefab);
         pushObject.GetComponent<SpriteRenderer>().sprite = boardSprite;
         pushObject.AddComponent<PolygonCollider2D>(); // Polygon Collider Setting
-        collider = pushObject.GetComponent<PolygonCollider2D>();
+        boardCollider = pushObject.GetComponent<PolygonCollider2D>();
     }
 
-    public void SetBoardSize()
+    private void CreateGrid()
     {
-        // Size Setting
-        boardSize = new Vector3(collider.bounds.size.x, collider.bounds.size.y, 1f); // collider size
+        // board Size Setting
+        boardSize = new Vector3(boardCollider.bounds.size.x, boardCollider.bounds.size.y, 1f); // collider size
         grid.x = (int)(boardSize.x / percentage);
         grid.y = (int)(boardSize.y / percentage);
-    }
 
-    public void DrawGrid()
-    {
-        // Create Grid
-        pos = new List<GameObject>();
-
-        for (int row = 0; row <= grid.y; row++)
+        // grid pos setting
+        for (int col = 0; col <= grid.x; col++)
         {
-            for (int col = 0; col <= grid.x; col++)
+            for (int row = 0; row <= grid.y; row++)
             {
-                // grid pos setting
-                float posX = -boardSize.x / grid.x * row;
-                float posY = -boardSize.y / grid.y * col;
-
-                pos.Add(Instantiate(posPrefab, pushObject.transform));
-                pos[pos.Count - 1].transform.position = boardObject.transform.position + new Vector3(boardSize.x / 2, boardSize.y / 2, 0f) + new Vector3(posX, posY, 1f);
-
-                if (pos[pos.Count - 1].GetComponent<CircleCollider2D>().bounds.Contains(collider.bounds.min) && pos[pos.Count - 1].GetComponent<CircleCollider2D>().bounds.Contains(collider.bounds.max))
-                {
-                    Debug.Log("In Collider pos");
-                }
-                if (collider.bounds.Contains(pos[pos.Count - 1].GetComponent<CircleCollider2D>().bounds.min) && collider.bounds.Contains(pos[pos.Count - 1].GetComponent<CircleCollider2D>().bounds.max))
-                {
-                    Debug.Log("In Collider col");
-                }
+                float posX = -boardSize.x / grid.x * col;
+                float posY = -boardSize.y / grid.y * row;
+                GetPushPopButton(pos, posPrefab, pushObject.transform, posX, posY);
             }
         }
     }
 
-    public void SettingPushPopButton()
+    // PushPop Button Setting
+    private void PushPopButtonSetting()
     {
-        posButton = new List<GameObject>();
-        for (int i = 0; i < pos.Count; i++)
+        for (int i = 0; i < activePos.Count; i++)
         {
-            posButton.Add(Instantiate(pushPopButton, pushPopCanvas.gameObject.transform));
-            posButton[i].GetComponent<RectTransform>().sizeDelta = buttonSize;
-            posButton[i].transform.position = Camera.main.WorldToScreenPoint(pos[i].transform.position);
+            GetPushPopButton(pushPopButton, pushPopButtonPrefab, pushPopCanvas);
+            pushPopButton[i].GetComponent<RectTransform>().sizeDelta = buttonSize;
+            pushPopButton[i].transform.position = Camera.main.WorldToScreenPoint(activePos[i].transform.position);
         }
     }
-
-    public void DestroyObject()
+    #region ObjectPooling
+    // PushPop Button Object Pooling
+    private void GetPushPopButton(List<GameObject> _pos, GameObject _prefab, Transform _parent)
     {
-        DestroyImmediate(pushObject);
+        for (int i = 0; i < _pos.Count; i++)
+        {
+            if (!_pos[i].activeSelf) // 기존 button이 활성화 되어있지 않다면 true
+            {
+                _pos[i].SetActive(true);
+                return;
+            }
+        }
+
+        GameObject newPos = Instantiate(_prefab, _parent); // Button이 더 필요하다면 새로 생성
+        _pos.Add(newPos);
+        return;
+    }
+
+    // PushPop position Object Pooling
+    private void GetPushPopButton(List<GameObject> _pos, GameObject _prefab, Transform _parent, float _posX, float _posY)
+    {
+        _parent = this.gameObject.transform;
+
+        for (int i = 0; i < _pos.Count; i++)
+        {
+            if (!_pos[i].activeSelf) // 기존 button이 활성화 되어있지 않다면 true
+            {
+                _pos[i].SetActive(true);
+                _pos[i].transform.position = boardPrefab.transform.position + new Vector3(boardSize.x / 2, boardSize.y / 2, 0f) + new Vector3(_posX, _posY, 1f); // grid 배치
+                _pos[i].GetComponent<PushPopCheck>().PointContains(); // collider check
+                return;
+            }
+        }
+
+        GameObject newPos = Instantiate(_prefab, _parent); // Button이 더 필요하다면 새로 생성
+        _pos.Add(newPos);
+        _pos[_pos.Count - 1].transform.position = boardPrefab.transform.position + new Vector3(boardSize.x / 2, boardSize.y / 2, 0f) + new Vector3(_posX, _posY, 1f); // grid 배치
+        _pos[_pos.Count - 1].GetComponent<PushPopCheck>().PointContains(); // collider chekc
+        return;
+    }
+    #endregion
+    // Game Clear 시 호출되는 method
+    public void PushPopClear()
+    {
+        for (int i = 0; i < activePos.Count; i++)
+        {
+            activePos[i].SetActive(false);
+        }
+        activePos.Clear();
+    }
+
+    public void DestroyBoard()
+    {
+        for (int i = 0; i < pushPopButton.Count; i++)
+        {
+            pushPopButton[i].SetActive(false);
+        }
+        Destroy(pushObject);
     }
 }

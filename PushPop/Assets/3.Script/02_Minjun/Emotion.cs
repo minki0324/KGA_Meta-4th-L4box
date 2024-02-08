@@ -4,34 +4,12 @@ using UnityEngine;
 using Mirror;
 public class Emotion : NetworkBehaviour
 {
+    //단지 EMotion 들 저장하고 있기 위한 스크립트
     public static Emotion instance;
-    [SerializeField] private Sprite[] emotions;
-    [SerializeField] private SpriteRenderer spriterenderer;
-    public PlayerEmotionControl playerEmotion;
+    //이모션 종류 인스펙터에서 추가하기
+    public Sprite[] emotions;
     private void Awake()
     {
         instance = this;
     }
-    void Start()
-    {
-      
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    [Client]
-    public void onEmotion(int index)
-    {
-        if (spriterenderer == null)
-        {
-            spriterenderer = playerEmotion.GetComponent<SpriteRenderer>();
-        }
-        spriterenderer.sprite = emotions[index];
-        playerEmotion.PlayEmotion();
-    }
-    
-  
 }

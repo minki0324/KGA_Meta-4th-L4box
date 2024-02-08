@@ -32,15 +32,12 @@ public class Main_Button : MonoBehaviour
         {
             case "PushPush":
                 GameManager.instance.gameMode = GameMode.PushPush;
-                TimeSet_Panel.gameObject.SetActive(true);
                 break;
             case "Speed":
                 GameManager.instance.gameMode = GameMode.Speed;
-                TimeSet_Panel.gameObject.SetActive(true);
                 break;
             case "Memory":
                 GameManager.instance.gameMode = GameMode.Memory;
-                TimeSet_Panel.gameObject.SetActive(true);
                 break;
         }
     }

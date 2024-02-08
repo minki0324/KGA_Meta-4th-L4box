@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-interface IBubble
+public interface IBubble
 {
+    void BubbleTouch() { }
     void BubbleMovement() { }
 }
