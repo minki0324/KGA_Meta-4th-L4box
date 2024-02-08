@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using MySql.Data;
+using LitJson;
 using MySql.Data.MySqlClient;
 using System;
-using System.IO;
-using LitJson;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using UnityEngine;
 
 #region Other Class
 /// <summary>
@@ -31,11 +29,22 @@ public class Profile
 {
     public string name { get; private set; }
     public int index { get; private set; }
+    public bool imageMode { get; private set; }
+    public int defaultImage { get; private set; }
 
-    public Profile(string name, int index)
+    public Profile(string name, int index, int mode, int _defaultImage)
     {
         this.name = name;
         this.index = index;
+        if(mode.Equals(0))
+        { // 사진 찍은 사람
+            imageMode = false;
+        }
+        else if(mode.Equals(1))
+        { // default image 선택한 사람
+            imageMode = true;
+        }
+        defaultImage = _defaultImage;
     }
 }
 
@@ -85,7 +94,7 @@ public class SQL_Manager : MonoBehaviour
 
     public MySqlConnection connection;
     public MySqlDataReader reader;
-    
+
 
     public string DB_path = string.Empty;   // Json경로 (DB)
     public int UID;
@@ -130,7 +139,7 @@ public class SQL_Manager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        
+
     }
     #endregion
 
@@ -199,7 +208,7 @@ public class SQL_Manager : MonoBehaviour
         MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
         reader = cmd_.ExecuteReader();
 
-        if(reader.HasRows)
+        if (reader.HasRows)
         {
             if (!reader.IsClosed) reader.Close();
             return true;
@@ -239,11 +248,11 @@ public class SQL_Manager : MonoBehaviour
             string sql_cmd = string.Format(@"SELECT UID FROM User_Info WHERE GUID = '{0}';", GUID);
             MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
             reader = cmd_.ExecuteReader();
-      
+
             if (reader.HasRows)
             {
                 // 4. UID를 클래스의 멤버 변수에 할당
-                reader.Read(); 
+                reader.Read();
                 UID = reader.GetInt32("UID");
                 GameManager.instance.UID = UID;
                 Info = new User_Info(GUID, UID);
@@ -264,27 +273,34 @@ public class SQL_Manager : MonoBehaviour
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public bool SQL_AddProfile(string name)
+    public int SQL_AddProfile(string name, int imageMode)
     {
         try
         {
             // 1. SQL 서버에 접속 되어 있는지 확인
             if (!ConnectionCheck(connection))
             {
-                return false;
+                return -1;
             }
 
             // 2. 프로필 생성
-            string SQL_command = string.Format(@"INSERT INTO Profile (UID, User_name) VALUES('{0}', '{1}');", Info.UID, name);
+            string SQL_command = string.Format(@"INSERT INTO Profile (UID, User_name, ImageMode) VALUES('{0}', '{1}', '{2}'); SELECT LAST_INSERT_ID();", Info.UID, name, imageMode);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
-            cmd.ExecuteNonQuery();
+            int profileIndex = Convert.ToInt32(cmd.ExecuteScalar());
 
-            return true; // 프로필 생성 성공
+            if (profileIndex > 0)
+            {
+                return profileIndex; // 새로 생성된 프로필의 primary key 반환
+            }
+            else
+            {
+                return -1; // 프로필 생성 실패를 나타내는 값 반환
+            }
         }
         catch (Exception e)
         {
             Debug.Log(e.Message);
-            return false;
+            return -1;
         }
     }
 
@@ -337,19 +353,30 @@ public class SQL_Manager : MonoBehaviour
 
             Profile_list.Clear();
             // UID에 연결된 프로필 조회 쿼리 실행
-            string SQL_command = string.Format(@"SELECT User_name, Profile_Index FROM Profile WHERE UID = '{0}';", Info.UID);
+            string SQL_command = string.Format(@"SELECT DISTINCT Profile.User_name, Profile.Profile_Index, Profile.ImageMode, Image.DefaultIndex 
+                                                FROM Profile INNER JOIN Image
+                                                ON Profile.Profile_Index = Image.Profile_Index AND Profile.UID = '{0}';", Info.UID);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             reader = cmd.ExecuteReader();
-
+            int tempRow = 0;
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
                     string profileName = reader.GetString("User_name");
                     int profileIndex = reader.GetInt32("Profile_Index");
-
+                    int imageMode = reader.GetInt32("ImageMode");
+                    int defaultImage = reader.IsDBNull(tempRow) ? -1 : reader.GetInt32("DefaultIndex");
+                    tempRow++;
                     // 넘겨줄 리스트 Add해주기
-                    Profile_list.Add(new Profile(profileName, profileIndex));
+                    Profile_list.Add(new Profile(profileName, profileIndex, imageMode, defaultImage));
+                    for(int i = 0; i < Profile_list.Count; i++)
+                    {
+                        Debug.Log("name : " + Profile_list[i].name);
+                        Debug.Log("index : " + Profile_list[i].index);
+                        Debug.Log("mode : " + Profile_list[i].imageMode);
+                        Debug.Log("imageindex : " + Profile_list[i].defaultImage);
+                    }
                 }
                 if (!reader.IsClosed) reader.Close();
                 return;
@@ -416,6 +443,34 @@ public class SQL_Manager : MonoBehaviour
         }
     }
 
+    public void SQL_AddProfileImage(int defaultImage, int uid, int index)
+    {
+        try
+        {
+            // 1. 데이터베이스 연결 확인
+            if (!ConnectionCheck(connection))
+            {
+                Debug.Log("데이터베이스 연결 실패");
+                return;
+            }
+            string SQL_command = "INSERT INTO Image (UID, Profile_Index, DefaultIndex) VALUES (@UID, @Index, @DefaultIndex)";
+            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
+
+            // 파라미터 추가
+            cmd.Parameters.AddWithValue("@UID", uid);
+            cmd.Parameters.AddWithValue("@Index", index);
+            cmd.Parameters.AddWithValue("@DefaultIndex", defaultImage);
+
+            cmd.ExecuteNonQuery();
+        }
+        catch (Exception e)
+        {
+            Debug.Log($"프로필 조회 중 오류 발생: {e.Message}");
+            if (!reader.IsClosed) reader.Close();
+            return;
+        }
+    }
+
     /// <summary>
     /// Profile_index에 따른 프로필 이미지를 출력하는 Method
     /// </summary>
@@ -437,7 +492,6 @@ public class SQL_Manager : MonoBehaviour
         // ImageData를 Texture2D로 변환
         Texture2D texture = new Texture2D(1, 1);
         texture.LoadImage(imageData); // 바이트 배열로부터 텍스처를 로드합니다.
-
         return texture;
     }
 
@@ -490,7 +544,7 @@ public class SQL_Manager : MonoBehaviour
         }
     }
 
-    
+
     #endregion
 
     #region Rank
@@ -592,7 +646,7 @@ public class SQL_Manager : MonoBehaviour
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             reader = cmd.ExecuteReader();
 
-            if(reader.HasRows)
+            if (reader.HasRows)
             {
                 // 2. 랭킹 리스트 담기 전 초기화
                 Rank_List.Clear();

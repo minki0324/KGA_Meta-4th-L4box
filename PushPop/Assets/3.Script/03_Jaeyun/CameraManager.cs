@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class CameraManager : MonoBehaviour
 {
 	[SerializeField] private Image captureImage;
+	[SerializeField] private Profile_ profile;
 	private Texture2D captureTexture; // Create Image
 
 	public void CameraOpen() // Camera Open method
@@ -53,6 +54,10 @@ public class CameraManager : MonoBehaviour
 				captureTexture = texture;
 				Rect rect = new Rect(0, 0, captureTexture.width, captureTexture.height);
 				captureImage.sprite = Sprite.Create(captureTexture, rect, new Vector2(0.5f, 0.5f));
+
+				// Profile_index 설정
+				profile._isImageMode = false;
+				profile.Add_Profile();
 
 				// capture texture save
 				Texture2D readableTexture = GetReadableTexture(texture); // Texture 변환

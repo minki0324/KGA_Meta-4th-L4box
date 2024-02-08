@@ -1,14 +1,13 @@
 using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
 
-public class Profile_ : MonoBehaviour, IPointerClickHandler 
+public class Profile_ : MonoBehaviour, IPointerClickHandler
 {
     [Header("Profile_Panel")]
     public GameObject SelectProfilePanel;
@@ -45,6 +44,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     [Header("bool")]
     public bool _isImageSelect = false;
+    public bool _isImageMode = false;
 
     private Coroutine log;
 
@@ -65,7 +65,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            if(IconPanel.activeSelf)
+            if (IconPanel.activeSelf)
             {
                 _isImageSelect = false;
             }
@@ -101,7 +101,18 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     {
         if (!string.IsNullOrWhiteSpace(_profileName))
         {
-            SQL_Manager.instance.SQL_AddProfile(_profileName);
+            int imageMode = -1;
+            switch(_isImageMode)
+            {
+                case false:
+                    imageMode = 0;
+                    break;
+                case true:
+                    imageMode = 1;
+                    break;
+            }
+            GameManager.instance.Profile_Index = SQL_Manager.instance.SQL_AddProfile(_profileName, imageMode);
+
         }
         else
         {
@@ -137,9 +148,17 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         {
             Profile_Information info = Panel_List[i].GetComponent<Profile_Information>();
             info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
-            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.instance.UID, SQL_Manager.instance.Profile_list[i].index);
-            Sprite profileSprite = TextureToSprite(profileTexture);
-            info.ProfileImage.sprite = profileSprite;
+            if (SQL_Manager.instance.Profile_list[i].imageMode)
+            {
+                Debug.Log(SQL_Manager.instance.Profile_list[i].defaultImage);
+                info.ProfileImage.sprite = _profileSelectImage[SQL_Manager.instance.Profile_list[i].defaultImage];
+            }
+            else
+            {
+                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.instance.UID, SQL_Manager.instance.Profile_list[i].index);
+                Sprite profileSprite = TextureToSprite(profileTexture);
+                info.ProfileImage.sprite = profileSprite;
+            }
         }
     }
 
@@ -170,23 +189,20 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     {
         if (index.Equals(0))
         { // Camera Open
-            Add_Profile();
-            SQL_Manager.instance.SQL_ProfileListSet();
-            GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index;
             _imagePath = $"{Application.persistentDataPath}/Profile/{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png";
-            Debug.Log("Image Path: " + _imagePath);
             SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}", GameManager.instance.UID, GameManager.instance.Profile_Index);
-            Debug.Log("SQL 안들어옴");
+            SQL_Manager.instance.SQL_ProfileListSet();
+            
 
             PrintProfile();
             checkPanel.SetActive(false);
             createImage_Panel.SetActive(false);
         }
-        else if(index.Equals(1))
-        {
+        else if (index.Equals(1))
+        { // Default Image를 선택했을 때
             if (!_isImageSelect)
-            {
-                if(log != null)
+            { // 선택된 이미지가 없을 때
+                if (log != null)
                 {
                     StopCoroutine(log);
                 }
@@ -194,34 +210,23 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             }
             else
             {
-                _selectImage = _profileSelectImage[_imageIndex].name;
-                _imagePath = $"{Application.streamingAssetsPath}/Profile/{_selectImage}.png";
-
+                _isImageMode = true;
                 Add_Profile();
+                SQL_Manager.instance.SQL_AddProfileImage(_imageIndex, GameManager.instance.UID, GameManager.instance.Profile_Index);
                 SQL_Manager.instance.SQL_ProfileListSet();
-                GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index;
 
-                if (Application.platform.Equals(RuntimePlatform.Android))
-                { // android
-                    WWW wwwfile = new WWW(_imagePath);
-                    while (!wwwfile.isDone) { }
-                    _imagePath = wwwfile.text;
-                }
-
-                SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}", GameManager.instance.UID, GameManager.instance.Profile_Index);
                 PrintProfile();
                 IconPanel.SetActive(false);
                 createImage_Panel.SetActive(false);
             }
         }
-
     }
 
     // ���� btn �Ѵ� Method
     public void DeleteBtnOpen()
     {
         bool active = Panel_List[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
-        for (int i =0; i < Panel_List.Count; i++)
+        for (int i = 0; i < Panel_List.Count; i++)
         {
             Panel_List[i].GetComponent<Profile_Information>().DelBtn.SetActive(!active);
         }
@@ -242,9 +247,10 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         _profileName = _profileNameAdd.text;
         _profileNameAdd.text = string.Empty;
 
+
         SQL_Manager.instance.SQL_ProfileListSet();
-        GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index + 1;
-     }
+        GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index+1;
+    }
 
     // Profile Image �������� �� Btn ���� Method
     public void SelectImage(int index)
