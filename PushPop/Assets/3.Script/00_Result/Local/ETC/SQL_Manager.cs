@@ -107,7 +107,7 @@ public class SQL_Manager : MonoBehaviour
         }
 
         DB_path = Application.persistentDataPath + "/Database";
-        string serverinfo = Serverset(DB_path);
+        string serverinfo = ServerSet(DB_path);
         try
         {
             // serverinfo에 받아온 데이터가 없다면 오류
@@ -137,7 +137,7 @@ public class SQL_Manager : MonoBehaviour
     #region Other Method
     #region ConnectServer
     //경로에 파일이 없다면 기본 Default 파일 생성 Method
-    private void Default_Data(string path)
+    private void DefaultData(string path)
     {
         List<server_info> userInfo = new List<server_info>();
 
@@ -150,7 +150,7 @@ public class SQL_Manager : MonoBehaviour
 
     // SQL DATA를 불러오는 Method
     // 경로, 파일 탐색 후 Json파일 읽어와서 HeidiSQL 접속
-    private string Serverset(string path)
+    private string ServerSet(string path)
     {
         if (!File.Exists(path)) // 경로 탐색
         {
@@ -159,7 +159,7 @@ public class SQL_Manager : MonoBehaviour
 
         if (!File.Exists(path + "/config.json"))  // 파일 탐색
         {
-            Default_Data(path);
+            DefaultData(path);
         }
         string Jsonstring = File.ReadAllText(path + "/config.json");
 
@@ -176,7 +176,7 @@ public class SQL_Manager : MonoBehaviour
     }
 
     //SQL이 열려 있는지 확인하는 Method 
-    private bool Connection_Check(MySqlConnection con)
+    private bool ConnectionCheck(MySqlConnection con)
     {
         //현재 MySQLConnection open 이 아니라면?
         if (con.State != System.Data.ConnectionState.Open)
@@ -192,16 +192,35 @@ public class SQL_Manager : MonoBehaviour
     #endregion
 
     #region Profile
+    // GUID 중복체크 Method
+    private bool GUID_DuplicateCheck(string GUID)
+    {
+        string sql_cmd = string.Format(@"SELECT GUID FROM User_Info WHERE GUID='{0}';", GUID);
+        MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
+        reader = cmd_.ExecuteReader();
+
+        if(reader.HasRows)
+        {
+            if (!reader.IsClosed) reader.Close();
+            return true;
+        }
+        else
+        {
+            if (!reader.IsClosed) reader.Close();
+            return false;
+        }
+    }
+
     /// <summary>
     /// 접속시 GUID를 확인하여 첫 접속이면 GUID를 부여해 로그인하고, 기존 GUID가 있다면 해당 GUID를 통해 로그인 하는 Method
     /// </summary>
     /// <param name="GUID"></param>
-    public void Add_User(string GUID)
+    public void SQL_AddUser(string GUID)
     {
         try
         {
             // 1. SQL 서버에 접속 되어 있는지 확인
-            if (!Connection_Check(connection))
+            if (!ConnectionCheck(connection))
             {
                 return;
             }
@@ -240,25 +259,6 @@ public class SQL_Manager : MonoBehaviour
         }
     }
 
-    // GUID 중복체크 Method
-    private bool GUID_DuplicateCheck(string GUID)
-    {
-        string sql_cmd = string.Format(@"SELECT GUID FROM User_Info WHERE GUID='{0}';", GUID);
-        MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
-        reader = cmd_.ExecuteReader();
-
-        if(reader.HasRows)
-        {
-            if (!reader.IsClosed) reader.Close();
-            return true;
-        }
-        else
-        {
-            if (!reader.IsClosed) reader.Close();
-            return false;
-        }
-    }
-
     /// <summary>
     /// 프로필 생성 Method, name 중복 체크는 따로 하지 않음 (동명이인 고려)
     /// </summary>
@@ -269,7 +269,7 @@ public class SQL_Manager : MonoBehaviour
         try
         {
             // 1. SQL 서버에 접속 되어 있는지 확인
-            if (!Connection_Check(connection))
+            if (!ConnectionCheck(connection))
             {
                 return false;
             }
@@ -297,7 +297,7 @@ public class SQL_Manager : MonoBehaviour
         try
         {
             // 1. SQL 서버에 접속 되어 있는지 확인
-            if (!Connection_Check(connection))
+            if (!ConnectionCheck(connection))
             {
                 return;
             }
@@ -329,7 +329,7 @@ public class SQL_Manager : MonoBehaviour
         try
         {
             // 데이터베이스 연결 확인
-            if (!Connection_Check(connection))
+            if (!ConnectionCheck(connection))
             {
                 Debug.Log("데이터베이스 연결 실패");
                 return;
@@ -383,7 +383,7 @@ public class SQL_Manager : MonoBehaviour
         try
         {
             // 1. 데이터베이스 연결 확인
-            if (!Connection_Check(connection))
+            if (!ConnectionCheck(connection))
             {
                 Debug.Log("데이터베이스 연결 실패");
                 return;
@@ -442,7 +442,7 @@ public class SQL_Manager : MonoBehaviour
     }
 
     /// <summary>
-    /// 프로필 업데이트 Method, UID와 name을 확인해서 삭제하고, 새로운 name과 image로 update
+    /// 프로필 업데이트 Method, UID와 name을 확인해서 새로운 name과 image로 update
     /// </summary>
     public void SQL_UpdateProfile(int previousIndex, string previousname, string name, int uid, string filename)
     {
@@ -451,7 +451,7 @@ public class SQL_Manager : MonoBehaviour
         try
         {
             // 1. SQL 서버에 접속 되어 있는지 확인
-            if (!Connection_Check(connection))
+            if (!ConnectionCheck(connection))
             {
                 return;
             }
@@ -503,7 +503,7 @@ public class SQL_Manager : MonoBehaviour
         try
         {
             // 1. SQL 서버에 접속 되어 있는지 확인
-            if (!Connection_Check(connection))
+            if (!ConnectionCheck(connection))
             {
                 return;
             }
@@ -583,7 +583,7 @@ public class SQL_Manager : MonoBehaviour
         try
         {
             // 1. SQL 서버에 접속 되어 있는지 확인
-            if (!Connection_Check(connection))
+            if (!ConnectionCheck(connection))
             {
                 return;
             }

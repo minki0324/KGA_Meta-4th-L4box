@@ -91,7 +91,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             PlayerPrefs.SetString("DeviceGUID", _uniqueID);
             PlayerPrefs.Save();
         }
-        SQL_Manager.instance.Add_User(_uniqueID);
+        SQL_Manager.instance.SQL_AddUser(_uniqueID);
         PrintProfile();
     }
 
