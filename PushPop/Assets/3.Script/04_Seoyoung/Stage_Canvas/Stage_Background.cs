@@ -12,17 +12,13 @@ public class Stage_Background : MonoBehaviour
     [SerializeField] Canvas mainCanvas;
 
     [Header("도움말 창")]
-    [SerializeField]
-    private GameObject help_Panel;
+    [SerializeField] private GameObject help_Panel;
 
-    [SerializeField]
-    private Button help_Btn;
+    [SerializeField] private Button help_Btn;
 
-    [SerializeField]
-    private TMP_Text help_Description;
+    [SerializeField] private TMP_Text help_Description;
 
-    [SerializeField]
-    private TMP_Text page_Text;
+    [SerializeField] private TMP_Text page_Text;
 
     //도움말창이 켜져있는가 판단하는 변수
     public bool bisHelpPanelOn = false;

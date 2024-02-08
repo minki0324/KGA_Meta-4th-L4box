@@ -22,7 +22,6 @@ public class Main_Button : MonoBehaviour
     [SerializeField] private GameObject Collection_Panel;
     [SerializeField] private GameObject TimeSet_Panel;
 
-
     #region Unity Callback
     #endregion
 

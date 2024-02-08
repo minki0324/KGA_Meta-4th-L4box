@@ -8,6 +8,10 @@ using TMPro;
 
 public class Set_Time : MonoBehaviour
 {
+
+    [Header("스테이지 선택 캔버스")]
+    [SerializeField] private Canvas stage_Canvas;
+
     [Header("시간 증가/감소 버튼")]
     [SerializeField] private Button IncreaseTime_Btn;
     [SerializeField] private Button DecreaseTime_Btn;
@@ -161,6 +165,8 @@ public class Set_Time : MonoBehaviour
             else if (GameManager.instance.gameMode.Equals(GameMode.Speed))
             {
                 //스피드 모드 스테이지 선택창 열기
+                stage_Canvas.gameObject.SetActive(true);
+                gameObject.SetActive(false);
             }
             else if (GameManager.instance.gameMode.Equals(GameMode.Memory))
             {
