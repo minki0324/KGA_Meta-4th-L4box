@@ -33,6 +33,9 @@ public class Profile_Information : MonoBehaviour
         Profile_ profile = FindObjectOfType<Profile_>();
         profile.SelectProfilePanel.SetActive(false);
         profile.Select_Name.text = GameManager.instance.Profile_name;
+        Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.instance.UID, GameManager.instance.Profile_Index);
+        Sprite profileSprite = profile.TextureToSprite(profileTexture);
+        profile._profileImage.sprite = profileSprite;
         profile.currnetProfile_Panel.SetActive(true);
     }
 

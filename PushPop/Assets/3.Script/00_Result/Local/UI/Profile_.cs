@@ -29,8 +29,8 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     [SerializeField] private TMP_InputField _profileNameAdd;
     [SerializeField] private Transform Panel_Parent;
     [SerializeField] private List<GameObject> Panel_List;
-    public TMP_Text Select_Name;
     public GameObject _deletePanel;
+    public Image _profileImage;
 
     [Header("Image")]
     public int _imageIndex = -1;
@@ -39,6 +39,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     [SerializeField] private string _selectImage = string.Empty;
 
     [Header("Text")]
+    public TMP_Text Select_Name;
     private string _profileName = string.Empty;
 
     [Header("bool")]
@@ -157,9 +158,9 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     //������ �ڷΰ���Btn ���� Method
     public void Back_Profile()
     {
-        selectProfile_Panel.SetActive(false);
+        SelectProfilePanel.SetActive(false);
         createImage_Panel.SetActive(false);
-        createName_Panel.SetActive(false);
+        CreateNamePanel.SetActive(false);
         currnetProfile_Panel.SetActive(false);
         gameObject.SetActive(false);
     }
@@ -215,14 +216,8 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // ������ ���� �� �� ���� Method
-    public void Next_Scene()
-    {
-        SceneManager.LoadScene(1);
-    }
-
     // SQL���� �޾ƿ� Texture�� Sprite�������� ��ȯ�ϴ� Method
-    private Sprite TextureToSprite(Texture2D texture)
+    public Sprite TextureToSprite(Texture2D texture)
     {
         // Texture2D�� Sprite�� ��ȯ�մϴ�.
         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
@@ -235,7 +230,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     {
         _profileName = _profileNameAdd.text;
         _profileNameAdd.text = string.Empty;
-    }
+     }
 
     // Profile Image �������� �� Btn ���� Method
     public void SelectImage(int index)
