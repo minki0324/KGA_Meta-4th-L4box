@@ -123,7 +123,7 @@ public class PushPush_Canvas : MonoBehaviour
             Page_Text.text = $"{currentPage}/{maxPage}";
         }
 
-        if(currentPage == maxPage - 1)
+        if(currentPage == maxPage)
         {
             next_Btn.enabled = false;
         }
