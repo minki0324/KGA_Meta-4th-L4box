@@ -157,9 +157,9 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     //������ �ڷΰ���Btn ���� Method
     public void Back_Profile()
     {
-        selectProfile_Panel.SetActive(false);
+        SelectProfilePanel.SetActive(false);
         createImage_Panel.SetActive(false);
-        createName_Panel.SetActive(false);
+        CreateNamePanel.SetActive(false);
         currnetProfile_Panel.SetActive(false);
         gameObject.SetActive(false);
     }

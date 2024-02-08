@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-//Stage_Canvas에 들어가는 스크립트
+//Bg_Canvas에 들어가는 스크립트
 
 public class Stage_Background : MonoBehaviour
 {
     [Header("Main Canvas")]
-    [SerializeField] Canvas mainCanvas;
+    [SerializeField] private Canvas mainCanvas;
+
 
     [Header("도움말 창")]
     [SerializeField] private GameObject help_Panel;
@@ -31,13 +32,42 @@ public class Stage_Background : MonoBehaviour
 
     private void Start()
     {
-        help_Panel.SetActive(false);
-        //gameObject.SetActive(false);        
+        Init();
     }
 
+
+    private void OnEnable()
+    {
+        switch(GameManager.instance.gameMode)
+        {
+            case GameMode.PushPush:
+              //  pushMode_Panel.SetActive(true);
+                break;
+
+            case GameMode.Speed:
+             //   speedMode_Panel.SetActive(true);
+                break;
+
+            case GameMode.Memory:
+                //memoryMode_Panel.SetActive(true);
+                break;
+        }
+    }
+
+    private void OnDisable()
+    {
+       // pushMode_Panel.SetActive(false);
+
+    }
     #endregion
 
     #region Other Method
+
+    private void Init()
+    {   
+        help_Panel.SetActive(false);
+        gameObject.SetActive(false);        
+    }
 
     public void BackBtn_Clicked()
     {
