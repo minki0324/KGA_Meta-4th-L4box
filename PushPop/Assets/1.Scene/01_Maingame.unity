@@ -11758,7 +11758,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1417661301}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1543486626}
+        m_TargetAssemblyTypeName: CameraManager, Assembly-CSharp
+        m_MethodName: CameraOpen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 232424891}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1417661301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12184,6 +12208,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1520692301}
   m_CullTransparentMesh: 1
+--- !u!1 &1543486624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1543486625}
+  - component: {fileID: 1543486626}
+  m_Layer: 0
+  m_Name: CameraManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1543486625
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1543486624}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1543486626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1543486624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd9b8a6ad230c2246a13602ae7fa5cdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  captureImage: {fileID: 806832590}
 --- !u!1 &1545803394
 GameObject:
   m_ObjectHideFlags: 0
@@ -12917,7 +12986,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: db403a8607f490841aed8db180fe8f41, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b3816496fcb51864494ebdb56ff07abb, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14634,7 +14703,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1865929158}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1878190845}
+        m_TargetAssemblyTypeName: Profile_, Assembly-CSharp
+        m_MethodName: ImageSet
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1865929158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14736,6 +14817,7 @@ MonoBehaviour:
   createImage_Panel: {fileID: 1253195986}
   currnetProfile_Panel: {fileID: 71060990}
   IconPanel: {fileID: 1841294382}
+  checkPanel: {fileID: 0}
   Profile_Create: {fileID: 900693479}
   Profile_Panel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
   _errorLog: {fileID: 256174219}
@@ -14746,8 +14828,8 @@ MonoBehaviour:
   _profileImage: {fileID: 334612751}
   _imageIndex: -1
   _profileSelectImage:
-  - {fileID: 21300000, guid: ff4be33c079f465458bfce754ae92169, type: 3}
-  - {fileID: 21300000, guid: db403a8607f490841aed8db180fe8f41, type: 3}
+  - {fileID: 21300000, guid: ec63b76a27e30a848b5dc421a7b14d79, type: 3}
+  - {fileID: 21300000, guid: b3816496fcb51864494ebdb56ff07abb, type: 3}
   _selectImage: 
   Select_Name: {fileID: 620436293}
   _isImageSelect: 0
@@ -15646,7 +15728,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ff4be33c079f465458bfce754ae92169, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ec63b76a27e30a848b5dc421a7b14d79, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

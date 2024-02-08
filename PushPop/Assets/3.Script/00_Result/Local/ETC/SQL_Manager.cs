@@ -236,7 +236,7 @@ public class SQL_Manager : MonoBehaviour
             }
 
             // 3. UID 정보 받아오기
-            string sql_cmd = string.Format(@"SELECT UID FROM User_Info;");
+            string sql_cmd = string.Format(@"SELECT UID FROM User_Info WHERE GUID = '{0}';", GUID);
             MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
             reader = cmd_.ExecuteReader();
       
@@ -254,7 +254,7 @@ public class SQL_Manager : MonoBehaviour
         catch (Exception e)
         {
             if (!reader.IsClosed) reader.Close();
-            //Debug.Log(e.Message);
+            Debug.Log(e.Message);
             return;
         }
     }
@@ -283,7 +283,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            //Debug.Log(e.Message);
+            Debug.Log(e.Message);
             return false;
         }
     }

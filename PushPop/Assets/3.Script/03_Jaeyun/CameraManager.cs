@@ -18,7 +18,7 @@ public class CameraManager : MonoBehaviour
 
 	private void TakePicture()
     {
-		string _filePath = Application.persistentDataPath + "/Profile";
+		string _filePath = $"{Application.persistentDataPath}/Profile";
 		if (!File.Exists(_filePath))
 		{ // 해당 Directory 없을 시 생성
 			Directory.CreateDirectory(_filePath);
@@ -57,10 +57,10 @@ public class CameraManager : MonoBehaviour
 				// capture texture save
 				Texture2D readableTexture = GetReadableTexture(texture); // Texture 변환
 				byte[] texturePNGByte = readableTexture.EncodeToPNG(); // texture to pngByte encode
-				string fileName = $"{_filePath}/00_00.png";
-				// File.WriteAllBytes($"{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png", snap.EncodeToPNG());
+				string fileName = $"{_filePath}/{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png";
+				Debug.Log(fileName);
 				File.WriteAllBytes(fileName, texturePNGByte); // file save
-
+				Debug.Log("File Save");
 				Destroy(quad, 5f);
 			}
 		}, 2048, true, NativeCamera.PreferredCamera.Front);

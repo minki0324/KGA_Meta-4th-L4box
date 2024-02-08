@@ -16,6 +16,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     public GameObject createImage_Panel;
     public GameObject currnetProfile_Panel;
     public GameObject IconPanel;
+    public GameObject checkPanel;
 
     [Header("Button")]
     [SerializeField] private Button Profile_Create;
@@ -50,7 +51,6 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     #region Unity Callback
     private void Start()
     {
-        _imagePath = Application.persistentDataPath + "/PushPop_";
         // ����� ���� ID�� �ҷ����ų� ����
         LoadOrCreateGUID();
 
@@ -168,23 +168,24 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     // ������ �̹��� �����ϴ� Btn ���� Method (�Ű� ���� 0 �̸� ���� �Կ� Btn, �Ű� ���� 1 �̸� Image Select Btn)
     public void ImageSet(int index)
     {
-        // ��ΰ� �����ϴ��� Ȯ���ϰ� ���ٸ� ����
-        if (!Directory.Exists(_imagePath))
-        {
-            Directory.CreateDirectory(_imagePath);
-        }
+        if (index.Equals(0))
+        { // Camera Open
+            Add_Profile();
+            SQL_Manager.instance.SQL_ProfileListSet();
+            GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index;
+            _imagePath = $"{Application.persistentDataPath}/Profile/{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png";
+            Debug.Log("Image Path: " + _imagePath);
+            SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}", GameManager.instance.UID, GameManager.instance.Profile_Index);
+            Debug.Log("SQL 안들어옴");
 
-        // ���࿡ �����Կ��� ���� ��
-        if(index == 0)
-        {
-            /*SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}/{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png", GameManager.instance.UID, GameManager.instance.Profile_Index);*/
+            PrintProfile();
+            checkPanel.SetActive(false);
+            createImage_Panel.SetActive(false);
         }
-        // ���� �Կ� ���� �⺻ �̹��� ������ ����� ��
-        else if(index == 1)
+        else if(index.Equals(1))
         {
             if (!_isImageSelect)
             {
-                // �̹����� ����ּ��� �˾� ���� ����
                 if(log != null)
                 {
                     StopCoroutine(log);
@@ -194,10 +195,20 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             else
             {
                 _selectImage = _profileSelectImage[_imageIndex].name;
+                _imagePath = $"{Application.streamingAssetsPath}/Profile/{_selectImage}.png";
+
                 Add_Profile();
                 SQL_Manager.instance.SQL_ProfileListSet();
                 GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index;
-                SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}/{_selectImage}.png", GameManager.instance.UID, GameManager.instance.Profile_Index);
+
+                if (Application.platform.Equals(RuntimePlatform.Android))
+                { // android
+                    WWW wwwfile = new WWW(_imagePath);
+                    while (!wwwfile.isDone) { }
+                    _imagePath = wwwfile.text;
+                }
+
+                SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}", GameManager.instance.UID, GameManager.instance.Profile_Index);
                 PrintProfile();
                 IconPanel.SetActive(false);
                 createImage_Panel.SetActive(false);
@@ -230,6 +241,9 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     {
         _profileName = _profileNameAdd.text;
         _profileNameAdd.text = string.Empty;
+
+        SQL_Manager.instance.SQL_ProfileListSet();
+        GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index + 1;
      }
 
     // Profile Image �������� �� Btn ���� Method
