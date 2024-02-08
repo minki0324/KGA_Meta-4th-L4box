@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class MuseumManager : NetworkBehaviour
+public class CommunicationRoomManager : NetworkBehaviour
 {
  
     public void GotoLobby()
