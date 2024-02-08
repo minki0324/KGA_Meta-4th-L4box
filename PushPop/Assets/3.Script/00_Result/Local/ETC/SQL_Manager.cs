@@ -358,7 +358,6 @@ public class SQL_Manager : MonoBehaviour
                                                 ON Profile.Profile_Index = Image.Profile_Index AND Profile.UID = '{0}';", Info.UID);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             reader = cmd.ExecuteReader();
-            int tempRow = 0;
             if (reader.HasRows)
             {
                 while (reader.Read())
@@ -366,17 +365,9 @@ public class SQL_Manager : MonoBehaviour
                     string profileName = reader.GetString("User_name");
                     int profileIndex = reader.GetInt32("Profile_Index");
                     int imageMode = reader.GetInt32("ImageMode");
-                    int defaultImage = reader.IsDBNull(tempRow) ? -1 : reader.GetInt32("DefaultIndex");
-                    tempRow++;
+                    int defaultImage = reader.IsDBNull(reader.GetOrdinal("DefaultIndex")) ? -1 : reader.GetInt32("DefaultIndex");
                     // 넘겨줄 리스트 Add해주기
                     Profile_list.Add(new Profile(profileName, profileIndex, imageMode, defaultImage));
-                    for(int i = 0; i < Profile_list.Count; i++)
-                    {
-                        Debug.Log("name : " + Profile_list[i].name);
-                        Debug.Log("index : " + Profile_list[i].index);
-                        Debug.Log("mode : " + Profile_list[i].imageMode);
-                        Debug.Log("imageindex : " + Profile_list[i].defaultImage);
-                    }
                 }
                 if (!reader.IsClosed) reader.Close();
                 return;

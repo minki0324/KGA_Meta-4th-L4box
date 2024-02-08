@@ -14428,17 +14428,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c6f5d34411a1dd49b1585e721679288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectProfile_Panel: {fileID: 664826394}
-  createName_Panel: {fileID: 87528550}
+  SelectProfilePanel: {fileID: 0}
+  CreateNamePanel: {fileID: 0}
   createImage_Panel: {fileID: 1269728621}
   currnetProfile_Panel: {fileID: 2122880539}
-  Back_Btn: {fileID: 1975707114}
+  IconPanel: {fileID: 0}
+  checkPanel: {fileID: 0}
   Profile_Create: {fileID: 1324194570}
-  Profile_name: {fileID: 1022252834}
   Profile_Panel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
+  _errorLog: {fileID: 0}
+  _profileNameAdd: {fileID: 0}
   Panel_Parent: {fileID: 1718978042}
   Panel_List: []
+  _deletePanel: {fileID: 0}
+  _profileImage: {fileID: 0}
+  _imageIndex: -1
+  _profileSelectImage: []
+  _selectImage: 
   Select_Name: {fileID: 1266384821}
+  _isImageSelect: 0
+  _isImageMode: 0
 --- !u!114 &1033306052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28551,7 +28560,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1878787310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32498,7 +32507,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2084374409
 MonoBehaviour:
   m_ObjectHideFlags: 0

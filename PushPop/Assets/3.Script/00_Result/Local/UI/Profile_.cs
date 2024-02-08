@@ -150,7 +150,6 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
             if (SQL_Manager.instance.Profile_list[i].imageMode)
             {
-                Debug.Log(SQL_Manager.instance.Profile_list[i].defaultImage);
                 info.ProfileImage.sprite = _profileSelectImage[SQL_Manager.instance.Profile_list[i].defaultImage];
             }
             else
@@ -248,8 +247,8 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         _profileNameAdd.text = string.Empty;
 
 
-        SQL_Manager.instance.SQL_ProfileListSet();
-        GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index+1;
+        /*SQL_Manager.instance.SQL_ProfileListSet();
+        GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index+1;*/
     }
 
     // Profile Image �������� �� Btn ���� Method

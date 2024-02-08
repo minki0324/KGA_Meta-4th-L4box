@@ -20,8 +20,10 @@ public class CameraManager : MonoBehaviour
 	private void TakePicture()
     {
 		string _filePath = $"{Application.persistentDataPath}/Profile";
+		Debug.Log(_filePath);
 		if (!File.Exists(_filePath))
 		{ // 해당 Directory 없을 시 생성
+			Debug.Log("생성함 ?");
 			Directory.CreateDirectory(_filePath);
 		}
 
