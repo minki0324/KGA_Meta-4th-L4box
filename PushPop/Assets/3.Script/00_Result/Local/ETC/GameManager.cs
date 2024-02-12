@@ -80,14 +80,14 @@ public class GameManager : MonoBehaviour, IGameMode
         }
     }
 
-    private void GameStart(Mode _gameMode)
+    public void GameStart(int _gameMode)
     { // game Start 시 호출되는 method
-        for (int i = 0; i < pos[(int)_gameMode].transform.childCount; i++)
+        for (int i = 0; i < pos[_gameMode].transform.childCount; i++)
         { // 지정된 position
-            bubblePos.Add(pos[(int)_gameMode].GetChild(i));
+            bubblePos.Add(pos[_gameMode].GetChild(i));
         }
-
-        switch (_gameMode)
+        Mode gameMode = (Mode)_gameMode;
+        switch (gameMode)
         {
             case Mode.PushPush:
                 PushPushMode();
