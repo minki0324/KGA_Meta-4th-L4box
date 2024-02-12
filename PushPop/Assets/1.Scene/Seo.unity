@@ -14428,17 +14428,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c6f5d34411a1dd49b1585e721679288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectProfile_Panel: {fileID: 664826394}
-  createName_Panel: {fileID: 87528550}
-  createImage_Panel: {fileID: 1269728621}
-  currnetProfile_Panel: {fileID: 2122880539}
-  Back_Btn: {fileID: 1975707114}
-  Profile_Create: {fileID: 1324194570}
-  Profile_name: {fileID: 1022252834}
-  Profile_Panel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
-  Panel_Parent: {fileID: 1718978042}
-  Panel_List: []
-  Select_Name: {fileID: 1266384821}
+  SelectProfilePanel: {fileID: 0}
+  CreateNamePanel: {fileID: 0}
+  CreateImagePanel: {fileID: 0}
+  CurrnetProfilePanel: {fileID: 0}
+  IconPanel: {fileID: 0}
+  CheckPanel: {fileID: 0}
+  _profileCreateBtn: {fileID: 0}
+  _profilePanel: {fileID: 0}
+  _errorLog: {fileID: 0}
+  _profileNameAdd: {fileID: 0}
+  _panelParent: {fileID: 0}
+  _panelList: []
+  _deletePanel: {fileID: 0}
+  _profileImage: {fileID: 0}
+  _imageIndex: -1
+  SelectName: {fileID: 0}
+  _isImageSelect: 0
 --- !u!114 &1033306052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21529,18 +21535,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81af2f87754bb954da6e47bc5d795d7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  option_Btn: {fileID: 1053556169}
-  profile_Btn: {fileID: 1138518568}
-  home_Btn: {fileID: 739707313}
-  collection_Btn: {fileID: 288321232}
-  mode2P_Btn: {fileID: 1155008125}
-  pushMode_Btn: {fileID: 1280676654}
-  speedMode_Btn: {fileID: 320778364}
-  memoryMode_Btn: {fileID: 1784765042}
-  Profile_Panel: {fileID: 1033306049}
-  Option_Panel: {fileID: 1023259303}
-  Collection_Panel: {fileID: 0}
-  TimeSet_Panel: {fileID: 1255378347}
+  _optionBtn: {fileID: 0}
+  _profileBtn: {fileID: 0}
+  _homeBtn: {fileID: 0}
+  _collectionBtn: {fileID: 0}
+  _mode2PBtn: {fileID: 0}
+  _pushModeBtn: {fileID: 0}
+  _speedModeBtn: {fileID: 0}
+  _memoryModeBtn: {fileID: 0}
+  _profilePanel: {fileID: 0}
+  _optionPanel: {fileID: 0}
+  _collectionPanel: {fileID: 0}
+  _timesetPanel: {fileID: 0}
+  _buttonPanel: {fileID: 0}
+  _gameModePanel: {fileID: 0}
 --- !u!114 &1410643997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21628,6 +21636,9 @@ MonoBehaviour:
   UID: 0
   Profile_name: 
   Profile_Index: 0
+  DefaultImage: 0
+  ProfileImages: []
+  _isImageMode: 1
 --- !u!1 &1433538069
 GameObject:
   m_ObjectHideFlags: 0
@@ -28551,7 +28562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1878787310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32498,7 +32509,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2084374409
 MonoBehaviour:
   m_ObjectHideFlags: 0

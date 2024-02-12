@@ -4241,17 +4241,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c6f5d34411a1dd49b1585e721679288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectProfile_Panel: {fileID: 1397645104}
-  createName_Panel: {fileID: 27032163}
-  createImage_Panel: {fileID: 951598526}
-  currnetProfile_Panel: {fileID: 965724696}
-  Back_Btn: {fileID: 1313065139}
-  Profile_Create: {fileID: 313877784}
-  Profile_name: {fileID: 1346685222}
-  Profile_Panel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
-  Panel_Parent: {fileID: 535145170}
-  Panel_List: []
-  Select_Name: {fileID: 990576867}
+  SelectProfilePanel: {fileID: 0}
+  CreateNamePanel: {fileID: 0}
+  CreateImagePanel: {fileID: 0}
+  CurrnetProfilePanel: {fileID: 0}
+  IconPanel: {fileID: 0}
+  CheckPanel: {fileID: 0}
+  _profileCreateBtn: {fileID: 0}
+  _profilePanel: {fileID: 0}
+  _errorLog: {fileID: 0}
+  _profileNameAdd: {fileID: 0}
+  _panelParent: {fileID: 0}
+  _panelList: []
+  _deletePanel: {fileID: 0}
+  _profileImage: {fileID: 0}
+  _imageIndex: -1
+  SelectName: {fileID: 0}
+  _isImageSelect: 0
 --- !u!114 &382974005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7496,9 +7502,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9daf19aa4ca3304e9201c587f85f836, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stage_Canvas: {fileID: 0}
   IncreaseTime_Btn: {fileID: 75428541}
   DecreaseTime_Btn: {fileID: 1188935703}
-  time_textMesh: {fileID: 1787120870}
+  TimeText_InputField: {fileID: 0}
   Confirm_Btn: {fileID: 600879248}
   Back_Btn: {fileID: 996372880}
 --- !u!114 &723510043
@@ -9720,6 +9727,9 @@ MonoBehaviour:
   UID: 0
   Profile_name: 
   Profile_Index: 0
+  DefaultImage: 0
+  ProfileImages: []
+  _isImageMode: 1
 --- !u!4 &927645292
 Transform:
   m_ObjectHideFlags: 0
@@ -17430,7 +17440,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11aff70fdc4d7c14994e32b1e878270a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioMixer: {fileID: 24100000, guid: de1281af293f9c546af2496fc1fe22d6, type: 2}
   Master_Slider: {fileID: 511958439}
   BGM_Slider: {fileID: 168419991}
   SFX_Slider: {fileID: 110641855}
@@ -17632,18 +17641,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81af2f87754bb954da6e47bc5d795d7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  option_Btn: {fileID: 1029044558}
-  profile_Btn: {fileID: 115682100}
-  home_Btn: {fileID: 769466281}
-  collection_Btn: {fileID: 2099426228}
-  mode2P_Btn: {fileID: 99291480}
-  pushMode_Btn: {fileID: 0}
-  speedMode_Btn: {fileID: 0}
-  memoryMode_Btn: {fileID: 0}
-  Profile_Panel: {fileID: 382974002}
-  Option_Panel: {fileID: 1735286199}
-  Collection_Panel: {fileID: 0}
-  TimeSet_Panel: {fileID: 723510040}
+  _optionBtn: {fileID: 0}
+  _profileBtn: {fileID: 0}
+  _homeBtn: {fileID: 0}
+  _collectionBtn: {fileID: 0}
+  _mode2PBtn: {fileID: 0}
+  _pushModeBtn: {fileID: 0}
+  _speedModeBtn: {fileID: 0}
+  _memoryModeBtn: {fileID: 0}
+  _profilePanel: {fileID: 0}
+  _optionPanel: {fileID: 0}
+  _collectionPanel: {fileID: 0}
+  _timesetPanel: {fileID: 0}
+  _buttonPanel: {fileID: 0}
+  _gameModePanel: {fileID: 0}
 --- !u!114 &1771868819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20751,7 +20762,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1584231244926160351, guid: 35f0e7ca23966b7408a5d99e206dd904, type: 3}
       propertyPath: onlineScene
-      value: Assets/1.Scene/CommunicationRoom.unity
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1584231244926160351, guid: 35f0e7ca23966b7408a5d99e206dd904, type: 3}
       propertyPath: playerPrefab

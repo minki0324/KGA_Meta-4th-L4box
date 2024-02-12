@@ -1044,6 +1044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9daf19aa4ca3304e9201c587f85f836, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stage_Canvas: {fileID: 0}
   IncreaseTime_Btn: {fileID: 1647727333}
   DecreaseTime_Btn: {fileID: 2099523617}
   TimeText_InputField: {fileID: 0}
@@ -11428,17 +11429,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c6f5d34411a1dd49b1585e721679288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectProfile_Panel: {fileID: 0}
-  createName_Panel: {fileID: 0}
-  createImage_Panel: {fileID: 0}
-  currnetProfile_Panel: {fileID: 0}
-  Back_Btn: {fileID: 0}
-  Profile_Create: {fileID: 0}
-  Profile_name: {fileID: 0}
-  Profile_Panel: {fileID: 0}
-  Panel_Parent: {fileID: 0}
-  Panel_List: []
-  Select_Name: {fileID: 0}
+  SelectProfilePanel: {fileID: 0}
+  CreateNamePanel: {fileID: 0}
+  CreateImagePanel: {fileID: 0}
+  CurrnetProfilePanel: {fileID: 0}
+  IconPanel: {fileID: 0}
+  CheckPanel: {fileID: 0}
+  _profileCreateBtn: {fileID: 0}
+  _profilePanel: {fileID: 0}
+  _errorLog: {fileID: 0}
+  _profileNameAdd: {fileID: 0}
+  _panelParent: {fileID: 0}
+  _panelList: []
+  _deletePanel: {fileID: 0}
+  _profileImage: {fileID: 0}
+  _imageIndex: -1
+  SelectName: {fileID: 0}
+  _isImageSelect: 0
 --- !u!1 &659386397
 GameObject:
   m_ObjectHideFlags: 0
@@ -25398,18 +25405,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81af2f87754bb954da6e47bc5d795d7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  option_Btn: {fileID: 563024954}
-  profile_Btn: {fileID: 1938903284}
-  home_Btn: {fileID: 876441883}
-  collection_Btn: {fileID: 604220350}
-  mode2P_Btn: {fileID: 1992662512}
-  pushMode_Btn: {fileID: 0}
-  speedMode_Btn: {fileID: 0}
-  memoryMode_Btn: {fileID: 0}
-  Profile_Panel: {fileID: 0}
-  Option_Panel: {fileID: 0}
-  Collection_Panel: {fileID: 0}
-  TimeSet_Panel: {fileID: 0}
+  _optionBtn: {fileID: 0}
+  _profileBtn: {fileID: 0}
+  _homeBtn: {fileID: 0}
+  _collectionBtn: {fileID: 0}
+  _mode2PBtn: {fileID: 0}
+  _pushModeBtn: {fileID: 0}
+  _speedModeBtn: {fileID: 0}
+  _memoryModeBtn: {fileID: 0}
+  _profilePanel: {fileID: 0}
+  _optionPanel: {fileID: 0}
+  _collectionPanel: {fileID: 0}
+  _timesetPanel: {fileID: 0}
+  _buttonPanel: {fileID: 0}
+  _gameModePanel: {fileID: 0}
 --- !u!1 &1508950862
 GameObject:
   m_ObjectHideFlags: 0
