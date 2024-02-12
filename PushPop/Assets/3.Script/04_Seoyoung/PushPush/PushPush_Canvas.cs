@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class PushPush_Canvas : MonoBehaviour
 {
@@ -35,9 +36,11 @@ public class PushPush_Canvas : MonoBehaviour
     [SerializeField] private List<Button> categoryBtn_List;
 
     [Header("Category Icon List(Iamge & Text)")]
-    [SerializeField] private List<Sprite> categoryIcon_List;
+    [SerializeField] private List<Sprite> categoryIcon_List;        
     [SerializeField] private List<TMP_Text> categoryText_List;
- 
+
+    
+
     //이 친구는 Resource폴더에서 이미지를 불러와 리스트 하나로 동적으로 리스트를 변경할지 or 그냥 카테고리별 몰드 아이콘 리스트를 다 만들어 쓸지 생각할 것. 임시로 해산물 넣었슴당
     [Header("Mold Icon(Image) List")]
     [SerializeField] private List<Sprite> moldIcon_List;
@@ -78,14 +81,23 @@ public class PushPush_Canvas : MonoBehaviour
 
     private void Init()
     {
-          // gameObject.SetActive(false);
+
+        // gameObject.SetActive(false);
+
+      
         for (int i = 0; i < content_ScrollView.transform.childCount; i++)
         {
             //버튼 리스트 초기화
             categoryBtn_List.Add(content_ScrollView.transform.GetChild(i).GetComponent<Button>());
             categoryBtn_List[i].GetComponent<Image>().sprite = categoryIcon_List[i];
+     
+        }
 
+        //Catetory Icon 리스트의 원소이름으로 재정렬하기..
+        
 
+        for (int i = 0; i < content_ScrollView.transform.childCount; i++)
+        {
             //텍스트 리스트 초기화
             categoryText_List.Add(categoryBtn_List[i].transform.GetChild(0).GetComponent<TMP_Text>());
             categoryText_List[i].text = categoryIcon_List[i].name;
@@ -93,6 +105,16 @@ public class PushPush_Canvas : MonoBehaviour
             //버튼 이벤트 초기화
             categoryBtn_List[i].onClick.AddListener(delegate { CategoryIcon_Clicked(i); });
         }
+
+
+
+
+    }
+
+
+    public void SortText(string a, string b)
+    {
+
     }
 
     //카테고리 아이콘(버튼) 클릭 시 호출되는 메소드
@@ -101,6 +123,7 @@ public class PushPush_Canvas : MonoBehaviour
         //일단 무조건 해산물 리스트 호출
         selectMold_Panel.SetActive(true);
 
+        Debug.Log(index);
         selectedCategory_Text.text = categoryText_List[index].name;
         
 
