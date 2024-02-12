@@ -8,21 +8,6 @@ using UnityEngine;
 
 #region Other Class
 /// <summary>
-/// ID, PW로 접속하는 User_Info
-/// </summary>
-public class User_Info
-{
-    public string User_ID { get; private set; }
-    public int UID { get; private set; }
-
-    public User_Info(string id, int uid)
-    {
-        User_ID = id;
-        UID = uid;
-    }
-}
-
-/// <summary>
 /// UID에 속해있는 Profile
 /// </summary>
 public class Profile
@@ -90,7 +75,6 @@ public class server_info
 public class SQL_Manager : MonoBehaviour
 {
     public static SQL_Manager instance = null;
-    public User_Info Info;
 
     public MySqlConnection connection;
     public MySqlDataReader reader;
@@ -116,6 +100,7 @@ public class SQL_Manager : MonoBehaviour
         }
 
         DB_path = Application.persistentDataPath + "/Database";
+        Debug.Log(DB_path);
         string serverinfo = ServerSet(DB_path);
         try
         {
@@ -150,8 +135,8 @@ public class SQL_Manager : MonoBehaviour
     {
         List<server_info> userInfo = new List<server_info>();
 
-        // (testdb.cj4ki2qmepdi.ap-northeast-2.rds.amazonaws.com) = RDS 접속 IP
-        userInfo.Add(new server_info("testdb.cj4ki2qmepdi.ap-northeast-2.rds.amazonaws.com", "PushPop", "root", "12345678", "3306"));
+        // (database-1.cj4ki2qmepdi.ap-northeast-2.rds.amazonaws.com) = RDS 접속 IP
+        userInfo.Add(new server_info("database-1.cj4ki2qmepdi.ap-northeast-2.rds.amazonaws.com", "PushPop", "PushPopDB", "ruddlf4wh", "7958"));
 
         JsonData data = JsonMapper.ToJson(userInfo);
         File.WriteAllText(path + "/config.json", data.ToString());
@@ -255,7 +240,6 @@ public class SQL_Manager : MonoBehaviour
                 reader.Read();
                 UID = reader.GetInt32("UID");
                 GameManager.instance.UID = UID;
-                Info = new User_Info(GUID, UID);
             }
             if (!reader.IsClosed) reader.Close();
             return; // 회원가입 성공
@@ -284,7 +268,7 @@ public class SQL_Manager : MonoBehaviour
             }
 
             // 2. 프로필 생성
-            string SQL_command = string.Format(@"INSERT INTO Profile (UID, User_name, ImageMode) VALUES('{0}', '{1}', '{2}'); SELECT LAST_INSERT_ID();", Info.UID, name, imageMode);
+            string SQL_command = string.Format(@"INSERT INTO Profile (UID, User_name, ImageMode) VALUES('{0}', '{1}', '{2}'); SELECT LAST_INSERT_ID();", UID, name, imageMode);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             int profileIndex = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -319,12 +303,12 @@ public class SQL_Manager : MonoBehaviour
             }
 
             // 2. 프로필 삭제
-            string SQL_command = string.Format(@"DELETE FROM Profile WHERE UID = '{0}' AND User_name = '{1}';", Info.UID, name);
+            string SQL_command = string.Format(@"DELETE FROM Profile WHERE UID = '{0}' AND User_name = '{1}';", UID, name);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             cmd.ExecuteNonQuery();
 
             // 3. 이미지 삭제
-            string sql_cmd = string.Format(@"DELETE FROM Image WHERE UID = '{0}' AND Profile_Index = '{1}';", Info.UID, index);
+            string sql_cmd = string.Format(@"DELETE FROM Image WHERE UID = '{0}' AND Profile_Index = '{1}';", UID, index);
             MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
             cmd_.ExecuteNonQuery();
 
@@ -355,7 +339,7 @@ public class SQL_Manager : MonoBehaviour
             // UID에 연결된 프로필 조회 쿼리 실행
             string SQL_command = string.Format(@"SELECT DISTINCT Profile.User_name, Profile.Profile_Index, Profile.ImageMode, Image.DefaultIndex 
                                                 FROM Profile INNER JOIN Image
-                                                ON Profile.Profile_Index = Image.Profile_Index AND Profile.UID = '{0}';", Info.UID);
+                                                ON Profile.Profile_Index = Image.Profile_Index AND Profile.UID = '{0}';", UID);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             reader = cmd.ExecuteReader();
             if (reader.HasRows)
@@ -388,7 +372,7 @@ public class SQL_Manager : MonoBehaviour
     }
 
     /// <summary>
-    /// UID, Index를 매개변수로 전달하여 Image를 Binary값으로 DB에 저장하는 Method
+    /// UID, Index를 매개변수로 전달하여 Image를 Binary값으로 DB에 저장하는 Method (사진 찍기 선택)
     /// </summary>
     /// <param name="filename"></param>
     /// <param name="uid"></param>
@@ -434,6 +418,12 @@ public class SQL_Manager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// UID, Index를 매개변수로 전달하여 Image를 Index값으로 DB에 저장하는 Method (이미지 고르기 선택)
+    /// </summary>
+    /// <param name="defaultImage"></param>
+    /// <param name="uid"></param>
+    /// <param name="index"></param>
     public void SQL_AddProfileImage(int defaultImage, int uid, int index)
     {
         try
@@ -487,9 +477,9 @@ public class SQL_Manager : MonoBehaviour
     }
 
     /// <summary>
-    /// 프로필 업데이트 Method, UID와 name을 확인해서 새로운 name과 image로 update
+    /// 프로필 업데이트 Method, UID와 name을 확인해서 새로운 name과 image로 update (사진 찍기 선택)
     /// </summary>
-    public void SQL_UpdateProfile(int previousIndex, string previousname, string name, int uid, string filename)
+    public void SQL_UpdateProfile(int profileIndex, string newName, int uid, string filename)
     {
         FileStream fileStream;
         BinaryReader binaryReader;
@@ -502,11 +492,17 @@ public class SQL_Manager : MonoBehaviour
             }
 
             // 2. 기존 name찾아서 name 변경
-            string sql_cmd = string.Format(@"UPDATE Profile SET (UID, User_name) VALUES('{0}', '{1}');", Info.UID, name);
-            MySqlCommand cmd = new MySqlCommand(sql_cmd, connection);
+            string name_command = string.Format(@"UPDATE Profile SET UID = '{0}', User_name = '{1}' WHERE UID = '{2}', Profile_Index = '{3}'", uid, newName, uid, profileIndex);
+            MySqlCommand cmd = new MySqlCommand(name_command, connection);
             cmd.ExecuteNonQuery();
 
-            // 3. 이미지 변경
+            // 3. 기존 imageData들을 Null로 초기화 (사진 > 이미지 / 이미지 > 사진의 경우 고려)
+            string null_command = @$"UPDATE Image SET ImageData = NULL, DefaultIndex = NULL WHERE UID = '{uid}' AND Profile_Index = '{profileIndex}';";
+            MySqlCommand cmd_ = new MySqlCommand(null_command, connection);
+            cmd_.ExecuteNonQuery();
+
+
+            // 4. 이미지 변경
             byte[] ImageData;
             fileStream = new FileStream(filename, FileMode.Open, FileAccess.Read);
             binaryReader = new BinaryReader(fileStream);
@@ -516,15 +512,15 @@ public class SQL_Manager : MonoBehaviour
             fileStream.Close();
             binaryReader.Close();
 
-            string SQL_command = @$"UPDATE Image SET ImageData = '{ImageData}' WHERE UID = '{uid}' AND Profile_Index = '{previousIndex}';";
-            MySqlCommand cmd_ = new MySqlCommand(SQL_command, connection);
+            string update_command = @$"UPDATE Image SET ImageData = '{ImageData}' WHERE UID = '{uid}' AND Profile_Index = '{profileIndex}';";
+            MySqlCommand cmd__ = new MySqlCommand(update_command, connection);
 
             // 파라미터 추가
-            cmd_.Parameters.AddWithValue("@UID", uid);
-            cmd_.Parameters.AddWithValue("@Index", previousIndex);
-            cmd_.Parameters.AddWithValue("@ImageData", ImageData);
+            cmd__.Parameters.AddWithValue("@UID", uid);
+            cmd__.Parameters.AddWithValue("@Index", profileIndex);
+            cmd__.Parameters.AddWithValue("@ImageData", ImageData);
 
-            cmd_.ExecuteNonQuery();
+            cmd__.ExecuteNonQuery();
 
             return; // 업데이트 성공
         }
@@ -535,6 +531,48 @@ public class SQL_Manager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 프로필 업데이트 Method, UID와 name을 확인해서 새로운 name과 image로 update (이미지 고르기 선택)
+    /// </summary>
+    public void SQL_UpdateProfile(int profileIndex, string newName, int uid, int imageIndex)
+    {
+        /*try
+        {*/
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+
+        // 2. 기존 name찾아서 name 변경
+        string name_command = string.Format(@"UPDATE Profile SET UID = '{0}', User_name = '{1}' WHERE UID = '{2}' AND Profile_Index = '{3}'", uid, newName, uid, profileIndex);
+        MySqlCommand cmd = new MySqlCommand(name_command, connection);
+            cmd.ExecuteNonQuery();
+
+            // 3. 기존 imageData들을 Null로 초기화 (사진 > 이미지 / 이미지 > 사진의 경우 고려)
+            string null_command = @$"UPDATE Image SET ImageData = NULL, DefaultIndex = NULL WHERE UID = '{uid}' AND Profile_Index = '{profileIndex}';";
+            MySqlCommand cmd_ = new MySqlCommand(null_command, connection);
+            cmd_.ExecuteNonQuery();
+
+            // 4. 인덱스 수정
+            string update_command = @$"UPDATE Image SET DefaultIndex = '{imageIndex}' WHERE UID = '{uid}' AND Profile_Index = '{profileIndex}';";
+            MySqlCommand cmd__ = new MySqlCommand(update_command, connection);
+
+            // 파라미터 추가
+            cmd__.Parameters.AddWithValue("@UID", uid);
+            cmd__.Parameters.AddWithValue("@Index", profileIndex);
+            cmd__.Parameters.AddWithValue("@DefaultIndex", imageIndex);
+
+            cmd__.ExecuteNonQuery();
+
+            return; // 업데이트 성공
+       /* }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+            return;
+        }*/
+    }
 
     #endregion
 
@@ -633,7 +671,7 @@ public class SQL_Manager : MonoBehaviour
                 return;
             }
 
-            string SQL_command = string.Format(@"SELECT Profile_Name, Profile_Index, Score, Timer FROM Ranking WHERE UID = '{0}';", Info.UID);
+            string SQL_command = string.Format(@"SELECT Profile_Name, Profile_Index, Score, Timer FROM Ranking WHERE UID = '{0}';", UID);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             reader = cmd.ExecuteReader();
 

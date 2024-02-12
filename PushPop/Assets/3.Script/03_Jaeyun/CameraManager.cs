@@ -58,8 +58,8 @@ public class CameraManager : MonoBehaviour
 				captureImage.sprite = Sprite.Create(captureTexture, rect, new Vector2(0.5f, 0.5f));
 
 				// Profile_index 설정
-				profile._isImageMode = false;
-				profile.Add_Profile();
+				GameManager.instance._isImageMode = false;
+				profile.AddProfile();
 
 				// capture texture save
 				Texture2D readableTexture = GetReadableTexture(texture); // Texture 변환
