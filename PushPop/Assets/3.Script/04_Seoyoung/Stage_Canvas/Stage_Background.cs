@@ -163,7 +163,7 @@ public class Stage_Background : MonoBehaviour
                 break;
 
             //2인모드 도움맒
-            case GameMode.Multi:
+            case GameMode.Bomb:
                 maxPage = 1;
                 switch (currentPage)
                 {

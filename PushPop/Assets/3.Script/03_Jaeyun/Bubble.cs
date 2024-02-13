@@ -13,13 +13,15 @@ public enum Mode
 
 public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 { // bubble prefab마다 달아줄 script
-    protected Mode gameMode = Mode.PushPush; // game mode
+    protected Mode gameMode = Mode.Speed; // game mode
     private bool isMoving = false;
     private Animator bubbleAnimator;
 
+    private Coroutine moveCoroutine = null;
+
     private void OnEnable()
     {
-        gameMode = Mode.PushPush; // GameManager Mode Load
+        gameMode = Mode.Speed; // GameManager Mode Load
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -28,12 +30,18 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         Vector2 bubblePosition = transform.position;
         Vector2 touchPosition = eventData.position;
 
+        if (moveCoroutine != null)
+        { // move coroutine stop
+            StopCoroutine(moveCoroutine);
+        }
+
         switch (gameMode)
         {
             case Mode.PushPush:
                 PushPushMode(bubblePosition, touchPosition);
                 break;
             case Mode.Speed:
+                SpeedMode(bubblePosition, touchPosition);
                 break;
             case Mode.Memory:
                 break;
@@ -47,8 +55,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         // Bubble Move
         Vector2 dir = _bubblePosition - _touchPosition; // Touch Position의 반대 방향
 
-        StopAllCoroutines();
-        StartCoroutine(BubbleMove_Co(dir));
+        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, 5f, 0.4f));
     }
 
     public void SpeedMode(Vector2 _bubblePosition, Vector2 _touchPosition)
@@ -57,9 +64,15 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         Vector2 dir = _bubblePosition - _touchPosition;
         dir.y = 0f; // 좌우로만 이동
 
-        StopAllCoroutines();
-        StartCoroutine(BubbleMove_Co(dir));
+        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, 5f, 0.4f));
         GameManager.instance.touchCount--;
+
+        if (GameManager.instance.touchCount <= 0)
+        { // touch count 0보다 작을 시
+            // pushpop 생성
+            PushPop.instance.CreatePushPop();
+            Destroy(this.gameObject);
+        }
     }
 
     public void BombMode(Vector2 _player1, Vector2 _player2, bool _onlyMove)
@@ -74,11 +87,11 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         // touch는 하되 어떻게 해야할 지 생각
         if (_onlyMove)
         {
-            StartCoroutine(BubbleMove_Co(dir));
+            StartCoroutine(BubbleMove_Co(dir, 5f, 0.4f));
         }
         else
         {
-            StartCoroutine(BubbleMove_Co(dir)); // onlymove와 dir반대
+            StartCoroutine(BubbleMove_Co(-dir, 5f, 0.4f)); // onlymove와 dir반대
         }
     }
 
@@ -91,7 +104,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         {
             touchable = _result; // 2초 뒤 true
         }));
-        if (!touchable) return; 
+        if (!touchable) return;
         if (isShining)
         {
             // animation -> 터짐
@@ -111,13 +124,16 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         callback(true);
     }
 
-    private IEnumerator BubbleMove_Co(Vector2 _dir)
+    private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed, float _decel)
     {
         float timer = 2f;
+        float currentSpeed = _maxSpeed; // maxSpeed 초기화
+
         while (timer > 0)
         {
             timer -= Time.deltaTime;
-            transform.Translate(_dir * (Time.deltaTime * 0.5f));
+            transform.Translate(_dir * (Time.deltaTime * currentSpeed));
+            currentSpeed -= _decel * Time.deltaTime;
             yield return null;
         }
     }

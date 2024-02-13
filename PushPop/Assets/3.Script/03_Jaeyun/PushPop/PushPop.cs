@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class PushPop : MonoBehaviour
@@ -7,15 +8,17 @@ public class PushPop : MonoBehaviour
     public static PushPop instance = null;
 
     [Header("PushPop Canvas")]
-    [SerializeField] private Transform pushPopCanvas;
-    [SerializeField] private GameObject pushPopButtonPrefab;
+    [SerializeField] private Transform pushPopCanvas = null;
+    [SerializeField] private GameObject pushPopButtonPrefab = null;
+    [SerializeField] private GameObject pushPopBoardPrefab;
+    private List<GameObject> pushPopBoardObject = new List<GameObject>();
 
     [Header("PushPop Board")]
     [SerializeField] private GameObject boardPrefab = null; // board Prefab
     [SerializeField] private Sprite boardSprite = null; // board sprite, custom sprite out line setting 필요 
     private Vector3 boardSize = Vector3.zero;
     private PolygonCollider2D boardCollider; // board collider
-    private GameObject pushObject = null; // instantiate object
+    public GameObject pushObject = null; // instantiate object
 
     [Header("Grid Size")]
     private Vector2 grid = Vector2.zero;
@@ -26,8 +29,11 @@ public class PushPop : MonoBehaviour
     public GameObject posPrefab = null; // grid에 지정할 pos prefab
     private List<GameObject> pos = new List<GameObject>(); // grid 배치된 posPrefab
 
-    private List<GameObject> pushPopButton = new List<GameObject>();
+    public List<GameObject> pushPopButton = new List<GameObject>();
     public List<GameObject> activePos = new List<GameObject>();
+
+    private float screenWidth = Screen.width;
+    private float screenHeight = Screen.height;
 
     private void Awake()
     {
@@ -53,7 +59,12 @@ public class PushPop : MonoBehaviour
 
     // Sprite 모양에 따른 Polygon collider setting
     private void CreatePushPopBoard()
-    {
+    { // bomb mode일 때는 2회 호출
+        // canvas
+        GameObject pushPopBoard = Instantiate(pushPopBoardPrefab, pushPopCanvas);
+        pushPopBoard.GetComponent<Image>().sprite = boardSprite;
+        pushPopBoardObject.Add(pushPopBoard);
+        // gameObject
         pushObject = Instantiate(boardPrefab);
         pushObject.GetComponent<SpriteRenderer>().sprite = boardSprite;
         pushObject.AddComponent<PolygonCollider2D>(); // Polygon Collider Setting
@@ -133,11 +144,23 @@ public class PushPop : MonoBehaviour
     // Game Clear 시 호출되는 method
     public void PushPopClear()
     {
+        // gameObject claer
         for (int i = 0; i < activePos.Count; i++)
         {
             activePos[i].SetActive(false);
         }
         activePos.Clear();
+        if (pushObject != null)
+        {
+            pushObject.SetActive(false);
+        }
+
+        // canvas clear
+        for (int i = 0; i < pushPopBoardObject.Count; i++)
+        {
+            Destroy(pushPopBoardObject[i]);
+        }
+        pushPopBoardObject.Clear();
     }
 
     public void DestroyBoard()

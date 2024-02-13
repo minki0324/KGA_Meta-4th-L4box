@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ public enum GameMode
     PushPush,
     Speed,
     Memory,
-    Multi
+    Bomb
 }
 
 public class GameManager : MonoBehaviour, IGameMode
@@ -18,6 +19,8 @@ public class GameManager : MonoBehaviour, IGameMode
     public static GameManager instance;
     public GameMode gameMode;
     public int TimerTime;
+
+    
 
     // Bubble
     [Header("Bubble Info")]
@@ -33,6 +36,12 @@ public class GameManager : MonoBehaviour, IGameMode
     // Camera size
     public float yScreenHalfSize;
     public float xScreenHalfSize;
+
+    [Header("Score")]
+    [SerializeField] private TMP_Text scoreText;
+    private Coroutine timer = null;
+    public int score = 0;
+    public float timeScore = 0;
 
     [Header("User Infomation")]
     public int UID;
@@ -63,32 +72,22 @@ public class GameManager : MonoBehaviour, IGameMode
     #endregion
 
     #region Other Method
-    //게임 시작되면 호출
-    public IEnumerator Timer_co()
-    {
-        int t = TimerTime;
-        while (true)
-        {
-            if (t <= 0)
-            {
-                //시간 초기화하기
-                //Main창 켜기
-                //게임 종료 알림 띄우기
-
-                yield break;
-            }
-            t -= 1;
-
-            yield return new WaitForSeconds(1f);
-        }
-    }
-
     public void GameStart(int _gameMode)
     { // game Start 시 호출되는 method
-        for (int i = 0; i < pos[_gameMode].transform.childCount; i++)
-        { // 지정된 position
-            bubblePos.Add(pos[_gameMode].GetChild(i));
+        if (_gameMode.Equals(0))
+        {
+            for (int i = 0; i < pos[_gameMode].transform.childCount; i++)
+            { // 지정된 position
+                bubblePos.Add(pos[_gameMode].GetChild(i));
+            }
         }
+
+        // score 초기화
+        score = 0;
+        timeScore = 0;
+
+        timer = StartCoroutine(GameReady_Co()); // Game 시작 전 대기
+
         Mode gameMode = (Mode)_gameMode;
         switch (gameMode)
         {
@@ -105,21 +104,39 @@ public class GameManager : MonoBehaviour, IGameMode
         }
     }
 
-    private void GameClear()
-    { // Game End 시 호출하는 method
-        for (int i = 0; i < bubbleObject.Count; i++)
+    private IEnumerator GameReady_Co()
+    {
+        // game start 문구 띄워주기, panel 다 막아버리면 될듯?
+        // 준비~~
+        yield return new WaitForSeconds(2f);
+        // 시작!!
+        yield return new WaitForSeconds(1f);
+
+        while (true)
         {
-            bubbleObject[i].SetActive(false);
+            timeScore += Time.deltaTime;
+            scoreText.text = timeScore.ToString("F3");
+            yield return null;
         }
-        bubblePos.Clear(); // bubble transform mode에 따라 달라짐
-        PushPop.instance.PushPopClear();
+    }
+
+    public void GameClear()
+    { // Game End 시 호출하는 method
+        if (PushPop.instance.pushPopButton.Count == 0)
+        {
+            bubblePos.Clear(); // bubble transform mode에 따라 달라짐
+            PushPop.instance.PushPopClear();
+            StopCoroutine(timer); // timer coroutine stop;
+
+            // Ranking SQL Update
+            // Ranking.instance.UpdateTimerScore(timeScore);
+        }
     }
 
     public void PushPushMode()
     {
         float randomX = Random.Range(0f, 10f);
         // puzzle position
-        GetBubbleObject(bubbleObject.Count, bubblePrefab, bubbleCanvas.transform); // bubbleObject.Count -> puzzleObject.Count로 바꿀 것
         for (int i = 0; i < bubbleObject.Count; i++)
         {
             bubbleObject[i].transform.position = new Vector2();
@@ -129,8 +146,10 @@ public class GameManager : MonoBehaviour, IGameMode
     public void SpeedMode()
     {
         // position count 한 개, 위치 가운데, scale 조정
-        GetBubbleObject(1, bubblePrefab, bubbleCanvas.gameObject.transform);
-        bubbleObject[0].transform.position = new Vector2(xScreenHalfSize, yScreenHalfSize);
+        GameObject bubble = Instantiate(bubblePrefab, bubbleCanvas.transform);
+        bubbleObject.Add(bubble);
+        bubbleObject[0].GetComponent<RectTransform>().sizeDelta = new Vector2(500f, 500f);
+        bubbleObject[0].transform.localPosition = new Vector2(0, 0);
         touchCount = Random.Range(1, 11); // 1 ~ 10회
     }
 
@@ -152,22 +171,9 @@ public class GameManager : MonoBehaviour, IGameMode
 
     }
 
-    // bubble Object Pooling
-    private void GetBubbleObject(int posCount, GameObject _prefab, Transform _parent)
+    private void PushPopPositionSetting()
     {
-        for (int i = 0; i < posCount; i++)
-        {
-            if (!bubbleObject[i].activeSelf) // 기존 bubble이 활성화 되어있지 않다면 true
-            {
-                bubbleObject[i].SetActive(true);
-                bubbleObject[i].GetComponent<RectTransform>().sizeDelta = bubbleSize;
-                return;
-            }
-        }
-
-        GameObject newPos = Instantiate(_prefab, _parent); // bubble이 더 필요하다면 새로 생성
-        bubbleObject.Add(newPos);
-        return;
+        
     }
 
     /// <summary>
