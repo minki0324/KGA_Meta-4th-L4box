@@ -34,12 +34,12 @@ public class PuzzleLozic : MonoBehaviour
         }
     }
 
-    public void SelectPuzzleButton(string name)
+    public void SelectPuzzleButton(int PuzzleIDIndex)
     {//버튼참조 메소드
         foreach (var Kind in puzzles)
         {
             //매개변수로받은 String과 List에 들어있는 퍼즐들중 Enum.toString()과 같은 퍼즐 찾기
-            if (Kind.puzzleKind.ToString() == name)
+            if (Kind.PuzzleID == PuzzleIDIndex)
             {
                 currentPuzzle = Kind;
                 //클리어카운트는 퍼즐갯수 (Sprite)
@@ -59,16 +59,24 @@ public class PuzzleLozic : MonoBehaviour
 
         for (int i = 0; i < currentPuzzle.sprites.Length; i++)
         {
-            GameObject newFramePuzzle =  Instantiate(FrameObject, frampPos.position ,Quaternion.identity);
+            Debug.Log(frampPos.position);
+            GameObject newFramePuzzle =  Instantiate(FrameObject, frampPos.position, Quaternion.identity);
             newFramePuzzle.transform.SetParent(FrameParent.transform);
             newFramePuzzle.GetComponent<Image>().sprite = currentPuzzle.sprites[i];
+            newFramePuzzle.transform.localScale = new Vector3(1.5f, 1.5f, 1f);
+            newFramePuzzle.transform.position = frampPos.position;
+            Debug.Log(i +":" +newFramePuzzle.transform.localScale);
         }
         for (int i = 0; i < currentPuzzle.sprites.Length; i++)
         {
             GameObject newPiecePuzzle = Instantiate(PieceObject, piecePos[i].position, Quaternion.identity);
             newPiecePuzzle.transform.SetParent(PieceParent.transform);
             newPiecePuzzle.GetComponent<Image>().sprite = currentPuzzle.sprites[i];
+            newPiecePuzzle.transform.localScale = new Vector3(1.5f, 1.5f, 1f);
+            newPiecePuzzle.transform.position = piecePos[i].position;
+            Debug.Log(i + ":" + newPiecePuzzle.transform.localScale);
         }
+
     }
 
 }

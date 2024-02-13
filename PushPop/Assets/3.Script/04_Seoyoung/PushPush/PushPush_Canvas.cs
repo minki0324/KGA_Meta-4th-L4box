@@ -45,11 +45,13 @@ public class PushPush_Canvas : MonoBehaviour
     [Header("Mold Icon(Image) List")]
     [SerializeField] private List<Sprite> moldIcon_List;
 
+    [SerializeField] private PuzzleLozic puzzleLozic;
 
 
     int currentPage;
     int maxPage;
 
+  
     //도움말/뒤로가기 패널 버튼들 비활성화 추가하기
 
     #region Unity Callback
@@ -57,6 +59,7 @@ public class PushPush_Canvas : MonoBehaviour
     private void Start()
     {
         Init();
+        maxPage = moldIcon_List.Count;
     }
 
     private void OnEnable()
@@ -72,7 +75,7 @@ public class PushPush_Canvas : MonoBehaviour
 
     private void OnDisable()
     {
-        background_Canvas.gameObject.SetActive(false);
+        //background_Canvas.gameObject.SetActive(false);
     }
 
     #endregion
@@ -81,7 +84,7 @@ public class PushPush_Canvas : MonoBehaviour
 
     private void Init()
     {
-
+        
         // gameObject.SetActive(false);
 
       
@@ -136,7 +139,7 @@ public class PushPush_Canvas : MonoBehaviour
     //몰드 선택 패널에서 다음 버튼을 클릭 시 호출되는 메소드
     public void NextBtn_Clicked()
     {
-        if(currentPage < maxPage)
+        if (currentPage < maxPage)
         {
             prievious_Btn.enabled = true;
             currentPage += 1;
@@ -187,6 +190,10 @@ public class PushPush_Canvas : MonoBehaviour
     public void GameStartBtn_Clicked()
     {
         //PushPush 게임 진입
+        int puzzleIDIndex = int.Parse(moldIcon_List[currentPage - 1].name);
+        Debug.Log(puzzleIDIndex);
+        puzzleLozic.SelectPuzzleButton(puzzleIDIndex);
+
     }
 
     //몰드 선택 패널에서 x버튼을 누르면 호출되는 메소드
