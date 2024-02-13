@@ -9,6 +9,7 @@ public class PlayerMove : NetworkBehaviour
     [SerializeField]private Rigidbody2D rb;
     [SerializeField]private float speed = 5; //아바타 이동속도
     private bool isMove; //올바른 조건의 터치 , 클릭 시 플레이어를 이동시키기 위한 bool
+    private bool _isMouseStartUI;
     Vector2 touchPosition; // android 터치 , WIndow  클릭시 이동할 위치 저장( 플레이어를 이동시키기 위한 위치)
     private void Awake()
     {
@@ -38,17 +39,23 @@ public class PlayerMove : NetworkBehaviour
 
     public void PlayerMoveMent()
     {
+        
         if (Application.platform == RuntimePlatform.Android)
         {
-            if (Input.touchCount > 0)
+            if (Input.touchCount > 0 && !EventSystem.current.IsPointerOverGameObject())
             {
-                Touch touch = Input.GetTouch(0);
-                //터치를 누르고있을때 누른 위치를 저장합니다.
-                if (touch.phase == TouchPhase.Moved && !TouchOverUI())
+                for (int i = 0; i < Input.touchCount; i++)
                 {
-                    touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-                    isMove = true;
+                    Touch touch = Input.GetTouch(i);
+                    if (!isMove && (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved))
+                    {
+                            touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+                            isMove = true;
+                    }
+                    //터치를 누르고있을때 누른 위치를 저장합니다.(UI는 제외)
                 }
+
+
 
             }
             // 터치 위치로 플레이어를 이동시킵니다.
@@ -67,12 +74,14 @@ public class PlayerMove : NetworkBehaviour
         else
         { // window , editor
             //마우스클릭하고 클릭위치가 UI가 아닐때
-            if (Input.GetMouseButton(0) && !TouchOverUI())
-            {
-                //이동할위치저장
-                touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                isMove = true;
-            }
+      
+            if ( Input.GetMouseButton(0) &&  !EventSystem.current.IsPointerOverGameObject())
+                {
+                    //이동할위치저장
+                    touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    isMove = true;
+                }
+       
             //터치한 경우 터치위치로 이동시킴
             if (isMove)
             {

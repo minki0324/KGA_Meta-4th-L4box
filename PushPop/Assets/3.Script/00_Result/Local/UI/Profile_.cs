@@ -1,92 +1,302 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using System.IO;
 using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class Profile_ : MonoBehaviour
+public class Profile_ : MonoBehaviour, IPointerClickHandler
 {
     [Header("Profile_Panel")]
-    public GameObject selectProfile_Panel;
-    public GameObject createName_Panel;
-    public GameObject createImage_Panel;
-    public GameObject currnetProfile_Panel;
+    public GameObject SelectProfilePanel;
+    public GameObject CreateNamePanel;
+    public GameObject CreateImagePanel;
+    public GameObject CurrnetProfilePanel;
+    public GameObject IconPanel;
+    public GameObject CheckPanel;
 
     [Header("Button")]
-    [SerializeField] private Button Back_Btn;
-    [SerializeField] private Button Profile_Create;
+    [SerializeField] private Button _profileCreateBtn;
 
+    [Header("GUID")]
+    private string _uniqueID;
 
     [Header("Other Object")]
-    [SerializeField] private TMP_InputField Profile_name;
-    [SerializeField] private GameObject Profile_Panel;
-    [SerializeField] private Transform Panel_Parent;
-    [SerializeField] private List<GameObject> Panel_List;
-    public TMP_Text Select_Name;
+    [SerializeField] private GameObject _profilePanel;
+    [SerializeField] private GameObject _errorLog;
+    [SerializeField] private TMP_InputField _profileNameAdd;
+    [SerializeField] private Transform _panelParent;
+    [SerializeField] private List<GameObject> _panelList;
+    public GameObject _deletePanel;
+    public Image _profileImage;
+
+    [Header("Image")]
+    public int _imageIndex = -1;
+    private string _imagePath = string.Empty;
+
+    [Header("Text")]
+    public TMP_Text SelectName;
+    private string _profileName = string.Empty;
+    public string PreviousName = string.Empty;
+
+    [Header("bool")]
+    public bool _isImageSelect = false;
+    public bool _isUpdate = false;
+    
+    private Coroutine log;
 
     #region Unity Callback
-    private void Awake()
+    private void OnEnable()
     {
-        Print_Profile();
+        SelectProfilePanel.SetActive(true);
+    }
+
+    private void Start()
+    {
+        // ï¿½ï¿½ï¿½ï¿½ï¿½? ï¿½ï¿½ï¿½ï¿½ IDï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½
+        LoadOrCreateGUID();
+
+        Debug.Log("Device GUID: " + _uniqueID);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.pointerPress != null && eventData.pointerPress.GetComponent<Button>() != null)
+        {
+            return;
+        }
+        else
+        {
+            if (IconPanel.activeSelf)
+            {
+                _isImageSelect = false;
+            }
+        }
     }
     #endregion
 
     #region Other Method
-    // ÇÁ·ÎÇÊ »ı¼º Btn ¿¬µ¿ Method
-    public void Add_Profile()
+    // ê²Œì„ ï¿½? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ GUIDï¿½? ï¿½??ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½ï¿½? PlayerPrefs?ï¿½ï¿½ ????ï¿½ï¿½
+    // SQL_Manager?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ GUIDï¿½? DB?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ï¿½? ì²´í¬ ?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½, ?ï¿½ï¿½?ï¿½ï¿½ï¿½? GUID?ï¿½ï¿½ ë§ëŠ” UIDï¿½? ?ï¿½ï¿½????ï¿½ï¿½ì¤‘ì— ????ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ê°ì¢… ?ï¿½ï¿½ë³´ï¿½?? DB??? ?ï¿½ï¿½ï¿½?
+    private void LoadOrCreateGUID()
     {
-        if (!string.IsNullOrWhiteSpace(Profile_name.text))
+        // ï¿½ï¿½ï¿½ï¿½ï¿½? GUID ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
+        if (PlayerPrefs.HasKey("DeviceGUID"))
         {
-            SQL_Manager.instance.SQL_Add_Profile(Profile_name.text);
+            _uniqueID = PlayerPrefs.GetString("DeviceGUID");
         }
         else
         {
-            if (string.IsNullOrWhiteSpace(Profile_name.text))
+            // ï¿½ï¿½ï¿½Î¿ï¿½ GUID ï¿½ï¿½ï¿½ï¿½
+            _uniqueID = Guid.NewGuid().ToString();
+
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GUID ï¿½ï¿½ï¿½ï¿½
+            PlayerPrefs.SetString("DeviceGUID", _uniqueID);
+            PlayerPrefs.Save();
+        }
+        SQL_Manager.instance.SQL_AddUser(_uniqueID);
+        PrintProfileList();
+    }
+
+    // ?ï¿½ï¿½ë¡œí•„ ?ï¿½ï¿½ë¯¸ï¿½??ï¿½? ?ï¿½ï¿½ì§„ìœ¼ï¿½? ?ï¿½ï¿½ï¿½?, ?ï¿½ï¿½ë¯¸ï¿½?? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿½? ?ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ë³´ï¿½?? DB?ï¿½ï¿½ ê³µìœ ?ï¿½ï¿½ï¿½? ?ï¿½ï¿½ë¡œí•„ ?ï¿½ï¿½?ï¿½ï¿½
+    public void AddProfile()
+    {
+        int imageMode = -1;
+        switch (GameManager.instance._isImageMode)
+        {
+            case false: //  ì‚¬ì§„ ì°ê¸°ë¥¼ ì„ íƒí–ˆì„ ë•Œ
+                imageMode = 0;
+                break;
+            case true:  //  Default ì´ë¯¸ì§€ë¥¼ ì„ íƒí–ˆì„ ë•Œ
+                imageMode = 1;
+                break;
+        }
+        if (!_isUpdate)
+        { // ì²« ë“±ë¡ì¼ ë•Œ
+            if (!string.IsNullOrWhiteSpace(_profileName))
             {
-                Debug.Log("¿Ã¹Ù¸¥ ÇÁ·ÎÇÊ ´Ğ³×ÀÓÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä.");
+                GameManager.instance.Profile_Index = SQL_Manager.instance.SQL_AddProfile(_profileName, imageMode);
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(_profileName))
+                {
+                    Debug.Log("ï¿½Ã¹Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ğ³ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
+                }
+            }
+        }
+        else if(_isUpdate)
+        { // ìˆ˜ì • ì¤‘ì¼ ë•Œ
+            SQL_Manager.instance.SQL_UpdateMode(imageMode, GameManager.instance.UID, GameManager.instance.Profile_Index);
+        }
+    }
+
+    // ?ï¿½ï¿½ë¡œí•„ ë¦¬ìŠ¤?ï¿½ï¿½ ì¶œë ¥ Btn ?ï¿½ï¿½?ï¿½ï¿½ Method
+    public void PrintProfileList()
+    {
+        SQL_Manager.instance.SQL_ProfileListSet();
+
+        // ï¿½Ú·Î°ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½? ï¿½Ê±ï¿½È­
+        for (int i = 0; i < _panelList.Count; i++)
+        {
+            Destroy(_panelList[i].gameObject);
+        }
+        _panelList.Clear();
+
+        // Listï¿½ï¿½ Countï¿½ï¿½ï¿½? Panelï¿½ï¿½ï¿½ï¿½
+        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        {
+            GameObject panel = Instantiate(_profilePanel);
+            panel.transform.SetParent(_panelParent);
+            _panelList.Add(panel);
+        }
+
+        // Profile Indexï¿½ï¿½ ï¿½Â°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ name ï¿½ï¿½ï¿½?
+        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        {
+            Profile_Information info = _panelList[i].GetComponent<Profile_Information>();
+            info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
+            if (SQL_Manager.instance.Profile_list[i].imageMode) // ?ï¿½ï¿½ë¯¸ï¿½??ï¿½? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ Profile?ï¿½ï¿½ ê²½ìš°
+            {
+                info.ProfileImage.sprite = GameManager.instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
+            }
+            else // ?ï¿½ï¿½ì§„ì°ê¸°ï¿½?? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ Profile?ï¿½ï¿½ ê²½ìš°
+            {
+                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.instance.UID, SQL_Manager.instance.Profile_list[i].index);
+                Sprite profileSprite = GameManager.instance.TextureToSprite(profileTexture);
+                info.ProfileImage.sprite = profileSprite;
             }
         }
     }
 
-    // ÇÁ·ÎÇÊ Ãâ·Â Btn ¿¬µ¿ Method
-    public void Print_Profile()
+    // ?ï¿½ï¿½ë¡œí•„ ?ï¿½ï¿½?ï¿½ï¿½ Btn ?ï¿½ï¿½?ï¿½ï¿½ Method
+    public void DeleteProfile()
     {
-        SQL_Manager.instance.SQL_Profile_ListSet();
-
-        // µÚ·Î°¡±â ¹öÆ° µîÀ¸·Î ÀÌ¹Ì »ı¼º µÇ¾îÀÖÀ» °æ¿ì ÃÊ±âÈ­
-        for (int i = 0; i < Panel_List.Count; i++)
-        {
-            Destroy(Panel_List[i].gameObject);
-        }
-        Panel_List.Clear();
-
-        // ListÀÇ Count´ë·Î Panel»ı¼º
-        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        {
-            GameObject panel = Instantiate(Profile_Panel);
-            panel.transform.SetParent(Panel_Parent);
-            Panel_List.Add(panel);
-        }
-
-        // Profile Index¿¡ ¸Â°Ô ÇÁ·ÎÇÊ name Ãâ·Â
-        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        {
-            Profile_Information info = Panel_List[i].GetComponent<Profile_Information>();
-            info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
-        }
+        SQL_Manager.instance.SQL_DeleteProfile(GameManager.instance.Profile_name, GameManager.instance.Profile_Index);
     }
 
-    // ÇÁ·ÎÇÊ ¼öÁ¤ Btn ¿¬µ¿ Method
+    // Profile ?ï¿½ï¿½?ï¿½ï¿½ Btn ?ï¿½ï¿½?ï¿½ï¿½ Method
     public void Update_Profile()
     {
-
+        _isUpdate = true;
     }
 
-    // ÇÁ·ÎÇÊ ¼±ÅÃ ÈÄ ¾À º¯°æ Method
-    public void Next_Scene()
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·Î°ï¿½ï¿½ï¿½Btn ï¿½ï¿½ï¿½ï¿½ Method
+    public void Back_Profile()
     {
-        SceneManager.LoadScene(1);
+        SelectProfilePanel.SetActive(false);
+        CreateImagePanel.SetActive(false);
+        CreateNamePanel.SetActive(false);
+        CurrnetProfilePanel.SetActive(false);
+        gameObject.SetActive(false);
+    }
+
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Btn ï¿½ï¿½ï¿½ï¿½ Method (ï¿½Å°ï¿½ ï¿½ï¿½ï¿½ï¿½ 0 ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¿ï¿½ Btn, ï¿½Å°ï¿½ ï¿½ï¿½ï¿½ï¿½ 1 ï¿½Ì¸ï¿½ Image Select Btn)
+    public void ImageSet(int index)
+    {
+        if (!_isUpdate)
+        {   // ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ (ï¿½? ?ï¿½ï¿½ë¡ì¼ ?ï¿½ï¿½)
+            if (index.Equals(0))
+            { // ?ï¿½ï¿½ï¿½? ì°ê¸° ë²„íŠ¼ ?ï¿½ï¿½????ï¿½ï¿½ ?ï¿½ï¿½
+                _imagePath = $"{Application.persistentDataPath}/Profile/{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png";
+                SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}", GameManager.instance.UID, GameManager.instance.Profile_Index);
+
+                PrintProfileList();
+                CheckPanel.SetActive(false);
+                CreateImagePanel.SetActive(false);
+            }
+            else if (index.Equals(1))
+            { // ?ï¿½ï¿½ë¯¸ï¿½?? ê³ ë¥´ï¿½? ë²„íŠ¼ ?ï¿½ï¿½????ï¿½ï¿½ ?ï¿½ï¿½
+                if (!_isImageSelect)
+                { // ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ë¯¸ï¿½??ï¿½? ?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½
+                    if (log != null)
+                    {
+                        StopCoroutine(log);
+                    }
+                    log = StartCoroutine(PrintLog_co());
+                }
+                else
+                { 
+                    GameManager.instance._isImageMode = true;
+                    AddProfile();
+                    SQL_Manager.instance.SQL_AddProfileImage(_imageIndex, GameManager.instance.UID, GameManager.instance.Profile_Index);
+
+                    PrintProfileList();
+                    IconPanel.SetActive(false);
+                    CreateImagePanel.SetActive(false);
+                    SelectProfilePanel.SetActive(true);
+                }
+            }
+        }
+        else if (_isUpdate)
+        { // ?ï¿½ï¿½ë¡œí•„ ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½
+            if(index.Equals(0))
+            { // ?ï¿½ï¿½ï¿½? ì°ê¸° ë²„íŠ¼ ?ï¿½ï¿½????ï¿½ï¿½ ?ï¿½ï¿½
+
+            }
+            else if(index.Equals(1))
+            { // ?ï¿½ï¿½ë¯¸ï¿½?? ê³ ë¥´ï¿½? ë²„íŠ¼ ?ï¿½ï¿½????ï¿½ï¿½ ?ï¿½ï¿½
+                if (!_isImageSelect)
+                { // ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ë¯¸ï¿½??ï¿½? ?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½
+                    if (log != null)
+                    {
+                        StopCoroutine(log);
+                    }
+                    log = StartCoroutine(PrintLog_co());
+                }
+                else
+                {
+                    GameManager.instance._isImageMode = true;
+                    AddProfile();
+                    SQL_Manager.instance.SQL_UpdateProfile(GameManager.instance.Profile_Index, _profileName, GameManager.instance.UID, _imageIndex);
+
+                    PrintProfileList();
+                    IconPanel.SetActive(false);
+                    CreateImagePanel.SetActive(false);
+                    SelectProfilePanel.SetActive(true);
+                    _isUpdate = false;
+                }
+            }
+        }
+    }
+
+    // ï¿½ï¿½ï¿½ï¿½ btn ï¿½Ñ´ï¿½ Method
+    public void DeleteBtnOpen()
+    {
+        bool active = _panelList[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
+        for (int i = 0; i < _panelList.Count; i++)
+        {
+            _panelList[i].GetComponent<Profile_Information>().DelBtn.SetActive(!active);
+        }
+    }
+
+    // Profile Add?ï¿½ï¿½ name?ï¿½ï¿½ ????ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ Btn ?ï¿½ï¿½?ï¿½ï¿½ Method
+    public void SendProfile()
+    {
+        _profileName = _profileNameAdd.text;
+        _profileNameAdd.text = string.Empty;
+
+        /*SQL_Manager.instance.SQL_ProfileListSet();
+        GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index+1;*/
+    }
+
+    // Profile Image ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ë²ˆí˜¸ ?ï¿½ï¿½?ï¿½ï¿½ Btn ?ï¿½ï¿½?ï¿½ï¿½ Method
+    public void SelectImage(int index)
+    {
+        _imageIndex = index;
+        _isImageSelect = true;
+    }
+
+    private IEnumerator PrintLog_co()
+    {
+        _errorLog.SetActive(true);
+
+        yield return new WaitForSeconds(3f);
+
+        _errorLog.SetActive(false);
+        log = null;
     }
     #endregion
 }

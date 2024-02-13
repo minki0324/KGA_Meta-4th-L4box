@@ -10,6 +10,8 @@ using TMPro;
 public class Profile_Information : MonoBehaviour
 {
     public TMP_Text Profile_name;
+    public Image ProfileImage;
+    public GameObject DelBtn;
 
     #region Unity Callback
     #endregion
@@ -26,12 +28,35 @@ public class Profile_Information : MonoBehaviour
     {
         GameManager.instance.Profile_name = SQL_Manager.instance.Profile_list[Receive_Index()].name;
         GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[Receive_Index()].index;
-        GameManager.instance.UID = SQL_Manager.instance.info.UID;
+        GameManager.instance.UID = SQL_Manager.instance.UID;
 
         Profile_ profile = FindObjectOfType<Profile_>();
-        profile.selectProfile_Panel.SetActive(false);
-        profile.Select_Name.text = GameManager.instance.Profile_name;
-        profile.currnetProfile_Panel.SetActive(true);
+        profile.SelectProfilePanel.SetActive(false);
+        if(!GameManager.instance._isImageMode)  // 사진찍기 선택모드
+        {
+            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.instance.UID, GameManager.instance.Profile_Index);
+            Sprite profileSprite = GameManager.instance.TextureToSprite(profileTexture);
+            profile._profileImage.sprite = profileSprite;
+        }
+        else if(GameManager.instance._isImageMode)  // 이미지 선택 모드
+        {
+            GameManager.instance.DefaultImage = SQL_Manager.instance.Profile_list[Receive_Index()].defaultImage;
+            Sprite profileSprite = GameManager.instance.ProfileImages[SQL_Manager.instance.Profile_list[Receive_Index()].defaultImage];
+            profile._profileImage.sprite = profileSprite;
+        }
+        profile.SelectName.text = GameManager.instance.Profile_name;
+        profile.CurrnetProfilePanel.SetActive(true);
+    }
+
+    // 선택한 버튼의 name, UID GameManager에 넘겨주면서 삭제 확인 PopUp창 켜주는 Method
+    public void DeleteInfo()
+    {
+        GameManager.instance.Profile_name = SQL_Manager.instance.Profile_list[Receive_Index()].name;
+        GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[Receive_Index()].index;
+        GameManager.instance.UID = SQL_Manager.instance.UID;
+
+        Profile_ profile = FindObjectOfType<Profile_>();
+        profile._deletePanel.SetActive(true);
     }
     #endregion
 }
