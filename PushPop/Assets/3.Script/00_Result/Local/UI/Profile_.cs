@@ -103,26 +103,33 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     // 프로필 이미지를 사진으로 할지, 이미지 선택으로 할지 정한 후 해당 정보를 DB에 공유하고 프로필 생성
     public void AddProfile()
     {
-        if (!string.IsNullOrWhiteSpace(_profileName))
+        int imageMode = -1;
+        switch (GameManager.instance._isImageMode)
         {
-            int imageMode = -1;
-            switch(GameManager.instance._isImageMode)
-            {
-                case false: //  사진 찍기를 선택했을 때
-                    imageMode = 0;
-                    break;
-                case true:  //  Default 이미지를 선택했을 때
-                    imageMode = 1;
-                    break;
-            }
-            GameManager.instance.Profile_Index = SQL_Manager.instance.SQL_AddProfile(_profileName, imageMode);
+            case false: //  사진 찍기를 선택했을 때
+                imageMode = 0;
+                break;
+            case true:  //  Default 이미지를 선택했을 때
+                imageMode = 1;
+                break;
         }
-        else
-        {
-            if (string.IsNullOrWhiteSpace(_profileName))
+        if (!_isUpdate)
+        { // 첫 등록일 때
+            if (!string.IsNullOrWhiteSpace(_profileName))
             {
-                Debug.Log("�ùٸ� ������ �г����� �Է����ּ���.");
+                GameManager.instance.Profile_Index = SQL_Manager.instance.SQL_AddProfile(_profileName, imageMode);
             }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(_profileName))
+                {
+                    Debug.Log("�ùٸ� ������ �г����� �Է����ּ���.");
+                }
+            }
+        }
+        else if(_isUpdate)
+        { // 수정 중일 때
+            SQL_Manager.instance.SQL_UpdateMode(imageMode, GameManager.instance.UID, GameManager.instance.Profile_Index);
         }
     }
 
@@ -242,6 +249,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
                 else
                 {
                     GameManager.instance._isImageMode = true;
+                    AddProfile();
                     SQL_Manager.instance.SQL_UpdateProfile(GameManager.instance.Profile_Index, _profileName, GameManager.instance.UID, _imageIndex);
 
                     PrintProfileList();

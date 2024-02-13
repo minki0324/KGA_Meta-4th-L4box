@@ -168,6 +168,8 @@ public class GameManager : MonoBehaviour, IGameMode
         GameObject newPos = Instantiate(_prefab, _parent); // bubble이 더 필요하다면 새로 생성
         bubbleObject.Add(newPos);
         return;
+    }
+
     /// <summary>
     /// 변경할 gameobject를 매개변수로 받아서 그 안의 Image Component를 통해 프로필 이미지를 출력
     /// </summary>

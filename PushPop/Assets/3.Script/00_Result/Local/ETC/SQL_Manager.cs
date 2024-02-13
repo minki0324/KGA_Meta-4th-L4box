@@ -287,6 +287,33 @@ public class SQL_Manager : MonoBehaviour
             return -1;
         }
     }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public void SQL_UpdateMode(int imageMode, int uid, int profileIndex)
+    {
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+
+            // 2. 프로필 이미지 모드 변경
+            string name_command = string.Format(@"UPDATE Profile SET ImageMode = '{0} WHERE UID = '{1}', Profile_Index = '{2}'", imageMode, uid, profileIndex);
+            MySqlCommand cmd = new MySqlCommand(name_command, connection);
+            cmd.ExecuteNonQuery();
+
+            return; // 프로필 생성 실패를 나타내는 값 반환
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+            return;
+        }
+    }
 
     /// <summary>
     /// 프로필 삭제 Method, UID와 name을 확인해서 삭제
