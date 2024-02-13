@@ -25,7 +25,8 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     [Header("Other Object")]
     [SerializeField] private GameObject _profilePanel;
-    [SerializeField] private GameObject _errorLog;
+    [SerializeField] private GameObject _profileLog;
+    [SerializeField] private GameObject _nameLog;
     [SerializeField] private TMP_InputField _profileNameAdd;
     [SerializeField] private Transform _panelParent;
     [SerializeField] private List<GameObject> _panelList;
@@ -59,6 +60,9 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         LoadOrCreateGUID();
 
         Debug.Log("Device GUID: " + _uniqueID);
+
+        // 한글 입력만 가능하도록 이벤트 추가
+        _profileNameAdd.onValidateInput += ValidateInput;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -103,6 +107,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     // ?��로필 ?��미�??�? ?��진으�? ?���?, ?��미�?? ?��?��?���? ?���? ?��?�� ?�� ?��?�� ?��보�?? DB?�� 공유?���? ?��로필 ?��?��
     public void AddProfile()
     {
+        
         int imageMode = -1;
         switch (GameManager.instance._isImageMode)
         {
@@ -215,7 +220,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
                     {
                         StopCoroutine(log);
                     }
-                    log = StartCoroutine(PrintLog_co());
+                    log = StartCoroutine(PrintLog_co(_profileLog));
                 }
                 else
                 { 
@@ -244,7 +249,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
                     {
                         StopCoroutine(log);
                     }
-                    log = StartCoroutine(PrintLog_co());
+                    log = StartCoroutine(PrintLog_co(_profileLog));
                 }
                 else
                 {
@@ -289,14 +294,32 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         _isImageSelect = true;
     }
 
-    private IEnumerator PrintLog_co()
+    private IEnumerator PrintLog_co(GameObject errorlog)
     {
-        _errorLog.SetActive(true);
+        errorlog.SetActive(true);
 
         yield return new WaitForSeconds(3f);
 
-        _errorLog.SetActive(false);
+        errorlog.SetActive(false);
         log = null;
+    }
+
+    // Profile 영어 입력 못하도록 설정
+    private char ValidateInput(string text, int charIndex, char addedChar)
+    {
+        // 입력된 문자가 영어 알파벳인 경우 입력을 막음
+        if ((addedChar >= 'a' && addedChar <= 'z') || (addedChar >= 'A' && addedChar <= 'Z'))
+        {
+            if(log != null)
+            {
+                StopCoroutine(log);
+            }
+            log = StartCoroutine(PrintLog_co(_nameLog));
+            return '\0'; // 입력 막음
+        }
+
+        // 다른 문자는 허용
+        return addedChar;
     }
     #endregion
 }
