@@ -52,7 +52,6 @@ public class Main_Button : MonoBehaviour
     public void SpeedBtn_Clicked()
     {
         GameManager.instance.gameMode = GameMode.Speed;
-        speedMode_Canvas.gameObject.SetActive(true);
         _timesetPanel.SetActive(true);
     }
 
