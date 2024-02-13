@@ -6,11 +6,17 @@ using UnityEngine.UI;
 using TMPro;
 
 
+//Main_Canvas의 TimeSet_Panel에 들어갈 스크립트
 public class Set_Time : MonoBehaviour
 {
 
-    [Header("스테이지 선택 캔버스")]
-    [SerializeField] private Canvas stage_Canvas;
+    [Header("캔버스")]
+    [SerializeField] private Canvas main_Canvas;
+    [SerializeField] private Canvas pushMode_Canvas;
+    [SerializeField] private Canvas speedMode_Canvas;
+    [SerializeField] private Canvas memoryMode_Canvas;
+
+    [SerializeField] private Canvas Background_Canvas;  //도움말 & 뒤로가기 버튼 캔버스
 
     [Header("시간 증가/감소 버튼")]
     [SerializeField] private Button IncreaseTime_Btn;
@@ -39,6 +45,7 @@ public class Set_Time : MonoBehaviour
     private void OnEnable()
     {
         time = 300;
+        bCanStart = true;
     }
 
     private void Update()
@@ -112,12 +119,13 @@ public class Set_Time : MonoBehaviour
         {          
             if(TimeText_InputField.text == $"{string.Format("{0:0}", min)}분 {sec}초")
             {
-
+                bCanStart = true;
             }
             else
             {
                 Debug.Log("숫자가 아닙니다");
                 time = 300;
+                bCanStart = true;
                 Calculate_Time();
                 StartCoroutine(Calculate_Time_co());
             }
@@ -127,6 +135,7 @@ public class Set_Time : MonoBehaviour
             {
                 Debug.Log("시간 미입력 시");
                 time = 300;
+                bCanStart = true;
                 Calculate_Time();
                 StartCoroutine(Calculate_Time_co());
             }
@@ -134,6 +143,7 @@ public class Set_Time : MonoBehaviour
             if(time > 900)
             {
                 time = 900;
+                bCanStart = true;
                 Calculate_Time();
                 StartCoroutine(Calculate_Time_co());
             }
@@ -156,22 +166,18 @@ public class Set_Time : MonoBehaviour
     {
         if(bCanStart)
         {
-
             GameManager.instance.TimerTime = time;
-            if (GameManager.instance.gameMode.Equals(GameMode.PushPush))
+            if(GameManager.instance.gameMode.Equals(GameMode.Speed))
             {
-                //푸쉬푸쉬 모드 스테이지 선택창 열기
+                speedMode_Canvas.gameObject.SetActive(true);
             }
-            else if (GameManager.instance.gameMode.Equals(GameMode.Speed))
+            else if(GameManager.instance.gameMode.Equals(GameMode.Memory))
             {
-                //스피드 모드 스테이지 선택창 열기
-                stage_Canvas.gameObject.SetActive(true);
-                gameObject.SetActive(false);
+                memoryMode_Canvas.gameObject.SetActive(true);
             }
-            else if (GameManager.instance.gameMode.Equals(GameMode.Memory))
-            {
-                //메모리 모드 스테이지 선택창 열기
-            }
+
+            gameObject.SetActive(false);
+            main_Canvas.gameObject.SetActive(false);
         }
         else
         {
