@@ -9,20 +9,22 @@ using UnityEngine.SceneManagement;
 public class Main_Button : MonoBehaviour
 {
     [Header("Button")]
-    [SerializeField] private Button option_Btn;
-    [SerializeField] private Button profile_Btn;
-    [SerializeField] private Button home_Btn;        
-    [SerializeField] private Button collection_Btn;
-    [SerializeField] private Button mode2P_Btn;
-    [SerializeField] private Button pushMode_Btn;
-    [SerializeField] private Button speedMode_Btn;
-    [SerializeField] private Button memoryMode_Btn;
+    [SerializeField] private Button _optionBtn;
+    [SerializeField] private Button _profileBtn;
+    [SerializeField] private Button _homeBtn;        
+    [SerializeField] private Button _collectionBtn;
+    [SerializeField] private Button _mode2PBtn;
+    [SerializeField] private Button _pushModeBtn;
+    [SerializeField] private Button _speedModeBtn;
+    [SerializeField] private Button _memoryModeBtn;
 
     [Header("Panel")]
-    [SerializeField] private GameObject Profile_Panel;
-    [SerializeField] private GameObject Option_Panel;
-    [SerializeField] private GameObject Collection_Panel;
-    [SerializeField] private GameObject TimeSet_Panel;
+    [SerializeField] private GameObject _profilePanel;
+    [SerializeField] private GameObject _optionPanel;
+    [SerializeField] private GameObject _collectionPanel;
+    [SerializeField] private GameObject _timesetPanel;
+    [SerializeField] private GameObject _buttonPanel;
+    [SerializeField] private GameObject _gameModePanel;
 
 
     [Header("모드별 캔버스")]
@@ -65,14 +67,16 @@ public class Main_Button : MonoBehaviour
     //프로필 아이콘 클릭 시 호출
     public void Profile_Btn_Clicked()
     {
-        Profile_Panel.SetActive(true);
-        AudioManager123.instance.SetAudioClip_SFX(0);
+        _profilePanel.SetActive(true);
+        _gameModePanel.SetActive(false);
+        _buttonPanel.SetActive(false);
+        /*AudioManager123.instance.SetAudioClip_SFX(0);*/
     }
 
     //환경설정 버튼 클릭 시 호출
     public void OptionBtn_Clicked()
     {
-        Option_Panel.SetActive(true);
+        _optionPanel.SetActive(true);
         AudioManager123.instance.SetAudioClip_SFX(0);
     }
 
