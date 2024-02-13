@@ -1,57 +1,61 @@
 using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
 
-public class Profile_ : MonoBehaviour, IPointerClickHandler 
+public class Profile_ : MonoBehaviour, IPointerClickHandler
 {
     [Header("Profile_Panel")]
     public GameObject SelectProfilePanel;
     public GameObject CreateNamePanel;
-    public GameObject createImage_Panel;
-    public GameObject currnetProfile_Panel;
+    public GameObject CreateImagePanel;
+    public GameObject CurrnetProfilePanel;
     public GameObject IconPanel;
+    public GameObject CheckPanel;
 
     [Header("Button")]
-    [SerializeField] private Button Profile_Create;
+    [SerializeField] private Button _profileCreateBtn;
 
     [Header("GUID")]
     private string _uniqueID;
 
     [Header("Other Object")]
-    [SerializeField] private GameObject Profile_Panel;
+    [SerializeField] private GameObject _profilePanel;
     [SerializeField] private GameObject _errorLog;
     [SerializeField] private TMP_InputField _profileNameAdd;
-    [SerializeField] private Transform Panel_Parent;
-    [SerializeField] private List<GameObject> Panel_List;
+    [SerializeField] private Transform _panelParent;
+    [SerializeField] private List<GameObject> _panelList;
     public GameObject _deletePanel;
     public Image _profileImage;
 
     [Header("Image")]
     public int _imageIndex = -1;
     private string _imagePath = string.Empty;
-    [SerializeField] private Sprite[] _profileSelectImage;
-    [SerializeField] private string _selectImage = string.Empty;
 
     [Header("Text")]
-    public TMP_Text Select_Name;
+    public TMP_Text SelectName;
     private string _profileName = string.Empty;
+    public string PreviousName = string.Empty;
 
     [Header("bool")]
     public bool _isImageSelect = false;
-
+    public bool _isUpdate = false;
+    
     private Coroutine log;
 
     #region Unity Callback
+    private void OnEnable()
+    {
+        SelectProfilePanel.SetActive(true);
+    }
+
     private void Start()
     {
-        _imagePath = Application.persistentDataPath + "/PushPop_";
-        // ����� ���� ID�� �ҷ����ų� ����
+        // �����? ���� ID�� �ҷ����ų� ����
         LoadOrCreateGUID();
 
         Debug.Log("Device GUID: " + _uniqueID);
@@ -65,7 +69,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            if(IconPanel.activeSelf)
+            if (IconPanel.activeSelf)
             {
                 _isImageSelect = false;
             }
@@ -74,11 +78,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     #endregion
 
     #region Other Method
-    // �������� �� GUID�� �ִ��� Ȯ���ϰ�, ������ ����
-    // GUID�� DB�� �����Ͽ� UID�� ���� ������ �����ϴ� Method
+    // 게임 �? ?��?��?�� GUID�? �??���? ?��?���? ?��?�� ?�� ?��?���? ?��?��?���? ?��?���? PlayerPrefs?�� ????��
+    // SQL_Manager?�� ?��?�� GUID�? DB?�� ?��?���? 체크 ?�� ?��?���? ?��?��, ?��?���? GUID?�� 맞는 UID�? ?��????��중에 ????��?��?�� 각종 ?��보�?? DB??? ?���?
     private void LoadOrCreateGUID()
     {
-        // ����� GUID �ҷ�����
+        // �����? GUID �ҷ�����
         if (PlayerPrefs.HasKey("DeviceGUID"))
         {
             _uniqueID = PlayerPrefs.GetString("DeviceGUID");
@@ -93,146 +97,192 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             PlayerPrefs.Save();
         }
         SQL_Manager.instance.SQL_AddUser(_uniqueID);
-        PrintProfile();
+        PrintProfileList();
     }
 
-    // ������ ���� Btn ���� Method
-    public void Add_Profile()
+    // ?��로필 ?��미�??�? ?��진으�? ?���?, ?��미�?? ?��?��?���? ?���? ?��?�� ?�� ?��?�� ?��보�?? DB?�� 공유?���? ?��로필 ?��?��
+    public void AddProfile()
     {
-        if (!string.IsNullOrWhiteSpace(_profileName))
+        int imageMode = -1;
+        switch (GameManager.instance._isImageMode)
         {
-            SQL_Manager.instance.SQL_AddProfile(_profileName);
+            case false: //  사진 찍기를 선택했을 때
+                imageMode = 0;
+                break;
+            case true:  //  Default 이미지를 선택했을 때
+                imageMode = 1;
+                break;
         }
-        else
-        {
-            if (string.IsNullOrWhiteSpace(_profileName))
+        if (!_isUpdate)
+        { // 첫 등록일 때
+            if (!string.IsNullOrWhiteSpace(_profileName))
             {
-                Debug.Log("�ùٸ� ������ �г����� �Է����ּ���.");
+                GameManager.instance.Profile_Index = SQL_Manager.instance.SQL_AddProfile(_profileName, imageMode);
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(_profileName))
+                {
+                    Debug.Log("�ùٸ� ������ �г����� �Է����ּ���.");
+                }
+            }
+        }
+        else if(_isUpdate)
+        { // 수정 중일 때
+            SQL_Manager.instance.SQL_UpdateMode(imageMode, GameManager.instance.UID, GameManager.instance.Profile_Index);
+        }
+    }
+
+    // ?��로필 리스?�� 출력 Btn ?��?�� Method
+    public void PrintProfileList()
+    {
+        SQL_Manager.instance.SQL_ProfileListSet();
+
+        // �ڷΰ��� ��ư ������ �̹� ���� �Ǿ����� ���? �ʱ�ȭ
+        for (int i = 0; i < _panelList.Count; i++)
+        {
+            Destroy(_panelList[i].gameObject);
+        }
+        _panelList.Clear();
+
+        // List�� Count���? Panel����
+        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        {
+            GameObject panel = Instantiate(_profilePanel);
+            panel.transform.SetParent(_panelParent);
+            _panelList.Add(panel);
+        }
+
+        // Profile Index�� �°� ������ name ���?
+        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        {
+            Profile_Information info = _panelList[i].GetComponent<Profile_Information>();
+            info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
+            if (SQL_Manager.instance.Profile_list[i].imageMode) // ?��미�??�? ?��?��?�� Profile?�� 경우
+            {
+                info.ProfileImage.sprite = GameManager.instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
+            }
+            else // ?��진찍기�?? ?��?��?�� Profile?�� 경우
+            {
+                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.instance.UID, SQL_Manager.instance.Profile_list[i].index);
+                Sprite profileSprite = GameManager.instance.TextureToSprite(profileTexture);
+                info.ProfileImage.sprite = profileSprite;
             }
         }
     }
 
-    // ������ ��� Btn ���� Method
-    public void PrintProfile()
-    {
-        SQL_Manager.instance.SQL_ProfileListSet();
-
-        // �ڷΰ��� ��ư ������ �̹� ���� �Ǿ����� ��� �ʱ�ȭ
-        for (int i = 0; i < Panel_List.Count; i++)
-        {
-            Destroy(Panel_List[i].gameObject);
-        }
-        Panel_List.Clear();
-
-        // List�� Count��� Panel����
-        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        {
-            GameObject panel = Instantiate(Profile_Panel);
-            panel.transform.SetParent(Panel_Parent);
-            Panel_List.Add(panel);
-        }
-
-        // Profile Index�� �°� ������ name ���
-        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        {
-            Profile_Information info = Panel_List[i].GetComponent<Profile_Information>();
-            info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
-            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.instance.UID, SQL_Manager.instance.Profile_list[i].index);
-            Sprite profileSprite = TextureToSprite(profileTexture);
-            info.ProfileImage.sprite = profileSprite;
-        }
-    }
-
-    // ������ ���� Btn ���� Method
+    // ?��로필 ?��?�� Btn ?��?�� Method
     public void DeleteProfile()
     {
         SQL_Manager.instance.SQL_DeleteProfile(GameManager.instance.Profile_name, GameManager.instance.Profile_Index);
     }
 
-    // ������ ���� Btn ���� Method
+    // Profile ?��?�� Btn ?��?�� Method
     public void Update_Profile()
     {
-
+        _isUpdate = true;
     }
 
     //������ �ڷΰ���Btn ���� Method
     public void Back_Profile()
     {
         SelectProfilePanel.SetActive(false);
-        createImage_Panel.SetActive(false);
+        CreateImagePanel.SetActive(false);
         CreateNamePanel.SetActive(false);
-        currnetProfile_Panel.SetActive(false);
+        CurrnetProfilePanel.SetActive(false);
         gameObject.SetActive(false);
     }
 
     // ������ �̹��� �����ϴ� Btn ���� Method (�Ű� ���� 0 �̸� ���� �Կ� Btn, �Ű� ���� 1 �̸� Image Select Btn)
     public void ImageSet(int index)
     {
-        // ��ΰ� �����ϴ��� Ȯ���ϰ� ���ٸ� ����
-        if (!Directory.Exists(_imagePath))
-        {
-            Directory.CreateDirectory(_imagePath);
-        }
+        if (!_isUpdate)
+        {   // ?��?��?�� ?��?�� ?�� (�? ?��록일 ?��)
+            if (index.Equals(0))
+            { // ?���? 찍기 버튼 ?��????�� ?��
+                _imagePath = $"{Application.persistentDataPath}/Profile/{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png";
+                SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}", GameManager.instance.UID, GameManager.instance.Profile_Index);
 
-        // ���࿡ �����Կ��� ���� ��
-        if(index == 0)
-        {
-            /*SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}/{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png", GameManager.instance.UID, GameManager.instance.Profile_Index);*/
-        }
-        // ���� �Կ� ���� �⺻ �̹��� ������ ����� ��
-        else if(index == 1)
-        {
-            if (!_isImageSelect)
-            {
-                // �̹����� ����ּ��� �˾� ���� ����
-                if(log != null)
-                {
-                    StopCoroutine(log);
+                PrintProfileList();
+                CheckPanel.SetActive(false);
+                CreateImagePanel.SetActive(false);
+            }
+            else if (index.Equals(1))
+            { // ?��미�?? 고르�? 버튼 ?��????�� ?��
+                if (!_isImageSelect)
+                { // ?��?��?�� ?��미�??�? ?��?�� ?��
+                    if (log != null)
+                    {
+                        StopCoroutine(log);
+                    }
+                    log = StartCoroutine(PrintLog_co());
                 }
-                log = StartCoroutine(PrintLog_co());
-            }
-            else
-            {
-                _selectImage = _profileSelectImage[_imageIndex].name;
-                Add_Profile();
-                SQL_Manager.instance.SQL_ProfileListSet();
-                GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index;
-                SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}/{_selectImage}.png", GameManager.instance.UID, GameManager.instance.Profile_Index);
-                PrintProfile();
-                IconPanel.SetActive(false);
-                createImage_Panel.SetActive(false);
+                else
+                { 
+                    GameManager.instance._isImageMode = true;
+                    AddProfile();
+                    SQL_Manager.instance.SQL_AddProfileImage(_imageIndex, GameManager.instance.UID, GameManager.instance.Profile_Index);
+
+                    PrintProfileList();
+                    IconPanel.SetActive(false);
+                    CreateImagePanel.SetActive(false);
+                    SelectProfilePanel.SetActive(true);
+                }
             }
         }
+        else if (_isUpdate)
+        { // ?��로필 ?��?��?���? ?��?��?��?�� ?��
+            if(index.Equals(0))
+            { // ?���? 찍기 버튼 ?��????�� ?��
 
+            }
+            else if(index.Equals(1))
+            { // ?��미�?? 고르�? 버튼 ?��????�� ?��
+                if (!_isImageSelect)
+                { // ?��?��?�� ?��미�??�? ?��?�� ?��
+                    if (log != null)
+                    {
+                        StopCoroutine(log);
+                    }
+                    log = StartCoroutine(PrintLog_co());
+                }
+                else
+                {
+                    GameManager.instance._isImageMode = true;
+                    AddProfile();
+                    SQL_Manager.instance.SQL_UpdateProfile(GameManager.instance.Profile_Index, _profileName, GameManager.instance.UID, _imageIndex);
+
+                    PrintProfileList();
+                    IconPanel.SetActive(false);
+                    CreateImagePanel.SetActive(false);
+                    SelectProfilePanel.SetActive(true);
+                    _isUpdate = false;
+                }
+            }
+        }
     }
 
     // ���� btn �Ѵ� Method
     public void DeleteBtnOpen()
     {
-        bool active = Panel_List[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
-        for (int i =0; i < Panel_List.Count; i++)
+        bool active = _panelList[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
+        for (int i = 0; i < _panelList.Count; i++)
         {
-            Panel_List[i].GetComponent<Profile_Information>().DelBtn.SetActive(!active);
+            _panelList[i].GetComponent<Profile_Information>().DelBtn.SetActive(!active);
         }
     }
 
-    // SQL���� �޾ƿ� Texture�� Sprite�������� ��ȯ�ϴ� Method
-    public Sprite TextureToSprite(Texture2D texture)
-    {
-        // Texture2D�� Sprite�� ��ȯ�մϴ�.
-        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
-
-        return sprite;
-    }
-
-    // Profile Add�Ҷ� ���� Text�� ��������� �Ҵ�
+    // Profile Add?�� name?�� ????��?��?��?�� Btn ?��?�� Method
     public void SendProfile()
     {
         _profileName = _profileNameAdd.text;
         _profileNameAdd.text = string.Empty;
-     }
 
-    // Profile Image �������� �� Btn ���� Method
+        /*SQL_Manager.instance.SQL_ProfileListSet();
+        GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index+1;*/
+    }
+
+    // Profile Image ?��?��?�� 번호 ?��?�� Btn ?��?�� Method
     public void SelectImage(int index)
     {
         _imageIndex = index;

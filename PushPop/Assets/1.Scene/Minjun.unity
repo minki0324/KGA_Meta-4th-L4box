@@ -10159,6 +10159,9 @@ MonoBehaviour:
   UID: 0
   Profile_name: 
   Profile_Index: 0
+  DefaultImage: 0
+  ProfileImages: []
+  _isImageMode: 1
 --- !u!4 &927645292
 Transform:
   m_ObjectHideFlags: 0
@@ -18066,18 +18069,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81af2f87754bb954da6e47bc5d795d7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  option_Btn: {fileID: 1029044558}
-  profile_Btn: {fileID: 115682100}
-  home_Btn: {fileID: 769466281}
-  collection_Btn: {fileID: 2099426228}
-  mode2P_Btn: {fileID: 99291480}
-  pushMode_Btn: {fileID: 0}
-  speedMode_Btn: {fileID: 0}
-  memoryMode_Btn: {fileID: 0}
-  Profile_Panel: {fileID: 382974002}
-  Option_Panel: {fileID: 1735286199}
-  Collection_Panel: {fileID: 0}
-  TimeSet_Panel: {fileID: 723510040}
+  _optionBtn: {fileID: 0}
+  _profileBtn: {fileID: 0}
+  _homeBtn: {fileID: 0}
+  _collectionBtn: {fileID: 0}
+  _mode2PBtn: {fileID: 0}
+  _pushModeBtn: {fileID: 0}
+  _speedModeBtn: {fileID: 0}
+  _memoryModeBtn: {fileID: 0}
+  _profilePanel: {fileID: 0}
+  _optionPanel: {fileID: 0}
+  _collectionPanel: {fileID: 0}
+  _timesetPanel: {fileID: 0}
+  _buttonPanel: {fileID: 0}
+  _gameModePanel: {fileID: 0}
 --- !u!114 &1771868819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21071,7 +21076,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1584231244926160351, guid: 35f0e7ca23966b7408a5d99e206dd904, type: 3}
       propertyPath: onlineScene
-      value: Assets/1.Scene/CommunicationRoom.unity
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1584231244926160351, guid: 35f0e7ca23966b7408a5d99e206dd904, type: 3}
       propertyPath: playerPrefab
