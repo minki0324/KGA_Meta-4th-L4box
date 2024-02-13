@@ -9,10 +9,9 @@ public class PuzzleLozic : MonoBehaviour
     public GameObject PieceObject;
     [Header("프레임 오브젝트")]
     public GameObject FrameObject;
-    [Header("프레임상속시킬 오브젝트")] 
-    public GameObject FrameParent;
-    [Header("피스상속시킬 오브젝트")]
-    public GameObject PieceParent;
+    [Header("퍼즐상속시킬 오브젝트")] 
+    public GameObject PuzzleParent;
+
     [Header("프레임 설정 위치")]
     public Transform frampPos;
     [Header("피스들 설정 위치")] //임시
@@ -26,10 +25,12 @@ public class PuzzleLozic : MonoBehaviour
     {//퍼즐을 놓았을때 맞춰야하는 위치와 현재위치 비교
         if (Vector3.Distance(currentPosition, frampPos.position) < puzzleJudgmentDistance)
         {
+            Debug.Log(frampPos.position);
             return true;
         }
         else
         {
+            Debug.Log(frampPos.position);
             return false;
         }
     }
@@ -42,6 +43,9 @@ public class PuzzleLozic : MonoBehaviour
             if (Kind.PuzzleID == PuzzleIDIndex)
             {
                 currentPuzzle = Kind;
+                //todo 게임매니저에 현재퍼즐 보내줘...
+
+
                 //클리어카운트는 퍼즐갯수 (Sprite)
                 ClearCount = currentPuzzle.sprites.Length;
                 SettingPuzzle();
@@ -55,28 +59,35 @@ public class PuzzleLozic : MonoBehaviour
        
     }
     private void SettingPuzzle()
-    {//퍼즐을 골랐을때 정해둔 위치로 퍼즐 생성 , Sprite 끼우기 , SetParent로 에디터 정리
-
+    {//정해진 퍼즐 프레임,퍼즐 생성
+        PuzzleInstantiate(FrameObject, frampPos.position, currentPuzzle.shadow);
         for (int i = 0; i < currentPuzzle.sprites.Length; i++)
         {
-            Debug.Log(frampPos.position);
-            GameObject newFramePuzzle =  Instantiate(FrameObject, frampPos.position, Quaternion.identity);
-            newFramePuzzle.transform.SetParent(FrameParent.transform);
-            newFramePuzzle.GetComponent<Image>().sprite = currentPuzzle.sprites[i];
-            newFramePuzzle.transform.localScale = new Vector3(1.5f, 1.5f, 1f);
-            newFramePuzzle.transform.position = frampPos.position;
-            Debug.Log(i +":" +newFramePuzzle.transform.localScale);
+            PuzzleInstantiate(PieceObject, piecePos[i].position, currentPuzzle.sprites[i]);
         }
-        for (int i = 0; i < currentPuzzle.sprites.Length; i++)
-        {
-            GameObject newPiecePuzzle = Instantiate(PieceObject, piecePos[i].position, Quaternion.identity);
-            newPiecePuzzle.transform.SetParent(PieceParent.transform);
-            newPiecePuzzle.GetComponent<Image>().sprite = currentPuzzle.sprites[i];
-            newPiecePuzzle.transform.localScale = new Vector3(1.5f, 1.5f, 1f);
-            newPiecePuzzle.transform.position = piecePos[i].position;
-            Debug.Log(i + ":" + newPiecePuzzle.transform.localScale);
-        }
-
+    }
+    private void PuzzleInstantiate(GameObject puzzle , Vector3 position , Sprite puzzleSprite)
+    {//퍼즐생성
+        GameObject newPiecePuzzle = Instantiate(puzzle, position, Quaternion.identity);
+        PuzzleSetting(newPiecePuzzle, puzzleSprite);
     }
 
+    private void PuzzleSetting(GameObject puzzle , Sprite sprite)
+    {//UI 캔버스에 상속, 정해진 사진으로 넣어주기 , 사진크기 세팅.
+        puzzle.transform.SetParent(PuzzleParent.transform); //캔버스안에 상속
+        Image frameImage = puzzle.GetComponent<Image>(); 
+        frameImage.sprite = sprite; //퍼즐 사진넣기
+        frameImage.preserveAspect =true; //사진사이즈 세팅
+    }
+    public void DestroyChildren()
+    {//퍼즐을 완료했을때 생성되있던 퍼즐 삭제하기위한 메소드
+        foreach (Transform child in PuzzleParent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+    public void CraetBoard()
+    {//퍼즐완료하고 퍼즐 원본 오브젝트 생성해주기
+        PuzzleInstantiate(FrameObject, frampPos.position, currentPuzzle.board);
+    }
 }
