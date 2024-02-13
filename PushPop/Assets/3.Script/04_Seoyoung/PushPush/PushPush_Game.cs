@@ -7,6 +7,7 @@ using TMPro;
 public class PushPush_Game : MonoBehaviour
 {
 
+
     [Header("꾸미기 패널")]
     [SerializeField] private GameObject Colorset_Panel;
     [SerializeField] private List<Button> colorButton_List;
