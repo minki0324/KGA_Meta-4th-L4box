@@ -52,7 +52,7 @@ public class Main_Button : MonoBehaviour
     public void SpeedBtn_Clicked()
     {
         GameManager.instance.gameMode = GameMode.Speed;
-        TimeSet_Panel.SetActive(true);
+        _timesetPanel.SetActive(true);
     }
 
 
@@ -60,7 +60,7 @@ public class Main_Button : MonoBehaviour
     public void MemoryBtn_Clicked()
     {
         GameManager.instance.gameMode = GameMode.Memory;
-        TimeSet_Panel.SetActive(true);
+        _timesetPanel.SetActive(true);
     }
 
 
