@@ -68,7 +68,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     public void PushPushMode(Vector2 _bubblePosition, Vector2 _touchPosition)
     {
         // Bubble Move
-        Vector2 dir = _bubblePosition - _touchPosition; // Touch Position의 반대 방향
+        Vector2 dir = (_bubblePosition - _touchPosition).normalized;// Touch Position의 반대 방향
 
         //moveCoroutine = StartCoroutine(BubbleMove_Co(dir, 2f, 0.4f));
     }
@@ -148,22 +148,22 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         {
             if (0f + bubbleSize.x / 2f > transform.position.x)
             { // boundary left
-                _dir = ReflectionVector(_dir, Vector2.right, _bubblePosition);
+                _dir = ReflectionVector(_dir, Vector2.right);
                 transform.position = new Vector2((bubbleSize.x / 2f + 10f), transform.position.y);
             }
             else if (transform.position.x > Screen.width - bubbleSize.x / 2f)
             { // boundary right
-                _dir = ReflectionVector(_dir, Vector2.left, _bubblePosition);
+                _dir = ReflectionVector(_dir, Vector2.left);
                 transform.position = new Vector2(Screen.width - (bubbleSize.x / 2f + 10f), transform.position.y);
             }
             else if (0f + bubbleSize.y / 2f + 10f > transform.position.y)
             { // boundary bottom
-                _dir = ReflectionVector(_dir, Vector2.up, _bubblePosition);
+                _dir = ReflectionVector(_dir, Vector2.up);
                 transform.position = new Vector2(transform.position.x, bubbleSize.y / 2f + 10f);
             }
             else if (transform.position.y > Screen.height - bubbleSize.y / 2f)
             { // boundary up
-                _dir = ReflectionVector(_dir, Vector2.down, _bubblePosition);
+                _dir = ReflectionVector(_dir, Vector2.down);
                 transform.position = new Vector2(transform.position.x, Screen.height - (bubbleSize.y / 2f + 10f));
             }
 
@@ -179,16 +179,9 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         }
     }
 
-    private Vector2 ReflectionVector(Vector2 _inDrection, Vector2 _isNomal, Vector2 _bubblePosition)
+    private Vector2 ReflectionVector(Vector2 _inDrection, Vector2 _isNomal)
     {
         _inDrection = Vector2.Reflect(_inDrection.normalized, _isNomal).normalized; // 반사각
         return _inDrection;
-    }
-
-    private Vector2 ReflectionVector(Vector2 _direction, Vector2 _collisionVector)
-    {
-        float collisionAngle = Mathf.Atan2(_collisionVector.y, _collisionVector.x) * 180f / Mathf.PI;
-        Vector2 reflectVector = Vector2.zero;
-        return reflectVector;
     }
 }
