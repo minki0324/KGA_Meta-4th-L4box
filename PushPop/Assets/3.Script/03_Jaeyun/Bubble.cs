@@ -11,36 +11,30 @@ public enum Mode
     Bomb,
 }
 
-public enum Boundary
-{
-    Left = 0,
-    Right,
-    Up,
-    Bottom
-}
-
 public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 { // bubble prefab마다 달아줄 script
+
+    public AnimationCurve decelOverTime;
+    [Range(10f, 100f)] public float maxDecel = 30f;
+    [Range(10f, 1000f)] public float maxSpeed = 100f;
+
     protected Mode gameMode = Mode.Speed; // game mode
     private Vector2 bubbleSize = Vector2.zero;
     private bool isMoving = false;
     private Animator bubbleAnimator;
 
-    private Vector2[] collisionVector = new Vector2[4]; // boundary 충돌 Vector
-    private Vector2 collisionPoint= Vector2.zero;
-
     private Coroutine moveCoroutine = null;
+    bool coll = false;
+
+    // screen Size
+    private Vector2 screenSize = Vector2.zero;
 
     private void OnEnable()
     {
         Rect rectTransform = gameObject.GetComponent<RectTransform>().rect;
         bubbleSize = new Vector2(rectTransform.width, rectTransform.height);
         gameMode = Mode.Speed; // GameManager Mode Load
-
-        collisionVector[(int)Boundary.Left] = Vector2.zero - new Vector2(0, Screen.height);
-        collisionVector[(int)Boundary.Right] = new Vector2(Screen.width, Screen.height) - new Vector2(Screen.width, 0);
-        collisionVector[(int)Boundary.Up] = new Vector2(0, Screen.height) - new Vector2(Screen.width, Screen.height);
-        collisionVector[(int)Boundary.Bottom] = new Vector2(Screen.width, 0) - Vector2.zero;
+        screenSize = new Vector2(2 * Camera.main.orthographicSize * Camera.main.aspect, 2 * Camera.main.orthographicSize);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -48,6 +42,8 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
         Vector2 bubblePosition = transform.position;
         Vector2 touchPosition = eventData.position;
+
+
 
         if (moveCoroutine != null)
         { // move coroutine stop
@@ -74,16 +70,17 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         // Bubble Move
         Vector2 dir = _bubblePosition - _touchPosition; // Touch Position의 반대 방향
 
-        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, 2f, 0.4f));
+        //moveCoroutine = StartCoroutine(BubbleMove_Co(dir, 2f, 0.4f));
     }
 
     public void SpeedMode(Vector2 _bubblePosition, Vector2 _touchPosition)
     {
         // Bubble Move
-        Vector2 dir = _bubblePosition - _touchPosition;
+
+        Vector2 dir = (_bubblePosition - _touchPosition).normalized;
         //dir.y = 0f; // 좌우로만 이동
 
-        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, 2f, 0.7f));
+        moveCoroutine = StartCoroutine(BubbleMove_Co(_bubblePosition, dir, maxSpeed, maxDecel));
         GameManager.instance.touchCount--;
 
         if (GameManager.instance.touchCount <= 0)
@@ -106,11 +103,11 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         // touch는 하되 어떻게 해야할 지 생각
         if (_onlyMove)
         {
-            StartCoroutine(BubbleMove_Co(dir, 5f, 0.4f));
+            //   StartCoroutine(BubbleMove_Co(dir, 5f, 0.4f));
         }
         else
         {
-            StartCoroutine(BubbleMove_Co(-dir, 5f, 0.4f)); // onlymove와 dir반대
+            //StartCoroutine(BubbleMove_Co(-dir, 5f, 0.4f)); // onlymove와 dir반대
         }
     }
 
@@ -143,49 +140,55 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         callback(true);
     }
 
-    private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed, float _decel)
+    private IEnumerator BubbleMove_Co(Vector2 _bubblePosition, Vector2 _dir, float _maxSpeed, float _decel)
     {
-        float timer = 2f;
         float currentSpeed = _maxSpeed; // maxSpeed 초기화
-        while (timer > 0)
-        {
-            timer -= Time.deltaTime;
 
-            if (0 + bubbleSize.x / 2 >= transform.position.x)
+        while (currentSpeed >= 0)
+        {
+            if (0f + bubbleSize.x / 2f > transform.position.x)
             { // boundary left
-                collisionPoint = new Vector2(0, transform.position.y);
-                _dir = Vector2.Reflect(_dir.normalized, collisionPoint);
-                    // ReflectionVector(_dir, collisionVector[(int)Boundary.Left]);
+                _dir = ReflectionVector(_dir, Vector2.right, _bubblePosition);
+                transform.position = new Vector2((bubbleSize.x / 2f + 10f), transform.position.y);
             }
-            else if (transform.position.x >= Screen.width - bubbleSize.x / 2)
+            else if (transform.position.x > Screen.width - bubbleSize.x / 2f)
             { // boundary right
-                _dir = ReflectionVector(_dir, collisionVector[(int)Boundary.Right]);
+                _dir = ReflectionVector(_dir, Vector2.left, _bubblePosition);
+                transform.position = new Vector2(Screen.width - (bubbleSize.x / 2f + 10f), transform.position.y);
             }
-            else if (0 + bubbleSize.y / 2 >= transform.position.y)
+            else if (0f + bubbleSize.y / 2f + 10f > transform.position.y)
             { // boundary bottom
-                _dir = ReflectionVector(_dir, collisionVector[(int)Boundary.Bottom]);
+                _dir = ReflectionVector(_dir, Vector2.up, _bubblePosition);
+                transform.position = new Vector2(transform.position.x, bubbleSize.y / 2f + 10f);
             }
-            else if (transform.position.y >= Screen.height - bubbleSize.y / 2)
+            else if (transform.position.y > Screen.height - bubbleSize.y / 2f)
             { // boundary up
-                _dir = ReflectionVector(_dir, collisionVector[(int)Boundary.Up]);
+                _dir = ReflectionVector(_dir, Vector2.down, _bubblePosition);
+                transform.position = new Vector2(transform.position.x, Screen.height - (bubbleSize.y / 2f + 10f));
             }
-            Debug.Log("Dir: " + _dir);
-            transform.Translate(_dir * (Time.deltaTime * currentSpeed));
-            currentSpeed -= _decel * Time.deltaTime;
+
+            _bubblePosition = transform.position;
+
+            transform.Translate(_dir * (Time.deltaTime * currentSpeed * 200f));
+
+            // Lerp
+            var lerpDecel = decelOverTime.Evaluate(1 - currentSpeed / _maxSpeed) * _decel;
+            currentSpeed = Mathf.Max(0f, currentSpeed - lerpDecel * Time.deltaTime);
 
             yield return null;
         }
     }
 
-    private Vector2 ReflectionVector(Vector2 _dir, Vector2 _collisionVector)
+    private Vector2 ReflectionVector(Vector2 _inDrection, Vector2 _isNomal, Vector2 _bubblePosition)
     {
-        float collisionAngle = Mathf.Atan2(_collisionVector.y, _collisionVector.x) * 180f / Mathf.PI; // 충돌한 면의 벡터를 각도로 변환
-        float incidentAngle = Vector3.SignedAngle(_collisionVector, _dir, -Vector3.forward); // 입사 벡터를 각도로 변환
-        float reflectAngle = incidentAngle - 180f + collisionAngle; // 반사할 벡터의 각도를 구함(충돌한 면의 벡터 기준)
-        float reflectionRadian = reflectAngle * Mathf.Deg2Rad; // 반사할 벡터의 각도를 라디안으로 변환
+        _inDrection = Vector2.Reflect(_inDrection.normalized, _isNomal).normalized; // 반사각
+        return _inDrection;
+    }
 
-        Vector2 reflectVector = new Vector2(Mathf.Cos(reflectionRadian), Mathf.Sin(reflectionRadian));
-
+    private Vector2 ReflectionVector(Vector2 _direction, Vector2 _collisionVector)
+    {
+        float collisionAngle = Mathf.Atan2(_collisionVector.y, _collisionVector.x) * 180f / Mathf.PI;
+        Vector2 reflectVector = Vector2.zero;
         return reflectVector;
     }
 }

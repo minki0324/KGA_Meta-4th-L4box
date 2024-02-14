@@ -89,3 +89,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3834425d0192834d96e40a4d74039fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  decelOverTime:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.9
+      inSlope: 0.041585356
+      outSlope: 0.041585356
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1.0013698
+      value: 0.000120287994
+      inSlope: -1.7726747
+      outSlope: -1.7726747
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.05400359
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxDecel: 100
+  maxSpeed: 30
