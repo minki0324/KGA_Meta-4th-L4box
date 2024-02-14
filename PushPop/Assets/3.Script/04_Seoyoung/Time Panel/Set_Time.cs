@@ -11,7 +11,7 @@ public class Set_Time : MonoBehaviour
 {
 
     [Header("Äµ¹ö½º")]
-    [SerializeField] private Canvas main_Canvas;
+    [SerializeField] private Main_Button main_Canvas;
     [SerializeField] private Canvas pushMode_Canvas;
     [SerializeField] private Canvas speedMode_Canvas;
     [SerializeField] private Canvas memoryMode_Canvas;
@@ -46,7 +46,16 @@ public class Set_Time : MonoBehaviour
     {
         time = 300;
         bCanStart = true;
+        main_Canvas.Disable_Button();
     }
+
+    private void OnDisable()
+    {
+        main_Canvas.Enable_Button();
+    }
+
+
+
 
     private void Update()
     {
@@ -78,6 +87,7 @@ public class Set_Time : MonoBehaviour
         Back_Btn.onClick.AddListener(() => { 
             gameObject.SetActive(false);
             GameManager.instance.gameMode = GameMode.None;
+           
         });
     }
 

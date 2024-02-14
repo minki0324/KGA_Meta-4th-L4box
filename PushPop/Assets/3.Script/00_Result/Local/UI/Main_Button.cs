@@ -35,6 +35,10 @@ public class Main_Button : MonoBehaviour
     [SerializeField] private Help_Canvas help_Cavas;
 
     #region Unity Callback
+    private void OnEnable()
+    {
+        Enable_Button();
+    }
     #endregion
 
     #region Other Method
@@ -53,6 +57,7 @@ public class Main_Button : MonoBehaviour
     {
         GameManager.instance.gameMode = GameMode.Speed;
         _timesetPanel.SetActive(true);
+        //Disable_Button();
     }
 
 
@@ -61,6 +66,7 @@ public class Main_Button : MonoBehaviour
     {
         GameManager.instance.gameMode = GameMode.Memory;
         _timesetPanel.SetActive(true);
+       // Disable_Button();
     }
 
 
@@ -101,6 +107,32 @@ public class Main_Button : MonoBehaviour
     {
         Application.OpenURL("https://www.l4box.com/");
          AudioManager123.instance.SetAudioClip_SFX(0);
+    }
+
+
+    public void Enable_Button()
+    {
+        _optionBtn.enabled = true;
+        _profileBtn.enabled = true;
+        _homeBtn.enabled = true;
+        _collectionBtn.enabled = true;
+        _mode2PBtn.enabled = true;
+        _pushModeBtn.enabled = true;
+        _speedModeBtn.enabled = true;
+        _memoryModeBtn.enabled = true;
+
+    }
+
+    public void Disable_Button()
+    {
+        _optionBtn.enabled = false;
+        _profileBtn.enabled = false;
+        _homeBtn.enabled = false;
+        _collectionBtn.enabled = false;
+        _mode2PBtn.enabled = false;
+        _pushModeBtn.enabled = false;
+        _speedModeBtn.enabled = false;
+        _memoryModeBtn.enabled = false;
     }
     #endregion
 }
