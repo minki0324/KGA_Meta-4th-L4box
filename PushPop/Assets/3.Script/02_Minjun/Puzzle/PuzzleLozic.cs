@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
+
 public class PuzzleLozic : MonoBehaviour
 {
     [Header("맞추는 퍼즐 오브젝트")]
@@ -21,6 +24,23 @@ public class PuzzleLozic : MonoBehaviour
     public int ClearCount=0; //맞춰야하는 퍼즐 갯수
     public int successCount= 0; //맞춘 갯수
     private Puzzle currentPuzzle; //Player가 고른 퍼즐 종류
+    [SerializeField] CostomPushpopManager costom;
+    public Action onClear;
+
+    public SpriteAtlas atlas;
+
+    private void OnEnable()
+    {
+        onClear += DestroyChildren;
+        onClear += CraetBoard;
+        onClear += ActiveCostomPanel;
+    }
+    private void OnDisable()
+    {
+        onClear -= DestroyChildren;
+        onClear -= CraetBoard;
+        onClear -= ActiveCostomPanel;
+    }
     public bool checkdistance(Vector3 currentPosition )
     {//퍼즐을 놓았을때 맞춰야하는 위치와 현재위치 비교
         if (Vector3.Distance(currentPosition, frampPos.position) < puzzleJudgmentDistance)
@@ -68,8 +88,9 @@ public class PuzzleLozic : MonoBehaviour
     }
     private void PuzzleInstantiate(GameObject puzzle , Vector3 position , Sprite puzzleSprite)
     {//퍼즐생성
-        GameObject newPiecePuzzle = Instantiate(puzzle, position, Quaternion.identity);
-        PuzzleSetting(newPiecePuzzle, puzzleSprite);
+        GameObject board = Instantiate(puzzle, position, Quaternion.identity);
+        PuzzleSetting(board, puzzleSprite);
+        //newPiecePuzle
     }
 
     private void PuzzleSetting(GameObject puzzle , Sprite sprite)
@@ -79,15 +100,22 @@ public class PuzzleLozic : MonoBehaviour
         frameImage.sprite = sprite; //퍼즐 사진넣기
         frameImage.preserveAspect =true; //사진사이즈 세팅
     }
-    public void DestroyChildren()
+    private void DestroyChildren()
     {//퍼즐을 완료했을때 생성되있던 퍼즐 삭제하기위한 메소드
         foreach (Transform child in PuzzleParent.transform)
         {
             Destroy(child.gameObject);
         }
     }
-    public void CraetBoard()
+    private void CraetBoard()
     {//퍼즐완료하고 퍼즐 원본 오브젝트 생성해주기
-        PuzzleInstantiate(FrameObject, frampPos.position, currentPuzzle.board);
+        Image frameImage = costom.puzzleBoard.GetComponent<Image>();
+        frameImage.sprite = atlas.GetSprite(currentPuzzle.PuzzleID.ToString()); //퍼즐 사진넣기
+        frameImage.SetNativeSize();
+        frameImage.alphaHitTestMinimumThreshold = 0.1f;
+    }
+    private void ActiveCostomPanel()
+    {
+        costom.gameObject.SetActive(true);
     }
 }

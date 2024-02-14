@@ -76,10 +76,8 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             if (StageClear())
             {
                 Debug.Log("스테이지를 클리어 했습니다! 잘했어요!!");
-                //생성되있는 퍼즐들 전부삭제
-                puzzleLozic.DestroyChildren();
-                //합쳐져있는 퍼즐 원본 오브젝트 생성
-                puzzleLozic.CraetBoard();
+          
+                puzzleLozic.onClear?.Invoke();
             }
         }
     }
@@ -96,4 +94,5 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             return false;
         }
     }
+   
 }

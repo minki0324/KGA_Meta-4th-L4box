@@ -64,7 +64,7 @@ public class PushPush_Canvas : MonoBehaviour
 
     private void OnEnable()
     {
-        background_Canvas.gameObject.SetActive(true);
+        //background_Canvas.gameObject.SetActive(true);
         selectMold_Panel.SetActive(false);
 
         currentPage = 1;
