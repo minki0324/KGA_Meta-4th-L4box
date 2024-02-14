@@ -1,0 +1,228 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+//Bg_Canvas에 들어가는 스크립트
+
+public class Help_Canvas : MonoBehaviour
+{
+    [Header("Main Canvas")]
+    [SerializeField] private Canvas mainCanvas;
+
+    [Header("캔버스")]
+    [SerializeField] private PushPush_Canvas pushpush_Canvas;
+    [SerializeField] private Speed_Canvas speed_Canvas;
+    [SerializeField] private Canvas memory;
+
+
+    [Header("도움말 창")]
+    [SerializeField] private GameObject help_Panel;
+
+    [SerializeField] private Button help_Btn;
+
+    [SerializeField] private TMP_Text help_Description;
+
+    [SerializeField] private TMP_Text page_Text;
+
+    [Header("뒤로가기&도움말 버튼")]
+    public Button Back_Btn;
+    public Button Help_Btn;
+
+    //도움말창이 켜져있는가 판단하는 변수, 도움말 창이 켜져있으면 그 외 모든 버튼 비활성화
+    public bool bisHelpPanelOn = false;
+
+    //도움말 페이지 번호
+    private int maxPage;
+    private int currentPage;
+
+    #region Unity Callback
+
+    private void Start()
+    {
+        Init();
+    }
+    private void OnEnable()
+    {
+        Back_Btn.enabled = true;
+        help_Btn.enabled = true;
+    }
+
+    #endregion
+
+    #region Other Method
+    private void Init()
+    {   
+        help_Panel.SetActive(false); 
+    }
+
+    //우측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
+    public void BackBtn_Clicked()
+    {
+        if(!bisHelpPanelOn)
+        {
+            switch (GameManager.instance.gameMode)
+            {
+                case GameMode.PushPush:
+                    pushpush_Canvas.BackBtn_Clicked();
+                    break;
+
+                case GameMode.Speed:
+                    speed_Canvas.BackBtn_Clicked();
+                    break;
+
+                case GameMode.Memory:
+
+                    break;
+            }
+        }
+ 
+    }
+
+
+    //좌측하단 도움말 버튼 눌리면 호출될 메소드
+    public void HelpBtn_Clicked()
+    {     
+        if(!bisHelpPanelOn)
+        {
+            help_Panel.SetActive(true);
+            bisHelpPanelOn = true;
+            help_Btn.enabled = false;
+            Back_Btn.enabled = false;
+            currentPage = 1;
+            Help_Scripts();
+
+            switch(GameManager.instance.gameMode)
+            {
+                case GameMode.PushPush:
+                    pushpush_Canvas.Disable_Objects();
+                    break;
+
+                case GameMode.Speed:
+                    speed_Canvas.Disable_Objects();
+                    break;
+            }    
+        }
+    }
+
+
+    //도움말 창의 x키(BackBtn) 눌리면 호출될 메소드
+    public void Help_BackBtn_Clicked()
+    {
+        if(bisHelpPanelOn)
+        {
+            help_Btn.enabled = true;
+            Back_Btn.enabled = true;
+            bisHelpPanelOn = false;
+            help_Panel.SetActive(false);
+
+
+            switch (GameManager.instance.gameMode)
+            {
+                case GameMode.PushPush:
+                    pushpush_Canvas.Enable_Objects();
+                    break;
+
+                case GameMode.Speed:
+                    speed_Canvas.Enable_Objects();
+                    break;
+            }
+
+        }
+       
+    }
+
+
+    //도움말 창의 Next(다음) 버튼 눌리면 호출될 메소드
+    public void NextBtn_Clicked()
+    {     
+        if(currentPage < maxPage)
+        {
+            currentPage += 1;
+            Help_Scripts();
+        }
+     
+    }
+
+
+    //도움말 창의 Previous(이전) 버튼 눌리면 호출될 메소드
+    public void PreviousBtn_Clicked()
+    {
+        if (currentPage > 1)
+        {
+            currentPage -= 1;
+            Help_Scripts();
+        }
+    }
+
+
+    //헬프 버튼 누르면 나오는 스크립트 
+    private void Help_Scripts()
+    {       
+        switch (GameManager.instance.gameMode)
+        {
+
+            //푸시푸시모드 도움말
+            case GameMode.PushPush:
+                maxPage = 2;
+                switch (currentPage)
+                {
+                    case 1:
+                        //1페이지 내용
+                        help_Description.text = "푸시푸시 1페이지";
+                        break;
+
+                    case 2:
+                        //2페이지 내용
+                        help_Description.text = "푸시푸시 2페이지";
+                        break;
+
+                }
+                break;
+
+            //스피드 모드 도움말
+            case GameMode.Speed:
+                maxPage = 2;
+                switch (currentPage)
+                {
+                    case 1:
+                        help_Description.text = "스피드 1페이지";
+                        break;
+
+                    case 2:
+                        //2페이지 내용
+                        help_Description.text = "스피드 2페이지";
+                        break;
+                }
+                break;
+
+            //메모리 모드 도움말
+            case GameMode.Memory:
+                maxPage = 1;
+                switch (currentPage)
+                {
+                    case 1:
+
+                        break;
+                }
+                break;
+
+            //2인모드 도움맒
+            case GameMode.Multi:
+                maxPage = 1;
+                switch (currentPage)
+                {
+                    case 1:
+
+                        break;
+                }
+                break;
+        }
+
+        page_Text.text = $"{currentPage}/{maxPage}";
+    }
+
+    #endregion
+
+}

@@ -22,18 +22,17 @@ public class Mold_Dictionary : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
 
-    private void Start()
-    {
         CategoryDictionary();
         IconDictionary();
     }
 
 
+
     public void CategoryDictionary()
     {
         category_Dictionary = new Dictionary<int, string>();
+
         category_Dictionary.Add(10, "해산물");
         category_Dictionary.Add(11, "곤충");
         category_Dictionary.Add(12, "공룡");
@@ -52,64 +51,65 @@ public class Mold_Dictionary : MonoBehaviour
 
         icon_Dictionry.Add(1001, "문어");
         icon_Dictionry.Add(1002, "키조개");
-        icon_Dictionry.Add(1003, "키조개");
-        icon_Dictionry.Add(1004, "키조개");
-        icon_Dictionry.Add(1005, "키조개");
-        icon_Dictionry.Add(1006, "키조개");
-        icon_Dictionry.Add(1007, "키조개");
-        icon_Dictionry.Add(1008, "키조개");
-        icon_Dictionry.Add(1009, "키조개");
-        icon_Dictionry.Add(1010, "키조개");
-        icon_Dictionry.Add(1012, "키조개");
-        icon_Dictionry.Add(1013, "키조개");
-        icon_Dictionry.Add(1014, "키조개");
-        icon_Dictionry.Add(1015, "키조개");
-        icon_Dictionry.Add(1016, "키조개");
-        icon_Dictionry.Add(1017, "키조개");
-        icon_Dictionry.Add(1018, "키조개");
-        icon_Dictionry.Add(1019, "키조개");
-        icon_Dictionry.Add(1020, "키조개");
-        icon_Dictionry.Add(1021, "키조개");
+        icon_Dictionry.Add(1003, "농게");
+        icon_Dictionry.Add(1004, "칠게");
+        icon_Dictionry.Add(1005, "밤게");
+        icon_Dictionry.Add(1006, "명주매물고둥");
+        icon_Dictionry.Add(1007, "쏙");
+        icon_Dictionry.Add(1008, "댕가리");
+        icon_Dictionry.Add(1009, "짱둥어");
+        icon_Dictionry.Add(1010, "소라게");
+        icon_Dictionry.Add(1011, "말뚝망둥어");
+        icon_Dictionry.Add(1012, "바지락");
+        icon_Dictionry.Add(1013, "저어새");
+        icon_Dictionry.Add(1014, "동죽");
+        icon_Dictionry.Add(1015, "말락꼬리마도요");
+        icon_Dictionry.Add(1016, "꼬막");
+        icon_Dictionry.Add(1017, "검은머리물떼새");
+        icon_Dictionry.Add(1018, "가리비");
+        icon_Dictionry.Add(1019, "피뿔고동");
+        icon_Dictionry.Add(1020, "큰구슬우렁이");
+        icon_Dictionry.Add(1021, "별불가사리");
         //곤충
-        icon_Dictionry.Add(1101, "키조개");
-        icon_Dictionry.Add(1102, "키조개");
-        icon_Dictionry.Add(1103, "키조개");
-        icon_Dictionry.Add(1104, "키조개");
-        icon_Dictionry.Add(1105, "키조개");
-        icon_Dictionry.Add(1106, "키조개");
-        icon_Dictionry.Add(1107, "키조개");
-        icon_Dictionry.Add(1108, "키조개");
-        icon_Dictionry.Add(1109, "키조개");
-        icon_Dictionry.Add(1110, "키조개");
-        icon_Dictionry.Add(1111, "키조개");
+        icon_Dictionry.Add(1101, "꿀벌");
+        icon_Dictionry.Add(1102, "나비");
+        icon_Dictionry.Add(1103, "메뚜기");
+        icon_Dictionry.Add(1104, "풍뎅이");
+        icon_Dictionry.Add(1105, "달팽이");
+        icon_Dictionry.Add(1106, "여치");
+        icon_Dictionry.Add(1107, "매미");
+        icon_Dictionry.Add(1108, "무당벌레");
+        icon_Dictionry.Add(1109, "애벌레");
+        icon_Dictionry.Add(1110, "잠자리");
+        icon_Dictionry.Add(1111, "개미");
         //공룡
-        icon_Dictionry.Add(1201, "키조개");
-        icon_Dictionry.Add(1202, "키조개");
-        icon_Dictionry.Add(1203, "키조개");
-        icon_Dictionry.Add(1204, "키조개");
+        icon_Dictionry.Add(1201, "알로사우르스");
+        icon_Dictionry.Add(1202, "헤레라사우르스");
+        icon_Dictionry.Add(1203, "람포링쿠스");
+        icon_Dictionry.Add(1204, "갈라미무스");
         icon_Dictionry.Add(1205, "키조개");
-        icon_Dictionry.Add(1207, "키조개");
-        icon_Dictionry.Add(1208, "키조개");
-        icon_Dictionry.Add(1209, "키조개");
-        icon_Dictionry.Add(1210, "키조개");
-        icon_Dictionry.Add(1211, "키조개");
-        icon_Dictionry.Add(1212, "키조개");
-        icon_Dictionry.Add(1213, "키조개");
-        icon_Dictionry.Add(1214, "키조개");
-        icon_Dictionry.Add(1215, "키조개");
-        icon_Dictionry.Add(1216, "키조개");
-        icon_Dictionry.Add(1217, "키조개");
-        icon_Dictionry.Add(1218, "키조개");
-        icon_Dictionry.Add(1219, "키조개");
-        icon_Dictionry.Add(1220, "키조개");
-        icon_Dictionry.Add(1221, "키조개");
-        icon_Dictionry.Add(1222, "키조개");
-        icon_Dictionry.Add(1223, "키조개");
-        icon_Dictionry.Add(1224, "키조개");
-        icon_Dictionry.Add(1225, "키조개");
-        icon_Dictionry.Add(1226, "키조개");
+        icon_Dictionry.Add(1207, "프라테노돈");
+        icon_Dictionry.Add(1208, "콤프소그나투스");
+        icon_Dictionry.Add(1209, "브라키오사우르스");
+        icon_Dictionry.Add(1210, "디플로도쿠스");
+        icon_Dictionry.Add(1211, "파키케팔로사우르스");
+        icon_Dictionry.Add(1212, "스테고사우르스");
+        icon_Dictionry.Add(1213, "티라노사우르스");
+        icon_Dictionry.Add(1214, "엘라스모사우르스");
+        icon_Dictionry.Add(1215, "아파토사우르스");
+        icon_Dictionry.Add(1216, "이구아노돈");
+        icon_Dictionry.Add(1217, "크로노사우르스");
+        icon_Dictionry.Add(1218, "플라테오사우르스");
+        icon_Dictionry.Add(1219, "스니노사우르스");
+        icon_Dictionry.Add(1220, "모사사우르스");
+        icon_Dictionry.Add(1221, "벨라키랍토르");
+        icon_Dictionry.Add(1222, "트리케라톱스");
+        icon_Dictionry.Add(1223, "딜로포사우르스");
+        icon_Dictionry.Add(1224, "파라사우롤로푸스");
+        icon_Dictionry.Add(1225, "돌리코린촙스");
+        icon_Dictionry.Add(1226, "안킬로사우르스");
         icon_Dictionry.Add(1227, "키조개");
-        icon_Dictionry.Add(1228, "키조개");
+        icon_Dictionry.Add(1228, "오르니토케이루스");
         //과일
         icon_Dictionry.Add(1301, "파인애플");
         icon_Dictionry.Add(1302, "포도");
