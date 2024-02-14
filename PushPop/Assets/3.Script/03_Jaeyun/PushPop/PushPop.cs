@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.U2D;
 
 public class PushPop : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PushPop : MonoBehaviour
     private List<GameObject> pushPopBoardObject = new List<GameObject>();
 
     [Header("PushPop Board")]
+    [SerializeField] private SpriteAtlas spriteAtlas;
+    [SerializeField] private string spriteName = string.Empty;
     [SerializeField] private GameObject boardPrefab = null; // board Prefab
     [SerializeField] private Sprite boardSprite = null; // board sprite, custom sprite out line setting 필요 
     private Vector3 boardSize = Vector3.zero;
@@ -31,9 +34,6 @@ public class PushPop : MonoBehaviour
 
     public List<GameObject> pushPopButton = new List<GameObject>();
     public List<GameObject> activePos = new List<GameObject>();
-
-    private float screenWidth = Screen.width;
-    private float screenHeight = Screen.height;
 
     private void Awake()
     {
@@ -57,16 +57,40 @@ public class PushPop : MonoBehaviour
         PushPopButtonSetting();
     }
 
+    // SpriteAtlas에서 Sprite 갖고오기
+    private Sprite SpriteAtlas(string _spriteName)
+    {
+        _spriteName += "(Clone)";
+        Sprite[] sprites = new Sprite[spriteAtlas.spriteCount];
+        spriteAtlas.GetSprites(sprites);
+
+        foreach (Sprite sprite in sprites)
+        {
+            if (sprite.name.Equals(_spriteName))
+            {
+                return sprite;
+            }
+        }
+        return null;
+    }
+
     // Sprite 모양에 따른 Polygon collider setting
     private void CreatePushPopBoard()
     { // bomb mode일 때는 2회 호출
+        // sprite atlas
+        boardSprite = SpriteAtlas(spriteName);
+
         // canvas
         GameObject pushPopBoard = Instantiate(pushPopBoardPrefab, pushPopCanvas);
         pushPopBoard.GetComponent<Image>().sprite = boardSprite;
+        Rect boardRect = pushPopBoardPrefab.GetComponent<RectTransform>().rect;
+        float scale = Mathf.Min(boardRect.width / boardSprite.textureRect.size.x, boardRect.width / boardSprite.textureRect.size.y) * 0.95f;
         pushPopBoardObject.Add(pushPopBoard);
+
         // gameObject
         pushObject = Instantiate(boardPrefab);
         pushObject.GetComponent<SpriteRenderer>().sprite = boardSprite;
+        pushObject.transform.localScale = new Vector3(scale, scale, 1f);
         pushObject.AddComponent<PolygonCollider2D>(); // Polygon Collider Setting
         boardCollider = pushObject.GetComponent<PolygonCollider2D>();
     }

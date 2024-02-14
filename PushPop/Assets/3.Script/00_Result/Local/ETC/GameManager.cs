@@ -150,7 +150,7 @@ public class GameManager : MonoBehaviour, IGameMode
         bubbleObject.Add(bubble);
         bubbleObject[0].GetComponent<RectTransform>().sizeDelta = new Vector2(500f, 500f);
         bubbleObject[0].transform.localPosition = new Vector2(0, 0);
-        touchCount = Random.Range(1, 11); // 1 ~ 10ȸ
+        touchCount = Random.Range(2, 10); // 2 ~ 9ȸ
     }
 
     public void MemoryMode()
