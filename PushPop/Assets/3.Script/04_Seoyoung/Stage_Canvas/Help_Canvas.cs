@@ -76,7 +76,7 @@ public class Help_Canvas : MonoBehaviour
     {
         if(!bisHelpPanelOn)
         {
-            switch (GameManager.instance.gameMode)
+            switch (GameManager.Instance._gameMode)
             {
                 case GameMode.PushPush:
                     pushpush_Canvas.BackBtn_Clicked();
@@ -107,7 +107,7 @@ public class Help_Canvas : MonoBehaviour
             currentPage = 1;
             Help_Scripts();
 
-            switch(GameManager.instance.gameMode)
+            /*switch(GameManager.Instance.gameMode)
             {
                 case GameMode.PushPush:
                     pushpush_Canvas.Disable_Objects();
@@ -116,7 +116,7 @@ public class Help_Canvas : MonoBehaviour
                 case GameMode.Speed:
                     speed_Canvas.Disable_Objects();
                     break;
-            }    
+            }    */
         }
     }
 
@@ -132,7 +132,7 @@ public class Help_Canvas : MonoBehaviour
             help_Panel.SetActive(false);
 
 
-            switch (GameManager.instance.gameMode)
+           /* switch (GameManager.Instance.gameMode)
             {
                 case GameMode.PushPush:
                     pushpush_Canvas.Enable_Objects();
@@ -141,7 +141,7 @@ public class Help_Canvas : MonoBehaviour
                 case GameMode.Speed:
                     speed_Canvas.Enable_Objects();
                     break;
-            }
+            }*/
 
         }
        
@@ -174,7 +174,7 @@ public class Help_Canvas : MonoBehaviour
     //헬프 버튼 누르면 나오는 스크립트 
     private void Help_Scripts()
     {       
-        switch (GameManager.instance.gameMode)
+        /*switch (GameManager.Instance.gameMode)
         {
 
             //푸시푸시모드 도움말
@@ -232,7 +232,7 @@ public class Help_Canvas : MonoBehaviour
                         break;
                 }
                 break;
-        }
+        }*/
 
         page_Text.text = $"{currentPage}/{maxPage}";
     }

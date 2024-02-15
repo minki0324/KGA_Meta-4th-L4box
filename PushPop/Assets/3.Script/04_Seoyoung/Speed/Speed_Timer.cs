@@ -32,7 +32,7 @@ public class Speed_Timer : MonoBehaviour
     private void OnEnable()
     {
         //시간 초기화
-       currentTime = GameManager.instance.TimerTime + 1;
+       currentTime = GameManager.Instance.TimerTime + 1;
        // currentTime = 10 +1;
         SetText();
 

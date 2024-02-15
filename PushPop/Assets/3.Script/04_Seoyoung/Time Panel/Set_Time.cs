@@ -86,7 +86,7 @@ public class Set_Time : MonoBehaviour
         Confirm_Btn.onClick.AddListener(ConfirmBtn_Clicked);
         Back_Btn.onClick.AddListener(() => { 
             gameObject.SetActive(false);
-            GameManager.instance.gameMode = GameMode.None;
+            GameManager.Instance._gameMode = GameMode.None;
            
         });
     }
