@@ -11311,6 +11311,10 @@ MonoBehaviour:
   _timesetPanel: {fileID: 0}
   _buttonPanel: {fileID: 1410643994}
   _gameModePanel: {fileID: 851502538}
+  pushMode_Canvas: {fileID: 0}
+  speedMode_Canvas: {fileID: 0}
+  memoryMode_Canvas: {fileID: 0}
+  Background_Canvas: {fileID: 0}
 --- !u!114 &1410643997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13625,7 +13629,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9daf19aa4ca3304e9201c587f85f836, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stage_Canvas: {fileID: 0}
+  main_Canvas: {fileID: 0}
+  pushMode_Canvas: {fileID: 0}
+  speedMode_Canvas: {fileID: 0}
+  memoryMode_Canvas: {fileID: 0}
+  Background_Canvas: {fileID: 0}
   IncreaseTime_Btn: {fileID: 1633290260}
   DecreaseTime_Btn: {fileID: 1327201160}
   TimeText_InputField: {fileID: 945690016}
