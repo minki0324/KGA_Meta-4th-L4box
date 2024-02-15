@@ -6,10 +6,15 @@ using TMPro;
 
 //Bg_Canvas에 들어가는 스크립트
 
-public class Stage_Background : MonoBehaviour
+public class Help_Canvas : MonoBehaviour
 {
     [Header("Main Canvas")]
     [SerializeField] private Canvas mainCanvas;
+
+    [Header("캔버스")]
+    [SerializeField] private PushPush_Canvas pushpush_Canvas;
+    [SerializeField] private Speed_Canvas speed_Canvas;
+    [SerializeField] private Canvas memory;
 
 
     [Header("도움말 창")]
@@ -21,7 +26,11 @@ public class Stage_Background : MonoBehaviour
 
     [SerializeField] private TMP_Text page_Text;
 
-    //도움말창이 켜져있는가 판단하는 변수
+    [Header("뒤로가기&도움말 버튼")]
+    public Button Back_Btn;
+    public Button Help_Btn;
+
+    //도움말창이 켜져있는가 판단하는 변수, 도움말 창이 켜져있으면 그 외 모든 버튼 비활성화
     public bool bisHelpPanelOn = false;
 
     //도움말 페이지 번호
@@ -34,86 +43,123 @@ public class Stage_Background : MonoBehaviour
     {
         Init();
     }
-
-
     private void OnEnable()
     {
-        switch(GameManager.instance.gameMode)
-        {
-            case GameMode.PushPush:
-              //  pushMode_Panel.SetActive(true);
-                break;
-
-            case GameMode.Speed:
-             //   speedMode_Panel.SetActive(true);
-                break;
-
-            case GameMode.Memory:
-                //memoryMode_Panel.SetActive(true);
-                break;
-        }
+        Back_Btn.enabled = true;
+        help_Btn.enabled = true;
     }
 
-    private void OnDisable()
-    {
-       // pushMode_Panel.SetActive(false);
-
-    }
     #endregion
 
     #region Other Method
-
     private void Init()
     {   
-        help_Panel.SetActive(false);
-        gameObject.SetActive(false);        
+        help_Panel.SetActive(false); 
     }
 
+    //우측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
     public void BackBtn_Clicked()
     {
-        mainCanvas.gameObject.SetActive(true);
-        gameObject.SetActive(false);
+        if(!bisHelpPanelOn)
+        {
+            switch (GameManager.instance.gameMode)
+            {
+                case GameMode.PushPush:
+                    pushpush_Canvas.BackBtn_Clicked();
+                    break;
+
+                case GameMode.Speed:
+                    speed_Canvas.BackBtn_Clicked();
+                    break;
+
+                case GameMode.Memory:
+
+                    break;
+            }
+        }
+ 
     }
 
 
+    //좌측하단 도움말 버튼 눌리면 호출될 메소드
     public void HelpBtn_Clicked()
-    {
-        //Help(도움말) 버튼 눌리면 호출될 메소드
-        if(bisHelpPanelOn == false)
+    {     
+        if(!bisHelpPanelOn)
         {
             help_Panel.SetActive(true);
             bisHelpPanelOn = true;
             help_Btn.enabled = false;
+            Back_Btn.enabled = false;
             currentPage = 1;
+            Help_Scripts();
+
+            switch(GameManager.instance.gameMode)
+            {
+                case GameMode.PushPush:
+                    pushpush_Canvas.Disable_Objects();
+                    break;
+
+                case GameMode.Speed:
+                    speed_Canvas.Disable_Objects();
+                    break;
+            }    
+        }
+    }
+
+
+    //도움말 창의 x키(BackBtn) 눌리면 호출될 메소드
+    public void Help_BackBtn_Clicked()
+    {
+        if(bisHelpPanelOn)
+        {
+            help_Btn.enabled = true;
+            Back_Btn.enabled = true;
+            bisHelpPanelOn = false;
+            help_Panel.SetActive(false);
+
+
+            switch (GameManager.instance.gameMode)
+            {
+                case GameMode.PushPush:
+                    pushpush_Canvas.Enable_Objects();
+                    break;
+
+                case GameMode.Speed:
+                    speed_Canvas.Enable_Objects();
+                    break;
+            }
+
+        }
+       
+    }
+
+
+    //도움말 창의 Next(다음) 버튼 눌리면 호출될 메소드
+    public void NextBtn_Clicked()
+    {     
+        if(currentPage < maxPage)
+        {
+            currentPage += 1;
+            Help_Scripts();
+        }
+     
+    }
+
+
+    //도움말 창의 Previous(이전) 버튼 눌리면 호출될 메소드
+    public void PreviousBtn_Clicked()
+    {
+        if (currentPage > 1)
+        {
+            currentPage -= 1;
             Help_Scripts();
         }
     }
 
-    public void Help_BackBtn_Clicked()
-    {
-        //도움말 창의 x키(BackBtn) 눌리면 호출될 메소드
-        help_Panel.SetActive(false);
-        help_Btn.enabled = true;
-    }
 
-    public void NextBtn_Clicked()
-    {
-        //Next(다음) 버튼 눌리면 호출될 메소드
-        currentPage += 1;
-        Help_Scripts();
-    }
-
-    public void PreviousBtn_Clicked()
-    {
-        //Previous(이전) 버튼 눌리면 호출될 메소드
-        currentPage -= 1;
-        Help_Scripts();
-    }
-
-
+    //헬프 버튼 누르면 나오는 스크립트 
     private void Help_Scripts()
-    {
-        //헬프 버튼 누르면 나오는 스크립트 
+    {       
         switch (GameManager.instance.gameMode)
         {
 
