@@ -47,6 +47,20 @@ public class Help_Canvas : MonoBehaviour
     {
         Back_Btn.enabled = true;
         help_Btn.enabled = true;
+        switch(GameManager.Instance._gameMode)
+        {
+            case GameMode.PushPush:
+              //  pushMode_Panel.SetActive(true);
+                break;
+
+            case GameMode.Speed:
+             //   speedMode_Panel.SetActive(true);
+                break;
+
+            case GameMode.Memory:
+                //memoryMode_Panel.SetActive(true);
+                break;
+        }
     }
 
     #endregion
