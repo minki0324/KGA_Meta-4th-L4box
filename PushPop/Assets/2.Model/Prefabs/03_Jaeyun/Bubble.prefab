@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 8925204162082192839}
   - component: {fileID: 8925204162082192834}
   - component: {fileID: 8925204162082192837}
+  - component: {fileID: 1969846499647962035}
   - component: {fileID: 8925204162082192835}
   m_Layer: 0
-  m_Name: Bubble Button
+  m_Name: Bubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,7 +38,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 400}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8925204162082192834
 CanvasRenderer:
@@ -67,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 66d9f5ddb42cd854e8b682fa2d0b0727, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -77,6 +78,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &1969846499647962035
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8925204162082192838}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8ad13b17fc849b74f91d388a9bc1ea9e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &8925204162082192835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,15 +124,13 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 1.0013698
-      value: 0.000120287994
-      inSlope: -1.7726747
-      outSlope: -1.7726747
+      value: 0
+      inSlope: -1.5749441
+      outSlope: -1.5749441
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.05400359
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxDecel: 50
-  maxSpeed: 30

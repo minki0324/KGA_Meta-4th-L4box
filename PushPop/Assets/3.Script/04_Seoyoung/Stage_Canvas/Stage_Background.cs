@@ -38,7 +38,7 @@ public class Stage_Background : MonoBehaviour
 
     private void OnEnable()
     {
-        switch(GameManager.instance.gameMode)
+        switch(GameManager.Instance._gameMode)
         {
             case GameMode.PushPush:
               //  pushMode_Panel.SetActive(true);
@@ -114,7 +114,7 @@ public class Stage_Background : MonoBehaviour
     private void Help_Scripts()
     {
         //헬프 버튼 누르면 나오는 스크립트 
-        switch (GameManager.instance.gameMode)
+        switch (GameManager.Instance._gameMode)
         {
 
             //푸시푸시모드 도움말

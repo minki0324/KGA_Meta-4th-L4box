@@ -104,7 +104,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     public void AddProfile()
     {
         int imageMode = -1;
-        switch (GameManager.instance._isImageMode)
+        switch (GameManager.Instance.IsImageMode)
         {
             case false: //  사진 찍기를 선택했을 때
                 imageMode = 0;
@@ -117,7 +117,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         { // 첫 등록일 때
             if (!string.IsNullOrWhiteSpace(_profileName))
             {
-                GameManager.instance.Profile_Index = SQL_Manager.instance.SQL_AddProfile(_profileName, imageMode);
+                GameManager.Instance.ProfileIndex = SQL_Manager.instance.SQL_AddProfile(_profileName, imageMode);
             }
             else
             {
@@ -129,7 +129,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         }
         else if(_isUpdate)
         { // 수정 중일 때
-            SQL_Manager.instance.SQL_UpdateMode(imageMode, GameManager.instance.UID, GameManager.instance.Profile_Index);
+            SQL_Manager.instance.SQL_UpdateMode(imageMode, GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
         }
     }
 
@@ -160,12 +160,12 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
             if (SQL_Manager.instance.Profile_list[i].imageMode) // ?��미�??�? ?��?��?�� Profile?�� 경우
             {
-                info.ProfileImage.sprite = GameManager.instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
+                info.ProfileImage.sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
             }
             else // ?��진찍기�?? ?��?��?�� Profile?�� 경우
             {
-                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.instance.UID, SQL_Manager.instance.Profile_list[i].index);
-                Sprite profileSprite = GameManager.instance.TextureToSprite(profileTexture);
+                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
+                Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
                 info.ProfileImage.sprite = profileSprite;
             }
         }
@@ -174,7 +174,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     // ?��로필 ?��?�� Btn ?��?�� Method
     public void DeleteProfile()
     {
-        SQL_Manager.instance.SQL_DeleteProfile(GameManager.instance.Profile_name, GameManager.instance.Profile_Index);
+        SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex);
     }
 
     // Profile ?��?�� Btn ?��?�� Method
@@ -200,8 +200,8 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         {   // ?��?��?�� ?��?�� ?�� (�? ?��록일 ?��)
             if (index.Equals(0))
             { // ?���? 찍기 버튼 ?��????�� ?��
-                _imagePath = $"{Application.persistentDataPath}/Profile/{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png";
-                SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}", GameManager.instance.UID, GameManager.instance.Profile_Index);
+                _imagePath = $"{Application.persistentDataPath}/Profile/{GameManager.Instance.UID}_{GameManager.Instance.ProfileIndex}.png";
+                SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}", GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
 
                 PrintProfileList();
                 CheckPanel.SetActive(false);
@@ -219,9 +219,9 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
                 }
                 else
                 { 
-                    GameManager.instance._isImageMode = true;
+                    GameManager.Instance.IsImageMode = true;
                     AddProfile();
-                    SQL_Manager.instance.SQL_AddProfileImage(_imageIndex, GameManager.instance.UID, GameManager.instance.Profile_Index);
+                    SQL_Manager.instance.SQL_AddProfileImage(_imageIndex, GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
 
                     PrintProfileList();
                     IconPanel.SetActive(false);
@@ -248,9 +248,9 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
                 }
                 else
                 {
-                    GameManager.instance._isImageMode = true;
+                    GameManager.Instance.IsImageMode = true;
                     AddProfile();
-                    SQL_Manager.instance.SQL_UpdateProfile(GameManager.instance.Profile_Index, _profileName, GameManager.instance.UID, _imageIndex);
+                    SQL_Manager.instance.SQL_UpdateProfile(GameManager.Instance.ProfileIndex, _profileName, GameManager.Instance.UID, _imageIndex);
 
                     PrintProfileList();
                     IconPanel.SetActive(false);

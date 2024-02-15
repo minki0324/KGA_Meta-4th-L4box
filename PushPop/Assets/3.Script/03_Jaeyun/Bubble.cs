@@ -3,47 +3,41 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public enum Mode
+public enum Boundary
 {
-    PushPush = 0,
-    Speed,
-    Memory,
-    Bomb,
+    Left = 0,
+    Right,
+    Up,
+    Bottom
 }
 
 public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
-{ // bubble prefab마다 달아줄 script
-
-    public AnimationCurve decelOverTime;
-    [Range(10f, 100f)] public float maxDecel = 30f;
-    [Range(10f, 1000f)] public float maxSpeed = 100f;
-
-    protected Mode gameMode = Mode.Speed; // game mode
-    private Vector2 bubbleSize = Vector2.zero;
-    private bool isMoving = false;
+{ // bubble prefab's script
+    private Mode gameMode;
+    private RectTransform bubbleRectTrans;
     private Animator bubbleAnimator;
+    private Vector2 bubbleSize = Vector2.zero;
+    public int touchCount = 0;
 
+    [Header("Move Parameter")]
+    // Bubble moving
     private Coroutine moveCoroutine = null;
-    bool coll = false;
-
-    // screen Size
-    private Vector2 screenSize = Vector2.zero;
+    [SerializeField] private AnimationCurve decelOverTime;
+    [SerializeField] private float decel = 250f; // move 속도 감소
+    [SerializeField] private float speedRate = 10f;
 
     private void OnEnable()
     {
-        Rect rectTransform = gameObject.GetComponent<RectTransform>().rect;
-        bubbleSize = new Vector2(rectTransform.width, rectTransform.height);
-        gameMode = Mode.Speed; // GameManager Mode Load
-        screenSize = new Vector2(2 * Camera.main.orthographicSize * Camera.main.aspect, 2 * Camera.main.orthographicSize);
+        gameMode = GameManager.Instance.gameMode; // game start 시 load
+        bubbleRectTrans = GetComponent<RectTransform>();
+        bubbleAnimator = GetComponent<Animator>();
+        BubbleSetting(500f);
     }
 
     public void OnPointerDown(PointerEventData eventData)
     { // 현재 오브젝트 내부에서 클릭하는 순간 1회 호출
-
         Vector2 bubblePosition = transform.position;
         Vector2 touchPosition = eventData.position;
-
-
 
         if (moveCoroutine != null)
         { // move coroutine stop
@@ -65,29 +59,46 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         }
     }
 
+    public void BubbleSetting(float _bubbleSize/*, Transform _bubblePos*/)
+    { // GameManager에서 Mode 선택 시 Position 개수 만큼 호출되는 method
+        // position setting
+        
+        // size setting
+        bubbleRectTrans.sizeDelta = new Vector2(_bubbleSize, _bubbleSize);
+        bubbleSize = bubbleRectTrans.sizeDelta;
+    }
+
     public void PushPushMode(Vector2 _bubblePosition, Vector2 _touchPosition)
     {
         // Bubble Move
         Vector2 dir = (_bubblePosition - _touchPosition).normalized;// Touch Position의 반대 방향
+        float speed = (_bubblePosition - _touchPosition).magnitude;
+        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, speed));
 
-        //moveCoroutine = StartCoroutine(BubbleMove_Co(dir, 2f, 0.4f));
+        // bubble 터트렸을 때
+        touchCount--;
+        if (touchCount <= 0)
+        {
+            GameManager.Instance.bubbleObject.Remove(gameObject);
+            Destroy(gameObject);
+            // puzzle move
+        }
     }
 
     public void SpeedMode(Vector2 _bubblePosition, Vector2 _touchPosition)
     {
-        // Bubble Move
-
+        // Bubble move
         Vector2 dir = (_bubblePosition - _touchPosition).normalized;
-        //dir.y = 0f; // 좌우로만 이동
+        float speed = (_bubblePosition - _touchPosition).magnitude;
+        // dir.y = 0f; //좌우로만 이동
 
-        moveCoroutine = StartCoroutine(BubbleMove_Co(_bubblePosition, dir, maxSpeed, maxDecel));
-        GameManager.instance.touchCount--;
+        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, speed));
+        touchCount--;
 
-        if (GameManager.instance.touchCount <= 0)
-        { // touch count 0보다 작을 시
-            // pushpop 생성
-            PushPop.instance.CreatePushPop();
-            Destroy(this.gameObject);
+        if (touchCount <= 0)
+        {
+            GameManager.Instance.bubbleObject.Remove(gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -134,54 +145,47 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     }
 
     private IEnumerator BubbleTouchable_Co(Animator _bubbleAnimation, Action<bool> callback)
-    { // Bombmode에서 random shining touchable 부여
+    { // Bombmode에서 random shining touchable 부여, Memory mode도 필요
         // shine animation Setbool
         yield return new WaitForSeconds(2f);
         callback(true);
     }
 
-    private IEnumerator BubbleMove_Co(Vector2 _bubblePosition, Vector2 _dir, float _maxSpeed, float _decel)
+    // Bubble lerp Translate moving
+    private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed)
     {
         float currentSpeed = _maxSpeed; // maxSpeed 초기화
 
+        // 속도가 0이 되었을 때까지 이동
         while (currentSpeed >= 0)
         {
-            if (0f + bubbleSize.x / 2f > transform.position.x)
+            if (0f + (bubbleSize.x / 2f) > transform.position.x)
             { // boundary left
-                _dir = ReflectionVector(_dir, Vector2.right);
-                transform.position = new Vector2((bubbleSize.x / 2f + 10f), transform.position.y);
+                _dir = Vector2.Reflect(_dir, Vector2.right).normalized;
+                transform.position = new Vector2((bubbleSize.x / 2f) + 10f, transform.position.y);
             }
-            else if (transform.position.x > Screen.width - bubbleSize.x / 2f)
+            else if (transform.position.x > Screen.width - (bubbleSize.x / 2f))
             { // boundary right
-                _dir = ReflectionVector(_dir, Vector2.left);
-                transform.position = new Vector2(Screen.width - (bubbleSize.x / 2f + 10f), transform.position.y);
+                _dir = Vector2.Reflect(_dir, Vector2.left).normalized;
+                transform.position = new Vector2(Screen.width - ((bubbleSize.x / 2f) + 10f), transform.position.y);
             }
-            else if (0f + bubbleSize.y / 2f + 10f > transform.position.y)
+            else if (0f + (bubbleSize.y / 2f) > transform.position.y)
             { // boundary bottom
-                _dir = ReflectionVector(_dir, Vector2.up);
-                transform.position = new Vector2(transform.position.x, bubbleSize.y / 2f + 10f);
+                _dir = Vector2.Reflect(_dir, Vector2.up).normalized;
+                transform.position = new Vector2(transform.position.x, (bubbleSize.y / 2f) + 10f);
             }
-            else if (transform.position.y > Screen.height - bubbleSize.y / 2f)
+            else if (transform.position.y > Screen.height - (bubbleSize.y / 2f))
             { // boundary up
-                _dir = ReflectionVector(_dir, Vector2.down);
-                transform.position = new Vector2(transform.position.x, Screen.height - (bubbleSize.y / 2f + 10f));
+                _dir = Vector2.Reflect(_dir, Vector2.down).normalized;
+                transform.position = new Vector2(transform.position.x, Screen.height - ((bubbleSize.y / 2f) + 10f));
             }
+            transform.Translate(_dir * (Time.deltaTime * currentSpeed * speedRate)); // bubble move
 
-            _bubblePosition = transform.position;
-
-            transform.Translate(_dir * (Time.deltaTime * currentSpeed * 200f));
-
-            // Lerp
-            var lerpDecel = decelOverTime.Evaluate(1 - currentSpeed / _maxSpeed) * _decel;
+            // moving lerp
+            float lerpDecel = decelOverTime.Evaluate(1 - currentSpeed / _maxSpeed) * decel;
             currentSpeed = Mathf.Max(0f, currentSpeed - lerpDecel * Time.deltaTime);
 
             yield return null;
         }
-    }
-
-    private Vector2 ReflectionVector(Vector2 _inDrection, Vector2 _isNomal)
-    {
-        _inDrection = Vector2.Reflect(_inDrection.normalized, _isNomal).normalized; // 반사각
-        return _inDrection;
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
 //MainCanvas에 들어갈 스크립트
 public class Main_Button : MonoBehaviour
 {
@@ -42,7 +41,6 @@ public class Main_Button : MonoBehaviour
     //푸시푸시 모드 패널(버튼) 클릭 시 호출될 함수
     public void PushPushBtn_Clicked()
     {
-        GameManager.instance.gameMode = GameMode.PushPush;
         pushMode_Canvas.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
@@ -51,7 +49,6 @@ public class Main_Button : MonoBehaviour
     //스피드 모드 패널(버튼) 클릭 시 호출될 함수
     public void SpeedBtn_Clicked()
     {
-        GameManager.instance.gameMode = GameMode.Speed;
         _timesetPanel.SetActive(true);
     }
 
@@ -59,7 +56,6 @@ public class Main_Button : MonoBehaviour
     //메모리 모드 패널(버튼) 클릭 시 호출될 함수
     public void MemoryBtn_Clicked()
     {
-        GameManager.instance.gameMode = GameMode.Memory;
         _timesetPanel.SetActive(true);
     }
 

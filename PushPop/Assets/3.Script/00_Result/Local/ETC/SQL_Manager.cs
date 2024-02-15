@@ -239,7 +239,7 @@ public class SQL_Manager : MonoBehaviour
                 // 4. UID를 클래스의 멤버 변수에 할당
                 reader.Read();
                 UID = reader.GetInt32("UID");
-                GameManager.instance.UID = UID;
+                GameManager.Instance.UID = UID;
             }
             if (!reader.IsClosed) reader.Close();
             return; // 회원가입 성공

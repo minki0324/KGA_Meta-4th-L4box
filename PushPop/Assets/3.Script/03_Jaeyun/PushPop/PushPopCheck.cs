@@ -34,7 +34,7 @@ public class PushPopCheck : MonoBehaviour
         }
         else
         {
-            PushPop.instance.activePos.Add(this.gameObject); // active pos add
+            PushPop.Instance.activePos.Add(this.gameObject); // active pos add
         }
     }
 }

@@ -13,9 +13,9 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
     // Push Pop Button click method
     public void PushPopClick()
     {
-        GameObject clickButton = EventSystem.current.currentSelectedGameObject;
-        PushPop.instance.pushPopButton.Remove(clickButton);
-        GameManager.instance.GameClear();
+        GameObject clickButton = this.gameObject;
+        PushPop.Instance.pushPopButton.Remove(clickButton);
+        GameManager.Instance.GameClear();
         clickButton.SetActive(false);
     }
 }
