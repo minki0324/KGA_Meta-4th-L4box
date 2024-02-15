@@ -119,7 +119,7 @@ public class Main_Button : MonoBehaviour
 
     }
 
-    public void Disable_Button()
+  /*  public void Disable_Button()
     {
         _optionBtn.enabled = false;
         _profileBtn.enabled = false;
@@ -129,6 +129,6 @@ public class Main_Button : MonoBehaviour
         _pushModeBtn.enabled = false;
         _speedModeBtn.enabled = false;
         _memoryModeBtn.enabled = false;
-    }
+    }*/
     #endregion
 }

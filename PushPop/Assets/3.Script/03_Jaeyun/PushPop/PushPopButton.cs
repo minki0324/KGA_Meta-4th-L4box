@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 public class PushPopButton : MonoBehaviour, IPointerDownHandler
 {
+    private void OnEnable()
+    {
+        Button btn = transform.GetComponent<Button>();
+        btn.interactable = true;
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         PushPopClick();
@@ -17,6 +23,6 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
         GameObject clickButton = this.gameObject;
         PushPop.Instance.pushPopButton.Remove(clickButton);
         GameManager.Instance.GameClear();
-        clickButton.SetActive(false);
+        clickButton.GetComponent<Button>().interactable = false;
     }
 }

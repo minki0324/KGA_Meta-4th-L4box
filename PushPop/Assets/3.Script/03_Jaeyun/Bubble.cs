@@ -18,6 +18,8 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     private Animator bubbleAnimator;
     private Vector2 bubbleSize = Vector2.zero;
     public int touchCount = 0;
+    
+
 
     [Header("Move Parameter")]
     // Bubble moving
@@ -31,7 +33,13 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         gameMode = GameManager.Instance.gameMode; // game start 시 load
         bubbleRectTrans = GetComponent<RectTransform>();
         bubbleAnimator = GetComponent<Animator>();
-        BubbleSetting(500f);
+    }
+
+    private void OnDestroy()
+    {
+        PuzzlePiece piece = transform.parent.GetComponent<PuzzlePiece>();
+        piece.OnBubbleDestroy();
+        
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -59,12 +67,14 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         }
     }
 
-    public void BubbleSetting(float _bubbleSize/*, Transform _bubblePos*/)
+    public void BubbleSetting(Vector2 _puzzleSize, Vector2 _puzzlePos, Transform _puzzle)
     { // GameManager에서 Mode 선택 시 Position 개수 만큼 호출되는 method
-        // position setting
-        
+      // position setting
+        bubbleRectTrans.anchoredPosition = _puzzlePos;
         // size setting
-        bubbleRectTrans.sizeDelta = new Vector2(_bubbleSize, _bubbleSize);
+        float bigger = _puzzleSize.x > _puzzleSize.y ? _puzzleSize.x : _puzzleSize.y;
+
+        bubbleRectTrans.sizeDelta = new Vector2(bigger, bigger);
         bubbleSize = bubbleRectTrans.sizeDelta;
     }
 
@@ -80,8 +90,10 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         if (touchCount <= 0)
         {
             GameManager.Instance.bubbleObject.Remove(gameObject);
-            Destroy(gameObject);
             // puzzle move
+           
+            Destroy(gameObject);
+
         }
     }
 
@@ -151,7 +163,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         callback(true);
     }
 
-    // Bubble lerp Translate moving
+    // Bubble lerp Translate moving, pushpush, speed mode에서만 사용
     private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed)
     {
         float currentSpeed = _maxSpeed; // maxSpeed 초기화
@@ -179,7 +191,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
                 _dir = Vector2.Reflect(_dir, Vector2.down).normalized;
                 transform.position = new Vector2(transform.position.x, Screen.height - ((bubbleSize.y / 2f) + 10f));
             }
-            transform.Translate(_dir * (Time.deltaTime * currentSpeed * speedRate)); // bubble move
+            transform.parent.Translate(_dir * (Time.deltaTime * currentSpeed * speedRate)); // bubble move
 
             // moving lerp
             float lerpDecel = decelOverTime.Evaluate(1 - currentSpeed / _maxSpeed) * decel;

@@ -22,16 +22,32 @@ public enum Mode // GameMode
     Bomb,
 }
 
+public class PuzzleObject
+{
+    public GameObject puzzleObject;
+    public Sprite puzzleSprite;
+    public Vector2 puzzleArea;
+    public Vector2 puzzleCenter;
+
+    public PuzzleObject(GameObject puzzleObject, Sprite puzzleSprite, Vector2 puzzleArea, Vector2 puzzleCenter)
+    {
+        this.puzzleObject = puzzleObject;
+        this.puzzleSprite = puzzleSprite;
+        this.puzzleArea = puzzleArea;
+        this.puzzleCenter = puzzleCenter;
+    }
+}
+
 public class GameManager : MonoBehaviour, IGameMode
 {
     public static GameManager Instance = null;
     public GameMode _gameMode; // delete 필요
     public Mode gameMode;
-    public int TimerTime; // delete 필요
+    public int ShutdownTime; // delete 필요
 
     // Bubble
     [Header("Bubble Info")]
-    [SerializeField] private Canvas bubbleCanvas = null;
+    [SerializeField] private GameObject bubbleCanvas = null;
     [SerializeField] private GameObject bubblePrefab = null;
     public List<GameObject> bubbleObject = new List<GameObject>();
     [SerializeField] private float bubbleSize;
@@ -42,6 +58,12 @@ public class GameManager : MonoBehaviour, IGameMode
     [Header("PushPop Info")]
     public int PushPopStage = 0;
     public Vector2 BoardSize;
+
+    [Header("Puzzle Info")]
+    public Vector2 puzzleSize;
+    public Vector2 finalCenter;
+    public List<PuzzleObject> puzzleClass = new List<PuzzleObject>();
+    [SerializeField] private PuzzleLozic puzzleLogic;
 
     [Header("Score")]
     [SerializeField] private TMP_Text scoreText;
@@ -56,6 +78,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public int DefaultImage;
     public Sprite[] ProfileImages;
     public bool IsImageMode = true; // false = 사진찍기, true = 이미지 선택
+
 
     #region Unity Callback
     private void Awake()
@@ -74,9 +97,9 @@ public class GameManager : MonoBehaviour, IGameMode
     #endregion
 
     #region Other Method
-    public void GameModeSetting(Mode _gameMode)
+    public void GameModeSetting(int _gameMode)
     { // game mode setting button click method
-        gameMode = _gameMode;
+        gameMode = (Mode)_gameMode;
     }
 
     public void GameStageSetting(int _stage)
@@ -86,13 +109,13 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public void GameStart()
     { // game Start 시 호출되는 method
-        if (gameMode.Equals(0))
+        /*if (gameMode.Equals(0))
         {
             for (int i = 0; i < pos[(int)gameMode].transform.childCount; i++)
             { // 지정된 position
                 bubblePos.Add(pos[(int)gameMode].GetChild(i));
             }
-        }
+        }*/
 
         // score 초기화
         Score = 0;
@@ -135,9 +158,16 @@ public class GameManager : MonoBehaviour, IGameMode
     { // Game End 시 호출하는 method
         if (PushPop.Instance.pushPopButton.Count == 0)
         {
+            Debug.Log("게임클리어");
             bubblePos.Clear(); // bubble transform mode에 따라 달라짐
+
             PushPop.Instance.PushPopClear();
-            StopCoroutine(timer); // timer coroutine stop;
+
+
+            if(timer != null)
+            {
+                StopCoroutine(timer); // timer coroutine stop;
+            }
 
             // Ranking SQL Update
             // Ranking.instance.UpdateTimerScore(timeScore);
@@ -146,20 +176,24 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public void PushPushMode()
     {
-        float randomX = Random.Range(0f, 10f);
-        // puzzle position
-        for (int i = 0; i < bubbleObject.Count; i++)
+        // puzzle 생성
+        if (puzzleLogic == null)
         {
-            CreateBubble();
-            // bubbleObject[i].transform.position = Vector2.zero; // puzzle size 가로, 세로 길이 중에서 더 큰 기준으로 갖고오기
-            // puzzle bubble에 상속
+            puzzleLogic = FindObjectOfType<PuzzleLozic>();
+        }
+        puzzleLogic.SettingPuzzle();
+        // puzzle position
+        for (int i = 0; i < puzzleClass.Count; i++)
+        {
+            CreateBubble(puzzleClass[i].puzzleArea, puzzleClass[i].puzzleCenter, puzzleClass[i].puzzleObject);
         }
         // puzzle 전부 맞췄을 시 if ()
+
         // pushpop 생성
-            for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
+           /* for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
             {
                 PushPop.Instance.CreatePushPop(PushPop.Instance.pushPopBoardObject[i]);
-            }
+            }*/
     }
 
     public void SpeedMode()
@@ -169,7 +203,7 @@ public class GameManager : MonoBehaviour, IGameMode
         BoardSize = new Vector2(bubbleSize, bubbleSize);
 
         // bubble position
-        CreateBubble();
+        //CreateBubble();
 
         if (this.bubbleObject.Count == 0)
         { // touch count 0보다 작을 시
@@ -195,14 +229,16 @@ public class GameManager : MonoBehaviour, IGameMode
 
     }
 
-    private void CreateBubble()
-    {
-        GameObject bubbleObject = Instantiate(bubblePrefab, bubbleCanvas.transform);
+    private void CreateBubble(Vector2 _size, Vector2 _pos, GameObject _puzzle)
+    { // bubble size, pos, parent 상속 setting method
+        GameObject bubbleObject = Instantiate(bubblePrefab, _puzzle.transform);
         Bubble bubble = bubbleObject.GetComponent<Bubble>();
+
         this.bubbleObject.Add(bubbleObject);
-        bubble.BubbleSetting(bubbleSize); // position 추가 필요
-        bubbleObject.transform.localPosition = new Vector2(0, 0); // -> BubbleSetting에서 setting 될듯!!
-        bubble.touchCount = Random.Range(2, 10); // 2 ~ 9회, Mode별로 다르게 설정
+        bubble.BubbleSetting(_size, _pos, _puzzle.transform);
+        _puzzle.GetComponent<Image>().raycastTarget = false;
+        //_puzzle.SetParent(bubble.transform);
+        bubble.touchCount = 1; /*Random.Range(2, 10);*/ // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
     }
 
     /// <summary>

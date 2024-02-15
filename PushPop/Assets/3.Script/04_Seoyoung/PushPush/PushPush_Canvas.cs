@@ -15,6 +15,7 @@ public class PushPush_Canvas : MonoBehaviour
     [SerializeField] private GameObject selectCategory_Panel;
     [SerializeField] private GameObject selectMold_Panel;
     [SerializeField] private GameObject pushpushGame_Panel;
+    [SerializeField] private GameObject bubblePanel;
 
     [Header("ScrollView")]
     [SerializeField] private ScrollRect selectCategory_ScrollView;
@@ -127,8 +128,6 @@ public class PushPush_Canvas : MonoBehaviour
             categoryBtn_List[i].onClick.AddListener(delegate { CategoryIcon_Clicked(int.Parse(categoryIcon_List[temp].name)); });
 
         }
-
-        gameObject.SetActive(false);
 
     }
 
@@ -287,22 +286,27 @@ public class PushPush_Canvas : MonoBehaviour
 
     }
 
+    public void BubbleStart_Clicked()
+    {
+        selectCategory_Panel.SetActive(false);
+        selectMold_Panel.SetActive(false);
+        help_Canvas.gameObject.SetActive(false);
+    }
 
     //몰드 선택 패널에서 게임시작 버튼을 누르면 호출되는 메소드
     public void GameStartBtn_Clicked()
     {
-
         SelectedMold = selectedMoldIcon_Image.sprite;
 
-        pushpushGame_Panel.SetActive(true);
-        selectCategory_Panel.SetActive(false);
+        //pushpushGame_Panel.SetActive(true);
+        /*selectCategory_Panel.SetActive(false);
         selectMold_Panel.SetActive(false);
-        help_Canvas.gameObject.SetActive(false);
+        help_Canvas.gameObject.SetActive(false);*/
         //PushPush 게임 진입
         int puzzleIDIndex = int.Parse(moldIcon_List[currentPage - 1].name);
         Debug.Log(puzzleIDIndex);
         puzzleLozic.SelectPuzzleButton(puzzleIDIndex);
-
+        GameManager.Instance.PushPushMode();
     }
 
     //몰드 선택 패널에서 x버튼을 누르면 호출되는 메소드

@@ -32,6 +32,7 @@ public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHa
         if (isOverlap || !isCanMakePush)
         {
             Destroy(gameObject);
+            PushPop.Instance.pushPopButton.Remove(RectPush);
             Destroy(RectPush);
         }
         else

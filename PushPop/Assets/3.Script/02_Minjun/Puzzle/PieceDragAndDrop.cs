@@ -35,7 +35,7 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 
         if (puzzleLozic == null)
         {
-            transform.root.TryGetComponent(out puzzleLozic);
+            transform.parent.TryGetComponent(out puzzleLozic);
         }
         //클릭했을때 오브젝트 위치 그대로 포지션을 옮기기위한 계산
         _distance = (Vector3)eventData.position - _rect.position;
