@@ -1348,7 +1348,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -8667,7 +8667,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 653199141}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e015e968bab619409c879e51fde2a65, type: 3}
   m_Name: 
@@ -8754,6 +8754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffdf059670282104fa8b85965b4e8ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CustomArea: {fileID: 1127525932}
   rectTransform: {fileID: 987904116}
   pushPop: {fileID: 2804409159849094026, guid: c84c226c0b6b14b4bafe85eb215718fc, type: 3}
   canvas: {fileID: 0}
@@ -21684,6 +21685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffdf059670282104fa8b85965b4e8ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CustomArea: {fileID: 0}
   rectTransform: {fileID: 4566585757218681143}
   pushPop: {fileID: 2804409159849094026, guid: c84c226c0b6b14b4bafe85eb215718fc, type: 3}
   canvas: {fileID: 0}

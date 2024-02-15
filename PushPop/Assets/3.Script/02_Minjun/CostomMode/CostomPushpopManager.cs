@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class CostomPushpopManager : MonoBehaviour
+public class CostomPushpopManager : MonoBehaviour, IPointerDownHandler
 {
-
+    [SerializeField] private RectTransform CustomArea;
     private Vector3 SelectPositon; //카메라에서보이는 world 포지션 저장할 Vector
     private Vector2 localPosition; //UI에 위치한 마우스위치 저장할 Vector
     [SerializeField] private RectTransform rectTransform; // UI상 마우스위치 구하기위한 기준 판넬
@@ -72,6 +72,7 @@ public class CostomPushpopManager : MonoBehaviour
                 }
                 if (touch.phase == TouchPhase.Ended && isOnArea)
                 {
+                    Debug.Log("터치엔드");
                     ClickUp();
                 }
                 //터치를 누르고있을때 누른 위치를 저장합니다.(UI는 제외)
@@ -145,4 +146,25 @@ public class CostomPushpopManager : MonoBehaviour
         newRectPush = null;
         newPush = null;
     } // 마우스클릭을 뗏을때 or 터치를 뗏을때  
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        // 터치한 지점의 스크린 좌표를 RectTransform으로 변환하여 확인
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(CustomArea, eventData.position, eventData.pressEventCamera, out Vector2 localPoint);
+
+        // 변환된 지점이 CustomArea 안에 있는지 확인
+        if (CustomArea.rect.Contains(localPoint))
+        {
+            // CustomArea 안에 터치가 발생한 경우
+            Debug.Log("Touch inside CustomArea");
+            isOnArea = true;
+        }
+        else
+        {
+            // CustomArea 밖에서 터치가 발생한 경우
+            isOnArea = false;
+            Debug.Log("Touch outside CustomArea");
+        }
+
+    }
 }
