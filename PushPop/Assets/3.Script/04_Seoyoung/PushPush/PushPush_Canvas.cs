@@ -55,6 +55,7 @@ public class PushPush_Canvas : MonoBehaviour
     [SerializeField] private List<Sprite> icon_List19;
 
     [SerializeField] private List<Sprite> moldIcon_List;    //선택된 카테고리 몰드 아이콘 리스트
+    [SerializeField] private PuzzleLozic puzzleLozic;
 
     //푸쉬푸쉬 게임에 넘겨줄 이미지
     public Sprite SelectedMold { get; private set; }
@@ -62,18 +63,22 @@ public class PushPush_Canvas : MonoBehaviour
     int currentPage;
     int maxPage;
 
+  
+    //도움말/뒤로가기 패널 버튼들 비활성화 추가하기
 
     #region Unity Callback
 
     private void Start()
     {
         Init();
+        maxPage = moldIcon_List.Count;
     }
 
     private void OnEnable()
     {
         help_Canvas.gameObject.SetActive(true);
         selectCategory_Panel.SetActive(true);
+        //background_Canvas.gameObject.SetActive(true);
         selectMold_Panel.SetActive(false);
         pushpushGame_Panel.SetActive(false);
 
@@ -86,6 +91,7 @@ public class PushPush_Canvas : MonoBehaviour
     private void OnDisable()
     {
         help_Canvas.gameObject.SetActive(false);
+        //background_Canvas.gameObject.SetActive(false);
     }
 
     #endregion
@@ -101,6 +107,10 @@ public class PushPush_Canvas : MonoBehaviour
 
         //Catetory Icon리스트의 원소이름기준 오름차순 재정렬
         // categoryIcon_List = categoryIcon_List.OrderBy(x => x.name).ToList();
+        
+        // gameObject.SetActive(false);
+
+      
         for (int i = 0; i < content_ScrollView.transform.childCount; i++)
         {
             //버튼 리스트 초기화
@@ -288,6 +298,10 @@ public class PushPush_Canvas : MonoBehaviour
         selectCategory_Panel.SetActive(false);
         selectMold_Panel.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
+        //PushPush 게임 진입
+        int puzzleIDIndex = int.Parse(moldIcon_List[currentPage - 1].name);
+        Debug.Log(puzzleIDIndex);
+        puzzleLozic.SelectPuzzleButton(puzzleIDIndex);
 
     }
 

@@ -188,6 +188,7 @@ public class Set_Time : MonoBehaviour
 
             gameObject.SetActive(false);
             main_Canvas.gameObject.SetActive(false);
+            Debug.Log(time);
         }
         else
         {

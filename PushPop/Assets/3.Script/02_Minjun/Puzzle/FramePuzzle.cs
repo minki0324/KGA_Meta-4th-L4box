@@ -1,0 +1,47 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
+public class FramePuzzle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+{
+    private Image _myImage;
+    private CostomPushpopManager costomPushpop;
+    // Start is called before the first frame update
+    void Start()
+
+    {
+        costomPushpop = FindObjectOfType<CostomPushpopManager>();
+        _myImage = GetComponent<Image>();
+        //Sprite에서 Alpha 값이 0.1 이하 일시 인식하지 않게함
+        _myImage.alphaHitTestMinimumThreshold = 0.1f;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        //퍼즐위에 마우스가 있으면 True값 전달하기
+        costomPushpop.isCanMakePush = true;
+        costomPushpop.isOnArea = true;
+        Debug.Log("마우스들어옴" + costomPushpop.isCanMakePush);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        costomPushpop.isCanMakePush = false;
+        Debug.Log("마우스나감" + costomPushpop.isCanMakePush);
+    }
+    public void PushButtonActiveOn()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            // i번째 자식 요소의 Image 컴포넌트의 raycastTarget을 true로 설정합니다.
+            transform.GetChild(i).GetComponent<Image>().raycastTarget = true;
+        }
+    }
+}

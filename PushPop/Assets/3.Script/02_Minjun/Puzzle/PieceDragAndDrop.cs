@@ -76,6 +76,8 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             if (StageClear())
             {
                 Debug.Log("스테이지를 클리어 했습니다! 잘했어요!!");
+          
+                puzzleLozic.onClear?.Invoke();
             }
         }
     }
@@ -92,4 +94,5 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             return false;
         }
     }
+   
 }
