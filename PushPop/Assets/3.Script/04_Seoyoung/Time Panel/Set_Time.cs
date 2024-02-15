@@ -46,12 +46,12 @@ public class Set_Time : MonoBehaviour
     {
         time = 300;
         bCanStart = true;
-        main_Canvas.Disable_Button();
+        //main_Canvas.Disable_Button();
     }
 
     private void OnDisable()
     {
-        main_Canvas.Enable_Button();
+      //  main_Canvas.Enable_Button();
     }
 
 
