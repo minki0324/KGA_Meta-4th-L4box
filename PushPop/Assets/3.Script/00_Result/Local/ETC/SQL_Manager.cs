@@ -302,7 +302,7 @@ public class SQL_Manager : MonoBehaviour
             }
 
             // 2. 프로필 이미지 모드 변경
-            string name_command = string.Format(@"UPDATE Profile SET ImageMode = '{0} WHERE UID = '{1}', Profile_Index = '{2}'", imageMode, uid, profileIndex);
+            string name_command = string.Format(@"UPDATE Profile SET ImageMode = '{0}' WHERE UID = '{1}' AND Profile_Index = '{2}';", imageMode, uid, profileIndex);
             MySqlCommand cmd = new MySqlCommand(name_command, connection);
             cmd.ExecuteNonQuery();
 
