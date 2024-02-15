@@ -58,13 +58,13 @@ public class CameraManager : MonoBehaviour
 				captureImage.sprite = Sprite.Create(captureTexture, rect, new Vector2(0.5f, 0.5f));
 
 				// Profile_index 설정
-				GameManager.instance._isImageMode = false;
+				GameManager.Instance.IsImageMode = false;
 				profile.AddProfile();
 
 				// capture texture save
 				Texture2D readableTexture = GetReadableTexture(texture); // Texture 변환
 				byte[] texturePNGByte = readableTexture.EncodeToPNG(); // texture to pngByte encode
-				string fileName = $"{_filePath}/{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png";
+				string fileName = $"{_filePath}/{GameManager.Instance.UID}_{GameManager.Instance.ProfileIndex}.png";
 				Debug.Log(fileName);
 				File.WriteAllBytes(fileName, texturePNGByte); // file save
 				Debug.Log("File Save");

@@ -176,12 +176,12 @@ public class Set_Time : MonoBehaviour
     {
         if(bCanStart)
         {
-            GameManager.instance.TimerTime = time;
-            if(GameManager.instance.gameMode.Equals(GameMode.Speed))
+            GameManager.Instance.TimerTime = time;
+            if(GameManager.Instance._gameMode.Equals(GameMode.Speed))
             {
                 speedMode_Canvas.gameObject.SetActive(true);
             }
-            else if(GameManager.instance.gameMode.Equals(GameMode.Memory))
+            else if(GameManager.Instance._gameMode.Equals(GameMode.Memory))
             {
                 memoryMode_Canvas.gameObject.SetActive(true);
             }

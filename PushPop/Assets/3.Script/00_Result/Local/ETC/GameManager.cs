@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,44 +11,58 @@ public enum GameMode
     PushPush,
     Speed,
     Memory,
-    Multi
+    Bomb
+}
+
+public enum Mode // GameMode
+{
+    PushPush = 0,
+    Speed,
+    Memory,
+    Bomb,
 }
 
 public class GameManager : MonoBehaviour, IGameMode
 {
-    public static GameManager instance;
-    public GameMode gameMode;
-    public int TimerTime;
+    public static GameManager Instance = null;
+    public GameMode _gameMode; // delete 필요
+    public Mode gameMode;
+    public int TimerTime; // delete 필요
 
     // Bubble
     [Header("Bubble Info")]
     [SerializeField] private Canvas bubbleCanvas = null;
     [SerializeField] private GameObject bubblePrefab = null;
-    private List<GameObject> bubbleObject = new List<GameObject>();
-    [SerializeField] private Vector2 bubbleSize;
+    public List<GameObject> bubbleObject = new List<GameObject>();
+    [SerializeField] private float bubbleSize;
 
     [SerializeField] private Transform[] pos = new Transform[4]; // pushpush, speed, bomb1, bomb2
     private List<Transform> bubblePos = new List<Transform>(); // Mode에 따라 달라짐
-    public int touchCount = 0;
 
-    // Camera size
-    public float yScreenHalfSize;
-    public float xScreenHalfSize;
+    [Header("PushPop Info")]
+    public int PushPopStage = 0;
+    public Vector2 BoardSize;
+
+    [Header("Score")]
+    [SerializeField] private TMP_Text scoreText;
+    private Coroutine timer = null;
+    public int Score = 0;
+    public float TimeScore = 0;
 
     [Header("User Infomation")]
     public int UID;
-    public string Profile_name;
-    public int Profile_Index;
+    public string ProfileName;
+    public int ProfileIndex;
     public int DefaultImage;
     public Sprite[] ProfileImages;
-    public bool _isImageMode = true; // false = 사진찍기, true = 이미지 선택
+    public bool IsImageMode = true; // false = 사진찍기, true = 이미지 선택
 
     #region Unity Callback
     private void Awake()
     {
-        if(instance == null)
+        if(Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -55,41 +70,36 @@ public class GameManager : MonoBehaviour, IGameMode
             Destroy(gameObject);
             return;
         }
-
-        // camera size
-        yScreenHalfSize = Camera.main.orthographicSize;
-        xScreenHalfSize = yScreenHalfSize * Camera.main.aspect;
     }
     #endregion
 
     #region Other Method
-    //게임 시작되면 호출
-    public IEnumerator Timer_co()
-    {
-        int t = TimerTime;
-        while (true)
-        {
-            if (t <= 0)
-            {
-                //시간 초기화하기
-                //Main창 켜기
-                //게임 종료 알림 띄우기
-
-                yield break;
-            }
-            t -= 1;
-
-            yield return new WaitForSeconds(1f);
-        }
+    public void GameModeSetting(Mode _gameMode)
+    { // game mode setting button click method
+        gameMode = _gameMode;
     }
 
-    public void GameStart(int _gameMode)
+    public void GameStageSetting(int _stage)
+    { // game stage button click method
+        PushPopStage = _stage;
+    }
+
+    public void GameStart()
     { // game Start 시 호출되는 method
-        for (int i = 0; i < pos[_gameMode].transform.childCount; i++)
-        { // 지정된 position
-            bubblePos.Add(pos[_gameMode].GetChild(i));
+        if (gameMode.Equals(0))
+        {
+            for (int i = 0; i < pos[(int)gameMode].transform.childCount; i++)
+            { // 지정된 position
+                bubblePos.Add(pos[(int)gameMode].GetChild(i));
+            }
         }
-        Mode gameMode = (Mode)_gameMode;
+
+        // score 초기화
+        Score = 0;
+        TimeScore = 0;
+
+        timer = StartCoroutine(GameReady_Co()); // Game 시작 전 대기
+        
         switch (gameMode)
         {
             case Mode.PushPush:
@@ -105,33 +115,71 @@ public class GameManager : MonoBehaviour, IGameMode
         }
     }
 
-    private void GameClear()
-    { // Game End 시 호출하는 method
-        for (int i = 0; i < bubbleObject.Count; i++)
+    private IEnumerator GameReady_Co()
+    {
+        // game start 문구 띄워주기, panel 다 막아버리면 될듯?
+        // 준비~~
+        yield return new WaitForSeconds(2f);
+        // 시작!!
+        yield return new WaitForSeconds(1f);
+
+        while (true)
         {
-            bubbleObject[i].SetActive(false);
+            TimeScore += Time.deltaTime;
+            scoreText.text = TimeScore.ToString("F3");
+            yield return null;
         }
-        bubblePos.Clear(); // bubble transform mode에 따라 달라짐
-        PushPop.instance.PushPopClear();
+    }
+
+    public void GameClear()
+    { // Game End 시 호출하는 method
+        if (PushPop.Instance.pushPopButton.Count == 0)
+        {
+            bubblePos.Clear(); // bubble transform mode에 따라 달라짐
+            PushPop.Instance.PushPopClear();
+            StopCoroutine(timer); // timer coroutine stop;
+
+            // Ranking SQL Update
+            // Ranking.instance.UpdateTimerScore(timeScore);
+        }
     }
 
     public void PushPushMode()
     {
         float randomX = Random.Range(0f, 10f);
         // puzzle position
-        GetBubbleObject(bubbleObject.Count, bubblePrefab, bubbleCanvas.transform); // bubbleObject.Count -> puzzleObject.Count로 바꿀 것
         for (int i = 0; i < bubbleObject.Count; i++)
         {
-            bubbleObject[i].transform.position = new Vector2();
+            CreateBubble();
+            // bubbleObject[i].transform.position = Vector2.zero; // puzzle size 가로, 세로 길이 중에서 더 큰 기준으로 갖고오기
+            // puzzle bubble에 상속
         }
+        // puzzle 전부 맞췄을 시 if ()
+        // pushpop 생성
+            for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
+            {
+                PushPop.Instance.CreatePushPop(PushPop.Instance.pushPopBoardObject[i]);
+            }
     }
 
     public void SpeedMode()
     {
         // position count 한 개, 위치 가운데, scale 조정
-        GetBubbleObject(1, bubblePrefab, bubbleCanvas.gameObject.transform);
-        bubbleObject[0].transform.position = new Vector2(xScreenHalfSize, yScreenHalfSize);
-        touchCount = Random.Range(1, 11); // 1 ~ 10회
+        bubbleSize = 500f; // speed mode bubble size setting
+        BoardSize = new Vector2(bubbleSize, bubbleSize);
+
+        // bubble position
+        CreateBubble();
+
+        if (this.bubbleObject.Count == 0)
+        { // touch count 0보다 작을 시
+            // pushpop 생성
+            for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
+            {
+                PushPop.Instance.CreatePushPop(PushPop.Instance.pushPopBoardObject[i]);
+                Destroy(gameObject);
+            }
+        }
     }
 
     public void MemoryMode()
@@ -147,27 +195,14 @@ public class GameManager : MonoBehaviour, IGameMode
 
     }
 
-    private void BubblePositionSetting()
+    private void CreateBubble()
     {
-
-    }
-
-    // bubble Object Pooling
-    private void GetBubbleObject(int posCount, GameObject _prefab, Transform _parent)
-    {
-        for (int i = 0; i < posCount; i++)
-        {
-            if (!bubbleObject[i].activeSelf) // 기존 bubble이 활성화 되어있지 않다면 true
-            {
-                bubbleObject[i].SetActive(true);
-                bubbleObject[i].GetComponent<RectTransform>().sizeDelta = bubbleSize;
-                return;
-            }
-        }
-
-        GameObject newPos = Instantiate(_prefab, _parent); // bubble이 더 필요하다면 새로 생성
-        bubbleObject.Add(newPos);
-        return;
+        GameObject bubbleObject = Instantiate(bubblePrefab, bubbleCanvas.transform);
+        Bubble bubble = bubbleObject.GetComponent<Bubble>();
+        this.bubbleObject.Add(bubbleObject);
+        bubble.BubbleSetting(bubbleSize); // position 추가 필요
+        bubbleObject.transform.localPosition = new Vector2(0, 0); // -> BubbleSetting에서 setting 될듯!!
+        bubble.touchCount = Random.Range(2, 10); // 2 ~ 9회, Mode별로 다르게 설정
     }
 
     /// <summary>
@@ -178,13 +213,13 @@ public class GameManager : MonoBehaviour, IGameMode
     {
         Image image = printobj.GetComponent<Image>();
 
-        if (_isImageMode) // 이미지 선택모드
+        if (IsImageMode) // 이미지 선택모드
         {   // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
             image.sprite = ProfileImages[DefaultImage];
         }
-        else if (!_isImageMode) // 사진찍기 모드
+        else if (!IsImageMode) // 사진찍기 모드
         {
-            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, Profile_Index);
+            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, ProfileIndex);
             Sprite profileSprite = TextureToSprite(profileTexture);
             image.sprite = profileSprite;
         }

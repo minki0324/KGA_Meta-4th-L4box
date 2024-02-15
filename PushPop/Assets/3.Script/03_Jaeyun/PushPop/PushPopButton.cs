@@ -4,17 +4,19 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PushPopButton : MonoBehaviour
+public class PushPopButton : MonoBehaviour, IPointerDownHandler
 {
-    private Button pushButton;
-    private void Awake()
+    public void OnPointerDown(PointerEventData eventData)
     {
-        pushButton = GetComponent<Button>();
+        PushPopClick();
     }
+
     // Push Pop Button click method
     public void PushPopClick()
     {
-        pushButton.interactable = false;
-        PushPop.instance.activePos.Remove(gameObject);
+        GameObject clickButton = this.gameObject;
+        PushPop.Instance.pushPopButton.Remove(clickButton);
+        GameManager.Instance.GameClear();
+        clickButton.SetActive(false);
     }
 }

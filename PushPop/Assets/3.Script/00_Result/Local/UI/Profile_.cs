@@ -109,7 +109,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     public void AddProfile()
     {
         int imageMode = -1;
-        switch (GameManager.instance._isImageMode)
+        switch (GameManager.Instance.IsImageMode)
         {
             case false: //  사진 찍기를 선택했을 때
                 imageMode = 0;
@@ -122,7 +122,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         { // 첫 등록일 때
             if (!string.IsNullOrWhiteSpace(_profileName))
             {
-                GameManager.instance.Profile_Index = SQL_Manager.instance.SQL_AddProfile(_profileName, imageMode);
+                GameManager.Instance.ProfileIndex = SQL_Manager.instance.SQL_AddProfile(_profileName, imageMode);
             }
             else
             {
@@ -134,7 +134,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         }
         else if(_isUpdate)
         { // 수정 중일 때
-            SQL_Manager.instance.SQL_UpdateMode(imageMode, GameManager.instance.UID, GameManager.instance.Profile_Index);
+            SQL_Manager.instance.SQL_UpdateMode(imageMode, GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
         }
     }
 
@@ -177,7 +177,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     // 프로필 삭제 Btn 연동 Method
     public void DeleteProfile()
     {
-        SQL_Manager.instance.SQL_DeleteProfile(GameManager.instance.Profile_name, GameManager.instance.Profile_Index);
+        SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex);
     }
 
     // Update Mode Bool값 설정 Btn 연동 Method
@@ -223,7 +223,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
                 { // 선택한 이미지가 있을 때
                     GameManager.instance._isImageMode = true;
                     AddProfile();
-                    SQL_Manager.instance.SQL_AddProfileImage(_imageIndex, GameManager.instance.UID, GameManager.instance.Profile_Index);
+                    SQL_Manager.instance.SQL_AddProfileImage(_imageIndex, GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
 
                     PrintProfileList();
                     IconPanel.SetActive(false);
@@ -252,7 +252,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
                 { // 선택한 이미지가 있을 때
                     GameManager.instance._isImageMode = true;
                     AddProfile();
-                    SQL_Manager.instance.SQL_UpdateProfile(GameManager.instance.Profile_Index, _profileName, GameManager.instance.UID, _imageIndex);
+                    SQL_Manager.instance.SQL_UpdateProfile(GameManager.Instance.ProfileIndex, _profileName, GameManager.Instance.UID, _imageIndex);
 
                     PrintProfileList();
                     IconPanel.SetActive(false);
