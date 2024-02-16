@@ -60,7 +60,7 @@ public class PushPush_Canvas : MonoBehaviour
 
     //푸쉬푸쉬 게임에 넘겨줄 이미지
     public Sprite SelectedMold { get; private set; }
-
+    [SerializeField] private GameObject blurPanel;
     int currentPage;
     int maxPage;
 
@@ -222,7 +222,7 @@ public class PushPush_Canvas : MonoBehaviour
 
             maxPage = moldIcon_List.Count;
             selectedCategory_Text.text = Mold_Dictionary.instance.category_Dictionary[key];
-
+            blurPanel.SetActive(true);
             selectedMoldIcon_Image.sprite = moldIcon_List[currentPage - 1];
             selectedMoldIcon_Text.text = Mold_Dictionary.instance.icon_Dictionry[int.Parse(moldIcon_List[currentPage - 1].name)];
             Page_Text.text = $"{currentPage}/{maxPage}";
@@ -288,6 +288,7 @@ public class PushPush_Canvas : MonoBehaviour
 
     public void BubbleStart_Clicked()
     {
+        blurPanel.SetActive(false);
         selectCategory_Panel.SetActive(false);
         selectMold_Panel.SetActive(false);
         help_Canvas.gameObject.SetActive(false);

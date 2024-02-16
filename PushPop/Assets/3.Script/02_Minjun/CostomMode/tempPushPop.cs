@@ -4,9 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHandler*/
-
 {
-    
     public bool isCanMakePush;
     public bool isSet;
     public bool isCheckOverlap;
@@ -24,15 +22,17 @@ public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHa
                 }
             }
         }
-       
     }
    
     public void CheckOverlap(Vector3 spawnPosition)
     {
         if (isOverlap || !isCanMakePush)
         {
+            CostomPushpopManager stack = FindObjectOfType<CostomPushpopManager>();
             Destroy(gameObject);
             PushPop.Instance.pushPopButton.Remove(RectPush);
+            GameObject lastStack = stack.rectPopBtn.Pop();
+            Destroy(lastStack);
             Destroy(RectPush);
         }
         else

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class CostomPushpopManager : MonoBehaviour, IPointerDownHandler
+public class CostomPushpopManager : MonoBehaviour
 {
     [SerializeField] private RectTransform CustomArea;
     private Vector3 SelectPositon; //카메라에서보이는 world 포지션 저장할 Vector
@@ -18,6 +18,7 @@ public class CostomPushpopManager : MonoBehaviour, IPointerDownHandler
     public bool isCanMakePush; //FramePuzzle 에서 전달받은 bool값을 설치할때 버튼이 오브젝트위에있는지 판단하기위해 씀.
     public bool isOnArea;
     public GameObject puzzleBoard;
+    public Stack<GameObject> rectPopBtn = new Stack<GameObject>();
     void Update()
     {// 안드로이드는 구현안함
         if (Application.platform == RuntimePlatform.Android)
@@ -85,7 +86,8 @@ public class CostomPushpopManager : MonoBehaviour, IPointerDownHandler
         {
             Destroy(newPush);
             PushPop.Instance.pushPopButton.Remove(newRectPush);
-            Destroy(newRectPush);
+            GameObject lastStack = rectPopBtn.Pop();
+            Destroy(lastStack);
             newPush = null;
             newRectPush = null;
             return;
@@ -111,6 +113,7 @@ public class CostomPushpopManager : MonoBehaviour, IPointerDownHandler
         newRectPush = Instantiate(RectPushPop, newLocalPosition, Quaternion.identity);
         newRectPush.transform.localScale = new Vector3(0.55f, 0.55f, 0.55f);
         PushPop.Instance.pushPopButton.Add(newRectPush);
+        rectPopBtn.Push(newRectPush);
         // pushpop Btn Parent 설정
         newRectPush.transform.SetParent(puzzleBoard.transform);
 
@@ -137,7 +140,7 @@ public class CostomPushpopManager : MonoBehaviour, IPointerDownHandler
         tempPushPop push = newPush.GetComponent<tempPushPop>();
         push.RectPush = newRectPush;
         //isCheckOverLap = ture일시 다른 푸시팝과 겹치는지 확인함
-        push.isCheckOverlap = true;
+        push.isCheckOverlap = true ;
         //마우스가 퍼즐오브젝트 위에 있을시 true , 아니면 false -> 푸시팝설치를 오브젝트에만 하게하기위해
         push.isCanMakePush = isCanMakePush;
         //todo 버튼 interactable 설치할땐 꺼주고 설치완료되면 다시 켜주기
@@ -147,24 +150,38 @@ public class CostomPushpopManager : MonoBehaviour, IPointerDownHandler
         newPush = null;
     } // 마우스클릭을 뗏을때 or 터치를 뗏을때  
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void ReturnBtn()
     {
-        // 터치한 지점의 스크린 좌표를 RectTransform으로 변환하여 확인
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(CustomArea, eventData.position, eventData.pressEventCamera, out Vector2 localPoint);
-
-        // 변환된 지점이 CustomArea 안에 있는지 확인
-        if (CustomArea.rect.Contains(localPoint))
-        {
-            // CustomArea 안에 터치가 발생한 경우
-            Debug.Log("Touch inside CustomArea");
-            isOnArea = true;
-        }
-        else
-        {
-            // CustomArea 밖에서 터치가 발생한 경우
-            isOnArea = false;
-            Debug.Log("Touch outside CustomArea");
-        }
-
+        GameObject lastStack = rectPopBtn.Pop();
+        Destroy(lastStack);
     }
+
+    public void BtnAllClear()
+    {
+        while (rectPopBtn.Count > 0)
+        {
+            GameObject obj = rectPopBtn.Pop(); // Queue에서 오브젝트를 하나씩 제거
+            Destroy(obj); // 해당 오브젝트를 파괴
+        }
+    }
+    /* public void OnPointerDown(PointerEventData eventData)
+     {
+         // 터치한 지점의 스크린 좌표를 RectTransform으로 변환하여 확인
+         RectTransformUtility.ScreenPointToLocalPointInRectangle(CustomArea, eventData.position, eventData.pressEventCamera, out Vector2 localPoint);
+
+         // 변환된 지점이 CustomArea 안에 있는지 확인
+         if (CustomArea.rect.Contains(localPoint))
+         {
+             // CustomArea 안에 터치가 발생한 경우
+             Debug.Log("Touch inside CustomArea");
+             isOnArea = true;
+         }
+         else
+         {
+             // CustomArea 밖에서 터치가 발생한 경우
+             isOnArea = false;
+             Debug.Log("Touch outside CustomArea");
+         }
+
+     }*/
 }

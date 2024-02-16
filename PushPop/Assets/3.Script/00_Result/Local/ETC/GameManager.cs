@@ -181,6 +181,10 @@ public class GameManager : MonoBehaviour, IGameMode
         {
             puzzleLogic = FindObjectOfType<PuzzleLozic>();
         }
+        if(!puzzleLogic.gameObject.activeSelf)
+        {
+            puzzleLogic.gameObject.SetActive(true);
+        }
         puzzleLogic.SettingPuzzle();
         // puzzle position
         for (int i = 0; i < puzzleClass.Count; i++)
