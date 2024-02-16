@@ -10,6 +10,8 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
 
     private void OnEnable()
     {
+        CustomPushpopManager.Instance.StackPops.Push(gameObject);
+
         Button btn = transform.GetComponent<Button>();
         btn.interactable = true;
     }

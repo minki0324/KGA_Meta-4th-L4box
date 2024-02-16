@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public int ShutdownTime; // delete 필요
 
     [Header("GameScript")]
-    [SerializeField] private CostomPushpopManager pushpushScript;
+    [SerializeField] private CustomPushpopManager pushpushScript;
 
     // Bubble
     [Header("Bubble Info")]
@@ -295,7 +295,7 @@ public class GameManager : MonoBehaviour, IGameMode
         _puzzle.GetComponent<Image>().raycastTarget = false;
         //_puzzle.SetParent(bubble.transform);
         /*bubble.touchCount = 1; */
-        bubble.touchCount = Random.Range(2, 10); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
+        bubble.touchCount = 1;/* Random.Range(2, 10);*/ // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
     }
 
     /// <summary>
