@@ -25,7 +25,8 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     [Header("Other Object")]
     [SerializeField] private GameObject _profilePanel;
-    [SerializeField] private GameObject _errorLog;
+    [SerializeField] private GameObject _profileLog;
+    [SerializeField] private GameObject _nameLog;
     [SerializeField] private TMP_InputField _profileNameAdd;
     [SerializeField] private Transform _panelParent;
     [SerializeField] private List<GameObject> _panelList;
@@ -55,10 +56,13 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     private void Start()
     {
-        // �����? ���� ID�� �ҷ����ų� ����
+        // GUID를 확인하고, GUID에 맞는 UID index를 설정
         LoadOrCreateGUID();
 
         Debug.Log("Device GUID: " + _uniqueID);
+
+        // 한글 입력만 가능하도록 이벤트 추가
+        _profileNameAdd.onValidateInput += ValidateInput;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -78,33 +82,34 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     #endregion
 
     #region Other Method
-    // 게임 �? ?��?��?�� GUID�? �??���? ?��?���? ?��?�� ?�� ?��?���? ?��?��?���? ?��?���? PlayerPrefs?�� ????��
-    // SQL_Manager?�� ?��?�� GUID�? DB?�� ?��?���? 체크 ?�� ?��?���? ?��?��, ?��?���? GUID?�� 맞는 UID�? ?��????��중에 ????��?��?�� 각종 ?��보�?? DB??? ?���?
+    // 게임 접속시 PlayerPrefs에 GUID를 검색하고, 기존 GUID가 있다면 해당 GUID 기반으로 DB의 UID 연동
+    // 첫 접속시 PlayerPrefs에 GUID를 부여하고 해당 GUID로 DB에 User를 등록하면서 UID 연동
     private void LoadOrCreateGUID()
     {
-        // �����? GUID �ҷ�����
         if (PlayerPrefs.HasKey("DeviceGUID"))
-        {
+        { // 기존 GUID가 있는 경우 해당 GUID를 변수에 담아줌
             _uniqueID = PlayerPrefs.GetString("DeviceGUID");
         }
         else
-        {
-            // ���ο� GUID ����
+        { // 첫 접속시 GUID를 부여하고 해당 GUID를 변수에 담아줌
             _uniqueID = Guid.NewGuid().ToString();
 
-            // ������ GUID ����
+            // PlayerPrefs에 GUID를 저장
             PlayerPrefs.SetString("DeviceGUID", _uniqueID);
             PlayerPrefs.Save();
         }
+        // GUID를 가지고 DB와 연동하여 UID를 부여받음
         SQL_Manager.instance.SQL_AddUser(_uniqueID);
+
+        // 해당 UID가 가지고 있는 Profile들을 출력
         PrintProfileList();
     }
 
-    // ?��로필 ?��미�??�? ?��진으�? ?���?, ?��미�?? ?��?��?���? ?���? ?��?�� ?�� ?��?�� ?��보�?? DB?�� 공유?���? ?��로필 ?��?��
+    
     public void AddProfile()
     {
         int imageMode = -1;
-        switch (GameManager.instance._isImageMode)
+        switch (GameManager.Instance.IsImageMode)
         {
             case false: //  사진 찍기를 선택했을 때
                 imageMode = 0;
@@ -117,7 +122,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         { // 첫 등록일 때
             if (!string.IsNullOrWhiteSpace(_profileName))
             {
-                GameManager.instance.Profile_Index = SQL_Manager.instance.SQL_AddProfile(_profileName, imageMode);
+                GameManager.Instance.ProfileIndex = SQL_Manager.instance.SQL_AddProfile(_profileName, imageMode);
             }
             else
             {
@@ -129,55 +134,53 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         }
         else if(_isUpdate)
         { // 수정 중일 때
-            SQL_Manager.instance.SQL_UpdateMode(imageMode, GameManager.instance.UID, GameManager.instance.Profile_Index);
+            SQL_Manager.instance.SQL_UpdateMode(imageMode, GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
         }
     }
 
-    // ?��로필 리스?�� 출력 Btn ?��?�� Method
+    // Profile List 셋팅 후 Image, Name을 출력하는 Method
     public void PrintProfileList()
     {
+        // DB에 UID별로 저장되어있는 Profile들을 SQL_Manager에 List Up 해놓음
         SQL_Manager.instance.SQL_ProfileListSet();
 
-        // �ڷΰ��� ��ư ������ �̹� ���� �Ǿ����� ���? �ʱ�ȭ
         for (int i = 0; i < _panelList.Count; i++)
-        {
+        { // 출력 전 기존에 출력되어 있는 List가 있다면 초기화
             Destroy(_panelList[i].gameObject);
         }
         _panelList.Clear();
-
-        // List�� Count���? Panel����
+        
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        {
+        { // SQL_Manager에 Query문을 이용하여 UID에 담긴 Profile만큼 List를 셋팅하고, 해당 List의 Count 만큼 Profile Panel 생성
             GameObject panel = Instantiate(_profilePanel);
             panel.transform.SetParent(_panelParent);
             _panelList.Add(panel);
         }
 
-        // Profile Index�� �°� ������ name ���?
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        {
+        { // Panel의 Index 별로 Profile_Information 컴포넌트를 가져와서 name과 image를 Mode에 맞게 셋팅
             Profile_Information info = _panelList[i].GetComponent<Profile_Information>();
             info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
-            if (SQL_Manager.instance.Profile_list[i].imageMode) // ?��미�??�? ?��?��?�� Profile?�� 경우
-            {
-                info.ProfileImage.sprite = GameManager.instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
+            if (SQL_Manager.instance.Profile_list[i].imageMode)
+            { // 이미지 선택으로 설정 했을 경우
+                info.ProfileImage.sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
             }
-            else // ?��진찍기�?? ?��?��?�� Profile?�� 경우
-            {
-                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.instance.UID, SQL_Manager.instance.Profile_list[i].index);
-                Sprite profileSprite = GameManager.instance.TextureToSprite(profileTexture);
+            else 
+            { // 사진 찍기로 설정 했을 경우
+                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
+                Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
                 info.ProfileImage.sprite = profileSprite;
             }
         }
     }
 
-    // ?��로필 ?��?�� Btn ?��?�� Method
+    // 프로필 삭제 Btn 연동 Method
     public void DeleteProfile()
     {
-        SQL_Manager.instance.SQL_DeleteProfile(GameManager.instance.Profile_name, GameManager.instance.Profile_Index);
+        SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex);
     }
 
-    // Profile ?��?�� Btn ?��?�� Method
+    // Update Mode Bool값 설정 Btn 연동 Method
     public void Update_Profile()
     {
         _isUpdate = true;
@@ -193,35 +196,34 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         gameObject.SetActive(false);
     }
 
-    // ������ �̹��� �����ϴ� Btn ���� Method (�Ű� ���� 0 �̸� ���� �Կ� Btn, �Ű� ���� 1 �̸� Image Select Btn)
     public void ImageSet(int index)
-    {
+    { // Profile에 넣을 Image 셋팅하는 Btn 연동 Method
         if (!_isUpdate)
-        {   // ?��?��?�� ?��?�� ?�� (�? ?��록일 ?��)
+        { // 첫 등록일 때
             if (index.Equals(0))
-            { // ?���? 찍기 버튼 ?��????�� ?��
-                _imagePath = $"{Application.persistentDataPath}/Profile/{GameManager.instance.UID}_{GameManager.instance.Profile_Index}.png";
-                SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}", GameManager.instance.UID, GameManager.instance.Profile_Index);
+            { // 사진 찍기 버튼 눌렀을 때
+                _imagePath = $"{Application.persistentDataPath}/Profile/{GameManager.Instance.UID}_{GameManager.Instance.ProfileIndex}.png";
+                SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}", GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
 
                 PrintProfileList();
                 CheckPanel.SetActive(false);
                 CreateImagePanel.SetActive(false);
             }
             else if (index.Equals(1))
-            { // ?��미�?? 고르�? 버튼 ?��????�� ?��
+            { // 이미지 고르기 버튼 눌렀을 때
                 if (!_isImageSelect)
-                { // ?��?��?�� ?��미�??�? ?��?�� ?��
+                { // 이미지 선택을 안했을 때
                     if (log != null)
                     {
                         StopCoroutine(log);
                     }
-                    log = StartCoroutine(PrintLog_co());
+                    log = StartCoroutine(PrintLog_co(_profileLog));
                 }
                 else
-                { 
-                    GameManager.instance._isImageMode = true;
+                { // 선택한 이미지가 있을 때
+                    GameManager.Instance.IsImageMode = true;
                     AddProfile();
-                    SQL_Manager.instance.SQL_AddProfileImage(_imageIndex, GameManager.instance.UID, GameManager.instance.Profile_Index);
+                    SQL_Manager.instance.SQL_AddProfileImage(_imageIndex, GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
 
                     PrintProfileList();
                     IconPanel.SetActive(false);
@@ -231,26 +233,26 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             }
         }
         else if (_isUpdate)
-        { // ?��로필 ?��?��?���? ?��?��?��?�� ?��
+        { // 수정모드일 때
             if(index.Equals(0))
-            { // ?���? 찍기 버튼 ?��????�� ?��
+            { // 사진찍기 모드 눌렀을 때
 
             }
             else if(index.Equals(1))
-            { // ?��미�?? 고르�? 버튼 ?��????�� ?��
+            { // 이미지 고르기 버튼 눌렀을 때
                 if (!_isImageSelect)
-                { // ?��?��?�� ?��미�??�? ?��?�� ?��
+                { // 선택한 이미지가 없을 때
                     if (log != null)
                     {
                         StopCoroutine(log);
                     }
-                    log = StartCoroutine(PrintLog_co());
+                    log = StartCoroutine(PrintLog_co(_profileLog));
                 }
                 else
-                {
-                    GameManager.instance._isImageMode = true;
+                { // 선택한 이미지가 있을 때
+                    GameManager.Instance.IsImageMode = true;
                     AddProfile();
-                    SQL_Manager.instance.SQL_UpdateProfile(GameManager.instance.Profile_Index, _profileName, GameManager.instance.UID, _imageIndex);
+                    SQL_Manager.instance.SQL_UpdateProfile(GameManager.Instance.ProfileIndex, _profileName, GameManager.Instance.UID, _imageIndex);
 
                     PrintProfileList();
                     IconPanel.SetActive(false);
@@ -262,13 +264,21 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // ���� btn �Ѵ� Method
+    // 삭제 버튼 List만큼 출력
     public void DeleteBtnOpen()
     {
-        bool active = _panelList[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
-        for (int i = 0; i < _panelList.Count; i++)
+        if(_panelList.Count > 0)
         {
-            _panelList[i].GetComponent<Profile_Information>().DelBtn.SetActive(!active);
+            bool active = _panelList[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
+            for (int i = 0; i < _panelList.Count; i++)
+            {
+                _panelList[i].GetComponent<Profile_Information>().DelBtn.SetActive(!active);
+            }
+        }
+        else
+        {
+            // 삭제할 프로필 로그 출력
+            return;
         }
     }
 
@@ -279,7 +289,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         _profileNameAdd.text = string.Empty;
 
         /*SQL_Manager.instance.SQL_ProfileListSet();
-        GameManager.instance.Profile_Index = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index+1;*/
+        GameManager.Instance.ProfileIndex = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index+1;*/
     }
 
     // Profile Image ?��?��?�� 번호 ?��?�� Btn ?��?�� Method
@@ -289,14 +299,32 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         _isImageSelect = true;
     }
 
-    private IEnumerator PrintLog_co()
+    private IEnumerator PrintLog_co(GameObject errorlog)
     {
-        _errorLog.SetActive(true);
+        errorlog.SetActive(true);
 
         yield return new WaitForSeconds(3f);
 
-        _errorLog.SetActive(false);
+        errorlog.SetActive(false);
         log = null;
+    }
+
+    // Profile 영어 입력 못하도록 설정
+    private char ValidateInput(string text, int charIndex, char addedChar)
+    {
+        // 입력된 문자가 영어 알파벳, 숫자인 경우 입력을 막음
+        if ((addedChar >= 'a' && addedChar <= 'z') || (addedChar >= 'A' && addedChar <= 'Z') || (addedChar >= '0' && addedChar <= '9'))
+        {
+            if (log != null)
+            {
+                StopCoroutine(log);
+            }
+            log = StartCoroutine(PrintLog_co(_nameLog));
+            return '\0'; // 입력 막음
+        }
+
+        // 다른 문자는 허용
+        return addedChar;
     }
     #endregion
 }

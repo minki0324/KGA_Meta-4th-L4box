@@ -7,12 +7,14 @@ using TMPro;
 
 public class Ranking : MonoBehaviour
 {
+    public static Ranking instance = null;
+
     [Header("score")]
-    [SerializeField] private TMP_InputField score_txt;
+    [SerializeField] private TMP_Text score_txt;
     public int score;
 
     [Header("timer")]
-    [SerializeField] private TMP_InputField timer_txt;
+    [SerializeField] private TMP_Text timer_txt;
     public float timer;
 
     [Header("Rank")]
@@ -20,6 +22,19 @@ public class Ranking : MonoBehaviour
     [SerializeField] private TMP_Text[] Rank_Text;
 
     #region Unity Callback
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
     #endregion
 
     #region Other Method
@@ -28,15 +43,13 @@ public class Ranking : MonoBehaviour
     {
         score = int.Parse(score_txt.text.ToString());
 
-        SQL_Manager.instance.SQL_SetScore(GameManager.instance.Profile_name, GameManager.instance.Profile_Index, score, null, GameManager.instance.UID);
+        SQL_Manager.instance.SQL_SetScore(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, score, null, GameManager.Instance.UID);
     }
 
     // 타이머 저장 btn연동 테스트 메소드
-    public void test_Set_Timer()
+    public void UpdateTimerScore(float timer)
     {
-        timer = float.Parse(timer_txt.text.ToString());
-
-        SQL_Manager.instance.SQL_SetScore(GameManager.instance.Profile_name, GameManager.instance.Profile_Index, null, timer, GameManager.instance.UID);
+        SQL_Manager.instance.SQL_SetScore(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, null, timer, GameManager.Instance.UID);
     }
 
     // 특정 시점에 어떤 mode인지(speed, memory) 매개변수를 받아서 랭킹을 호출해주는 메소드

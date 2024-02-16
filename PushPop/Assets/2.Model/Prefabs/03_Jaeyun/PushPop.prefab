@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5550557447047154851
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5550557447047154850}
+  - component: {fileID: 5550557447047154849}
+  m_Layer: 0
+  m_Name: PushPop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5550557447047154850
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5550557447047154851}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5550557447047154849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5550557447047154851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c26053256305ff84b99ac1d150a19a3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pushPopCanvas: {fileID: 0}
+  pushPopButtonPrefab: {fileID: 7161972215700324124, guid: 1381da20a7f6349438dc19f56e561b10, type: 3}
+  boardPrefabUI: {fileID: 6080136693297342902, guid: e2c99a2b45e46b34eb39a7934886813e, type: 3}
+  pushPopSpriteAtlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
+  boardPrefab: {fileID: 3633448892475870983, guid: b42c40511bead9941bc7f9901e85999e, type: 3}
+  boardSprite: {fileID: 0}
+  pushPopBoardObject: []
+  percentage: 0.5
+  buttonSize: {x: 50, y: 50}
+  PosPrefab: {fileID: 4701027180370166461, guid: 908e83bf5cbab784199690367c9362ca, type: 3}
+  pushPopButton: []
+  activePos: []

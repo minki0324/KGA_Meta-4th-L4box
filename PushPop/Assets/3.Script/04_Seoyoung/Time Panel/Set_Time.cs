@@ -11,10 +11,11 @@ public class Set_Time : MonoBehaviour
 {
 
     [Header("캔버스")]
-    [SerializeField] private Canvas main_Canvas;
-    [SerializeField] private Canvas pushMode_Canvas;
-    [SerializeField] private Canvas speedMode_Canvas;
-    [SerializeField] private Canvas memoryMode_Canvas;
+    [SerializeField] private GameObject pushpushMode_Canvas;
+    [SerializeField] private GameObject speedMode_Canvas;
+    [SerializeField] private GameObject memoryMode_Canvas;
+    [SerializeField] private GameObject bombMode_Canvas;
+    [SerializeField] private GameObject main_Canvas;
 
     [SerializeField] private Canvas Background_Canvas;  //도움말 & 뒤로가기 버튼 캔버스
 
@@ -23,29 +24,27 @@ public class Set_Time : MonoBehaviour
     [SerializeField] private Button DecreaseTime_Btn;
 
     [Header("시간 텍스트 (최소 5분/최대 15분)")]
-    [SerializeField] TMP_InputField TimeText_InputField;
+    [SerializeField] private TMP_Text TimeText;
 
     [Header("시작/뒤로가기 버튼")]
     [SerializeField] Button Confirm_Btn;
     [SerializeField] Button Back_Btn;
 
-    int time = 300;
+    [SerializeField] private int time = 300;
     int min;
     int sec;
 
-    bool bCanStart = false;
-
-    private void Start()
-    {
-        Init();
-        Calculate_Time();
-        gameObject.SetActive(false);
-    }
-
+    #region Unity Callback
     private void OnEnable()
     {
         time = 300;
-        bCanStart = true;
+        /*main_Canvas.Disable_Button();*/
+    }
+
+    private void Start()
+    {
+        /*Init();*/
+        Calculate_Time();
     }
 
     private void Update()
@@ -56,7 +55,7 @@ public class Set_Time : MonoBehaviour
         }
         else
         {
-            DecreaseTime_Btn.enabled = true ;
+            DecreaseTime_Btn.enabled = true;
         }
 
         if (time >= 900)
@@ -68,16 +67,17 @@ public class Set_Time : MonoBehaviour
             IncreaseTime_Btn.enabled = true;
         }
     }
+    #endregion
 
+    #region Other Method
     private void Init()
     {
-        TimeText_InputField.onValueChanged.AddListener(delegate { TextFieldValue_Changed(TimeText_InputField.text); });
-        IncreaseTime_Btn.onClick.AddListener(IncreaseTimeBtn_Clicked);
-        DecreaseTime_Btn.onClick.AddListener(DecreaseTimeBtn_Clicked);
+        
         Confirm_Btn.onClick.AddListener(ConfirmBtn_Clicked);
-        Back_Btn.onClick.AddListener(() => { 
+        Back_Btn.onClick.AddListener(() => {
             gameObject.SetActive(false);
-            GameManager.instance.gameMode = GameMode.None;
+            GameManager.Instance._gameMode = GameMode.None;
+
         });
     }
 
@@ -85,7 +85,7 @@ public class Set_Time : MonoBehaviour
     {
         sec = time % 60;    //60으로 나눈 나머지 = 초
         min = time / 60;
-        TimeText_InputField.text = $"{string.Format("{0:0}", min)}분 {sec}초";
+        TimeText.text = $"{string.Format("{0:0}", min)}분 {sec}초";
     }
 
 
@@ -110,81 +110,66 @@ public class Set_Time : MonoBehaviour
 
         bIsNumber = int.TryParse(text, out InputNum);
 
-        if(bIsNumber)
+        if (bIsNumber)
         {
             time = InputNum;
-            StartCoroutine(Calculate_Time_co());
         }
         else
-        {          
-            if(TimeText_InputField.text == $"{string.Format("{0:0}", min)}분 {sec}초")
+        {
+            if (TimeText.text == $"{string.Format("{0:0}", min)}분 {sec}초")
             {
-                bCanStart = true;
+
             }
             else
             {
                 Debug.Log("숫자가 아닙니다");
                 time = 300;
-                bCanStart = true;
                 Calculate_Time();
-                StartCoroutine(Calculate_Time_co());
             }
 
 
-            if(TimeText_InputField.text == string.Empty || time < 300)
+            if (TimeText.text == string.Empty || time < 300)
             {
                 Debug.Log("시간 미입력 시");
                 time = 300;
-                bCanStart = true;
                 Calculate_Time();
-                StartCoroutine(Calculate_Time_co());
             }
-            
-            if(time > 900)
+
+            if (time > 900)
             {
                 time = 900;
-                bCanStart = true;
                 Calculate_Time();
-                StartCoroutine(Calculate_Time_co());
             }
-           
         }
-
-       
-    }
-
-    private IEnumerator Calculate_Time_co()
-    {
-        yield return new WaitForSeconds(1.5f);
-        TimeText_InputField.enabled = false;
-        Calculate_Time();
-        TimeText_InputField.enabled = true;
     }
 
 
     public void ConfirmBtn_Clicked()
     {
-        if(bCanStart)
-        {
-            GameManager.instance.TimerTime = time;
-            if(GameManager.instance.gameMode.Equals(GameMode.Speed))
-            {
-                speedMode_Canvas.gameObject.SetActive(true);
-            }
-            else if(GameManager.instance.gameMode.Equals(GameMode.Memory))
-            {
-                memoryMode_Canvas.gameObject.SetActive(true);
-            }
-
-            gameObject.SetActive(false);
-            main_Canvas.gameObject.SetActive(false);
+        GameManager.Instance.ShutdownTime = time;
+        if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
+        { // 푸시푸시 시작
+            pushpushMode_Canvas.SetActive(true);
         }
-        else
-        {
-            Debug.Log("시간 입력 좀 해주세요..");
-            bCanStart = false;
+        else if (GameManager.Instance.gameMode.Equals(Mode.Speed))
+        { // 스피드 시작
+            speedMode_Canvas.SetActive(true);
         }
-
-
+        else if (GameManager.Instance.gameMode.Equals(Mode.Memory))
+        { // 메모리 시작
+            memoryMode_Canvas.SetActive(true);
+        }
+        else if (GameManager.Instance.gameMode.Equals(Mode.Bomb))
+        { // 2인모드 시작
+            bombMode_Canvas.SetActive(true);
+        }
+        gameObject.SetActive(false);
+        main_Canvas.SetActive(false);
     }
+    #endregion
+
+
+
+
+
 }
