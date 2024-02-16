@@ -735,5 +735,87 @@ public class SQL_Manager : MonoBehaviour
         }
     }
     #endregion
+
+    #region PushPush
+    /// <summary>
+    /// PushPush게임 진행 후 Custom한 Object와 Btn들의 정보를 DB에 전달하는 Method
+    /// </summary>
+    /// <param name="_jsonData"></param>
+    /// <param name="_profileIndex"></param>
+    public void SQL_AddPushpush(string _jsonData, int _profileIndex)
+    {
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+
+            // 2. 현재 ProfileIndex에 대한 레코드 수 확인
+            string countQuery = $"SELECT COUNT(*) FROM PushPush WHERE ProfileIndex = {_profileIndex};";
+            MySqlCommand countCmd = new MySqlCommand(countQuery, connection);
+            int recordCount = Convert.ToInt32(countCmd.ExecuteScalar());
+
+            // 3. 레코드 수가 6개 이상이면 가장 오래된 레코드 삭제
+            if (recordCount >= 6)
+            {
+                string deleteOldestQuery = $"DELETE FROM PushPush WHERE ProfileIndex = {_profileIndex} ORDER BY CreatedAt LIMIT 1;";
+                MySqlCommand deleteCmd = new MySqlCommand(deleteOldestQuery, connection);
+                deleteCmd.ExecuteNonQuery();
+            }
+
+            // 4. 새 레코드 삽입
+            string SQL_command = $"INSERT INTO PushPush (ProfileIndex, ObjInfo) VALUES('{_profileIndex}', '{_jsonData}');";
+            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
+            cmd.ExecuteNonQuery();
+
+            return; 
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+            return;
+        }
+    }
+
+
+    public void SQL_SetPushPush(int _profileIndex)
+    {
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+
+            string selectCommand = string.Format(@"SELECT ObjInfo FROM PushPush WHERE ProfileIndex = '{0}';", _profileIndex);
+            MySqlCommand selectCmd = new MySqlCommand(selectCommand, connection);
+            reader = selectCmd.ExecuteReader();
+
+            List<PushPushObject> push = new List<PushPushObject>();
+
+            if (reader.HasRows)
+            {
+
+            }
+            else
+            {
+
+            }
+
+
+            if (!reader.IsClosed) reader.Close();
+            return;
+        }
+        catch (Exception e)
+        {
+            if (!reader.IsClosed) reader.Close();
+            Debug.Log(e.Message);
+            return;
+        }
+    }
+    #endregion
     #endregion
 }
