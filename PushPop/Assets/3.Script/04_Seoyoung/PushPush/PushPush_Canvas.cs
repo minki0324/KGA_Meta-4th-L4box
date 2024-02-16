@@ -138,7 +138,6 @@ public class PushPush_Canvas : MonoBehaviour
         {     
             //key는 카테고리 딕셔너리 key값
             moldIcon_List.Clear();
-            Debug.Log("CategoryIcon_Clicked : " + key);
 
 
             switch (key)
@@ -305,7 +304,6 @@ public class PushPush_Canvas : MonoBehaviour
         help_Canvas.gameObject.SetActive(false);*/
         //PushPush 게임 진입
         int puzzleIDIndex = int.Parse(moldIcon_List[currentPage - 1].name);
-        Debug.Log(puzzleIDIndex);
         puzzleLozic.SelectPuzzleButton(puzzleIDIndex);
         GameManager.Instance.PushPushMode();
     }

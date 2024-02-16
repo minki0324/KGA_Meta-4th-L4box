@@ -22,6 +22,22 @@ public enum Mode // GameMode
     Bomb,
 }
 
+public class PushPushObject
+{
+    public int spriteName;
+    public int childIndex;
+    public int[] childSpriteIndex;
+    public Vector2[] childPosition;
+
+    public PushPushObject(int spriteName, int childIndex, int[] childSpriteIndex, Vector2[] childPosition)
+    {
+        this.spriteName = spriteName;
+        this.childIndex = childIndex;
+        this.childSpriteIndex = childSpriteIndex;
+        this.childPosition = childPosition;
+    }
+}
+
 public class PuzzleObject
 {
     public GameObject puzzleObject;
@@ -45,6 +61,9 @@ public class GameManager : MonoBehaviour, IGameMode
     public Mode gameMode;
     public int ShutdownTime; // delete 필요
 
+    [Header("GameScript")]
+    [SerializeField] private CostomPushpopManager pushpushScript;
+
     // Bubble
     [Header("Bubble Info")]
     [SerializeField] private GameObject bubbleCanvas = null;
@@ -64,6 +83,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public Vector2 finalCenter;
     public List<PuzzleObject> puzzleClass = new List<PuzzleObject>();
     [SerializeField] private PuzzleLozic puzzleLogic;
+    public List<PushPushObject> push = new List<PushPushObject>();
 
     [Header("Score")]
     [SerializeField] private TMP_Text scoreText;
@@ -159,12 +179,44 @@ public class GameManager : MonoBehaviour, IGameMode
         if (PushPop.Instance.pushPopButton.Count == 0)
         {
             Debug.Log("게임클리어");
+           
+
+            switch(gameMode)
+            {
+                case Mode.PushPush:
+                    //담고
+                    int[] spriteIndexs = new int[pushpushScript.puzzleBoard.transform.childCount];
+                    Vector2[] childPos = new Vector2[pushpushScript.puzzleBoard.transform.childCount];
+                    for(int i = 0; i< pushpushScript.puzzleBoard.transform.childCount; i++)
+                    {
+                        PushPopButton pop = pushpushScript.puzzleBoard.transform.GetChild(i).GetComponent<PushPopButton>();
+                        Debug.Log("배열 : " + spriteIndexs[i]);
+                        Debug.Log("pop : " + pop);
+                        Debug.Log("pop.spriteIndex : " + pop.spriteIndex);
+                        spriteIndexs[i] = pop.spriteIndex;
+                        childPos[i] = pop.gameObject.transform.position;
+                    }
+
+                    PushPushObject newPush = new PushPushObject(puzzleLogic.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
+                    pushpushScript.result.SetActive(true);
+                    //출력
+                  /*  pushpushScript.resultText.text = Mold_Dictionary.instance.icon_Dictionry[puzzleLogic.currentPuzzle.PuzzleID];
+                    pushpushScript.resultImage.sprite = puzzleLogic.currentPuzzle.board;*/
+
+                    pushpushScript.puzzleBoard.GetComponent<Animator>().SetTrigger("Clear");
+
+                    for (int i = 0; i < pushpushScript.puzzleBoard.transform.childCount; i++)
+                    {
+                        pushpushScript.puzzleBoard.transform.GetChild(i).GetComponent<Button>().interactable = true;
+                    }
+                    break;
+            }
+
             bubblePos.Clear(); // bubble transform mode에 따라 달라짐
 
             PushPop.Instance.PushPopClear();
 
-
-            if(timer != null)
+            if (timer != null)
             {
                 StopCoroutine(timer); // timer coroutine stop;
             }

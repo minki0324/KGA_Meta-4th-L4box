@@ -24,7 +24,7 @@ public class PuzzleLozic : MonoBehaviour
     public List<Puzzle> puzzles = new List<Puzzle>(); //모든 퍼즐 종류를 담아놓는 리스트
     public int ClearCount=0; //맞춰야하는 퍼즐 갯수
     public int successCount= 0; //맞춘 갯수
-    private Puzzle currentPuzzle; //Player가 고른 퍼즐 종류
+    public Puzzle currentPuzzle; //Player가 고른 퍼즐 종류
     [SerializeField] CostomPushpopManager costom;
     public Action onClear;
     public List<PuzzlePiece> pieceList = new List<PuzzlePiece>();
@@ -46,12 +46,10 @@ public class PuzzleLozic : MonoBehaviour
     {//퍼즐을 놓았을때 맞춰야하는 위치와 현재위치 비교
         if (Vector3.Distance(currentPosition, frampPos.position) < puzzleJudgmentDistance)
         {
-            Debug.Log(frampPos.position);
             return true;
         }
         else
         {
-            Debug.Log(frampPos.position);
             return false;
         }
     }
@@ -135,10 +133,6 @@ public class PuzzleLozic : MonoBehaviour
     private void CraetBoard()
     {//퍼즐완료하고 퍼즐 원본 오브젝트 생성해주기
         Image frameImage = costom.puzzleBoard.GetComponent<Image>();
-        Debug.Log("스프라이트" + frameImage.sprite);
-        Debug.Log("아틀라스" + atlas);
-        Debug.Log("커런트퍼즐+ID" + currentPuzzle.PuzzleID);
-        Debug.Log("커런트퍼즐" + currentPuzzle);
         frameImage.sprite = atlas.GetSprite(currentPuzzle.PuzzleID.ToString()); //퍼즐 사진넣기
         frameImage.SetNativeSize();
         frameImage.alphaHitTestMinimumThreshold = 0.1f;
@@ -190,7 +184,6 @@ public class PuzzleLozic : MonoBehaviour
 
         // 중심점 위치 계산
         Vector2 finalCenter = new Vector2(center.x - spriteCenter.x, center.y - spriteCenter.y);
-        Debug.Log("finalCenter : " + finalCenter);
         PuzzleObject obj = new PuzzleObject(puzzle, sprite, Area, finalCenter);
 
         GameManager.Instance.puzzleClass.Add(obj);

@@ -11,13 +11,11 @@ public class CustomArea : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("Enter");
         costom.isOnArea = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("Exit");
         costom.isOnArea = false;
     }
 }

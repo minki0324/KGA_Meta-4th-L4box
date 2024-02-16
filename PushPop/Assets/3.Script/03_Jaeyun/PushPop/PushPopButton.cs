@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class PushPopButton : MonoBehaviour, IPointerDownHandler
 {
+    public int spriteIndex;
+
     private void OnEnable()
     {
         Button btn = transform.GetComponent<Button>();

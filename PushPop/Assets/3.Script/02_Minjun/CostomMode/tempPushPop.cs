@@ -29,9 +29,10 @@ public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHa
         if (isOverlap || !isCanMakePush)
         {
             CostomPushpopManager stack = FindObjectOfType<CostomPushpopManager>();
-            Destroy(gameObject);
+            GameObject lastFakeStack = stack.StackFakePops.Pop();
+            Destroy(lastFakeStack);
             PushPop.Instance.pushPopButton.Remove(RectPush);
-            GameObject lastStack = stack.rectPopBtn.Pop();
+            GameObject lastStack = stack.StackPops.Pop();
             Destroy(lastStack);
             Destroy(RectPush);
         }

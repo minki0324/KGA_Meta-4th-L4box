@@ -22,20 +22,18 @@ public class FramePuzzle : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     // Update is called once per frame
     void Update()
     {
-
+   
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
         //퍼즐위에 마우스가 있으면 True값 전달하기
         costomPushpop.isCanMakePush = true;
         costomPushpop.isOnArea = true;
-        Debug.Log("마우스들어옴" + costomPushpop.isCanMakePush);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         costomPushpop.isCanMakePush = false;
-        Debug.Log("마우스나감" + costomPushpop.isCanMakePush);
     }
 
 
@@ -48,25 +46,31 @@ public class FramePuzzle : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         }
     }
 
-  /*  public void OnPointerDown(PointerEventData eventData)
-    {
-        // 터치한 지점의 스크린 좌표를 RectTransform으로 변환하여 확인
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, eventData.position, eventData.pressEventCamera, out Vector2 localPoint);
+    //public void OnPointerDown(PointerEventData eventData)
+    //{
+    //    GameObject clickObject = EventSystem.current.currentSelectedGameObject;
+    //    Debug.Log(clickObject.name);
+    //}
 
-        // 변환된 지점이 CustomArea 안에 있는지 확인
-        if (rect.rect.Contains(localPoint))
-        {
-            // rect 안에 터치가 발생한 경우
-            Debug.Log("Touch inside CustomArea");
-            costomPushpop.isCanMakePush = true;
-            costomPushpop.isOnArea = true;
-        }
-        else
-        {
-            // rect 밖에서 터치가 발생한 경우
-            costomPushpop.isCanMakePush = false;
-            Debug.Log("Touch outside CustomArea");
-        }
+    /*  public void OnPointerDown(PointerEventData eventData)
+      {
+          // 터치한 지점의 스크린 좌표를 RectTransform으로 변환하여 확인
+          RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, eventData.position, eventData.pressEventCamera, out Vector2 localPoint);
 
-    }*/
+          // 변환된 지점이 CustomArea 안에 있는지 확인
+          if (rect.rect.Contains(localPoint))
+          {
+              // rect 안에 터치가 발생한 경우
+              Debug.Log("Touch inside CustomArea");
+              costomPushpop.isCanMakePush = true;
+              costomPushpop.isOnArea = true;
+          }
+          else
+          {
+              // rect 밖에서 터치가 발생한 경우
+              costomPushpop.isCanMakePush = false;
+              Debug.Log("Touch outside CustomArea");
+          }
+
+      }*/
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class CostomPushpopManager : MonoBehaviour
 {
@@ -18,17 +19,27 @@ public class CostomPushpopManager : MonoBehaviour
     public bool isCanMakePush; //FramePuzzle 에서 전달받은 bool값을 설치할때 버튼이 오브젝트위에있는지 판단하기위해 씀.
     public bool isOnArea;
     public GameObject puzzleBoard;
-    public Stack<GameObject> rectPopBtn = new Stack<GameObject>();
+    public Stack<GameObject> StackPops = new Stack<GameObject>();
+    public Stack<GameObject> StackFakePops = new Stack<GameObject>();
+    [SerializeField] private Sprite[] btnSprites;
+    private int spriteIndex = 0;
+    public GameObject result;
+    public TMP_Text resultText;
+    public Image resultImage;
+
     void Update()
     {// 안드로이드는 구현안함
         if (Application.platform == RuntimePlatform.Android)
         {//안드로이드에서 실행 할 때
+            Debug.Log("안드");
+
             AndroidPlatForm();
 
         }
         else
         { // window , editor
           //마우스클릭하고 클릭위치가 UI가 아닐때
+            Debug.Log("윈도우");
             WindowPlatform();
         }
     }
@@ -40,9 +51,15 @@ public class CostomPushpopManager : MonoBehaviour
     private void WindowPlatform()
     {
 
-        if (Input.GetMouseButtonDown(0) && isOnArea)
+        if (Input.GetMouseButtonDown(0) )
         {
-            ClickDown();
+            if (isInArea("CostomArea") || isInArea("Puzzle"))
+            {
+                ClickDown();
+            }
+            else
+            {
+            }
 
         }
         if (newRectPush == null) return;
@@ -62,9 +79,16 @@ public class CostomPushpopManager : MonoBehaviour
             for (int i = 0; i < Input.touchCount; i++)
             {
                 Touch touch = Input.GetTouch(i);
-                if (touch.phase == TouchPhase.Began && isOnArea)
+                if (touch.phase == TouchPhase.Began)
                 {
-                    ClickDown();
+                    if (isInArea( "CostomArea") || isInArea( "Puzzle"))
+                    {
+                        ClickDown();
+                    }
+                    else
+                    {
+                        Debug.Log("else요");
+                    }
                 }
                 if (newRectPush == null) return;
                 if (touch.phase == TouchPhase.Moved)
@@ -86,7 +110,7 @@ public class CostomPushpopManager : MonoBehaviour
         {
             Destroy(newPush);
             PushPop.Instance.pushPopButton.Remove(newRectPush);
-            GameObject lastStack = rectPopBtn.Pop();
+            GameObject lastStack = StackPops.Pop();
             Destroy(lastStack);
             newPush = null;
             newRectPush = null;
@@ -100,7 +124,6 @@ public class CostomPushpopManager : MonoBehaviour
     // 클릭 or 터치시 메소드들
     private void ClickDown()
     {
-        Debug.Log("마우스클릭");
         SelectPositon = Camera.main.ScreenToWorldPoint(Input.mousePosition); //카메라상의 좌표를 월드포지션으로구하기
                                                                              //판넬안에서 마우스혹은 터치위치의 RectTransform 구하기
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, null, out localPosition);
@@ -109,11 +132,16 @@ public class CostomPushpopManager : MonoBehaviour
         //UI에선 collider검사가 안되서 gameObject를 동시에 소환해서 안보이는 곳에서 겹침검사
         //월드포지션에 push소환하기(Collider 검사해서 push버튼 겹치는지 확인하기위해)
         newPush = Instantiate(pushPop, SelectPositon, Quaternion.identity);
+        StackFakePops.Push(newPush);
         //UI상 위치에 push소환(실제로 보이는 push)
         newRectPush = Instantiate(RectPushPop, newLocalPosition, Quaternion.identity);
+        Image popImage = newRectPush.GetComponent<Image>();
+        popImage.sprite = btnSprites[spriteIndex];
+        PushPopButton pop = newRectPush.GetComponent<PushPopButton>();
+        pop.spriteIndex = spriteIndex;
         newRectPush.transform.localScale = new Vector3(0.55f, 0.55f, 0.55f);
         PushPop.Instance.pushPopButton.Add(newRectPush);
-        rectPopBtn.Push(newRectPush);
+        StackPops.Push(newRectPush);
         // pushpop Btn Parent 설정
         newRectPush.transform.SetParent(puzzleBoard.transform);
 
@@ -152,36 +180,46 @@ public class CostomPushpopManager : MonoBehaviour
 
     public void ReturnBtn()
     {
-        GameObject lastStack = rectPopBtn.Pop();
+        GameObject lastFakeStack = StackFakePops.Pop();
+        Destroy(lastFakeStack);
+        GameObject lastStack = StackPops.Pop();
         Destroy(lastStack);
+        PushPop.Instance.pushPopButton.Remove(lastStack);
     }
 
     public void BtnAllClear()
     {
-        while (rectPopBtn.Count > 0)
+        while (StackPops.Count > 0)
         {
-            GameObject obj = rectPopBtn.Pop(); // Queue에서 오브젝트를 하나씩 제거
+            GameObject objs = StackFakePops.Pop();
+            Destroy(objs);
+            GameObject obj = StackPops.Pop(); // Queue에서 오브젝트를 하나씩 제거
             Destroy(obj); // 해당 오브젝트를 파괴
+            PushPop.Instance.pushPopButton.Remove(obj);
         }
     }
-    /* public void OnPointerDown(PointerEventData eventData)
-     {
-         // 터치한 지점의 스크린 좌표를 RectTransform으로 변환하여 확인
-         RectTransformUtility.ScreenPointToLocalPointInRectangle(CustomArea, eventData.position, eventData.pressEventCamera, out Vector2 localPoint);
 
-         // 변환된 지점이 CustomArea 안에 있는지 확인
-         if (CustomArea.rect.Contains(localPoint))
-         {
-             // CustomArea 안에 터치가 발생한 경우
-             Debug.Log("Touch inside CustomArea");
-             isOnArea = true;
-         }
-         else
-         {
-             // CustomArea 밖에서 터치가 발생한 경우
-             isOnArea = false;
-             Debug.Log("Touch outside CustomArea");
-         }
-
-     }*/
+    public void GetSpriteIndex(int index)
+    {
+        spriteIndex = index;
+    }
+   
+    private bool isInArea(string tag)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity)){
+            if(hit.transform.CompareTag(tag))
+            {
+                isOnArea = true;
+                
+                Debug.Log( "isOnArea : " + isOnArea);
+            }
+            else
+            {
+                isOnArea = false;
+                Debug.Log( "isOnArea : " + isOnArea);
+            }
+        }
+        return isOnArea;
+    }
 }
