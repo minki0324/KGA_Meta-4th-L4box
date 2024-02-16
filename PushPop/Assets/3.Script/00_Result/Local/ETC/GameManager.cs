@@ -200,8 +200,8 @@ public class GameManager : MonoBehaviour, IGameMode
                     PushPushObject newPush = new PushPushObject(puzzleLogic.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
                     pushpushScript.result.SetActive(true);
                     //출력
-                  /*  pushpushScript.resultText.text = Mold_Dictionary.instance.icon_Dictionry[puzzleLogic.currentPuzzle.PuzzleID];
-                    pushpushScript.resultImage.sprite = puzzleLogic.currentPuzzle.board;*/
+                    pushpushScript.resultText.text = Mold_Dictionary.instance.icon_Dictionry[puzzleLogic.currentPuzzle.PuzzleID];
+                    /*pushpushScript.resultImage.sprite = puzzleLogic.currentPuzzle.board;*/
 
                     pushpushScript.puzzleBoard.GetComponent<Animator>().SetTrigger("Clear");
 
@@ -294,7 +294,8 @@ public class GameManager : MonoBehaviour, IGameMode
         bubble.BubbleSetting(_size, _pos, _puzzle.transform);
         _puzzle.GetComponent<Image>().raycastTarget = false;
         //_puzzle.SetParent(bubble.transform);
-        bubble.touchCount = 1; /*Random.Range(2, 10);*/ // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
+        /*bubble.touchCount = 1; */
+        bubble.touchCount = Random.Range(2, 10); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
     }
 
     /// <summary>

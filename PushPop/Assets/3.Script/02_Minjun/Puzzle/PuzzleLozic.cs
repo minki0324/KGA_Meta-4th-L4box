@@ -20,7 +20,7 @@ public class PuzzleLozic : MonoBehaviour
     public Transform frampPos;
     [Header("피스들 설정 위치")] //임시
     public Transform[] piecePos;
-    private float puzzleJudgmentDistance = 30111111; // 퍼즐 판정 거리.
+    private float puzzleJudgmentDistance = 30; // 퍼즐 판정 거리.
     public List<Puzzle> puzzles = new List<Puzzle>(); //모든 퍼즐 종류를 담아놓는 리스트
     public int ClearCount=0; //맞춰야하는 퍼즐 갯수
     public int successCount= 0; //맞춘 갯수
