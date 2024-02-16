@@ -47,17 +47,17 @@ public class Help_Canvas : MonoBehaviour
     {
         Back_Btn.enabled = true;
         help_Btn.enabled = true;
-        switch(GameManager.Instance._gameMode)
+        switch(GameManager.Instance.gameMode)
         {
-            case GameMode.PushPush:
+            case Mode.PushPush:
               //  pushMode_Panel.SetActive(true);
                 break;
 
-            case GameMode.Speed:
+            case Mode.Speed:
              //   speedMode_Panel.SetActive(true);
                 break;
 
-            case GameMode.Memory:
+            case Mode.Memory:
                 //memoryMode_Panel.SetActive(true);
                 break;
         }
@@ -76,17 +76,17 @@ public class Help_Canvas : MonoBehaviour
     {
         if(!bisHelpPanelOn)
         {
-            switch (GameManager.Instance._gameMode)
+            switch (GameManager.Instance.gameMode)
             {
-                case GameMode.PushPush:
+                case Mode.PushPush:
                     pushpush_Canvas.BackBtn_Clicked();
                     break;
 
-                case GameMode.Speed:
+                case Mode.Speed:
                     speed_Canvas.BackBtn_Clicked();
                     break;
 
-                case GameMode.Memory:
+                case Mode.Memory:
 
                     break;
             }
@@ -107,16 +107,16 @@ public class Help_Canvas : MonoBehaviour
             currentPage = 1;
             Help_Scripts();
 
-            /*switch(GameManager.Instance.gameMode)
+            switch (GameManager.Instance.gameMode)
             {
-                case GameMode.PushPush:
+                case Mode.PushPush:
                     pushpush_Canvas.Disable_Objects();
                     break;
 
-                case GameMode.Speed:
+                case Mode.Speed:
                     speed_Canvas.Disable_Objects();
                     break;
-            }    */
+            }
         }
     }
 
@@ -132,16 +132,16 @@ public class Help_Canvas : MonoBehaviour
             help_Panel.SetActive(false);
 
 
-           /* switch (GameManager.Instance.gameMode)
+            switch (GameManager.Instance.gameMode)
             {
-                case GameMode.PushPush:
+                case Mode.PushPush:
                     pushpush_Canvas.Enable_Objects();
                     break;
 
-                case GameMode.Speed:
+                case Mode.Speed:
                     speed_Canvas.Enable_Objects();
                     break;
-            }*/
+            }
 
         }
        
@@ -173,12 +173,12 @@ public class Help_Canvas : MonoBehaviour
 
     //헬프 버튼 누르면 나오는 스크립트 
     private void Help_Scripts()
-    {       
-        /*switch (GameManager.Instance.gameMode)
+    {
+        switch (GameManager.Instance.gameMode)
         {
 
             //푸시푸시모드 도움말
-            case GameMode.PushPush:
+            case Mode.PushPush:
                 maxPage = 2;
                 switch (currentPage)
                 {
@@ -196,7 +196,7 @@ public class Help_Canvas : MonoBehaviour
                 break;
 
             //스피드 모드 도움말
-            case GameMode.Speed:
+            case Mode.Speed:
                 maxPage = 2;
                 switch (currentPage)
                 {
@@ -212,7 +212,7 @@ public class Help_Canvas : MonoBehaviour
                 break;
 
             //메모리 모드 도움말
-            case GameMode.Memory:
+            case Mode.Memory:
                 maxPage = 1;
                 switch (currentPage)
                 {
@@ -223,7 +223,7 @@ public class Help_Canvas : MonoBehaviour
                 break;
 
             //2인모드 도움맒
-            case GameMode.Bomb:
+            case Mode.Bomb:
                 maxPage = 1;
                 switch (currentPage)
                 {
@@ -232,10 +232,13 @@ public class Help_Canvas : MonoBehaviour
                         break;
                 }
                 break;
-        }*/
+        }
 
         page_Text.text = $"{currentPage}/{maxPage}";
     }
+
+
+
 
     #endregion
 

@@ -138,8 +138,8 @@ public class PushPush_Canvas : MonoBehaviour
         {     
             //key는 카테고리 딕셔너리 key값
             moldIcon_List.Clear();
-
-
+            
+            
             switch (key)
             {
                 case 10:
@@ -230,8 +230,8 @@ public class PushPush_Canvas : MonoBehaviour
             //버튼 enable = false 함수
             Disable_Objects();
 
-            help_Canvas.Back_Btn.enabled = false;
-            help_Canvas.Help_Btn.enabled = false;
+            help_Canvas.Back_Btn.interactable = false;
+            help_Canvas.Help_Btn.interactable = false;
         }
 
     }
@@ -316,8 +316,8 @@ public class PushPush_Canvas : MonoBehaviour
             //버튼 enable = true 함수
             Enable_Objects();
 
-            help_Canvas.Back_Btn.enabled = true;
-            help_Canvas.Help_Btn.enabled = true;
+            help_Canvas.Back_Btn.interactable = true;
+            help_Canvas.Help_Btn.interactable = true;
 
             selectMold_Panel.SetActive(false);
             moldIcon_List.Clear();
@@ -340,7 +340,7 @@ public class PushPush_Canvas : MonoBehaviour
     {
         for (int i = 0; i < categoryBtn_List.Count; i++)
         {
-            categoryBtn_List[i].enabled = false;
+            categoryBtn_List[i].interactable = false;
         }
 
         selectCategory_ScrollView.enabled = false;
@@ -353,7 +353,7 @@ public class PushPush_Canvas : MonoBehaviour
     {
         for (int i = 0; i < categoryBtn_List.Count; i++)
         {
-            categoryBtn_List[i].enabled = true;
+            categoryBtn_List[i].interactable = true;
         }
 
         selectCategory_ScrollView.enabled = true;
