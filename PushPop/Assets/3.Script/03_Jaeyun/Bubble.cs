@@ -167,29 +167,30 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed)
     {
         float currentSpeed = _maxSpeed; // maxSpeed 초기화
+        float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y 같음
 
         // 속도가 0이 되었을 때까지 이동
         while (currentSpeed >= 0)
         {
-            if (0f + (bubbleSize.x / 2f) > transform.position.x)
+            if (0f + (bubbleSize.x * bubbleScale / 2f) > transform.position.x)
             { // boundary left
                 _dir = Vector2.Reflect(_dir, Vector2.right).normalized;
-                transform.position = new Vector2((bubbleSize.x / 2f) + 10f, transform.position.y);
+                transform.position = new Vector2((bubbleSize.x * bubbleScale / 2f) + 10f, transform.position.y);
             }
-            else if (transform.position.x > Screen.width - (bubbleSize.x / 2f))
+            else if (transform.position.x > Screen.width - (bubbleSize.x * bubbleScale / 2f))
             { // boundary right
                 _dir = Vector2.Reflect(_dir, Vector2.left).normalized;
-                transform.position = new Vector2(Screen.width - ((bubbleSize.x / 2f) + 10f), transform.position.y);
+                transform.position = new Vector2(Screen.width - ((bubbleSize.x * bubbleScale / 2f) + 10f), transform.position.y);
             }
-            else if (0f + (bubbleSize.y / 2f) > transform.position.y)
+            else if (0f + (bubbleSize.y * bubbleScale / 2f) > transform.position.y)
             { // boundary bottom
                 _dir = Vector2.Reflect(_dir, Vector2.up).normalized;
-                transform.position = new Vector2(transform.position.x, (bubbleSize.y / 2f) + 10f);
+                transform.position = new Vector2(transform.position.x, (bubbleSize.y * bubbleScale / 2f) + 10f);
             }
-            else if (transform.position.y > Screen.height - (bubbleSize.y / 2f))
+            else if (transform.position.y > Screen.height - (bubbleSize.y * bubbleScale / 2f))
             { // boundary up
                 _dir = Vector2.Reflect(_dir, Vector2.down).normalized;
-                transform.position = new Vector2(transform.position.x, Screen.height - ((bubbleSize.y / 2f) + 10f));
+                transform.position = new Vector2(transform.position.x, Screen.height - ((bubbleSize.y * bubbleScale / 2f) + 10f));
             }
             transform.parent.Translate(_dir * (Time.deltaTime * currentSpeed * speedRate)); // bubble move
 
