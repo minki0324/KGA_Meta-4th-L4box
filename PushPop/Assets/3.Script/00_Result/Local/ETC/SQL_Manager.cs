@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 
 #region Other Class
@@ -80,8 +81,8 @@ public class SQL_Manager : MonoBehaviour
     public MySqlDataReader reader;
 
 
-    public string DB_path = string.Empty;   // Json경로 (DB)
-    public int UID;
+    public string DB_path = string.Empty;   // Json Path (DB)
+    public int UID;                         
     public List<Profile> Profile_list = new List<Profile>();
     public List<Rank> Rank_List = new List<Rank>();
 
@@ -779,41 +780,43 @@ public class SQL_Manager : MonoBehaviour
         }
     }
 
-
-    public void SQL_SetPushPush(int _profileIndex)
+    /// <summary>
+    /// DB에 저장된 PushPushObject Class를 List로 받아오는 Method
+    /// </summary>
+    /// <param name="_profileIndex"></param>
+    /// <returns></returns>
+    public List<PushPushObject> SQL_SetPushPush(int _profileIndex)
     {
         try
         {
             // 1. SQL 서버에 접속 되어 있는지 확인
             if (!ConnectionCheck(connection))
             {
-                return;
+                return null;
             }
 
-            string selectCommand = string.Format(@"SELECT ObjInfo FROM PushPush WHERE ProfileIndex = '{0}';", _profileIndex);
+            // 2. JSON 데이터를 읽어와서 PushPushObject 리스트로 변환
+            // 최근 순서대로 데이터를 정렬하여 조회
+            string selectCommand = $"SELECT ObjInfo FROM PushPush WHERE ProfileIndex = '{_profileIndex}' ORDER BY CreatedAt DESC;";
             MySqlCommand selectCmd = new MySqlCommand(selectCommand, connection);
-            reader = selectCmd.ExecuteReader();
 
             List<PushPushObject> push = new List<PushPushObject>();
 
-            if (reader.HasRows)
+            while (reader.Read())
             {
-
+                string jsonData = reader.GetString("ObjInfo");
+                PushPushObject pushObject = JsonUtility.FromJson<PushPushObject>(jsonData);
+                push.Add(pushObject);
             }
-            else
-            {
-
-            }
-
 
             if (!reader.IsClosed) reader.Close();
-            return;
+            return push;
         }
         catch (Exception e)
         {
             if (!reader.IsClosed) reader.Close();
             Debug.Log(e.Message);
-            return;
+            return null;
         }
     }
     #endregion

@@ -7,6 +7,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+
+/// <summary>
+/// Profile 관련 행동 처리 Class
+/// </summary>
 public class Profile_ : MonoBehaviour, IPointerClickHandler
 {
     [Header("Profile_Panel")]
@@ -35,12 +39,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     [Header("Image")]
     public int _imageIndex = -1;
-    private string _imagePath = string.Empty;
+    private string _imagePath = string.Empty;   // Camera Image Save Path
 
     [Header("Text")]
     public TMP_Text SelectName;
     private string _profileName = string.Empty;
-    public string PreviousName = string.Empty;
 
     [Header("bool")]
     public bool _isImageSelect = false;
@@ -52,6 +55,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     private void OnEnable()
     {
         SelectProfilePanel.SetActive(true);
+        _profileNameAdd.onValidateInput += ValidateInput;
     }
 
     private void Start()
@@ -62,7 +66,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         Debug.Log("Device GUID: " + _uniqueID);
 
         // 한글 입력만 가능하도록 이벤트 추가
-        _profileNameAdd.onValidateInput += ValidateInput;
+    }
+
+    private void OnDisable()
+    {
+        _profileNameAdd.onValidateInput -= ValidateInput;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -282,7 +290,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // Profile Add?�� name?�� ????��?��?��?�� Btn ?��?�� Method
+    // Profile Add 하기 전 InputField에 저장된 이름을 변수에 저장해주는 Btn 연동 Method
     public void SendProfile()
     {
         _profileName = _profileNameAdd.text;
@@ -292,13 +300,14 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         GameManager.Instance.ProfileIndex = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index+1;*/
     }
 
-    // Profile Image ?��?��?�� 번호 ?��?�� Btn ?��?�� Method
+    // Profile Image Index를 저장하는 Method
     public void SelectImage(int index)
     {
         _imageIndex = index;
         _isImageSelect = true;
     }
 
+    // Error_log 출력 Coroutine
     private IEnumerator PrintLog_co(GameObject errorlog)
     {
         errorlog.SetActive(true);
@@ -309,7 +318,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         log = null;
     }
 
-    // Profile 영어 입력 못하도록 설정
+    // Profile 영어, 숫자 입력 못하도록 설정
     private char ValidateInput(string text, int charIndex, char addedChar)
     {
         // 입력된 문자가 영어 알파벳, 숫자인 경우 입력을 막음

@@ -99,6 +99,11 @@ public class GameManager : MonoBehaviour, IGameMode
     public Sprite[] ProfileImages;
     public bool IsImageMode = true; // false = 사진찍기, true = 이미지 선택
 
+    [Header("2P Player")]
+    public string ProfileName2P = string.Empty;
+    public int ProfileIndex2P = 0;
+    public int DefaultImage2P = 0;
+    public bool IsimageMode2P = true;
 
     #region Unity Callback
     private void Awake()
@@ -194,7 +199,7 @@ public class GameManager : MonoBehaviour, IGameMode
                         Debug.Log("pop : " + pop);
                         Debug.Log("pop.spriteIndex : " + pop.spriteIndex);
                         spriteIndexs[i] = pop.spriteIndex;
-                        childPos[i] = pop.gameObject.transform.position;
+                        childPos[i] = pop.gameObject.transform.localPosition;
                     }
 
                     PushPushObject newPush = new PushPushObject(puzzleLogic.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
