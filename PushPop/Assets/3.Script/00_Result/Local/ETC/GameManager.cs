@@ -203,13 +203,13 @@ public class GameManager : MonoBehaviour, IGameMode
                     pushpushScript.resultText.text = Mold_Dictionary.instance.icon_Dictionry[puzzleLogic.currentPuzzle.PuzzleID];
                     /*pushpushScript.resultImage.sprite = puzzleLogic.currentPuzzle.board;*/
 
-                    pushpushScript.puzzleBoard.GetComponent<Animator>().SetTrigger("Clear");
 
                     for (int i = 0; i < pushpushScript.puzzleBoard.transform.childCount; i++)
                     {
                         pushpushScript.puzzleBoard.transform.GetChild(i).GetComponent<Button>().interactable = true;
                     }
                     break;
+                    //
             }
 
             bubblePos.Clear(); // bubble transform mode에 따라 달라짐

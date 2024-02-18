@@ -26,21 +26,23 @@ public class PuzzleLozic : MonoBehaviour
     public int successCount= 0; //맞춘 갯수
     public Puzzle currentPuzzle; //Player가 고른 퍼즐 종류
     [SerializeField] CustomPushpopManager costom;
-    public Action onClear;
+    public Action onPuzzleClear;
     public List<PuzzlePiece> pieceList = new List<PuzzlePiece>();
     public SpriteAtlas atlas;
-
+    [SerializeField] private GameObject DecorationPanel;
     private void OnEnable()
     {
-        onClear += DestroyChildren;
-        onClear += CraetBoard;
-        onClear += ActiveCostomPanel;
+        onPuzzleClear += DestroyChildren; //퍼즐완료시 프레임 , 피스들 모두삭제
+        onPuzzleClear += CraetBoard; //완성된 퍼즐보드 생산
+        onPuzzleClear += ActiveCustomPanel; //커스텀판넬 활성화
+        onPuzzleClear += AtiveOnDecoPanel; //데코판넬활성화
     }
     private void OnDisable()
     {
-        onClear -= DestroyChildren;
-        onClear -= CraetBoard;
-        onClear -= ActiveCostomPanel;
+        onPuzzleClear -= DestroyChildren;
+        onPuzzleClear -= CraetBoard;
+        onPuzzleClear -= ActiveCustomPanel;
+        onPuzzleClear -= AtiveOnDecoPanel; //데코판넬활성화
     }
     public bool checkdistance(Vector3 currentPosition )
     {//퍼즐을 놓았을때 맞춰야하는 위치와 현재위치 비교
@@ -85,7 +87,7 @@ public class PuzzleLozic : MonoBehaviour
             pieceList[i].transform.GetComponent<Image>().raycastTarget = true;
             pieceList[i].transform.GetComponent<PieceDragAndDrop>().enabled = true;
         }
-        PuzzleInstantiate(FrameObject, frampPos.position, currentPuzzle.shadow, false, FrameParent.transform);
+        PuzzleInstantiate(FrameObject, frampPos.position, currentPuzzle.shadow, false);
     }
 
     public  void SettingPuzzle()
@@ -96,22 +98,21 @@ public class PuzzleLozic : MonoBehaviour
             pieceList.Add(piece.GetComponent<PuzzlePiece>());
         }
     }
-    private GameObject PuzzleInstantiate(GameObject puzzle , Vector3 position , Sprite puzzleSprite, bool _isPiece, Transform parent = null)
+    private GameObject PuzzleInstantiate(GameObject puzzle , Vector3 position , Sprite puzzleSprite, bool _isPiece)
     {//퍼즐생성
         GameObject board = null;
-        if (parent != null)
-        {
-            board = Instantiate(puzzle, position, Quaternion.identity, parent);
-        }
-        else
-        {
-            board = Instantiate(puzzle, position, Quaternion.identity, PuzzleParent.transform);
-        }
+        board = Instantiate(puzzle, position, Quaternion.identity, FrameParent.transform);
+
         PuzzleSetting(board, puzzleSprite);
         //newPiecePuzle
         if(_isPiece)
-        {
+        {//생성하는 퍼즐이 맞추는 조각일때
             AlphaCalculate(puzzleSprite, board);
+        }
+        else
+        {//생성하는 퍼즐이 퍼즐 틀일때.
+            //생성할 시 조각들보다 위로 세팅해주면서 조각이 틀에 안가려지게하기위함.
+            board.transform.SetAsFirstSibling();
         }
 
         return board;
@@ -125,7 +126,7 @@ public class PuzzleLozic : MonoBehaviour
     }
     private void DestroyChildren()
     {//퍼즐을 완료했을때 생성되있던 퍼즐 삭제하기위한 메소드
-        foreach (Transform child in PuzzleParent.transform)
+        foreach (Transform child in PuzzleParent.transform.GetChild(0))
         {
             Destroy(child.gameObject);
         }
@@ -136,8 +137,11 @@ public class PuzzleLozic : MonoBehaviour
         frameImage.sprite = atlas.GetSprite(currentPuzzle.PuzzleID.ToString()); //퍼즐 사진넣기
         frameImage.SetNativeSize();
         frameImage.alphaHitTestMinimumThreshold = 0.1f;
+        //커스텀모드 활성화
+        costom.EnableThisComponent();
+        costom.isCustomMode = true;
     }
-    private void ActiveCostomPanel()
+    private void ActiveCustomPanel()
     {
         costom.gameObject.SetActive(true);
     }
@@ -188,5 +192,13 @@ public class PuzzleLozic : MonoBehaviour
 
         GameManager.Instance.puzzleClass.Add(obj);
         puzzle.GetComponent<PuzzlePiece>().puzzle = obj;
+    }
+    public void ClearPieceList()
+    {
+        pieceList.Clear();
+    }
+    public void AtiveOnDecoPanel()
+    {
+        DecorationPanel.SetActive(true);
     }
 }

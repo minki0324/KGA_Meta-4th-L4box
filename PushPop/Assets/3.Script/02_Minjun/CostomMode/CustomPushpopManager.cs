@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -16,6 +17,7 @@ public class CustomPushpopManager : MonoBehaviour
     [SerializeField] private GameObject pushPop; // OverLap검사하는 푸시팝(gameObject)
     [SerializeField] private Transform canvas; // UI푸시팝 소환하고 상속시킬 캔버스
     [SerializeField] private GameObject RectPushPop; //UI 푸시팝
+    [SerializeField] private Button[] ColorButton;
     private GameObject newPush; //현재 소환중인 푸시팝
     private GameObject newRectPush;//현재 소환중인 푸시팝
     public bool isCanMakePush; //FramePuzzle 에서 전달받은 bool값을 설치할때 버튼이 오브젝트위에있는지 판단하기위해 씀.
@@ -28,21 +30,21 @@ public class CustomPushpopManager : MonoBehaviour
     public GameObject result;
     public TMP_Text resultText;
     public Image resultImage;
-
+    public bool isCustomMode;
+    public Action onCustomEnd;
     private void Awake()
     {
         Instance = this;
     }
-    void Update()
-    {// 안드로이드는 구현안함
-  
-    }
-    private IEnumerator CheckDelay(tempPushPop push)
+    private void OnEnable()
     {
-        yield return new WaitForSeconds(0.1f);
-        push.CheckOverlap();
+        onCustomEnd += DisableThisComponent;//커스텀모드 종료시 컴포넌트 끄기
     }
- 
+    private void OnDisable()
+    {
+        onCustomEnd -= DisableThisComponent; //커스텀모드 종료시 컴포넌트 끄기
+    }
+  
     public void DestroyNewPush()
     {
         if (newPush != null && newRectPush != null)
@@ -60,7 +62,10 @@ public class CustomPushpopManager : MonoBehaviour
     {
         this.enabled = false;
     }
-
+    public void EnableThisComponent()
+    {
+        this.enabled = true;
+    }
     // 클릭 or 터치시 메소드들
     public void ClickDown()
     {
@@ -72,6 +77,9 @@ public class CustomPushpopManager : MonoBehaviour
         // StackFakePops.Push(newPush);
         //UI상 위치에 push소환(실제로 보이는 push)
         newRectPush = Instantiate(RectPushPop, Input.mousePosition, Quaternion.identity);
+        tempPushPop push = newPush.GetComponent<tempPushPop>(); // collider check GameObject
+
+        push.RectPush = newRectPush;
         PushPop.Instance.pushPopButton.Add(newRectPush);
 
         //스프라이트교체
@@ -107,7 +115,7 @@ public class CustomPushpopManager : MonoBehaviour
         if (newPush == null) return;
         tempPushPop push = newPush.GetComponent<tempPushPop>(); // collider check GameObject
         
-        push.RectPush = newRectPush;
+        //push.RectPush = newRectPush;
         push.GetComponent<tempPushPop>().isSet = true; // 놓아졌는 지 확인
 
         //isCheckOverLap = ture일시 다른 푸시팝과 겹치는지 확인함
@@ -141,7 +149,20 @@ public class CustomPushpopManager : MonoBehaviour
 
     public void GetSpriteIndex(int index)
     {
+        ColorButton[spriteIndex].interactable = true;
         spriteIndex = index;
+        ColorButton[spriteIndex].interactable = false;
     }
- 
+    public void onCustomEndmethod()
+    {
+        onCustomEnd?.Invoke();
+    }
+    public void DestroyChildren()
+    {//퍼즐을 완료했을때 생성되있던 퍼즐 삭제하기위한 메소드
+        foreach (Transform child in puzzleBoard.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
 }
