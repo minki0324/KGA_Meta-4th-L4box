@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 using TMPro;
-using static UnityEngine.PlayerLoop.PreUpdate;
 using UnityEngine.EventSystems;
-using UnityEditor.Tilemaps;
+
+public enum Turn
+{
+    Turn1P = 0,
+    Turn2P
+}
 
 /// <summary>
 /// 2인 모드(폭탄 돌리기) 관련 Class
@@ -15,6 +20,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [Header("1P Player")]
     [SerializeField] private Image playerImage1P = null;
     [SerializeField] private TMP_Text playerName1P = null;
+    public List<GameObject> popList1P = new List<GameObject>();
 
     [Header("2P Player")]
     public Image playerImage2P = null;
@@ -24,6 +30,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public bool isImageSelect = false;
     public bool isUpdate = false;
     public bool isSelect2P = false;
+    public List<GameObject> popList2P = new List<GameObject>();
 
     [Header("Profile Obj")]
     [SerializeField] private GameObject profilePanel = null;
@@ -49,14 +56,61 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private GameObject need2P = null;
 
     [Header("BombGame")]
+    [SerializeField] private bool isStart = false;
+    [SerializeField] private Turn turn = new Turn();
+    [SerializeField] private SpriteAtlas atlas = null;
+    [SerializeField] private Sprite[] sprites = null;
+    [SerializeField] private float upperTimer = 10f;
+    [SerializeField] private float bottomTimer = 60f;
+    [SerializeField] private Vector2[] upperPos = new Vector2[2];
+    [SerializeField] private Vector2[] bottomPos = new Vector2[2];
+    [SerializeField] private GameObject upperBubble;
+    [SerializeField] private GameObject bottomBubble;
+    [SerializeField] private Transform[] Frame;
+    [SerializeField] private Image waterfall;
+    [SerializeField] private TMP_Text timerText;
+    [SerializeField] private Sprite[] upperBubbleSprite;
 
     private Coroutine log;
+    private Coroutine waterfall_co;
 
     #region Unity Callback
+    private void Awake()
+    {
+        // 초기 Sprite 배열 세팅
+        Sprite[] tempSprites = new Sprite[atlas.spriteCount];
+        sprites = tempSprites;
+        atlas.GetSprites(sprites);
+
+        // 버튼 사이즈 설정
+        PushPop.Instance.buttonSize = new Vector2(90f, 90f);
+        PushPop.Instance.percentage = 0.85f;
+    }
+
     private void OnEnable()
     {
         PlayerSet1P();
         profile2PInput.onValidateInput += ValidateInput;
+    }
+
+    private void Update()
+    {
+        if (!isStart) return;
+        if(upperTimer <= 0.1f)
+        { // 게임 끝
+            Debug.Log("게임 끝");
+            isStart = false;
+            return;
+        }
+        else if(bottomTimer <= 0.1f)
+        { // 게임 끝
+            Debug.Log("게임 끝");
+            isStart = false;
+            return;
+        }
+        bottomTimer -= Time.deltaTime;
+        upperTimer -= Time.deltaTime;
+        timerText.text = $"남은시간\n{(int)bottomTimer}";
     }
 
     private void OnDisable()
@@ -325,6 +379,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         {
             MainPanel.gameObject.SetActive(false);
             GamePanel.SetActive(true);
+            InitSetting();
         }
         else
         { // 2P 선택이 되지 않은 경우 ErrorLog를 출력하고 return
@@ -335,6 +390,143 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             log = StartCoroutine(PrintLog_co(need2P));
             return;
         }
+    }
+
+    public void RepeatGameLogic()
+    {
+        switch(turn)
+        {
+            case Turn.Turn1P:
+                turn = Turn.Turn2P;
+                break;
+            case Turn.Turn2P:
+                turn = Turn.Turn1P;
+                break;
+        }
+        PosSetting();
+        TurnSetting();
+    }
+
+    private void InitSetting()
+    { // 게임 초기 시작시 셋팅하는 Method
+        GameManager.Instance.GameStart();
+        // 상단의 Bubble의 위치를 랜덤으로 부여하여 해당 위치에 따라 어떤 플레이어가 먼저 시작할지 턴을 부여
+        int randomPos = Random.Range(0, 2);
+        upperBubble.transform.localPosition = upperPos[randomPos];
+        if(randomPos == 0)
+        {
+            bottomBubble.transform.localPosition = bottomPos[1];
+            turn = Turn.Turn1P; // 1P 먼저 시작
+        }
+        else
+        {
+            bottomBubble.transform.localPosition = bottomPos[0];
+            turn = Turn.Turn2P; // 2P 먼저 시작
+        }
+
+        // Sprite 배열로 각 플레이어들에게 랜덤한 Sprite 부여 및 Pushpop 생성
+        SetSpriteImage(Frame[0], popList1P);
+        SetSpriteImage(Frame[1], popList2P);
+        Frame[0].transform.GetChild(0).transform.localPosition = bottomPos[0];
+        Frame[1].transform.GetChild(0).transform.localPosition = bottomPos[1];
+        isStart = true;
+        TurnSetting();
+    }
+
+    private void PosSetting()
+    {
+        if(turn.Equals(Turn.Turn1P))
+        { // 1P 턴
+            popList2P.Clear();
+            Destroy(Frame[1].transform.GetChild(0).gameObject);    // 지금 오브젝트 풀링의 List를 받아올 수 없는 구조라서 일단 Destroy로 했음, 추후 수정해야함
+            SetSpriteImage(Frame[1], popList2P);
+            Frame[1].transform.GetChild(1).transform.localPosition = bottomPos[1]; // Destroy한 객체는 다음 프레임에 삭제됨
+            upperBubble.transform.localPosition = upperPos[0];
+            bottomBubble.transform.localPosition = bottomPos[1];
+        }
+        else if(turn.Equals(Turn.Turn2P))
+        { // 2P 턴
+            popList1P.Clear();
+            Destroy(Frame[0].transform.GetChild(0).gameObject);
+            SetSpriteImage(Frame[0], popList1P);
+            Frame[0].transform.GetChild(1).transform.localPosition = bottomPos[0];
+            upperBubble.transform.localPosition = upperPos[1];
+            bottomBubble.transform.localPosition = bottomPos[0];
+        }
+    }
+
+    private void TurnSetting()
+    { // 턴 세팅하는 Method
+        if(turn.Equals(Turn.Turn1P))
+        { // 1P 턴
+            for (int i = 0; i < popList2P.Count; i++)
+            {
+                popList2P[i].GetComponent<Button>().interactable = false;
+            }
+            for(int i = 0; i < popList1P.Count; i++)
+            {
+                popList1P[i].GetComponent<Button>().interactable = true;
+                popList1P[i].GetComponent<PushPopButton>().player = 0;
+            }
+        }
+        else if(turn.Equals(Turn.Turn2P))
+        { // 2P 턴
+            for (int i = 0; i < popList1P.Count; i++)
+            {
+                popList1P[i].GetComponent<Button>().interactable = false;
+            }
+            for (int i = 0; i < popList2P.Count; i++)
+            {
+                popList2P[i].GetComponent<Button>().interactable = true;
+                popList2P[i].GetComponent<PushPopButton>().player = 1;
+            }
+        }
+    }
+
+    private void SetSpriteImage(Transform _parent, List<GameObject> _popList)
+    { // 매개변수를 이용해 각 Player의 Sprite와 PopBtn 세팅하는 Method
+        int randomIndex = Random.Range(0, sprites.Length);
+
+        Sprite sprite = sprites[randomIndex];
+        PushPop.Instance.boardSprite = sprite;
+        // Sprite 이름에서 "(Clone)" 부분을 제거
+        string spriteName = sprite.name.Replace("(Clone)", "").Trim();
+
+        // 이름에서 숫자 부분만 추출하여 int로 변환
+        if (int.TryParse(spriteName, out int spriteNumber))
+        {
+            GameManager.Instance.PushPopStage = spriteNumber;
+            PushPop.Instance.CreatePushPopBoard(_parent);
+            PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
+            PushPop.Instance.PushPopButtonSetting(PushPop.Instance.PopParent.transform);
+            for(int i = 0; i < PushPop.Instance.PopParent.transform.childCount; i++)
+            {
+                GameObject pop = PushPop.Instance.PopParent.transform.GetChild(i).gameObject;
+                _popList.Add(pop);
+            }
+            PushPop.Instance.pushPopBoardObject[0].transform.SetParent(_parent, false); // worldPositionStays를 false로 설정하여 로컬 위치 유지
+            GameObject temp = PushPop.Instance.pushPopBoardObject[0];
+            PushPop.Instance.pushPopBoardObject.Remove(temp);
+            Destroy(temp);
+            for(int i = 0; i < PushPop.Instance.activePos.Count; i++)
+            {
+                PushPop.Instance.activePos[i].SetActive(false);
+            }
+            PushPop.Instance.activePos.Clear();
+            PushPop.Instance.pushPopButton.Clear();
+            PushPop.Instance.pushPopBoardObject.Clear();
+            PushPop.Instance.pushPopBoardUIObject.Clear();
+        }
+    }
+
+    public void BottomBubbleTouch()
+    { // 밑에 큰 방울을 터치할 때마다 상단 방울의 시간이 줄어듬
+        upperTimer -= 0.1f;
+    }
+
+    private IEnumerator Waterfall_co()
+    {
+        yield return null;
     }
     #endregion
     private IEnumerator PrintLog_co(GameObject errorlog)

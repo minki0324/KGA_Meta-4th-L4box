@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour, IGameMode
 
     [Header("GameScript")]
     [SerializeField] private CostomPushpopManager pushpushScript;
+    public Bomb bombScript;
 
     // Bubble
     [Header("Bubble Info")]
@@ -159,6 +160,7 @@ public class GameManager : MonoBehaviour, IGameMode
             case Mode.Memory:
                 break;
             case Mode.Bomb:
+                BombMode();
                 break;
         }
     }
@@ -181,7 +183,15 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public void GameClear()
     { // Game End 시 호출하는 method
-        if (PushPop.Instance.pushPopButton.Count == 0)
+        if(gameMode.Equals(Mode.Bomb))
+        {
+            if(bombScript.popList1P.Count.Equals(0) || bombScript.popList2P.Count.Equals(0))
+            {
+                bombScript.RepeatGameLogic();
+                return;
+            }
+        }
+        else if (PushPop.Instance.pushPopButton.Count == 0)
         {
             Debug.Log("게임클리어");
            
@@ -219,6 +229,9 @@ public class GameManager : MonoBehaviour, IGameMode
                     {
                         pushpushScript.puzzleBoard.transform.GetChild(i).GetComponent<Button>().interactable = true;
                     }
+                    break;
+                case Mode.Bomb:
+
                     break;
             }
 
@@ -276,7 +289,7 @@ public class GameManager : MonoBehaviour, IGameMode
             // pushpop 생성
             for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
             {
-                PushPop.Instance.CreatePushPop(PushPop.Instance.pushPopBoardObject[i]);
+                /*PushPop.Instance.CreatePushPop(PushPop.Instance.pushPopBoardObject[i]);*/
                 Destroy(gameObject);
             }
         }
@@ -289,6 +302,7 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public void BombMode()
     {
+        BoardSize = new Vector2(600f, 600f);
         // 상단 배치
 
         // 게임 보드에 배치
