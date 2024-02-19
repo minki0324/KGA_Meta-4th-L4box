@@ -1,0 +1,104 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class MemoryBoard : MonoBehaviour
+{
+    public int ClearCount; //맞춰야하는 정답갯수
+    public int CurrentCorrectCount; //현재맞춘정답갯수
+    private List<MemoryPushpop> allButton = new List<MemoryPushpop>();
+    private List<MemoryPushpop> CorrectBtnList = new List<MemoryPushpop>();
+    MemoryStageData stage;
+    private void Awake()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            allButton.Add(transform.GetChild(i).GetComponent<MemoryPushpop>());
+        }
+    }
+    private void OnEnable()
+    {
+        stage = MemoryManager.Instance.GetStage();
+        RandCorrectDraw(stage.CorrectCount);
+        StartCoroutine(ReadyGame());
+
+
+    }
+    private void OnDisable()
+    {
+        CorrectBtnList.Clear(); //정답버튼 리스트 초기화
+        ClearCount = 0;
+        CurrentCorrectCount = 0;
+    }
+    public void RandCorrectDraw(int DrawNum)
+    {
+        //DrawNum의 횟수만큼 정답버튼을 정합니다.
+        ClearCount = DrawNum;
+        int DrawCount = 0;
+        while (DrawCount < DrawNum)
+        {
+            int RandCorrectNum = Random.Range(1, allButton.Count);
+            while (true)
+            {
+                if (!CorrectBtnList.Contains(allButton[RandCorrectNum]))
+                {
+                    break;
+                }
+                else
+                {
+                    RandCorrectNum = Random.Range(1, allButton.Count);
+                }
+            }
+            CorrectBtnList.Add(allButton[RandCorrectNum]);
+            DrawCount ++;
+        }
+        //버튼에게 너가 정답이라고 알려주기
+        foreach (MemoryPushpop pushpop in CorrectBtnList)
+        {
+            pushpop.isCorrect = true;
+        }
+    }
+    public void BtnAllStop()
+    {//버튼활성화 끄는 메소드
+        for (int i = 0; i < allButton.Count; i++)
+        {
+            allButton[i].GetComponent<Image>().raycastTarget = false;
+        }
+    }
+    public void BtnAllPlay()
+    {//버튼활성화 키는 메소드
+        for (int i = 0; i < allButton.Count; i++)
+        {
+            allButton[i].GetComponent<Image>().raycastTarget = true;
+        }
+    }
+    public bool isStageClear()
+    {
+        if(ClearCount == CurrentCorrectCount)
+        {
+            return true;  
+        }
+        return false;
+    }
+    public IEnumerator ReadyGame()
+    {
+        BtnAllStop();
+        yield return new WaitForSeconds(1f);
+        //게임시작 텍스트 띄우기
+        MemoryManager.Instance.PlayStartPanel("게임 시작!");
+       
+        yield return new WaitForSeconds(2f);
+        //1초 뒤 반짝이기
+        CorrectBtnPlayBlink();
+        yield return new WaitForSeconds(2f);
+        BtnAllPlay();
+    }
+    public void CorrectBtnPlayBlink()
+    {
+        for (int i = 0; i < CorrectBtnList.Count; i++)
+        {
+            CorrectBtnList[i].PlayBlink();
+        }
+    }
+}
