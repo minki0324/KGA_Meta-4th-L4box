@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using System.IO;
 using LitJson;
 
@@ -20,6 +19,13 @@ public class IconDict
     public string name;
 }
 
+
+[System.Serializable]
+public class HelpScript
+{
+    public string Type;
+    public string script;
+}
 #endregion
 
 
@@ -27,6 +33,8 @@ public class DataManager2 : MonoBehaviour
 {
     public static DataManager2 instance = null;
 
+
+    //딕셔너리용
     public List<CategoryDict> categoryDicts_List = new List<CategoryDict>();
     public List<IconDict> iconDicts_List = new List<IconDict>();
 
@@ -35,8 +43,14 @@ public class DataManager2 : MonoBehaviour
     public Dictionary<int, string> categoryDict = new Dictionary<int, string>();
     public Dictionary<int, string> iconDict = new Dictionary<int, string>();
 
+    //도움말 스크립트용
+    public List<HelpScript> helpScripts_List = new List<HelpScript>();
+
+
     public string categoryDict_fileName = "category.json";
     public string iconDict_fileName = "icon.json";
+    public string helpScript_fileName = "HelpScript.json";
+
     private string path = string.Empty;
 
     #region Unity Callback
@@ -56,7 +70,7 @@ public class DataManager2 : MonoBehaviour
 
     void Start()
     {
-        path = Application.persistentDataPath;
+        path = Application.streamingAssetsPath;
         Save_Category();
         Save_Icon();
 
@@ -177,6 +191,13 @@ public class DataManager2 : MonoBehaviour
         File.WriteAllText(path + "/" + iconDict_fileName, jsonData.ToString());
     }
 
+
+    public void Read_HelpScript()
+    {
+        //도움말 스크립트 읽어오는 함수
+
+        string JsonString = File.ReadAllText(path + "/ " + helpScript_fileName);
+    }
 
 
     #endregion

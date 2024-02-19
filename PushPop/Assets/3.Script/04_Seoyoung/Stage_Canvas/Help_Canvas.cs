@@ -14,7 +14,7 @@ public class Help_Canvas : MonoBehaviour
     [Header("캔버스")]
     [SerializeField] private PushPush_Canvas pushpush_Canvas;
     [SerializeField] private Speed_Canvas speed_Canvas;
-    [SerializeField] private Canvas memory;
+    [SerializeField] private Memory_Canvas memory_Canvas;
 
 
     [Header("도움말 창")]
@@ -87,7 +87,7 @@ public class Help_Canvas : MonoBehaviour
                     break;
 
                 case Mode.Memory:
-
+                    
                     break;
             }
         }
@@ -116,6 +116,11 @@ public class Help_Canvas : MonoBehaviour
                 case Mode.Speed:
                     speed_Canvas.Disable_Objects();
                     break;
+
+                case Mode.Memory:
+                    memory_Canvas.DisalbeObjects();
+                    break;
+
             }
         }
     }
@@ -140,6 +145,10 @@ public class Help_Canvas : MonoBehaviour
 
                 case Mode.Speed:
                     speed_Canvas.Enable_Objects();
+                    break;
+
+                case Mode.Memory:
+                    memory_Canvas.EnableObjects();
                     break;
             }
 
