@@ -1,8 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class Speed_Timer : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class Speed_Timer : MonoBehaviour
 
     [Header("타이머")]
     [SerializeField] private TMP_Text time_Text;
-    [SerializeField] private Slider time_Slider;
+    public Slider time_Slider;
 
     [Header("아이콘 이미지")]
     [SerializeField] private Image Mold_Image;
@@ -24,29 +23,36 @@ public class Speed_Timer : MonoBehaviour
     [SerializeField] private Button Back_Btn;
 
     public int currentTime;
-    int sec;
-    int min;
+    private int sec;
+    private int min;
+    public Coroutine timer = null;
 
     #region Unity Callback
 
     private void OnEnable()
     {
         //시간 초기화
-       currentTime = GameManager.Instance.ShutdownTime + 1;
-       // currentTime = 10 +1;
+        // currentTime = GameManager.Instance.ShutdownTime + 1;
+        currentTime = 0; // 0부터 제한시간까지 +
+                         // currentTime = 10 +1;
         SetText();
 
         //슬라이더 초기화
-        time_Slider.maxValue = currentTime;
+        time_Slider.maxValue = 1f;
         time_Slider.minValue = 0f;
-        time_Slider.value = time_Slider.maxValue;
+        time_Slider.value = 0f;
+        time_Slider.gameObject.SetActive(false);
+        if (time_Slider.gameObject.activeSelf)
+        {
+            Debug.Log("Active true?");
+        }
 
         //몰드 아이콘 이미지 초기화
-        Mold_Image.sprite = speed_Canvas.moldIcon;
+        // Mold_Image.sprite = speed_Canvas.moldIcon;
 
         //타이머 코루틴 시작
-        StartCoroutine(Timer_co());
-        StartCoroutine(SliderLerp_co());
+        timer = StartCoroutine(Timer_co());
+        // StartCoroutine(SliderLerp_co());
     }
 
     public void BackBtn_Clicked()
@@ -54,7 +60,6 @@ public class Speed_Timer : MonoBehaviour
         help_Canvas.gameObject.SetActive(true);
         SelectDifficulty_Panel.SetActive(true);
         speed_Canvas.Enable_Objects();
-
 
         gameObject.SetActive(false);
     }
@@ -66,13 +71,16 @@ public class Speed_Timer : MonoBehaviour
     //타이머 코루틴
     private IEnumerator Timer_co()
     {
+        // game ready
+        StartCoroutine(GameManager.Instance.GameReady_Co());
         int cashing = 1;
 
-        while(true)
-        {      
-            currentTime -= cashing;
+        while (true)
+        {
+            currentTime += cashing;
+            GameManager.Instance.TimeScore = currentTime; // score 저장
             SetText();
-          
+
             if (currentTime <= 0)
             {
                 //경고문 띄우기
@@ -89,7 +97,7 @@ public class Speed_Timer : MonoBehaviour
         float cashing = 0.05f;
         float currentT = currentTime;
 
-        while(true)
+        while (true)
         {
             currentT -= cashing;
             time_Slider.value = currentT;
@@ -102,8 +110,6 @@ public class Speed_Timer : MonoBehaviour
             yield return new WaitForSeconds(cashing);
         }
     }
-
-
 
     //시분초 변환 & 텍스트 포맷 지정 함수
     public void SetText()

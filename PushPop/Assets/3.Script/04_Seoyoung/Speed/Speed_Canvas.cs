@@ -193,7 +193,6 @@ public class Speed_Canvas : MonoBehaviour
         if (!help_Canvas.bisHelpPanelOn)
         {
             ready_Panel.SetActive(true);
-           
 
             help_Canvas.Back_Btn.enabled = false;
             help_Canvas.Help_Btn.enabled = false;
@@ -203,7 +202,6 @@ public class Speed_Canvas : MonoBehaviour
 
             moldIcon = selected_Image.sprite;
         }
-
     }
 
 
@@ -216,7 +214,6 @@ public class Speed_Canvas : MonoBehaviour
             help_Canvas.Back_Btn.enabled = true;
             help_Canvas.Help_Btn.enabled = true;
         }
-
     }
 
 
@@ -229,6 +226,9 @@ public class Speed_Canvas : MonoBehaviour
         ready_Panel.SetActive(false);
         bSelectCategoryPanel_On = false;
         help_Canvas.gameObject.SetActive(false);
+
+        PushPop.Instance.boardSprite = moldIcon; // pushpop
+        GameManager.Instance.SpeedMode(); // Speed Mode start
     }
 
 

@@ -41,8 +41,6 @@ public class PuzzlePiece : MonoBehaviour
     public void OnBubbleDestroy()
     {
         StartCoroutine(PuzzleMove_Co());
-
-        
     }
     #endregion
 

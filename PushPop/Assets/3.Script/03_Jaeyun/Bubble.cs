@@ -37,9 +37,22 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
     private void OnDestroy()
     {
-        PuzzlePiece piece = transform.parent.GetComponent<PuzzlePiece>();
-        piece.OnBubbleDestroy();
-        
+        switch (gameMode)
+        {
+            case Mode.PushPush:
+                PuzzlePiece piece = transform.parent.GetComponent<PuzzlePiece>();
+                piece.OnBubbleDestroy();
+                break;
+            case Mode.Speed:
+                Speed_Timer speedTimer = FindObjectOfType<Speed_Timer>();
+                speedTimer.time_Slider.gameObject.SetActive(true);
+                GameManager.Instance.SpeedModePushPopCreate();
+                break;
+            case Mode.Memory:
+                break;
+            case Mode.Bomb:
+                break;
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)

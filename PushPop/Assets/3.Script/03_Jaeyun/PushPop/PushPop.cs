@@ -9,22 +9,23 @@ public class PushPop : MonoBehaviour
     public static PushPop Instance = null;
 
     [Header("PushPop Canvas")]
-    [SerializeField] private Transform pushPopCanvas = null; // Canvas_PushPop
+    public Transform pushPopCanvas = null; // Canvas_PushPop
     [SerializeField] private GameObject pushPopButtonPrefab = null; // PushPop Button Prefab
-    [SerializeField] private GameObject boardPrefabUI = null; // PushPop Board Canvas Prefab
+    public GameObject boardPrefabUI = null; // PushPop Board Canvas Prefab
     private RectTransform boardSizeUI;
     private List<GameObject> pushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
 
     [Header("PushPop GameObject")]
     [SerializeField] private SpriteAtlas pushPopSpriteAtlas; // pushPop Atlas 참조
     private int spriteName; // stage에 따라 달라짐
-    [SerializeField] private GameObject boardPrefab = null; // PushPop Prefab
-    [SerializeField] private Sprite boardSprite = null;
+    public GameObject boardPrefab = null; // PushPop Prefab
+    public Sprite boardSprite = null;
     private Vector3 boardSize;
     private PolygonCollider2D boardCollider;
     public List<GameObject> pushPopBoardObject = new List<GameObject>(); // pushPopBoard의 GameObject List
 
     [Header("Grid Setting")]
+    public Transform buttonCanvas = null;
     private Vector2 grid = Vector2.zero;
     [SerializeField] private float percentage = 0; // gameobject에 따른 gird 비율
     [SerializeField] private Vector2 buttonSize = Vector2.zero; // x, y 동일
@@ -74,11 +75,13 @@ public class PushPop : MonoBehaviour
     }
 
     // Sprite 모양에 따른 Polygon collider setting
-    private void CreatePushPopBoard()
+    public void CreatePushPopBoard()
     { // bomb mode일 때는 2회 호출
         // sprite atlas setting
-        spriteName = GameManager.Instance.PushPopStage;
-        boardSprite = SpriteAtlas(spriteName.ToString());
+        // spriteName = GameManager.Instance.PushPopStage;
+        // boardSprite = SpriteAtlas(spriteName.ToString());
+
+        if (boardSprite == null) return;
 
         // canvas setting
         GameObject pushPopBoard = Instantiate(boardPrefabUI, pushPopCanvas);
@@ -102,7 +105,7 @@ public class PushPop : MonoBehaviour
     }
 
     // pushpop button 생성할 grid
-    private void CreateGrid(GameObject _pushPopBoardObject)
+    public void CreateGrid(GameObject _pushPopBoardObject)
     {
         // board Size Setting
         boardSize = new Vector3(boardCollider.bounds.size.x, boardCollider.bounds.size.y, 1f); // collider size
@@ -122,11 +125,11 @@ public class PushPop : MonoBehaviour
     }
 
     // PushPop Button Setting
-    private void PushPopButtonSetting()
+    public void PushPopButtonSetting()
     {
         for (int i = 0; i < activePos.Count; i++)
         {
-            GetPushPopButton(pushPopButton, pushPopButtonPrefab, pushPopCanvas);
+            GetPushPopButton(pushPopButton, pushPopButtonPrefab, buttonCanvas);
             pushPopButton[i].GetComponent<RectTransform>().sizeDelta = buttonSize;
             pushPopButton[i].transform.position = Camera.main.WorldToScreenPoint(activePos[i].transform.position);
         }
@@ -139,6 +142,7 @@ public class PushPop : MonoBehaviour
         {
             if (!_pos[i].activeSelf) // 기존 button이 활성화 되어있지 않다면 true
             {
+                Debug.Log("objectpooling");
                 _pos[i].SetActive(true);
                 return;
             }

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -75,8 +74,11 @@ public class GameManager : MonoBehaviour, IGameMode
     private List<Transform> bubblePos = new List<Transform>(); // Mode에 따라 달라짐
 
     [Header("PushPop Info")]
+    public Sprite moldIcon = null;
     public int PushPopStage = 0;
     public Vector2 BoardSize;
+    [SerializeField] Transform boardPos = null;
+    public int buttonActive = 0;
 
     [Header("Puzzle Info")]
     public Vector2 puzzleSize;
@@ -86,7 +88,6 @@ public class GameManager : MonoBehaviour, IGameMode
     public List<PushPushObject> push = new List<PushPushObject>();
 
     [Header("Score")]
-    [SerializeField] private TMP_Text scoreText;
     private Coroutine timer = null;
     public int Score = 0;
     public float TimeScore = 0;
@@ -99,11 +100,13 @@ public class GameManager : MonoBehaviour, IGameMode
     public Sprite[] ProfileImages;
     public bool IsImageMode = true; // false = 사진찍기, true = 이미지 선택
 
+    [Header("Speed Mode")]
+    public float count = 0.25f;
 
     #region Unity Callback
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
@@ -140,9 +143,11 @@ public class GameManager : MonoBehaviour, IGameMode
         // score 초기화
         Score = 0;
         TimeScore = 0;
+        buttonActive = 0;
+        count = 0.25f;
 
         timer = StartCoroutine(GameReady_Co()); // Game 시작 전 대기
-        
+
         switch (gameMode)
         {
             case Mode.PushPush:
@@ -158,36 +163,27 @@ public class GameManager : MonoBehaviour, IGameMode
         }
     }
 
-    private IEnumerator GameReady_Co()
+    public IEnumerator GameReady_Co()
     {
         // game start 문구 띄워주기, panel 다 막아버리면 될듯?
         // 준비~~
         yield return new WaitForSeconds(2f);
         // 시작!!
         yield return new WaitForSeconds(1f);
-
-        while (true)
-        {
-            TimeScore += Time.deltaTime;
-            scoreText.text = TimeScore.ToString("F3");
-            yield return null;
-        }
     }
 
     public void GameClear()
     { // Game End 시 호출하는 method
-        if (PushPop.Instance.pushPopButton.Count == 0)
+        // button active check
+        if (buttonActive == 0)
         {
-            Debug.Log("게임클리어");
-           
-
-            switch(gameMode)
+            switch (gameMode)
             {
                 case Mode.PushPush:
                     //담고
                     int[] spriteIndexs = new int[pushpushScript.puzzleBoard.transform.childCount];
                     Vector2[] childPos = new Vector2[pushpushScript.puzzleBoard.transform.childCount];
-                    for(int i = 0; i< pushpushScript.puzzleBoard.transform.childCount; i++)
+                    for (int i = 0; i < pushpushScript.puzzleBoard.transform.childCount; i++)
                     {
                         PushPopButton pop = pushpushScript.puzzleBoard.transform.GetChild(i).GetComponent<PushPopButton>();
                         Debug.Log("배열 : " + spriteIndexs[i]);
@@ -209,12 +205,40 @@ public class GameManager : MonoBehaviour, IGameMode
                     {
                         pushpushScript.puzzleBoard.transform.GetChild(i).GetComponent<Button>().interactable = true;
                     }
+
+                    bubblePos.Clear(); // bubble transform mode에 따라 달라짐
+                    PushPop.Instance.PushPopClear();
+                    break;
+                case Mode.Speed:
+                    for (int i = 0; i < PushPop.Instance.pushPopCanvas.childCount; i++)
+                    {
+                        PushPop.Instance.pushPopCanvas.GetChild(i).gameObject.SetActive(false);
+                    } 
+                    Speed_Timer speed_Timer = FindObjectOfType<Speed_Timer>();
+                    speed_Timer.time_Slider.value += count;
+                    if (speed_Timer.time_Slider.value.Equals(1f))
+                    {
+                        Debug.Log("Game Clear");
+                        // Game Clear
+                        bubblePos.Clear(); // bubble transform mode에 따라 달라짐
+                        PushPop.Instance.PushPopClear();
+                        speed_Timer.StopCoroutine(speed_Timer.timer);
+                    }
+                    else
+                    {
+                        // animation
+                        bubblePos.Clear();
+                        PushPop.Instance.PushPopClear();
+                        // pushpop 생성
+                        PushPop.Instance.CreatePushPopBoard();
+                        PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
+                        PushPop.Instance.PushPopButtonSetting();
+                        buttonActive = PushPop.Instance.activePos.Count - 1;
+                    }
                     break;
             }
 
-            bubblePos.Clear(); // bubble transform mode에 따라 달라짐
-
-            PushPop.Instance.PushPopClear();
+            
 
             if (timer != null)
             {
@@ -233,7 +257,7 @@ public class GameManager : MonoBehaviour, IGameMode
         {
             puzzleLogic = FindObjectOfType<PuzzleLozic>();
         }
-        if(!puzzleLogic.gameObject.activeSelf)
+        if (!puzzleLogic.gameObject.activeSelf)
         {
             puzzleLogic.gameObject.SetActive(true);
         }
@@ -246,30 +270,39 @@ public class GameManager : MonoBehaviour, IGameMode
         // puzzle 전부 맞췄을 시 if ()
 
         // pushpop 생성
-           /* for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
-            {
-                PushPop.Instance.CreatePushPop(PushPop.Instance.pushPopBoardObject[i]);
-            }*/
+        /* for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
+         {
+             PushPop.Instance.CreatePushPop(PushPop.Instance.pushPopBoardObject[i]);
+         }*/
     }
 
     public void SpeedMode()
     {
+        StartCoroutine(GameReady_Co());
         // position count 한 개, 위치 가운데, scale 조정
-        bubbleSize = 500f; // speed mode bubble size setting
-        BoardSize = new Vector2(bubbleSize, bubbleSize);
+        bubbleSize = 700; // speed mode bubble size setting
+        BoardSize = new Vector2(bubbleSize, bubbleSize); // scale
 
         // bubble position
-        //CreateBubble();
+        GameObject board = Instantiate(PushPop.Instance.boardPrefabUI, PushPop.Instance.pushPopCanvas); // image
+        board.GetComponent<Image>().sprite = PushPop.Instance.boardSprite;
+        PushPop.Instance.pushPopBoardObject.Add(board);
+        CreateBubble(BoardSize, board.transform.localPosition, board);
+    }
 
-        if (this.bubbleObject.Count == 0)
-        { // touch count 0보다 작을 시
-            // pushpop 생성
-            for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
-            {
-                PushPop.Instance.CreatePushPop(PushPop.Instance.pushPopBoardObject[i]);
-                Destroy(gameObject);
-            }
+    public void SpeedModePushPopCreate()
+    {
+        for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
+        {
+            Destroy(PushPop.Instance.pushPopBoardObject[i]);
         }
+        PushPop.Instance.pushPopBoardObject.Clear();
+
+        // pushpop 생성
+        PushPop.Instance.CreatePushPopBoard();
+        PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
+        PushPop.Instance.PushPopButtonSetting();
+        buttonActive = PushPop.Instance.activePos.Count - 1;
     }
 
     public void MemoryMode()
