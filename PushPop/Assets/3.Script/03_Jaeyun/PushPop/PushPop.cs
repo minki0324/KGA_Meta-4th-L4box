@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using UnityEngine.U2D;
+using UnityEngine.UI;
 
 public class PushPop : MonoBehaviour
 {
@@ -102,10 +101,15 @@ public class PushPop : MonoBehaviour
         Rect boardRect = pushPopBoard.GetComponent<RectTransform>().rect;
         float scale = Mathf.Min(boardRect.width / boardSprite.textureRect.size.x, boardRect.width / boardSprite.textureRect.size.y) * 0.95f;
         pushObject.transform.localScale = new Vector3(scale, scale, 1f);
+        if (!pushTurn)
+        {
+            pushObject.transform.rotation = Quaternion.Euler(0, 180f, 0);
+        }
         // polygon collider setting
         pushObject.AddComponent<PolygonCollider2D>();
         boardCollider = pushObject.GetComponent<PolygonCollider2D>();
         pushPopBoardObject.Add(pushObject);
+        
     }
 
     // pushpop button »ý¼ºÇÒ grid
@@ -202,13 +206,10 @@ public class PushPop : MonoBehaviour
         }
 
         // canvas clear
-        if (!GameManager.Instance.gameMode.Equals(Mode.Speed))
+        for (int i = 0; i < pushPopBoardUIObject.Count; i++)
         {
-            for (int i = 0; i < pushPopBoardUIObject.Count; i++)
-            {
-                Destroy(pushPopBoardUIObject[i]);
-            }
-            pushPopBoardUIObject.Clear();
+            Destroy(pushPopBoardUIObject[i]);
         }
+        pushPopBoardUIObject.Clear();
     }
 }

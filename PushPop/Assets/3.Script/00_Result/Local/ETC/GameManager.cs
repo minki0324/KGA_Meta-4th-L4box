@@ -102,6 +102,7 @@ public class GameManager : MonoBehaviour, IGameMode
 
     [Header("Speed Mode")]
     public float count = 0.25f;
+    private bool isFirst = true;
 
     #region Unity Callback
     private void Awake()
@@ -145,6 +146,7 @@ public class GameManager : MonoBehaviour, IGameMode
         TimeScore = 0;
         buttonActive = 0;
         count = 0.25f;
+        isFirst = true;
 
         timer = StartCoroutine(GameReady_Co()); // Game 시작 전 대기
 
@@ -210,10 +212,12 @@ public class GameManager : MonoBehaviour, IGameMode
                     PushPop.Instance.PushPopClear();
                     break;
                 case Mode.Speed:
-                    for (int i = 0; i < PushPop.Instance.pushPopCanvas.childCount; i++)
+                    // button active false
+                    for (int i = 0; i < PushPop.Instance.buttonCanvas.childCount; i++)
                     {
-                        PushPop.Instance.pushPopCanvas.GetChild(i).gameObject.SetActive(false);
-                    } 
+                        PushPop.Instance.buttonCanvas.GetChild(i).gameObject.SetActive(false);
+                    }
+
                     Speed_Timer speed_Timer = FindObjectOfType<Speed_Timer>();
                     speed_Timer.time_Slider.value += count;
                     if (speed_Timer.time_Slider.value.Equals(1f))
@@ -247,17 +251,15 @@ public class GameManager : MonoBehaviour, IGameMode
         // animation
         Animator pushAni = PushPop.Instance.pushPopAni.GetComponent<Animator>();
         pushAni.SetBool("isTurn", PushPop.Instance.pushTurn);
+
+        yield return new WaitForSeconds(1.5f);
+        Debug.Log("?");
+
         PushPop.Instance.pushTurn = !PushPop.Instance.pushTurn;
         bubblePos.Clear();
         PushPop.Instance.PushPopClear();
 
-        while (pushAni.GetCurrentAnimatorStateInfo(0).IsName("Turn"))
-        { // animation 진행 동안
-            Debug.Log("왜안돼");
-            yield return null;   
-        }
-
-        // pushpop 생성
+        // pushpop 생성, PushPop.Instance.pushTurn == false일 때 Rotate 180 돌려준 뒤에 add
         PushPop.Instance.CreatePushPopBoard();
         PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
         PushPop.Instance.PushPopButtonSetting();
@@ -306,9 +308,7 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public void SpeedModePushPopCreate()
     {
-        Debug.Log(BoardSize);
         BoardSize = new Vector2(700f, 700f); // scale
-        Debug.Log(BoardSize);
         for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
         {
             Destroy(PushPop.Instance.pushPopBoardObject[i]);
@@ -319,7 +319,15 @@ public class GameManager : MonoBehaviour, IGameMode
         PushPop.Instance.CreatePushPopBoard();
         PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
         PushPop.Instance.PushPopButtonSetting();
-        buttonActive = PushPop.Instance.activePos.Count - 1;
+        if (isFirst)
+        {
+            buttonActive = PushPop.Instance.activePos.Count - 1;
+            isFirst = false;
+        }
+        else
+        {
+            buttonActive = PushPop.Instance.activePos.Count;
+        }
     }
 
     public void MemoryMode()
