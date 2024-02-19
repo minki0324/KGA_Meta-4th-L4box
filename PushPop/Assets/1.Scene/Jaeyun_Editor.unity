@@ -6921,6 +6921,7 @@ MonoBehaviour:
   pushPopCanvas: {fileID: 1308020219}
   pushPopButtonPrefab: {fileID: 7161972215700324124, guid: 1381da20a7f6349438dc19f56e561b10, type: 3}
   boardPrefabUI: {fileID: 6080136693297342902, guid: e2c99a2b45e46b34eb39a7934886813e, type: 3}
+  pushPopBoardUIObject: []
   pushPopSpriteAtlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
   boardPrefab: {fileID: 3633448892475870983, guid: b42c40511bead9941bc7f9901e85999e, type: 3}
   boardSprite: {fileID: 0}
@@ -6931,6 +6932,8 @@ MonoBehaviour:
   PosPrefab: {fileID: 4701027180370166461, guid: 908e83bf5cbab784199690367c9362ca, type: 3}
   pushPopButton: []
   activePos: []
+  pushPopAni: {fileID: 0}
+  pushTurn: 1
 --- !u!4 &429527111
 Transform:
   m_ObjectHideFlags: 0

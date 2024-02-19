@@ -227,18 +227,10 @@ public class GameManager : MonoBehaviour, IGameMode
                     else
                     {
                         // animation
-                        bubblePos.Clear();
-                        PushPop.Instance.PushPopClear();
-                        // pushpop 생성
-                        PushPop.Instance.CreatePushPopBoard();
-                        PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
-                        PushPop.Instance.PushPopButtonSetting();
-                        buttonActive = PushPop.Instance.activePos.Count - 1;
+                        StartCoroutine(PushPushCreate_Co());
                     }
                     break;
             }
-
-            
 
             if (timer != null)
             {
@@ -248,6 +240,28 @@ public class GameManager : MonoBehaviour, IGameMode
             // Ranking SQL Update
             // Ranking.instance.UpdateTimerScore(timeScore);
         }
+    }
+
+    private IEnumerator PushPushCreate_Co()
+    {
+        // animation
+        Animator pushAni = PushPop.Instance.pushPopAni.GetComponent<Animator>();
+        pushAni.SetBool("isTurn", PushPop.Instance.pushTurn);
+        PushPop.Instance.pushTurn = !PushPop.Instance.pushTurn;
+        bubblePos.Clear();
+        PushPop.Instance.PushPopClear();
+
+        while (pushAni.GetCurrentAnimatorStateInfo(0).IsName("Turn"))
+        { // animation 진행 동안
+            Debug.Log("왜안돼");
+            yield return null;   
+        }
+
+        // pushpop 생성
+        PushPop.Instance.CreatePushPopBoard();
+        PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
+        PushPop.Instance.PushPopButtonSetting();
+        buttonActive = PushPop.Instance.activePos.Count - 1;
     }
 
     public void PushPushMode()
@@ -280,8 +294,8 @@ public class GameManager : MonoBehaviour, IGameMode
     {
         StartCoroutine(GameReady_Co());
         // position count 한 개, 위치 가운데, scale 조정
-        bubbleSize = 700; // speed mode bubble size setting
-        BoardSize = new Vector2(bubbleSize, bubbleSize); // scale
+        bubbleSize = 500f; // speed mode bubble size setting
+        BoardSize = new Vector2(300f, 300f); // scale
 
         // bubble position
         GameObject board = Instantiate(PushPop.Instance.boardPrefabUI, PushPop.Instance.pushPopCanvas); // image
@@ -292,6 +306,9 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public void SpeedModePushPopCreate()
     {
+        Debug.Log(BoardSize);
+        BoardSize = new Vector2(700f, 700f); // scale
+        Debug.Log(BoardSize);
         for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
         {
             Destroy(PushPop.Instance.pushPopBoardObject[i]);
@@ -326,6 +343,7 @@ public class GameManager : MonoBehaviour, IGameMode
         this.bubbleObject.Add(bubbleObject);
         bubble.BubbleSetting(_size, _pos, _puzzle.transform);
         _puzzle.GetComponent<Image>().raycastTarget = false;
+        _puzzle.GetComponent<RectTransform>().sizeDelta = BoardSize;
         //_puzzle.SetParent(bubble.transform);
         /*bubble.touchCount = 1; */
         bubble.touchCount = Random.Range(2, 10); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것

@@ -13,7 +13,7 @@ public class PushPop : MonoBehaviour
     [SerializeField] private GameObject pushPopButtonPrefab = null; // PushPop Button Prefab
     public GameObject boardPrefabUI = null; // PushPop Board Canvas Prefab
     private RectTransform boardSizeUI;
-    private List<GameObject> pushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
+    public List<GameObject> pushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
 
     [Header("PushPop GameObject")]
     [SerializeField] private SpriteAtlas pushPopSpriteAtlas; // pushPop Atlas 참조
@@ -34,6 +34,9 @@ public class PushPop : MonoBehaviour
 
     public List<GameObject> pushPopButton = new List<GameObject>();
     public List<GameObject> activePos = new List<GameObject>();
+
+    public GameObject pushPopAni = null;
+    public bool pushTurn = true;
 
     private void Awake()
     {
@@ -85,6 +88,7 @@ public class PushPop : MonoBehaviour
 
         // canvas setting
         GameObject pushPopBoard = Instantiate(boardPrefabUI, pushPopCanvas);
+        pushPopAni = pushPopBoard;
         pushPopBoard.GetComponent<Image>().sprite = boardSprite;
         // board size setting
         boardSizeUI = pushPopBoard.GetComponent<RectTransform>();
@@ -198,10 +202,13 @@ public class PushPop : MonoBehaviour
         }
 
         // canvas clear
-        for (int i = 0; i < pushPopBoardUIObject.Count; i++)
+        if (!GameManager.Instance.gameMode.Equals(Mode.Speed))
         {
-            Destroy(pushPopBoardUIObject[i]);
+            for (int i = 0; i < pushPopBoardUIObject.Count; i++)
+            {
+                Destroy(pushPopBoardUIObject[i]);
+            }
+            pushPopBoardUIObject.Clear();
         }
-        pushPopBoardUIObject.Clear();
     }
 }

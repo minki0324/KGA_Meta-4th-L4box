@@ -42,10 +42,6 @@ public class Speed_Timer : MonoBehaviour
         time_Slider.minValue = 0f;
         time_Slider.value = 0f;
         time_Slider.gameObject.SetActive(false);
-        if (time_Slider.gameObject.activeSelf)
-        {
-            Debug.Log("Active true?");
-        }
 
         //몰드 아이콘 이미지 초기화
         // Mold_Image.sprite = speed_Canvas.moldIcon;
@@ -90,33 +86,12 @@ public class Speed_Timer : MonoBehaviour
         }
     }
 
-
-    //슬라이더 값 변화 코루틴
-    private IEnumerator SliderLerp_co()
-    {
-        float cashing = 0.05f;
-        float currentT = currentTime;
-
-        while (true)
-        {
-            currentT -= cashing;
-            time_Slider.value = currentT;
-
-            if (currentT <= 0)
-            {
-                //경고문 띄우기
-                yield break;
-            }
-            yield return new WaitForSeconds(cashing);
-        }
-    }
-
     //시분초 변환 & 텍스트 포맷 지정 함수
     public void SetText()
     {
         sec = currentTime % 60;    //60으로 나눈 나머지 = 초
         min = currentTime / 60;
-        time_Text.text = $"{string.Format("{0:0}", min)}분 {sec}초";
+        time_Text.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
     }
     #endregion
 }
