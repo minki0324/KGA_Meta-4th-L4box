@@ -9,6 +9,9 @@ public class MemoryBoard : MonoBehaviour
     public int CurrentCorrectCount; //현재맞춘정답갯수
     private List<MemoryPushpop> allButton = new List<MemoryPushpop>();
     private List<MemoryPushpop> CorrectBtnList = new List<MemoryPushpop>();
+    private Queue<MemoryPushpop> CorrectBtnQueue = new Queue<MemoryPushpop>();
+    private MemoryPushpop currentOrderPushPop;
+    private WaitForSeconds WaitTime = new WaitForSeconds(0.5f);
     MemoryStageData stage;
     private void Awake()
     {
@@ -16,15 +19,22 @@ public class MemoryBoard : MonoBehaviour
         {
             allButton.Add(transform.GetChild(i).GetComponent<MemoryPushpop>());
         }
+        MemoryManager.Instance.currentBoard = this;
     }
     private void OnEnable()
     {
         stage = MemoryManager.Instance.GetStage();
         RandCorrectDraw(stage.CorrectCount);
-        StartCoroutine(ReadyGame());
+        //StartCoroutine(ReadyGame());
+        StartCoroutine(InOrder());
 
 
     }
+
+  
+
+
+
     private void OnDisable()
     {
         CorrectBtnList.Clear(); //정답버튼 리스트 초기화
@@ -51,6 +61,7 @@ public class MemoryBoard : MonoBehaviour
                 }
             }
             CorrectBtnList.Add(allButton[RandCorrectNum]);
+            CorrectBtnQueue.Enqueue(allButton[RandCorrectNum]);
             DrawCount ++;
         }
         //버튼에게 너가 정답이라고 알려주기
@@ -58,6 +69,7 @@ public class MemoryBoard : MonoBehaviour
         {
             pushpop.isCorrect = true;
         }
+        currentOrderPushPop = CorrectBtnQueue.Dequeue();
     }
     public void BtnAllStop()
     {//버튼활성화 끄는 메소드
@@ -82,7 +94,7 @@ public class MemoryBoard : MonoBehaviour
         return false;
     }
     public IEnumerator ReadyGame()
-    {
+    {//순서상관없는모드
         BtnAllStop();
         yield return new WaitForSeconds(1f);
         //게임시작 텍스트 띄우기
@@ -94,6 +106,16 @@ public class MemoryBoard : MonoBehaviour
         yield return new WaitForSeconds(2f);
         BtnAllPlay();
     }
+    private IEnumerator InOrder()
+    {//순서대로 누르는 모드
+        BtnAllStop();
+        yield return new WaitForSeconds(1f);
+        //게임시작 텍스트 띄우기
+        MemoryManager.Instance.PlayStartPanel("게임 시작!");
+        yield return new WaitForSeconds(2f);
+        StartCoroutine(CorrectBtnPlayBlink_InOrder());
+
+    }
     public void CorrectBtnPlayBlink()
     {
         for (int i = 0; i < CorrectBtnList.Count; i++)
@@ -101,4 +123,27 @@ public class MemoryBoard : MonoBehaviour
             CorrectBtnList[i].PlayBlink();
         }
     }
+    public IEnumerator CorrectBtnPlayBlink_InOrder()
+    {
+        for (int i = 0; i < CorrectBtnList.Count; i++)
+        {
+            CorrectBtnList[i].PlayBlink();
+            yield return WaitTime;
+        }
+        BtnAllPlay();
+    }
+    public bool IsOrder(MemoryPushpop btn)
+    {
+        
+        if (currentOrderPushPop == btn)
+        {
+            if (CorrectBtnQueue.Count > 0) { 
+            currentOrderPushPop = CorrectBtnQueue.Dequeue();
+            }
+            return true;
+        }
+
+        return false;
+    }
+
 }

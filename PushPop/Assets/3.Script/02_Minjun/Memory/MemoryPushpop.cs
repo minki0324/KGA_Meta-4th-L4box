@@ -35,6 +35,7 @@ public class MemoryPushpop : MonoBehaviour
     {
         
     }
+    #region onButton에 넣어주는메소드
     public void MemoryBtnClick()
     {
         if (isCorrect)
@@ -46,6 +47,19 @@ public class MemoryPushpop : MonoBehaviour
             Incorrect();
         }
     }
+    public void InOrderBtn()
+    {
+        if (memoryBoard.IsOrder(this))
+        {
+            Correct();
+        }
+        else
+        {
+            Incorrect();
+        }
+    }
+    #endregion
+    #region 정답,오답판정메소드
     private void Correct()
     {//정답메소드
         //todo 점수주기
@@ -66,22 +80,13 @@ public class MemoryPushpop : MonoBehaviour
         //라이프 모두소진시 실패
         if (MemoryManager.Instance.Life == 0)
         {
-            onStageFail();
+            MemoryManager.Instance.onStageFail();
         }
 
     }
-
-    private void onStageFail()
-    {
-        //현재보드 꺼주기
-        Destroy(memoryBoard.gameObject);
-        //stage초기화
-        MemoryManager.Instance.currentStage = 1;
-        MemoryManager.Instance.Score = 0;
-        MemoryManager.Instance.ResetLife();
-        //메모리 로비로 나가기
-        MemoryManager.Instance.PlayStartPanel("왤케못하니?");
-    }
+    #endregion
+    #region 스테이지 승리콜백메소드
+ 
 
     private void onStageClear()
     {//스테이지  클리어시 불리는 메소드
@@ -89,25 +94,32 @@ public class MemoryPushpop : MonoBehaviour
 
         //코루틴으로 텀주고 훌륭해요 띄워주기 2초
         StartCoroutine(Clear_co());
-      
-    }
-    public void PlayBlink()
-    {
-        ani.SetTrigger("isBlink");
+
     }
     private IEnumerator Clear_co()
-    {
+    {//클리어 코루틴
         //훌륭해요 애니메이션
-        memoryBoard.BtnAllStop();
-        MemoryManager.Instance.PlayStartPanel("훌륭 해요!");
+        memoryBoard.BtnAllStop(); //버튼동작정지
+        MemoryManager.Instance.PlayStartPanel("훌륭 해요!");//애니메이션 멘트재생
         yield return new WaitForSeconds(2f);
 
-        //현재보드 꺼주기.
-        Destroy(memoryBoard.gameObject);
-        MemoryManager.Instance.currentStage++;
-        MemoryManager.Instance.SetStageIndex();
+        Destroy(memoryBoard.gameObject); //현재보드 지우기
+        MemoryManager.Instance.currentStage++; //스테이지 Index증가
+        MemoryManager.Instance.SetStageIndex(); //스테이지 텍스트 문구변경
 
         //다음스테이지?로이동(새로운보드 꺼내주기) manager에서 
         MemoryManager.Instance.CreatBoard();
     }
+    #endregion
+
+
+    //시작할때 정답알려주는 깜빡깜빡 애니메이션 메소드
+    public void PlayBlink()
+    {
+        ani.SetTrigger("isBlink");
+    }
+    #region
+    #endregion
+    
+   
 }
