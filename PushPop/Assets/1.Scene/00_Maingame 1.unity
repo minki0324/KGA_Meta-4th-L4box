@@ -453,15 +453,16 @@ MonoBehaviour:
   main_Canvas: {fileID: 2084374411}
   gameSet_Panel: {fileID: 2096696496}
   memoryGame_Panel: {fileID: 1024729421}
+  help_Canvas: {fileID: 2100022476}
   profile_Image: {fileID: 1624066624}
   profileName_Text: {fileID: 526950287}
   score_Text: {fileID: 627220796}
+  gameStart_Btn: {fileID: 1195574951}
   rankObject: {fileID: 107422397}
   rankIconImage_List: []
   profileImage_List: []
   profileName_List: []
   scoreText_List: []
-  gameStart_Btn: {fileID: 0}
 --- !u!1 &26909407
 GameObject:
   m_ObjectHideFlags: 0
@@ -17422,8 +17423,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1962812331}
-        m_TargetAssemblyTypeName: Speed_Timer, Assembly-CSharp
+      - m_Target: {fileID: 1024729425}
+        m_TargetAssemblyTypeName: Memory_Game, Assembly-CSharp
         m_MethodName: BackBtn_Clicked
         m_Mode: 1
         m_Arguments:
@@ -22239,7 +22240,7 @@ GameObject:
   - component: {fileID: 1195574952}
   - component: {fileID: 1195574951}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Btn_GameStart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38997,7 +38998,7 @@ MonoBehaviour:
   mainCanvas: {fileID: 2084374411}
   pushpush_Canvas: {fileID: 91780939}
   speed_Canvas: {fileID: 396213663}
-  memory_Canvas: {fileID: 0}
+  memory_Canvas: {fileID: 23916803}
   help_Panel: {fileID: 1907437482}
   help_Btn: {fileID: 1545360580}
   help_Description: {fileID: 1518036363}

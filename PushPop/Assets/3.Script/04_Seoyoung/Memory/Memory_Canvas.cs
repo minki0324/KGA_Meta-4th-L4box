@@ -23,11 +23,17 @@ public class Memory_Canvas : MonoBehaviour
     [SerializeField] private Canvas main_Canvas;
     [SerializeField] private GameObject gameSet_Panel; 
     [SerializeField] private GameObject memoryGame_Panel;
+    [SerializeField] private Help_Canvas help_Canvas;
 
     [Header("개인 기록")] 
     [SerializeField] private Image profile_Image;
     [SerializeField] private TMP_Text profileName_Text;
     [SerializeField] private TMP_Text score_Text;
+
+
+    [Header("버튼")]
+    [SerializeField] private Button gameStart_Btn;
+
 
     [Header("랭킹")]
     [SerializeField] private GameObject rankObject;
@@ -37,22 +43,32 @@ public class Memory_Canvas : MonoBehaviour
     [SerializeField] private List<TMP_Text> profileName_List = new List<TMP_Text>();
     [SerializeField] private List<TMP_Text> scoreText_List = new List<TMP_Text>();
 
-    [Header("버튼")]
-    [SerializeField] private Button gameStart_Btn;
-
 
     private void OnEnable()
     {
+        if(!gameSet_Panel.activeSelf)
+        {
+            gameSet_Panel.SetActive(true);
+        }
 
         if (memoryGame_Panel.activeSelf)
         {
             memoryGame_Panel.SetActive(false);
+        }
+        if(!help_Canvas.gameObject.activeSelf)
+        {
+            help_Canvas.gameObject.SetActive(true);
         }
     }
 
     private void Start()
     {
         Init();
+    }
+
+    private void OnDisable()
+    {
+        //help_Canvas.gameObject.SetActive(false);
     }
 
     public void Init()
@@ -71,6 +87,8 @@ public class Memory_Canvas : MonoBehaviour
     public void GameStartBtn_Clicked()
     {
         gameSet_Panel.SetActive(false);
+        help_Canvas.gameObject.SetActive(false);
+
         memoryGame_Panel.SetActive(true);    
     }
 
@@ -78,6 +96,8 @@ public class Memory_Canvas : MonoBehaviour
     public void BackBtn_Clicked()
     {
         main_Canvas.gameObject.SetActive(true);
+        help_Canvas.gameObject.SetActive(false);
+
         gameObject.SetActive(false);
     }
 

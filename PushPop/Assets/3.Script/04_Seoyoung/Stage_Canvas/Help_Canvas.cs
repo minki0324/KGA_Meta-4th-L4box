@@ -87,7 +87,7 @@ public class Help_Canvas : MonoBehaviour
                     break;
 
                 case Mode.Memory:
-                    
+                    memory_Canvas.BackBtn_Clicked();
                     break;
             }
         }

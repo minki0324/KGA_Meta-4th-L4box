@@ -53,6 +53,8 @@ public class Memory_Game : MonoBehaviour
     //나가기 경고 패널의 나가기 버튼 클릭 시 호출되는 메소드
     public void GoOutBtn_Clicked()
     {
+        back_Btn.interactable = true;
+
         main_Canvas.gameObject.SetActive(true);
         memory_Canvas.gameObject.SetActive(false);
     }
@@ -60,8 +62,10 @@ public class Memory_Game : MonoBehaviour
     //나가기 경고 패널의 취소 버튼 클릭 시 호출되는 메소드
     public void CancelBtn_Clicked()
     {
-        Warning_Panel.SetActive(false);
         back_Btn.interactable = true;
+
+        Warning_Panel.SetActive(false);
+      
     }
 
 }
