@@ -11,6 +11,15 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
 
     private void OnEnable()
     {
+        switch (GameManager.Instance.gameMode)
+        {
+            case Mode.PushPush:
+                CustomPushpopManager.Instance.StackPops.Push(gameObject);
+                break;
+            case Mode.Memory:
+                break;
+
+        }
         Button btn = transform.GetComponent<Button>();
         btn.interactable = true;
         if (!GameManager.Instance.gameMode.Equals(Mode.PushPush))
@@ -21,7 +30,14 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        PushPopClick();
+        switch (GameManager.Instance.gameMode)
+        {
+            case Mode.PushPush:
+                PushPopClick();
+                break;
+            case Mode.Memory:
+                break;
+        }
     }
 
     // Push Pop Button click method

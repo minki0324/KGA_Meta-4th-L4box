@@ -41,7 +41,7 @@ public class Ranking : MonoBehaviour
     // 스코어 저장 btn연동 테스트 메소드
     public void test_Set_Score()
     {
-        score = int.Parse(score_txt.text.ToString());
+        //score = int.Parse(score_txt.text.ToString());
 
         SQL_Manager.instance.SQL_SetScore(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, score, null, GameManager.Instance.UID);
     }

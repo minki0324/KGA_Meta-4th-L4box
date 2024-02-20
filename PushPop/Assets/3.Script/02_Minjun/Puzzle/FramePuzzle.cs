@@ -4,39 +4,33 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class FramePuzzle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler/*, IPointerDownHandler*/
+public class FramePuzzle : MonoBehaviour,  IPointerDownHandler , IPointerUpHandler
 {
     private Image _myImage;
-    private CostomPushpopManager costomPushpop;
-    private RectTransform rect;
-    // Start is called before the first frame update
+    private void OnEnable()
+    {
+        CustomPushpopManager.Instance.onCustomEnd += PushButtonActiveOn; // 설치한 버튼들 활성화
+        CustomPushpopManager.Instance.onCustomEnd += CustomModeEnd; // 버튼 설치할 수 있게하는 bool true;
+    }
+    private void OnDisable()
+    {
+        CustomPushpopManager.Instance.onCustomEnd -= PushButtonActiveOn; // 설치한 버튼들 활성화
+        CustomPushpopManager.Instance.onCustomEnd -= CustomModeEnd; // 버튼 설치할 수 있게하는 bool true;
+    }
     void Start()
     {
-        rect = GetComponent<RectTransform>();
-        costomPushpop = FindObjectOfType<CostomPushpopManager>();
         _myImage = GetComponent<Image>();
         //Sprite에서 Alpha 값이 0.1 이하 일시 인식하지 않게함
         _myImage.alphaHitTestMinimumThreshold = 0.1f;
     }
 
+   
     // Update is called once per frame
     void Update()
     {
    
     }
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        //퍼즐위에 마우스가 있으면 True값 전달하기
-        costomPushpop.isCanMakePush = true;
-        costomPushpop.isOnArea = true;
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        costomPushpop.isCanMakePush = false;
-    }
-
-
+   
     public void PushButtonActiveOn()
     {
         for (int i = 0; i < transform.childCount; i++)
@@ -44,6 +38,23 @@ public class FramePuzzle : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             // i번째 자식 요소의 Image 컴포넌트의 raycastTarget을 true로 설정합니다.
             transform.GetChild(i).GetComponent<Image>().raycastTarget = true;
         }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (!CustomPushpopManager.Instance.isCustomMode) return;
+        CustomPushpopManager.Instance.ClickDown();
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (!CustomPushpopManager.Instance.isCustomMode) return;
+        CustomPushpopManager.Instance.ClickUp();
+    }
+
+    public void CustomModeEnd()
+    {
+        CustomPushpopManager.Instance.isCustomMode = false;
     }
 
     //public void OnPointerDown(PointerEventData eventData)
