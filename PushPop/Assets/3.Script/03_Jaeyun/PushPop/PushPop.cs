@@ -7,27 +7,28 @@ using UnityEngine.U2D;
 public class PushPop : MonoBehaviour
 {
     public static PushPop Instance = null;
+    public GameObject PopParent = null; // 민기 추가 Bomb모드에서 필요
 
     [Header("PushPop Canvas")]
-    [SerializeField] private Transform pushPopCanvas = null; // Canvas_PushPop
+    public Transform pushPopCanvas = null; // Canvas_PushPop
     [SerializeField] private GameObject pushPopButtonPrefab = null; // PushPop Button Prefab
-    [SerializeField] private GameObject boardPrefabUI = null; // PushPop Board Canvas Prefab
+    public GameObject boardPrefabUI = null; // PushPop Board Canvas Prefab
     private RectTransform boardSizeUI;
-    private List<GameObject> pushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
+    public List<GameObject> pushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
 
     [Header("PushPop GameObject")]
     [SerializeField] private SpriteAtlas pushPopSpriteAtlas; // pushPop Atlas 참조
     private int spriteName; // stage에 따라 달라짐
     [SerializeField] private GameObject boardPrefab = null; // PushPop Prefab
-    [SerializeField] private Sprite boardSprite = null;
+    public Sprite boardSprite = null;
     private Vector3 boardSize;
     private PolygonCollider2D boardCollider;
     public List<GameObject> pushPopBoardObject = new List<GameObject>(); // pushPopBoard의 GameObject List
 
     [Header("Grid Setting")]
     private Vector2 grid = Vector2.zero;
-    [SerializeField] private float percentage = 0; // gameobject에 따른 gird 비율
-    [SerializeField] private Vector2 buttonSize = Vector2.zero; // x, y 동일
+    public float percentage = 0; // gameobject에 따른 gird 비율
+    public Vector2 buttonSize = Vector2.zero; // x, y 동일
     public GameObject PosPrefab = null; // grid에 지정할 pos prefab
     private List<GameObject> pos = new List<GameObject>(); // grid 배치된 posPrefab
 
@@ -48,13 +49,13 @@ public class PushPop : MonoBehaviour
         }
     }
 
-    // PushPop Game Start
+    /*// PushPop Game Start
     public void CreatePushPop(GameObject _pushPopBoardObject)
     {
         CreatePushPopBoard();
         CreateGrid(_pushPopBoardObject); // pushPop board마다 필요, CreatePushPop처럼 한 번에 묶지 말고 따로 실행해야 할듯
         PushPopButtonSetting();
-    }
+    }*/
 
     // SpriteAtlas에서 Sprite 갖고오기
     private Sprite SpriteAtlas(string _spriteName)
@@ -74,15 +75,17 @@ public class PushPop : MonoBehaviour
     }
 
     // Sprite 모양에 따른 Polygon collider setting
-    private void CreatePushPopBoard()
+    public void CreatePushPopBoard(Transform parent)
     { // bomb mode일 때는 2회 호출
         // sprite atlas setting
         spriteName = GameManager.Instance.PushPopStage;
         boardSprite = SpriteAtlas(spriteName.ToString());
 
         // canvas setting
-        GameObject pushPopBoard = Instantiate(boardPrefabUI, pushPopCanvas);
+        GameObject pushPopBoard = Instantiate(boardPrefabUI, parent);
         pushPopBoard.GetComponent<Image>().sprite = boardSprite;
+        PopParent = pushPopBoard;
+
         // board size setting
         boardSizeUI = pushPopBoard.GetComponent<RectTransform>();
         boardSizeUI.sizeDelta = GameManager.Instance.BoardSize;
@@ -102,7 +105,7 @@ public class PushPop : MonoBehaviour
     }
 
     // pushpop button 생성할 grid
-    private void CreateGrid(GameObject _pushPopBoardObject)
+    public void CreateGrid(GameObject _pushPopBoardObject)
     {
         // board Size Setting
         boardSize = new Vector3(boardCollider.bounds.size.x, boardCollider.bounds.size.y, 1f); // collider size
@@ -122,11 +125,11 @@ public class PushPop : MonoBehaviour
     }
 
     // PushPop Button Setting
-    private void PushPopButtonSetting()
+    public void PushPopButtonSetting(Transform parent)
     {
         for (int i = 0; i < activePos.Count; i++)
         {
-            GetPushPopButton(pushPopButton, pushPopButtonPrefab, pushPopCanvas);
+            GetPushPopButton(pushPopButton, pushPopButtonPrefab, parent);
             pushPopButton[i].GetComponent<RectTransform>().sizeDelta = buttonSize;
             pushPopButton[i].transform.position = Camera.main.WorldToScreenPoint(activePos[i].transform.position);
         }
