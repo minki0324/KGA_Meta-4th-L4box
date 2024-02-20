@@ -459,7 +459,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         inGameText2P.text = GameManager.Instance.ProfileName2P;
         if(GameManager.Instance.IsImageMode)
         { // 1P 가 사진 찍기를 선택한 Player일 경우
-
+            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
+            Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
+            inGameImage1P.sprite = profileSprite;
         }
         else if(!GameManager.Instance.IsImageMode)
         { // 1P 가 이미지 고르기를 선택한 Player일 경우
@@ -468,11 +470,13 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
         if (GameManager.Instance.IsimageMode2P)
         { // 2P 가 사진 찍기를 선택한 Player일 경우
-
+            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
+            Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
+            inGameImage2P.sprite = profileSprite;
         }
         else if (!GameManager.Instance.IsimageMode2P)
         { // 2P 가 이미지 고르기를 선택한 Player일 경우
-            inGameImage1P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage2P];
+            inGameImage2P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage2P];
         }
     }
 
@@ -576,26 +580,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             upperTimer -= Time.deltaTime; // upperTimer 감소
 
             // upperTimer 값에 따라 waterfall의 sprite 변경
-            if (upperTimer < 2)
-            {
-                waterfall.sprite = upperBubbleSprite[5];
-            }
-            else if (upperTimer < 4)
-            {
-                waterfall.sprite = upperBubbleSprite[4];
-            }
-            else if (upperTimer < 6)
-            {
-                waterfall.sprite = upperBubbleSprite[3];
-            }
-            else if (upperTimer < 8)
-            {
-                waterfall.sprite = upperBubbleSprite[2];
-            }
-            else if (upperTimer < 10)
-            {
-                waterfall.sprite = upperBubbleSprite[1];
-            }
+            if (upperTimer < 2) waterfall.sprite = upperBubbleSprite[5];
+            else if (upperTimer < 4) waterfall.sprite = upperBubbleSprite[4];
+            else if (upperTimer < 6) waterfall.sprite = upperBubbleSprite[3];
+            else if (upperTimer < 8) waterfall.sprite = upperBubbleSprite[2];
+            else if (upperTimer < 10) waterfall.sprite = upperBubbleSprite[1];
 
             // Z 축 회전 처리
             if (rotateDirection)
@@ -657,8 +646,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         {
             quitBtn[i].interactable = true;
         }
-        Quit1P = false;
-        Quit2P = false;
+        
         // 오브젝트 삭제
         ResetGame();
     }
@@ -670,6 +658,10 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         popList2P.Clear();
         Destroy(Frame[0].transform.GetChild(0).gameObject);
         Destroy(Frame[1].transform.GetChild(0).gameObject);
+
+        // Bool값 초기화
+        Quit1P = false;
+        Quit2P = false;
     }
     #endregion
     private IEnumerator PrintLog_co(GameObject errorlog)
