@@ -98,7 +98,7 @@ public class Help_Canvas : MonoBehaviour
                     break;
             }
 
-            mainCanvas.gameObject.SetActive(true);
+           
         }
  
     }
@@ -161,6 +161,10 @@ public class Help_Canvas : MonoBehaviour
 
                 case Mode.Memory:
                     memory_Canvas.EnableObjects();
+                    break;
+
+                case Mode.Bomb:
+
                     break;
             }
 
