@@ -76,6 +76,8 @@ public class Help_Canvas : MonoBehaviour
     {
         if(!bisHelpPanelOn)
         {
+            //GameManager.Instance.gameMode = Mode.None;
+
             switch (GameManager.Instance.gameMode)
             {
                 case Mode.PushPush:
@@ -188,46 +190,40 @@ public class Help_Canvas : MonoBehaviour
 
             //푸시푸시모드 도움말
             case Mode.PushPush:
-                maxPage = 2;
-                switch (currentPage)
+                maxPage = DataManager2.instance.helpScripts_List[0].script.Count;
+
+                for(int i = 0; i < DataManager2.instance.helpScripts_List[0].script.Count; i++)
                 {
-                    case 1:
-                        //1페이지 내용
-                        help_Description.text = "푸시푸시 1페이지";
-                        break;
-
-                    case 2:
-                        //2페이지 내용
-                        help_Description.text = "푸시푸시 2페이지";
-                        break;
-
+                    if(currentPage == DataManager2.instance.helpScripts_List[0].script[i].pageNum)
+                    {
+                        help_Description.text = DataManager2.instance.helpScripts_List[0].script[i].content;
+                    }
                 }
                 break;
 
             //스피드 모드 도움말
             case Mode.Speed:
-                maxPage = 2;
-                switch (currentPage)
-                {
-                    case 1:
-                        help_Description.text = "스피드 1페이지";
-                        break;
+                maxPage = DataManager2.instance.helpScripts_List[1].script.Count;
 
-                    case 2:
-                        //2페이지 내용
-                        help_Description.text = "스피드 2페이지";
-                        break;
+                for (int i = 0; i < DataManager2.instance.helpScripts_List[1].script.Count; i++)
+                {
+                    if (currentPage == DataManager2.instance.helpScripts_List[1].script[i].pageNum)
+                    {
+                        help_Description.text = DataManager2.instance.helpScripts_List[1].script[i].content;
+                    }
                 }
                 break;
 
             //메모리 모드 도움말
             case Mode.Memory:
-                maxPage = 1;
-                switch (currentPage)
-                {
-                    case 1:
+                maxPage = DataManager2.instance.helpScripts_List[2].script.Count;
 
-                        break;
+                for (int i = 0; i < DataManager2.instance.helpScripts_List[2].script.Count; i++)
+                {
+                    if (currentPage == DataManager2.instance.helpScripts_List[2].script[i].pageNum)
+                    {
+                        help_Description.text = DataManager2.instance.helpScripts_List[2].script[i].content;
+                    }
                 }
                 break;
 

@@ -1,6 +1,55 @@
 [
   {
     "type": "Push",
-    "Script": "Çª½ÃÇª½Ã ÆËÆË $ ÆËÆËÆËÆËÆËÆË"
+    "script": [
+      {
+        "page": 1,
+        "content": "Çª½Ã1"
+      },
+      {
+        "page": 2,
+        "content": "Çª½Ã2"
+      },
+      {
+        "page": 3,
+        "content": "Çª½Ã3"
+      }
+    ]
+  },
+
+  {
+    "type": "Speed",
+    "script": [
+      {
+        "page": 1,
+        "content": "½ºÇÇµå1"
+      },
+      {
+        "page": 2,
+        "content": "½ºÇÇµå2"
+      },
+      {
+        "page": 3,
+        "content": "½ºÇÇµå3"
+      }
+    ]
+  },
+
+  {
+    "type": "Memory",
+    "script": [
+      {
+        "page": 1,
+        "content" : "¸Þ¸ð¸®1"
+      },
+      {
+        "page": 2,
+        "content": "¸Þ¸ð¸®1"
+      },
+      {
+        "page": 3,
+        "content": "¸Þ¸ð¸®1"
+      }
+    ]
   }
 ]

@@ -17,7 +17,7 @@ public class Memory_Game : MonoBehaviour
     [SerializeField] private List<Image> heartImage_List;
     [SerializeField] private TMP_Text score_Text;
 
-
+    #region Unity Callback
     private void OnEnable()
     {
         if (Warning_Panel.activeSelf)
@@ -42,6 +42,9 @@ public class Memory_Game : MonoBehaviour
     }
 
 
+    #endregion
+
+    #region Other Method
     //좌측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
     public void BackBtn_Clicked()
     {
@@ -68,4 +71,5 @@ public class Memory_Game : MonoBehaviour
       
     }
 
+    #endregion
 }

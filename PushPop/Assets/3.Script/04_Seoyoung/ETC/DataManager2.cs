@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Text;	// 인코딩
 using LitJson;
 
 #region ObjectClass
@@ -21,10 +22,18 @@ public class IconDict
 
 
 [System.Serializable]
+public class Scripts
+{
+    public int pageNum;
+    public string content;
+}
+
+
+[System.Serializable]
 public class HelpScript
 {
-    public string Type;
-    public string script;
+    public string type;
+    public List<Scripts> script = new List<Scripts>();
 }
 #endregion
 
@@ -36,6 +45,7 @@ public class DataManager2 : MonoBehaviour
 
     //딕셔너리용
     public List<CategoryDict> categoryDicts_List = new List<CategoryDict>();
+    public List<Scripts> scipts_List = new List<Scripts>();
     public List<IconDict> iconDicts_List = new List<IconDict>();
 
 
@@ -46,10 +56,10 @@ public class DataManager2 : MonoBehaviour
     //도움말 스크립트용
     public List<HelpScript> helpScripts_List = new List<HelpScript>();
 
-
     public string categoryDict_fileName = "category.json";
     public string iconDict_fileName = "icon.json";
-    public string helpScript_fileName = "HelpScript.json";
+    public string helpScript_fileName = "asdf.json";
+    //public string helpScript_fileName = "help.json";      //한글이 꺠지므로 인코딩 코드 넣고 쓰기..일단 asdf 씀
 
     private string path = string.Empty;
 
@@ -71,8 +81,12 @@ public class DataManager2 : MonoBehaviour
     void Start()
     {
         path = Application.streamingAssetsPath;
-        Save_Category();
-        Save_Icon();
+        Read_HelpScript();
+
+        //Save_Category();
+        //Save_Icon();
+
+       
 
         //Read_Category();
         //Read_Icon();
@@ -196,7 +210,43 @@ public class DataManager2 : MonoBehaviour
     {
         //도움말 스크립트 읽어오는 함수
 
-        string JsonString = File.ReadAllText(path + "/ " + helpScript_fileName);
+        helpScripts_List.Clear();
+
+        string JsonString = File.ReadAllText(path + "/" + helpScript_fileName);
+        JsonData jsonData = JsonMapper.ToObject(JsonString);
+       // byte[] encoding = Encoding.UTF8.GetBytes(File.ReadAllText(JsonString));
+        
+
+       
+
+
+        for (int i = 0; i < jsonData.Count; i++)
+        {
+            HelpScript helpScript = new HelpScript();
+
+            helpScript.type = (string)jsonData[i]["type"];
+
+            //Debug.Log(jsonData[i]["script"]); //Json Data Array로 나옴 -> 안풀림..
+
+       
+
+            for (int j = 0; j < jsonData[i]["script"].Count; j++)
+            {
+                JsonData  item = JsonMapper.ToObject<JsonData>(jsonData[i]["script"].ToJson());
+                Scripts script = new Scripts();
+                script.pageNum = int.Parse(item[j]["page"].ToString());
+                script.content = item[j]["content"].ToString();
+
+
+                helpScript.script.Add(script);
+                //Debug.Log(script.pageNum + "," + script.content);
+                
+            }
+
+             helpScripts_List.Add(helpScript);
+
+        }
+
     }
 
 

@@ -43,7 +43,7 @@ public class Memory_Canvas : MonoBehaviour
     [SerializeField] private List<TMP_Text> profileName_List = new List<TMP_Text>();
     [SerializeField] private List<TMP_Text> scoreText_List = new List<TMP_Text>();
 
-
+    #region Unity Callback
     private void OnEnable()
     {
         if(!gameSet_Panel.activeSelf)
@@ -71,6 +71,9 @@ public class Memory_Canvas : MonoBehaviour
         //help_Canvas.gameObject.SetActive(false);
     }
 
+    #endregion
+
+    #region Other Method
     public void Init()
     {
         for (int i = 0; i < rankObject.transform.childCount; i++)
@@ -116,6 +119,6 @@ public class Memory_Canvas : MonoBehaviour
         //디비에서 개인 랭킹 읽어온 후 계산
     }
 
-
+    #endregion
 
 }
