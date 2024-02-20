@@ -34,8 +34,8 @@ public class VersionManager
     [MenuItem("Build/Check Current Version", false, 2)]
     private static void CheckCurrentVersion()
     {
-        Debug.Log("Build v" + PlayerSettings.bundleVersion +
-            " (" + PlayerSettings.Android.bundleVersionCode + ")");
+        /*Debug.Log("Build v" + PlayerSettings.bundleVersion +
+            " (" + PlayerSettings.Android.bundleVersionCode + ")");*/
     }
 
     [PostProcessBuild(1)]
