@@ -470,24 +470,24 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // Profile Setting
         inGameText1P.text = GameManager.Instance.ProfileName;
         inGameText2P.text = GameManager.Instance.ProfileName2P;
-        if(GameManager.Instance.IsImageMode)
+        if(!GameManager.Instance.IsImageMode)
         { // 1P 가 사진 찍기를 선택한 Player일 경우
             Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
             Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
             inGameImage1P.sprite = profileSprite;
         }
-        else if(!GameManager.Instance.IsImageMode)
+        else if(GameManager.Instance.IsImageMode)
         { // 1P 가 이미지 고르기를 선택한 Player일 경우
             inGameImage1P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage];
         }
 
-        if (GameManager.Instance.IsimageMode2P)
+        if (!GameManager.Instance.IsimageMode2P)
         { // 2P 가 사진 찍기를 선택한 Player일 경우
             Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
             Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
             inGameImage2P.sprite = profileSprite;
         }
-        else if (!GameManager.Instance.IsimageMode2P)
+        else if (GameManager.Instance.IsimageMode2P)
         { // 2P 가 이미지 고르기를 선택한 Player일 경우
             inGameImage2P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage2P];
         }
