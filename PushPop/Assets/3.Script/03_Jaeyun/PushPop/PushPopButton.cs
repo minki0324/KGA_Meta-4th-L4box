@@ -13,7 +13,7 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
     {
         Button btn = transform.GetComponent<Button>();
         btn.interactable = true;
-        if(!GameManager.Instance.gameMode.Equals(Mode.PushPush))
+        if (!GameManager.Instance.gameMode.Equals(Mode.PushPush))
         {
             gameObject.GetComponent<Image>().raycastTarget = true;
         }
@@ -28,7 +28,9 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
     public void PushPopClick()
     {
         GameObject clickButton = this.gameObject;
-        PushPop.Instance.pushPopButton.Remove(clickButton);
+        if (GameManager.Instance.gameMode.Equals(Mode.PushPush)) {
+            PushPop.Instance.pushPopButton.Remove(clickButton);
+        }
         if(GameManager.Instance.gameMode.Equals(Mode.Bomb))
         {
             if (player.Equals(0))
@@ -41,6 +43,10 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
             }
         }
         GameManager.Instance.GameClear();
-        clickButton.GetComponent<Button>().interactable = false;
+        if (clickButton.GetComponent<Button>().interactable)
+        {
+            GameManager.Instance.buttonActive--;
+            clickButton.GetComponent<Button>().interactable = false;
+        }
     }
 }

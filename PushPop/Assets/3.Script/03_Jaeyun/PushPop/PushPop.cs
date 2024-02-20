@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using UnityEngine.U2D;
+using UnityEngine.UI;
 
 public class PushPop : MonoBehaviour
 {
@@ -19,13 +18,14 @@ public class PushPop : MonoBehaviour
     [Header("PushPop GameObject")]
     [SerializeField] private SpriteAtlas pushPopSpriteAtlas; // pushPop Atlas 참조
     private int spriteName; // stage에 따라 달라짐
-    [SerializeField] private GameObject boardPrefab = null; // PushPop Prefab
+    public GameObject boardPrefab = null; // PushPop Prefab
     public Sprite boardSprite = null;
     private Vector3 boardSize;
     private PolygonCollider2D boardCollider;
     public List<GameObject> pushPopBoardObject = new List<GameObject>(); // pushPopBoard의 GameObject List
 
     [Header("Grid Setting")]
+    public Transform buttonCanvas = null;
     private Vector2 grid = Vector2.zero;
     public float percentage = 0; // gameobject에 따른 gird 비율
     public Vector2 buttonSize = Vector2.zero; // x, y 동일
@@ -34,6 +34,9 @@ public class PushPop : MonoBehaviour
 
     public List<GameObject> pushPopButton = new List<GameObject>();
     public List<GameObject> activePos = new List<GameObject>();
+
+    public GameObject pushPopAni = null;
+    public bool pushTurn = true;
 
     private void Awake()
     {
@@ -78,13 +81,16 @@ public class PushPop : MonoBehaviour
     public void CreatePushPopBoard(Transform parent)
     { // bomb mode일 때는 2회 호출
         // sprite atlas setting
-        spriteName = GameManager.Instance.PushPopStage;
-        boardSprite = SpriteAtlas(spriteName.ToString());
+        // spriteName = GameManager.Instance.PushPopStage;
+        // boardSprite = SpriteAtlas(spriteName.ToString());
+
+        if (boardSprite == null) return;
 
         // canvas setting
         GameObject pushPopBoard = Instantiate(boardPrefabUI, parent);
         pushPopBoard.GetComponent<Image>().sprite = boardSprite;
         PopParent = pushPopBoard;
+        pushPopAni = pushPopBoard;
 
         // board size setting
         boardSizeUI = pushPopBoard.GetComponent<RectTransform>();
@@ -98,6 +104,12 @@ public class PushPop : MonoBehaviour
         Rect boardRect = pushPopBoard.GetComponent<RectTransform>().rect;
         float scale = Mathf.Min(boardRect.width / boardSprite.textureRect.size.x, boardRect.width / boardSprite.textureRect.size.y) * 0.95f;
         pushObject.transform.localScale = new Vector3(scale, scale, 1f);
+        if (!pushTurn)
+        { // image flip
+            boardSizeUI.localScale = new Vector3(-1, 1, 1);
+            pushObject.transform.rotation = Quaternion.Euler(0, 180f, 0);
+            Debug.Log("Rot: " + pushPopBoard.transform.rotation);
+        }
         // polygon collider setting
         pushObject.AddComponent<PolygonCollider2D>();
         boardCollider = pushObject.GetComponent<PolygonCollider2D>();
