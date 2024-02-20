@@ -64,20 +64,25 @@ public class Speed_Canvas : MonoBehaviour
 
     #region Unity Callback
 
+    private void OnEnable()
+    {
+        selectDifficulty_Panel.SetActive(true);
+        help_Canvas.gameObject.SetActive(true);
+    }
+
     private void Start()
     {
         iconButton_List = new List<Button>();
         selectCategory_Panel.SetActive(false);
         ready_Panel.SetActive(false);
         speedGame_Panel.SetActive(false);
-        gameObject.SetActive(false);
-    }
 
-    private void OnEnable()
-    {
         selectDifficulty_Panel.SetActive(true);
         help_Canvas.gameObject.SetActive(true);
+        //gameObject.SetActive(false);
     }
+
+
 
     private void OnDisable()
     {
@@ -188,7 +193,6 @@ public class Speed_Canvas : MonoBehaviour
         if (!help_Canvas.bisHelpPanelOn)
         {
             ready_Panel.SetActive(true);
-           
 
             help_Canvas.Back_Btn.enabled = false;
             help_Canvas.Help_Btn.enabled = false;
@@ -198,7 +202,6 @@ public class Speed_Canvas : MonoBehaviour
 
             moldIcon = selected_Image.sprite;
         }
-
     }
 
 
@@ -211,7 +214,6 @@ public class Speed_Canvas : MonoBehaviour
             help_Canvas.Back_Btn.enabled = true;
             help_Canvas.Help_Btn.enabled = true;
         }
-
     }
 
 
@@ -224,6 +226,9 @@ public class Speed_Canvas : MonoBehaviour
         ready_Panel.SetActive(false);
         bSelectCategoryPanel_On = false;
         help_Canvas.gameObject.SetActive(false);
+
+        PushPop.Instance.boardSprite = moldIcon; // pushpop
+        GameManager.Instance.SpeedMode(); // Speed Mode start
     }
 
 
@@ -257,13 +262,13 @@ public class Speed_Canvas : MonoBehaviour
     {
         for (int i = 0; i < iconButton_List.Count; i++)
         {
-            iconButton_List[i].enabled = false;
+            iconButton_List[i].interactable = false;
         }
 
 
         for(int i = 0; i<Difficulty_Btn.Count; i++)
         {
-            Difficulty_Btn[i].enabled = false;
+            Difficulty_Btn[i].interactable = false;
         }
 
         SelectCategory_ScrollView.enabled = false;
@@ -276,13 +281,13 @@ public class Speed_Canvas : MonoBehaviour
     {
         for (int i = 0; i < iconButton_List.Count; i++)
         {
-            iconButton_List[i].enabled = true;
+            iconButton_List[i].interactable = true;
         }
 
 
         for (int i = 0; i < Difficulty_Btn.Count; i++)
         {
-            Difficulty_Btn[i].enabled = true;
+            Difficulty_Btn[i].interactable = true;
         }
 
         SelectCategory_ScrollView.enabled = true;

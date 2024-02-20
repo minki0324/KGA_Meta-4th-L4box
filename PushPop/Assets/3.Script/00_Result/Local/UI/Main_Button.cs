@@ -108,27 +108,46 @@ public class Main_Button : MonoBehaviour
 
     public void Enable_Button()
     {
-        _optionBtn.enabled = true;
-        _profileBtn.enabled = true;
-        _homeBtn.enabled = true;
-        _collectionBtn.enabled = true;
-        _mode2PBtn.enabled = true;
-        _pushModeBtn.enabled = true;
-        _speedModeBtn.enabled = true;
-        _memoryModeBtn.enabled = true;
+        //_optionBtn.enabled = true;
+        //_profileBtn.enabled = true;
+        //_homeBtn.enabled = true;
+        //_collectionBtn.enabled = true;
+        //_mode2PBtn.enabled = true;
+        //_pushModeBtn.enabled = true;
+        //_speedModeBtn.enabled = true;
+        //_memoryModeBtn.enabled = true;
+
+        _optionBtn.interactable = true;
+        _profileBtn.interactable = true;
+        _homeBtn.interactable = true;
+        _collectionBtn.interactable = true;
+        _mode2PBtn.interactable = true;
+        _pushModeBtn.interactable = true;
+        _speedModeBtn.interactable = true;
+        _memoryModeBtn.interactable = true;
 
     }
 
-  /*  public void Disable_Button()
+    public void Disable_Button()
     {
-        _optionBtn.enabled = false;
-        _profileBtn.enabled = false;
-        _homeBtn.enabled = false;
-        _collectionBtn.enabled = false;
-        _mode2PBtn.enabled = false;
-        _pushModeBtn.enabled = false;
-        _speedModeBtn.enabled = false;
-        _memoryModeBtn.enabled = false;
-    }*/
+        //_optionBtn.enabled = false;
+        //_profileBtn.enabled = false;
+        //_homeBtn.enabled = false;
+        //_collectionBtn.enabled = false;
+        //_mode2PBtn.enabled = false;
+        //_pushModeBtn.enabled = false;
+        //_speedModeBtn.enabled = false;
+        //_memoryModeBtn.enabled = false;
+
+
+        _optionBtn.interactable = false;
+        _profileBtn.interactable = false;
+        _homeBtn.interactable = false;
+        _collectionBtn.interactable = false;
+        _mode2PBtn.interactable = false;
+        _pushModeBtn.interactable = false;
+        _speedModeBtn.interactable = false;
+        _memoryModeBtn.interactable = false;
+    }
     #endregion
 }

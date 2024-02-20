@@ -8,23 +8,23 @@ using System;
 
 public class PuzzleLozic : MonoBehaviour
 {
-    [Header("¸ÂÃß´Â ÆÛÁñ ¿ÀºêÁ§Æ®")]
+    [Header("ë§ì¶”ëŠ” í¼ì¦ ì˜¤ë¸Œì íŠ¸")]
     public GameObject PieceObject;
-    [Header("ÇÁ·¹ÀÓ ¿ÀºêÁ§Æ®")]
+    [Header("í”„ë ˆì„ ì˜¤ë¸Œì íŠ¸")]
     public GameObject FrameObject;
-    [Header("ÆÛÁñ»ó¼Ó½ÃÅ³ ¿ÀºêÁ§Æ®")] 
+    [Header("í¼ì¦ìƒì†ì‹œí‚¬ ì˜¤ë¸Œì íŠ¸")] 
     public GameObject PuzzleParent;
     public GameObject FrameParent;
 
-    [Header("ÇÁ·¹ÀÓ ¼³Á¤ À§Ä¡")]
+    [Header("í”„ë ˆì„ ì„¤ì • ìœ„ì¹˜")]
     public Transform frampPos;
-    [Header("ÇÇ½ºµé ¼³Á¤ À§Ä¡")] //ÀÓ½Ã
+    [Header("í”¼ìŠ¤ë“¤ ì„¤ì • ìœ„ì¹˜")] //ì„ì‹œ
     public Transform[] piecePos;
-    private float puzzleJudgmentDistance = 301111; // ÆÛÁñ ÆÇÁ¤ °Å¸®.
-    public List<Puzzle> puzzles = new List<Puzzle>(); //¸ğµç ÆÛÁñ Á¾·ù¸¦ ´ã¾Æ³õ´Â ¸®½ºÆ®
-    public int ClearCount=0; //¸ÂÃç¾ßÇÏ´Â ÆÛÁñ °¹¼ö
-    public int successCount= 0; //¸ÂÃá °¹¼ö
-    public Puzzle currentPuzzle; //Player°¡ °í¸¥ ÆÛÁñ Á¾·ù
+    private float puzzleJudgmentDistance = 301111; // í¼ì¦ íŒì • ê±°ë¦¬.
+    public List<Puzzle> puzzles = new List<Puzzle>(); //ëª¨ë“  í¼ì¦ ì¢…ë¥˜ë¥¼ ë‹´ì•„ë†“ëŠ” ë¦¬ìŠ¤íŠ¸
+    public int ClearCount=0; //ë§ì¶°ì•¼í•˜ëŠ” í¼ì¦ ê°¯ìˆ˜
+    public int successCount= 0; //ë§ì¶˜ ê°¯ìˆ˜
+    public Puzzle currentPuzzle; //Playerê°€ ê³ ë¥¸ í¼ì¦ ì¢…ë¥˜
     [SerializeField] CustomPushpopManager costom;
     public Action onPuzzleClear;
     public List<PuzzlePiece> pieceList = new List<PuzzlePiece>();
@@ -32,20 +32,20 @@ public class PuzzleLozic : MonoBehaviour
     [SerializeField] private GameObject DecorationPanel;
     private void OnEnable()
     {
-        onPuzzleClear += DestroyChildren; //ÆÛÁñ¿Ï·á½Ã ÇÁ·¹ÀÓ , ÇÇ½ºµé ¸ğµÎ»èÁ¦
-        onPuzzleClear += CraetBoard; //¿Ï¼ºµÈ ÆÛÁñº¸µå »ı»ê
-        onPuzzleClear += ActiveCustomPanel; //Ä¿½ºÅÒÆÇ³Ú È°¼ºÈ­
-        onPuzzleClear += AtiveOnDecoPanel; //µ¥ÄÚÆÇ³ÚÈ°¼ºÈ­
+        onPuzzleClear += DestroyChildren; //í¼ì¦ì™„ë£Œì‹œ í”„ë ˆì„ , í”¼ìŠ¤ë“¤ ëª¨ë‘ì‚­ì œ
+        onPuzzleClear += CraetBoard; //ì™„ì„±ëœ í¼ì¦ë³´ë“œ ìƒì‚°
+        onPuzzleClear += ActiveCustomPanel; //ì»¤ìŠ¤í…€íŒë„¬ í™œì„±í™”
+        onPuzzleClear += AtiveOnDecoPanel; //ë°ì½”íŒë„¬í™œì„±í™”
     }
     private void OnDisable()
     {
         onPuzzleClear -= DestroyChildren;
         onPuzzleClear -= CraetBoard;
         onPuzzleClear -= ActiveCustomPanel;
-        onPuzzleClear -= AtiveOnDecoPanel; //µ¥ÄÚÆÇ³ÚÈ°¼ºÈ­
+        onPuzzleClear -= AtiveOnDecoPanel; //ë°ì½”íŒë„¬í™œì„±í™”
     }
     public bool checkdistance(Vector3 currentPosition )
-    {//ÆÛÁñÀ» ³õ¾ÒÀ»¶§ ¸ÂÃç¾ßÇÏ´Â À§Ä¡¿Í ÇöÀçÀ§Ä¡ ºñ±³
+    {//í¼ì¦ì„ ë†“ì•˜ì„ë•Œ ë§ì¶°ì•¼í•˜ëŠ” ìœ„ì¹˜ì™€ í˜„ì¬ìœ„ì¹˜ ë¹„êµ
         if (Vector3.Distance(currentPosition, frampPos.position) < puzzleJudgmentDistance)
         {
             return true;
@@ -57,17 +57,17 @@ public class PuzzleLozic : MonoBehaviour
     }
 
     public void SelectPuzzleButton(int PuzzleIDIndex)
-    {//¹öÆ°ÂüÁ¶ ¸Ş¼Òµå
+    {//ë²„íŠ¼ì°¸ì¡° ë©”ì†Œë“œ
         foreach (var Kind in puzzles)
         {
-            //¸Å°³º¯¼ö·Î¹ŞÀº String°ú List¿¡ µé¾îÀÖ´Â ÆÛÁñµéÁß Enum.toString()°ú °°Àº ÆÛÁñ Ã£±â
+            //ë§¤ê°œë³€ìˆ˜ë¡œë°›ì€ Stringê³¼ Listì— ë“¤ì–´ìˆëŠ” í¼ì¦ë“¤ì¤‘ Enum.toString()ê³¼ ê°™ì€ í¼ì¦ ì°¾ê¸°
             if (Kind.PuzzleID == PuzzleIDIndex)
             {
                 currentPuzzle = Kind;
-                //todo °ÔÀÓ¸Å´ÏÀú¿¡ ÇöÀçÆÛÁñ º¸³»Áà...
+                //todo ê²Œì„ë§¤ë‹ˆì €ì— í˜„ì¬í¼ì¦ ë³´ë‚´ì¤˜...
 
 
-                //Å¬¸®¾îÄ«¿îÆ®´Â ÆÛÁñ°¹¼ö (Sprite)
+                //í´ë¦¬ì–´ì¹´ìš´íŠ¸ëŠ” í¼ì¦ê°¯ìˆ˜ (Sprite)
                 ClearCount = currentPuzzle.sprites.Length;
                 // SettingPuzzle();
                 break;
@@ -75,7 +75,7 @@ public class PuzzleLozic : MonoBehaviour
         }
         if (currentPuzzle == null)
         {
-            Debug.Log("ÀÏÄ¡ÇÏ´Â ÆÛÁñÀÌ ¾ø½À´Ï´Ù. ScriptableObject¸¦ Ãß°¡ÇØ ÁÖ¼¼¿ä");
+            Debug.Log("ì¼ì¹˜í•˜ëŠ” í¼ì¦ì´ ì—†ìŠµë‹ˆë‹¤. ScriptableObjectë¥¼ ì¶”ê°€í•´ ì£¼ì„¸ìš”");
         }
        
     }
@@ -91,7 +91,7 @@ public class PuzzleLozic : MonoBehaviour
     }
 
     public  void SettingPuzzle()
-    {//Á¤ÇØÁø ÆÛÁñ ÇÁ·¹ÀÓ,ÆÛÁñ »ı¼º
+    {//ì •í•´ì§„ í¼ì¦ í”„ë ˆì„,í¼ì¦ ìƒì„±
         for (int i = 0; i < currentPuzzle.sprites.Length; i++)
         {
             GameObject piece = PuzzleInstantiate(PieceObject, piecePos[i].position, currentPuzzle.sprites[i], true);
@@ -99,19 +99,19 @@ public class PuzzleLozic : MonoBehaviour
         }
     }
     private GameObject PuzzleInstantiate(GameObject puzzle , Vector3 position , Sprite puzzleSprite, bool _isPiece)
-    {//ÆÛÁñ»ı¼º
+    {//í¼ì¦ìƒì„±
         GameObject board = null;
         board = Instantiate(puzzle, position, Quaternion.identity, FrameParent.transform);
 
         PuzzleSetting(board, puzzleSprite);
         //newPiecePuzle
         if(_isPiece)
-        {//»ı¼ºÇÏ´Â ÆÛÁñÀÌ ¸ÂÃß´Â Á¶°¢ÀÏ¶§
+        {//ìƒì„±í•˜ëŠ” í¼ì¦ì´ ë§ì¶”ëŠ” ì¡°ê°ì¼ë•Œ
             AlphaCalculate(puzzleSprite, board);
         }
         else
-        {//»ı¼ºÇÏ´Â ÆÛÁñÀÌ ÆÛÁñ Æ²ÀÏ¶§.
-            //»ı¼ºÇÒ ½Ã Á¶°¢µéº¸´Ù À§·Î ¼¼ÆÃÇØÁÖ¸é¼­ Á¶°¢ÀÌ Æ²¿¡ ¾È°¡·ÁÁö°ÔÇÏ±âÀ§ÇÔ.
+        {//ìƒì„±í•˜ëŠ” í¼ì¦ì´ í¼ì¦ í‹€ì¼ë•Œ.
+            //ìƒì„±í•  ì‹œ ì¡°ê°ë“¤ë³´ë‹¤ ìœ„ë¡œ ì„¸íŒ…í•´ì£¼ë©´ì„œ ì¡°ê°ì´ í‹€ì— ì•ˆê°€ë ¤ì§€ê²Œí•˜ê¸°ìœ„í•¨.
             board.transform.SetAsFirstSibling();
         }
 
@@ -119,25 +119,25 @@ public class PuzzleLozic : MonoBehaviour
     }
 
     private void PuzzleSetting(GameObject puzzle , Sprite sprite)
-    {//UI Äµ¹ö½º¿¡ »ó¼Ó, Á¤ÇØÁø »çÁøÀ¸·Î ³Ö¾îÁÖ±â , »çÁøÅ©±â ¼¼ÆÃ.
+    {//UI ìº”ë²„ìŠ¤ì— ìƒì†, ì •í•´ì§„ ì‚¬ì§„ìœ¼ë¡œ ë„£ì–´ì£¼ê¸° , ì‚¬ì§„í¬ê¸° ì„¸íŒ….
         Image frameImage = puzzle.GetComponent<Image>(); 
-        frameImage.sprite = sprite; //ÆÛÁñ »çÁø³Ö±â
-        frameImage.preserveAspect =true; //»çÁø»çÀÌÁî ¼¼ÆÃ
+        frameImage.sprite = sprite; //í¼ì¦ ì‚¬ì§„ë„£ê¸°
+        frameImage.preserveAspect =true; //ì‚¬ì§„ì‚¬ì´ì¦ˆ ì„¸íŒ…
     }
     private void DestroyChildren()
-    {//ÆÛÁñÀ» ¿Ï·áÇßÀ»¶§ »ı¼ºµÇÀÖ´ø ÆÛÁñ »èÁ¦ÇÏ±âÀ§ÇÑ ¸Ş¼Òµå
+    {//í¼ì¦ì„ ì™„ë£Œí–ˆì„ë•Œ ìƒì„±ë˜ìˆë˜ í¼ì¦ ì‚­ì œí•˜ê¸°ìœ„í•œ ë©”ì†Œë“œ
         foreach (Transform child in PuzzleParent.transform.GetChild(0))
         {
             Destroy(child.gameObject);
         }
     }
     private void CraetBoard()
-    {//ÆÛÁñ¿Ï·áÇÏ°í ÆÛÁñ ¿øº» ¿ÀºêÁ§Æ® »ı¼ºÇØÁÖ±â
+    {//í¼ì¦ì™„ë£Œí•˜ê³  í¼ì¦ ì›ë³¸ ì˜¤ë¸Œì íŠ¸ ìƒì„±í•´ì£¼ê¸°
         Image frameImage = costom.puzzleBoard.GetComponent<Image>();
-        frameImage.sprite = atlas.GetSprite(currentPuzzle.PuzzleID.ToString()); //ÆÛÁñ »çÁø³Ö±â
+        frameImage.sprite = atlas.GetSprite(currentPuzzle.PuzzleID.ToString()); //í¼ì¦ ì‚¬ì§„ë„£ê¸°
         frameImage.SetNativeSize();
         frameImage.alphaHitTestMinimumThreshold = 0.1f;
-        //Ä¿½ºÅÒ¸ğµå È°¼ºÈ­
+        //ì»¤ìŠ¤í…€ëª¨ë“œ í™œì„±í™”
         costom.EnableThisComponent();
         costom.isCustomMode = true;
     }
@@ -154,7 +154,7 @@ public class PuzzleLozic : MonoBehaviour
         int width = texture.width;
         int height = texture.height;
 
-        // ¾ËÆÄ°ªÀÌ 0.1 ÀÌ»óÀÎ ÇÈ¼¿ÀÇ ¿µ¿ª °è»ê
+        // ì•ŒíŒŒê°’ì´ 0.1 ì´ìƒì¸ í”½ì…€ì˜ ì˜ì—­ ê³„ì‚°
         int minX = width;
         int maxX = 0;
         int minY = height;
@@ -165,7 +165,7 @@ public class PuzzleLozic : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 Color32 pixel = pixels[y * width + x];
-                if (pixel.a >= 25) // ¾ËÆÄ°ªÀÌ 0.1 ÀÌ»óÀÎ °æ¿ì
+                if (pixel.a >= 25) // ì•ŒíŒŒê°’ì´ 0.1 ì´ìƒì¸ ê²½ìš°
                 {
                     minX = Mathf.Min(minX, x);
                     maxX = Mathf.Max(maxX, x);
@@ -175,7 +175,7 @@ public class PuzzleLozic : MonoBehaviour
             }
         }
 
-        // ¿µ¿ªÀÇ Å©±â ¹× Áß½É °è»ê
+        // ì˜ì—­ì˜ í¬ê¸° ë° ì¤‘ì‹¬ ê³„ì‚°
         int areaWidth = maxX - minX + 1;
         int areaHeight = maxY - minY + 1;
         Vector2 Area = new Vector2(areaWidth, areaHeight);
@@ -183,10 +183,10 @@ public class PuzzleLozic : MonoBehaviour
 
         Vector2 center = new Vector2((minX + maxX) / 2f, (minY + maxY) / 2f);
 
-        // ½ºÇÁ¶óÀÌÆ®ÀÇ Áß½ÉÁ¡ °è»ê
+        // ìŠ¤í”„ë¼ì´íŠ¸ì˜ ì¤‘ì‹¬ì  ê³„ì‚°
         Vector2 spriteCenter = new Vector2(sprite.rect.width / 2f, sprite.rect.height / 2f);
 
-        // Áß½ÉÁ¡ À§Ä¡ °è»ê
+        // ì¤‘ì‹¬ì  ìœ„ì¹˜ ê³„ì‚°
         Vector2 finalCenter = new Vector2(center.x - spriteCenter.x, center.y - spriteCenter.y);
         PuzzleObject obj = new PuzzleObject(puzzle, sprite, Area, finalCenter);
 
