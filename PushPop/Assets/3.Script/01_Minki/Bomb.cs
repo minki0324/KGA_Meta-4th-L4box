@@ -55,6 +55,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public GameObject CreateImagePanel = null;    
     public GameObject SelectProfile = null;
     public GameObject CurrentProfile = null;
+    public GameObject help_Canvas = null;
 
     [Header("ErrorLog")]
     [SerializeField] private GameObject nameLog = null;
@@ -107,6 +108,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     {
         PlayerSet1P();
         profile2PInput.onValidateInput += ValidateInput;
+        help_Canvas.SetActive(true);
     }
 
     private void Update()
@@ -130,6 +132,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     {
         profile2PInput.onValidateInput -= ValidateInput;
         isSelect2P = false;
+
+        help_Canvas.SetActive(false);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -699,6 +703,14 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             GamePanel.SetActive(false);
             MainPanel.SetActive(true);
         }
+    }
+
+    public void BackBtn_Clicked()
+    {
+        GamePanel.SetActive(false);
+        CreateImagePanel.SetActive(false);
+        CurrentProfile.SetActive(false);
+        SelectProfile.SetActive(false);
     }
     #endregion
 }

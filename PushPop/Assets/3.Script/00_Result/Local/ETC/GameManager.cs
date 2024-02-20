@@ -3,15 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum GameMode
-{
-    //게임매니저에 넣을 것
-    None = 0,
-    PushPush,
-    Speed,
-    Memory,
-    Bomb
-}
 
 public enum Mode // GameMode
 {
@@ -56,10 +47,8 @@ public class PuzzleObject
 public class GameManager : MonoBehaviour, IGameMode
 {
     public static GameManager Instance = null;
-    public GameMode _gameMode; // delete 필요
     public Mode gameMode;
-    public int ShutdownTime; // delete 필요
-
+   
     [Header("GameScript")]
     [SerializeField] private CustomPushpopManager pushpushScript;
     public Bomb bombScript;

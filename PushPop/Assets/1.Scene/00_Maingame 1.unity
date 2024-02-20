@@ -353,7 +353,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &23916799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -452,7 +452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   main_Canvas: {fileID: 2084374411}
   gameSet_Panel: {fileID: 2096696496}
-  memoryGame_Panel: {fileID: 1024729421}
+  memoryGame_Canvas: {fileID: 0}
   help_Canvas: {fileID: 2100022476}
   profile_Image: {fileID: 1624066624}
   profileName_Text: {fileID: 526950287}
@@ -1426,10 +1426,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7451f3ad8c9098b479a198926557b0a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameMode: 0
   gameMode: 0
-  ShutdownTime: 0
   pushpushScript: {fileID: 653199146}
+  bombScript: {fileID: 0}
   bubbleCanvas: {fileID: 996538353}
   bubblePrefab: {fileID: 8925204162082192838, guid: b1233b5acd8a67a4b9328d6e3efeedfb, type: 3}
   bubbleObject: []
@@ -1439,12 +1438,14 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  moldIcon: {fileID: 0}
   PushPopStage: 0
   BoardSize: {x: 0, y: 0}
+  boardPos: {fileID: 0}
+  buttonActive: 0
   puzzleSize: {x: 0, y: 0}
   finalCenter: {x: 0, y: 0}
   puzzleLogic: {fileID: 996538354}
-  scoreText: {fileID: 0}
   Score: 0
   TimeScore: 0
   UID: 0
@@ -1455,6 +1456,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 807b7464a7f4d7b49a0af0ff03f1f844, type: 3}
   - {fileID: 21300000, guid: fa674ec355fdfbd4595ceb81aed8cc80, type: 3}
   IsImageMode: 1
+  count: 0.25
+  ProfileName2P: 
+  ProfileIndex2P: 0
+  DefaultImage2P: 0
+  IsimageMode2P: 1
 --- !u!4 &58363337
 Transform:
   m_ObjectHideFlags: 0
@@ -2218,7 +2224,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9e9088e203b921a4b8ed0f794e79adcb, type: 3}
   moldIcon_List: []
   puzzleLozic: {fileID: 996538354}
-  blurPanel: {fileID: 1251707359}
 --- !u!114 &91780940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12609,6 +12614,7 @@ MonoBehaviour:
   pushPop: {fileID: 2804409159849094026, guid: c84c226c0b6b14b4bafe85eb215718fc, type: 3}
   canvas: {fileID: 0}
   RectPushPop: {fileID: 7161972215700324124, guid: 1381da20a7f6349438dc19f56e561b10, type: 3}
+  ColorButton: []
   isCanMakePush: 0
   isOnArea: 0
   puzzleBoard: {fileID: 1680650726}
@@ -12626,6 +12632,7 @@ MonoBehaviour:
   result: {fileID: 1200535802}
   resultText: {fileID: 1575803356}
   resultImage: {fileID: 1971142195}
+  isCustomMode: 0
 --- !u!1 &674628023
 GameObject:
   m_ObjectHideFlags: 0
@@ -15859,10 +15866,10 @@ RectTransform:
   m_Father: {fileID: 79508709}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 200, y: -80}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &859425512
 MonoBehaviour:
@@ -18897,6 +18904,7 @@ MonoBehaviour:
   costom: {fileID: 653199146}
   pieceList: []
   atlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
+  DecorationPanel: {fileID: 0}
 --- !u!224 &996538355
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19546,7 +19554,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1024729422
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19625,9 +19633,6 @@ MonoBehaviour:
   memory_Canvas: {fileID: 23916801}
   Warning_Panel: {fileID: 363225159}
   back_Btn: {fileID: 930749352}
-  heartBox: {fileID: 79508708}
-  heartImage_List: []
-  score_Text: {fileID: 0}
 --- !u!1 &1025986522
 GameObject:
   m_ObjectHideFlags: 0
@@ -19895,10 +19900,10 @@ RectTransform:
   m_Father: {fileID: 79508709}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 315, y: -80}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1033251003
 MonoBehaviour:
@@ -26083,10 +26088,10 @@ RectTransform:
   m_Father: {fileID: 79508709}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 85, y: -80}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1344833756
 MonoBehaviour:
@@ -34815,7 +34820,6 @@ MonoBehaviour:
   _profileImage: {fileID: 334612751}
   _imageIndex: -1
   SelectName: {fileID: 620436293}
-  PreviousName: 
   _isImageSelect: 0
   _isUpdate: 0
 --- !u!114 &1878190846
@@ -40184,18 +40188,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c26053256305ff84b99ac1d150a19a3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PopParent: {fileID: 0}
   pushPopCanvas: {fileID: 0}
   pushPopButtonPrefab: {fileID: 7161972215700324124, guid: 1381da20a7f6349438dc19f56e561b10, type: 3}
   boardPrefabUI: {fileID: 6080136693297342902, guid: e2c99a2b45e46b34eb39a7934886813e, type: 3}
+  pushPopBoardUIObject: []
   pushPopSpriteAtlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
   boardPrefab: {fileID: 3633448892475870983, guid: b42c40511bead9941bc7f9901e85999e, type: 3}
   boardSprite: {fileID: 0}
   pushPopBoardObject: []
+  buttonCanvas: {fileID: 0}
   percentage: 0.5
   buttonSize: {x: 50, y: 50}
   PosPrefab: {fileID: 4701027180370166461, guid: 908e83bf5cbab784199690367c9362ca, type: 3}
   pushPopButton: []
   activePos: []
+  pushPopAni: {fileID: 0}
+  pushTurn: 1
 --- !u!1 &5550557446942374718
 GameObject:
   m_ObjectHideFlags: 0

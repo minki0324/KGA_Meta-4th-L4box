@@ -84,7 +84,7 @@ public class Set_Time : MonoBehaviour
         Confirm_Btn.onClick.AddListener(ConfirmBtn_Clicked);
         Back_Btn.onClick.AddListener(() => {
             gameObject.SetActive(false);
-            GameManager.Instance._gameMode = GameMode.None;
+            
 
         });
     }
@@ -162,7 +162,7 @@ public class Set_Time : MonoBehaviour
 
     public void ConfirmBtn_Clicked()
     {
-        GameManager.Instance.ShutdownTime = time;
+        //GameManager.Instance.ShutdownTime = time;
         if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
         { // Çª½ÃÇª½Ã ½ÃÀÛ
             pushpushMode_Canvas.SetActive(true);

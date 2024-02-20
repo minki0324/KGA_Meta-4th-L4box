@@ -12,10 +12,7 @@ public class Memory_Game : MonoBehaviour
     [SerializeField] GameObject Warning_Panel;
     [SerializeField] private Button back_Btn;
 
-    [Header("ปýธํทย")]
-    [SerializeField] private GameObject heartBox;
-    [SerializeField] private List<Image> heartImage_List;
-    [SerializeField] private TMP_Text score_Text;
+  
 
     #region Unity Callback
     private void OnEnable()
@@ -28,17 +25,7 @@ public class Memory_Game : MonoBehaviour
 
     private void Start()
     {
-        Init();
-    }
-
-
-
-    public void Init()
-    {
-        for(int i = 0; i< heartBox.transform.childCount; i++)
-        {
-            heartImage_List.Add(heartBox.transform.GetChild(i).GetComponent<Image>());
-        }
+      
     }
 
 

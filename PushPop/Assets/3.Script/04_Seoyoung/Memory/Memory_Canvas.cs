@@ -22,7 +22,7 @@ public class Memory_Canvas : MonoBehaviour
     [Header("패널")]
     [SerializeField] private Canvas main_Canvas;
     [SerializeField] private GameObject gameSet_Panel; 
-    [SerializeField] private GameObject memoryGame_Panel;
+    [SerializeField] private Canvas memoryGame_Canvas;
     [SerializeField] private Help_Canvas help_Canvas;
 
     [Header("개인 기록")] 
@@ -51,9 +51,9 @@ public class Memory_Canvas : MonoBehaviour
             gameSet_Panel.SetActive(true);
         }
 
-        if (memoryGame_Panel.activeSelf)
+        if (memoryGame_Canvas.gameObject.activeSelf)
         {
-            memoryGame_Panel.SetActive(false);
+            memoryGame_Canvas.gameObject.SetActive(false);
         }
         if(!help_Canvas.gameObject.activeSelf)
         {
@@ -92,7 +92,7 @@ public class Memory_Canvas : MonoBehaviour
         gameSet_Panel.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
 
-        memoryGame_Panel.SetActive(true);    
+        memoryGame_Canvas.gameObject.SetActive(true);    
     }
 
 

@@ -15,6 +15,7 @@ public class Help_Canvas : MonoBehaviour
     [SerializeField] private PushPush_Canvas pushpush_Canvas;
     [SerializeField] private Speed_Canvas speed_Canvas;
     [SerializeField] private Memory_Canvas memory_Canvas;
+    [SerializeField] private Bomb bomb_Canvas;
 
 
     [Header("도움말 창")]
@@ -91,7 +92,13 @@ public class Help_Canvas : MonoBehaviour
                 case Mode.Memory:
                     memory_Canvas.BackBtn_Clicked();
                     break;
+
+                case Mode.Bomb:
+                    bomb_Canvas.BackBtn_Clicked();
+                    break;
             }
+
+            mainCanvas.gameObject.SetActive(true);
         }
  
     }
@@ -123,6 +130,9 @@ public class Help_Canvas : MonoBehaviour
                     memory_Canvas.DisalbeObjects();
                     break;
 
+                case Mode.Bomb:
+
+                    break;
             }
         }
     }

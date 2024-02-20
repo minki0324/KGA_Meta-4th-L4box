@@ -37,6 +37,7 @@ public class Main_Button : MonoBehaviour
     private void OnEnable()
     {
         Enable_Button();
+        help_Cavas.gameObject.SetActive(false);
     }
     #endregion
 
@@ -45,8 +46,8 @@ public class Main_Button : MonoBehaviour
     //푸시푸시 모드 패널(버튼) 클릭 시 호출될 함수
     public void PushPushBtn_Clicked()
     {
-        pushMode_Canvas.gameObject.SetActive(true);
-        gameObject.SetActive(false);
+        _timesetPanel.SetActive(true);
+        Disable_Button();
     }
 
 
@@ -54,7 +55,7 @@ public class Main_Button : MonoBehaviour
     public void SpeedBtn_Clicked()
     {
         _timesetPanel.SetActive(true);
-        //Disable_Button();
+        Disable_Button();
     }
 
 
@@ -62,7 +63,7 @@ public class Main_Button : MonoBehaviour
     public void MemoryBtn_Clicked()
     {
         _timesetPanel.SetActive(true);
-       // Disable_Button();
+        Disable_Button();
     }
 
 
