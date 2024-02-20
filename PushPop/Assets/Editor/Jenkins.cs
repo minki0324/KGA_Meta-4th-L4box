@@ -23,7 +23,7 @@ public class Jenkins
         options.locationPathName = $"../Build/PushPop{PlayerSettings.bundleVersion}.apk";
         // 빌드 타겟
         options.target = BuildTarget.Android;
-
+        options.options = BuildOptions.None;
         // 빌드
         BuildPipeline.BuildPlayer(options);
     }
