@@ -21,6 +21,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Image playerImage1P = null;
     [SerializeField] private TMP_Text playerName1P = null;
     public List<GameObject> popList1P = new List<GameObject>();
+    [SerializeField] private TMP_Text inGameText1P = null;
+    [SerializeField] private Image inGameImage1P = null;
+    private bool Quit1P = false;
 
     [Header("2P Player")]
     public Image playerImage2P = null;
@@ -31,6 +34,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public bool isUpdate = false;
     public bool isSelect2P = false;
     public List<GameObject> popList2P = new List<GameObject>();
+    [SerializeField] private TMP_Text inGameText2P = null;
+    [SerializeField] private Image inGameImage2P = null;
+    private bool Quit2P = false;
 
     [Header("Profile Obj")]
     [SerializeField] private GameObject profilePanel = null;
@@ -60,7 +66,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Turn turn = new Turn();
     [SerializeField] private SpriteAtlas atlas = null;
     [SerializeField] private Sprite[] sprites = null;
-    [SerializeField] private float upperTimer = 10f;
+    [SerializeField] private float upperTimer = 12f;
     [SerializeField] private float bottomTimer = 60f;
     [SerializeField] private Vector2[] upperPos = new Vector2[2];
     [SerializeField] private Vector2[] bottomPos = new Vector2[2];
@@ -70,6 +76,14 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Image waterfall;
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private Sprite[] upperBubbleSprite;
+    [SerializeField] private Animator endAnimation;
+    [SerializeField] private GameObject result;
+
+    [Header("Other Component")]
+    [SerializeField] private Button[] quitBtn;
+    //waterfall 회전 변수들
+    private bool rotateDirection = true; // true면 회전 방향이 +, false면 회전 방향이 -
+    private float rotationZ = 0f; // 현재 Z 축 회전 각도
 
     private Coroutine log;
     private Coroutine waterfall_co;
@@ -85,6 +99,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // 버튼 사이즈 설정
         PushPop.Instance.buttonSize = new Vector2(90f, 90f);
         PushPop.Instance.percentage = 0.85f;
+
+        GameManager.Instance.GameStart();
     }
 
     private void OnEnable()
@@ -96,20 +112,17 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void Update()
     {
         if (!isStart) return;
-        if(upperTimer <= 0.1f)
-        { // 게임 끝
-            Debug.Log("게임 끝");
-            isStart = false;
-            return;
-        }
         else if(bottomTimer <= 0.1f)
         { // 게임 끝
-            Debug.Log("게임 끝");
-            isStart = false;
+            EndGame();
+            if(waterfall_co != null)
+            { // upperbubble 코루틴이 돌아가고 있다면 스탑
+                StopCoroutine(waterfall_co);
+            }
             return;
         }
         bottomTimer -= Time.deltaTime;
-        upperTimer -= Time.deltaTime;
+        
         timerText.text = $"남은시간\n{(int)bottomTimer}";
     }
 
@@ -393,7 +406,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     public void RepeatGameLogic()
-    {
+    { // 게임 로직 반복 Method
         switch(turn)
         {
             case Turn.Turn1P:
@@ -405,11 +418,19 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         }
         PosSetting();
         TurnSetting();
+        if(waterfall_co != null)
+        {
+            StopCoroutine(waterfall_co);
+        }
+        upperTimer = 12f;
+        waterfall_co = StartCoroutine(Waterfall_co());
     }
 
-    private void InitSetting()
+    public void InitSetting()
     { // 게임 초기 시작시 셋팅하는 Method
-        GameManager.Instance.GameStart();
+        // Timer 선언
+        upperTimer = 12f;
+        bottomTimer = 60f;
         // 상단의 Bubble의 위치를 랜덤으로 부여하여 해당 위치에 따라 어떤 플레이어가 먼저 시작할지 턴을 부여
         int randomPos = Random.Range(0, 2);
         upperBubble.transform.localPosition = upperPos[randomPos];
@@ -431,10 +452,32 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         Frame[1].transform.GetChild(0).transform.localPosition = bottomPos[1];
         isStart = true;
         TurnSetting();
+        waterfall_co = StartCoroutine(Waterfall_co());
+
+        // Profile Setting
+        inGameText1P.text = GameManager.Instance.ProfileName;
+        inGameText2P.text = GameManager.Instance.ProfileName2P;
+        if(GameManager.Instance.IsImageMode)
+        { // 1P 가 사진 찍기를 선택한 Player일 경우
+
+        }
+        else if(!GameManager.Instance.IsImageMode)
+        { // 1P 가 이미지 고르기를 선택한 Player일 경우
+            inGameImage1P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage];
+        }
+
+        if (GameManager.Instance.IsimageMode2P)
+        { // 2P 가 사진 찍기를 선택한 Player일 경우
+
+        }
+        else if (!GameManager.Instance.IsimageMode2P)
+        { // 2P 가 이미지 고르기를 선택한 Player일 경우
+            inGameImage1P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage2P];
+        }
     }
 
     private void PosSetting()
-    {
+    { // 턴 넘어갔을 때 각 포지션들 설정하는 Method
         if(turn.Equals(Turn.Turn1P))
         { // 1P 턴
             popList2P.Clear();
@@ -525,8 +568,108 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     private IEnumerator Waterfall_co()
-    {
+    { // 시간에 따라 bubble속의 waterfall의 sprite를 결정하고 uppertimer가 0보다 작아지면 게임 종료
+        waterfall.sprite = upperBubbleSprite[0]; // 방울의 sprite를 초기 상태로 변경
+
+        while (upperTimer > 0)
+        { // upperTimer가 0보다 클 때까지 반복
+            upperTimer -= Time.deltaTime; // upperTimer 감소
+
+            // upperTimer 값에 따라 waterfall의 sprite 변경
+            if (upperTimer < 2)
+            {
+                waterfall.sprite = upperBubbleSprite[5];
+            }
+            else if (upperTimer < 4)
+            {
+                waterfall.sprite = upperBubbleSprite[4];
+            }
+            else if (upperTimer < 6)
+            {
+                waterfall.sprite = upperBubbleSprite[3];
+            }
+            else if (upperTimer < 8)
+            {
+                waterfall.sprite = upperBubbleSprite[2];
+            }
+            else if (upperTimer < 10)
+            {
+                waterfall.sprite = upperBubbleSprite[1];
+            }
+
+            // Z 축 회전 처리
+            if (rotateDirection)
+            {
+                rotationZ += Time.deltaTime * 30; // 속도 조절
+                if (rotationZ > 15)
+                {
+                    rotateDirection = !rotateDirection;
+                }
+            }
+            else
+            {
+                rotationZ -= Time.deltaTime * 30; // 속도 조절
+                if (rotationZ < -15)
+                {
+                    rotateDirection = !rotateDirection;
+                }
+            }
+
+            waterfall.transform.rotation = Quaternion.Euler(0, 0, rotationZ);
+
+            yield return null; // 다음 프레임까지 대기
+        }
+
+        // while문을 벗어났다면 upperTimer가 0보다 작아졌다는 것을 의미하기에 게임 종료
+        EndGame();
+    }
+
+    private void EndGame()
+    { // 게임이 종료됐을 때 Method
+        isStart = false;
+        endAnimation.transform.gameObject.SetActive(true);
+        if(turn.Equals(Turn.Turn1P))
+        {
+            endAnimation.transform.localPosition = bottomPos[0];
+        }
+        else if (turn.Equals(Turn.Turn2P))
+        {
+            endAnimation.transform.localPosition = bottomPos[1];
+        }
+        endAnimation.SetTrigger("EndGame");
+        StartCoroutine(Result_Co());
+    }
+
+    private IEnumerator Result_Co()
+    { // 결과창 출력 코루틴
+        yield return new WaitForSeconds(1.2f);
+        result.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        // 오브젝트들 삭제
+        ResetGame();
         yield return null;
+    }
+
+    private void QuitGame()
+    { // 중간에 게임 나갔을 때 Method
+        isStart = false;
+        for(int i = 0; i < quitBtn.Length; i++)
+        {
+            quitBtn[i].interactable = true;
+        }
+        Quit1P = false;
+        Quit2P = false;
+        // 오브젝트 삭제
+        ResetGame();
+    }
+
+    private void ResetGame()
+    { // 오브젝트들 삭제하는 메소드
+        endAnimation.transform.gameObject.SetActive(false);
+        popList1P.Clear();
+        popList2P.Clear();
+        Destroy(Frame[0].transform.GetChild(0).gameObject);
+        Destroy(Frame[1].transform.GetChild(0).gameObject);
     }
     #endregion
     private IEnumerator PrintLog_co(GameObject errorlog)
@@ -537,6 +680,28 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
         errorlog.SetActive(false);
         log = null;
+    }
+
+    public void QuitBtn(int _player)
+    { // 매개변수 0은 1P / 1은 2P
+        if(_player.Equals(0))
+        {
+            Quit1P = true;
+            quitBtn[0].interactable = false;
+        }
+        else if (_player.Equals(1))
+        {
+            Quit2P = true;
+            quitBtn[1].interactable = false;
+        }
+
+        if(Quit1P && Quit2P)
+        {
+            QuitGame();
+            result.SetActive(false);
+            GamePanel.SetActive(false);
+            MainPanel.SetActive(true);
+        }
     }
     #endregion
 }
