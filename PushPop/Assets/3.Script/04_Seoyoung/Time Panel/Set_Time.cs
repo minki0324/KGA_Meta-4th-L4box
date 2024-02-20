@@ -41,7 +41,7 @@ public class Set_Time : MonoBehaviour
     {
         time = 300;
         Calculate_Time();
-        main_Button.Disable_Button();
+        /*main_Button.Disable_Button();*/
     }
 
     private void Start()
@@ -52,7 +52,7 @@ public class Set_Time : MonoBehaviour
 
     private void OnDisable()
     {
-        main_Button.Enable_Button();
+        /*main_Button.Enable_Button();*/
     }
 
     private void Update()

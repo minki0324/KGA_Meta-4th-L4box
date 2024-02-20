@@ -30,24 +30,19 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        switch (GameManager.Instance.gameMode)
-        {
-            case Mode.PushPush:
-                PushPopClick();
-                break;
-            case Mode.Memory:
-                break;
-        }
+        PushPopClick();
     }
 
     // Push Pop Button click method
     public void PushPopClick()
     {
+        Debug.Log("왜지");
         GameObject clickButton = this.gameObject;
-        if (GameManager.Instance.gameMode.Equals(Mode.PushPush)) {
+        if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
+        {
             PushPop.Instance.pushPopButton.Remove(clickButton);
         }
-        if(GameManager.Instance.gameMode.Equals(Mode.Bomb))
+        if (GameManager.Instance.gameMode.Equals(Mode.Bomb))
         {
             if (player.Equals(0))
             { // 1P 소유 팝 버튼
@@ -58,11 +53,11 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
                 GameManager.Instance.bombScript.popList2P.Remove(clickButton);
             }
         }
-        GameManager.Instance.GameClear();
         if (clickButton.GetComponent<Button>().interactable)
         {
             GameManager.Instance.buttonActive--;
             clickButton.GetComponent<Button>().interactable = false;
         }
+        GameManager.Instance.GameClear();
     }
 }

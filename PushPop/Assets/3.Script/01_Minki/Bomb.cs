@@ -98,7 +98,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
         // 버튼 사이즈 설정
         PushPop.Instance.buttonSize = new Vector2(90f, 90f);
-        PushPop.Instance.percentage = 0.85f;
+        PushPop.Instance.percentage = 0.8f;
 
         GameManager.Instance.GameStart();
     }
@@ -662,6 +662,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // Bool값 초기화
         Quit1P = false;
         Quit2P = false;
+
+        if(waterfall_co != null)
+        {
+            StopCoroutine(waterfall_co);
+        }
     }
     #endregion
     private IEnumerator PrintLog_co(GameObject errorlog)

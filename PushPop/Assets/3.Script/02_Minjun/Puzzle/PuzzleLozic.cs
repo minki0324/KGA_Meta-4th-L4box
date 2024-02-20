@@ -69,7 +69,7 @@ public class PuzzleLozic : MonoBehaviour
 
                 //클리어카운트는 퍼즐갯수 (Sprite)
                 ClearCount = currentPuzzle.sprites.Length;
-                // SettingPuzzle();
+                //SettingPuzzle();
                 break;
             }
         }
@@ -102,7 +102,6 @@ public class PuzzleLozic : MonoBehaviour
     {//퍼즐생성
         GameObject board = null;
         board = Instantiate(puzzle, position, Quaternion.identity, FrameParent.transform);
-
         PuzzleSetting(board, puzzleSprite);
         //newPiecePuzle
         if(_isPiece)
@@ -122,7 +121,7 @@ public class PuzzleLozic : MonoBehaviour
     {//UI 캔버스에 상속, 정해진 사진으로 넣어주기 , 사진크기 세팅.
         Image frameImage = puzzle.GetComponent<Image>(); 
         frameImage.sprite = sprite; //퍼즐 사진넣기
-        frameImage.preserveAspect =true; //사진사이즈 세팅
+        frameImage.preserveAspect = true; //사진사이즈 세팅
     }
     private void DestroyChildren()
     {//퍼즐을 완료했을때 생성되있던 퍼즐 삭제하기위한 메소드

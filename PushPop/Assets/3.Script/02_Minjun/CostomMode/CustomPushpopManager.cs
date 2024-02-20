@@ -39,10 +39,12 @@ public class CustomPushpopManager : MonoBehaviour
     private void OnEnable()
     {
         onCustomEnd += DisableThisComponent;//Ä¿½ºÅÒ¸ðµå Á¾·á½Ã ÄÄÆ÷³ÍÆ® ²ô±â
+        onCustomEnd += SetActiveCount;
     }
     private void OnDisable()
     {
         onCustomEnd -= DisableThisComponent; //Ä¿½ºÅÒ¸ðµå Á¾·á½Ã ÄÄÆ÷³ÍÆ® ²ô±â
+        onCustomEnd -= SetActiveCount;
     }
   
     public void DestroyNewPush()
@@ -58,6 +60,11 @@ public class CustomPushpopManager : MonoBehaviour
             return;
         }
     }
+    public void SetActiveCount()
+    {
+        GameManager.Instance.buttonActive = StackPops.Count;
+    }
+
     public void DisableThisComponent()
     {
         this.enabled = false;
