@@ -102,7 +102,6 @@ public class GameManager : MonoBehaviour, IGameMode
 
     [Header("Speed Mode")]
     public float count = 0.25f;
-    private bool isFirst = true;
 
     #region Unity Callback
     private void Awake()
@@ -146,7 +145,6 @@ public class GameManager : MonoBehaviour, IGameMode
         TimeScore = 0;
         buttonActive = 0;
         count = 0.25f;
-        isFirst = true;
 
         timer = StartCoroutine(GameReady_Co()); // Game 시작 전 대기
 
@@ -230,7 +228,6 @@ public class GameManager : MonoBehaviour, IGameMode
                     }
                     else
                     {
-                        // animation
                         StartCoroutine(PushPushCreate_Co());
                     }
                     break;
@@ -250,10 +247,9 @@ public class GameManager : MonoBehaviour, IGameMode
     {
         // animation
         Animator pushAni = PushPop.Instance.pushPopAni.GetComponent<Animator>();
-        pushAni.SetBool("isTurn", PushPop.Instance.pushTurn);
+        pushAni.SetTrigger("Turning");
 
-        yield return new WaitForSeconds(1.5f);
-        Debug.Log("?");
+        yield return new WaitForSeconds(2f);
 
         PushPop.Instance.pushTurn = !PushPop.Instance.pushTurn;
         bubblePos.Clear();
@@ -319,15 +315,7 @@ public class GameManager : MonoBehaviour, IGameMode
         PushPop.Instance.CreatePushPopBoard();
         PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
         PushPop.Instance.PushPopButtonSetting();
-        if (isFirst)
-        {
-            buttonActive = PushPop.Instance.activePos.Count - 1;
-            isFirst = false;
-        }
-        else
-        {
-            buttonActive = PushPop.Instance.activePos.Count;
-        }
+        buttonActive = PushPop.Instance.activePos.Count - 1;
     }
 
     public void MemoryMode()

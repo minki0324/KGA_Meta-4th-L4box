@@ -3,14 +3,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public enum Boundary
-{
-    Left = 0,
-    Right,
-    Up,
-    Bottom
-}
-
 public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 { // bubble prefab's script
     private Mode gameMode;
@@ -19,8 +11,6 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     private Vector2 bubbleSize = Vector2.zero;
     public int touchCount = 0;
     
-
-
     [Header("Move Parameter")]
     // Bubble moving
     private Coroutine moveCoroutine = null;
@@ -188,23 +178,24 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
             if (0f + (bubbleSize.x * bubbleScale / 2f) > transform.position.x)
             { // boundary left
                 _dir = Vector2.Reflect(_dir, Vector2.right).normalized;
-                transform.position = new Vector2((bubbleSize.x * bubbleScale / 2f) + 10f, transform.position.y);
+                transform.parent.position = new Vector2((bubbleSize.x * bubbleScale / 2f) + 10f, transform.position.y);
             }
             else if (transform.position.x > Screen.width - (bubbleSize.x * bubbleScale / 2f))
             { // boundary right
                 _dir = Vector2.Reflect(_dir, Vector2.left).normalized;
-                transform.position = new Vector2(Screen.width - ((bubbleSize.x * bubbleScale / 2f) + 10f), transform.position.y);
+                transform.parent.position = new Vector2(Screen.width - ((bubbleSize.x * bubbleScale / 2f) + 10f), transform.position.y);
             }
             else if (0f + (bubbleSize.y * bubbleScale / 2f) > transform.position.y)
             { // boundary bottom
                 _dir = Vector2.Reflect(_dir, Vector2.up).normalized;
-                transform.position = new Vector2(transform.position.x, (bubbleSize.y * bubbleScale / 2f) + 10f);
+                transform.parent.position = new Vector2(transform.position.x, (bubbleSize.y * bubbleScale / 2f) + 10f);
             }
             else if (transform.position.y > Screen.height - (bubbleSize.y * bubbleScale / 2f))
             { // boundary up
                 _dir = Vector2.Reflect(_dir, Vector2.down).normalized;
-                transform.position = new Vector2(transform.position.x, Screen.height - ((bubbleSize.y * bubbleScale / 2f) + 10f));
+                transform.parent.position = new Vector2(transform.position.x, Screen.height - ((bubbleSize.y * bubbleScale / 2f) + 10f));
             }
+
             transform.parent.Translate(_dir * (Time.deltaTime * currentSpeed * speedRate)); // bubble move
 
             // moving lerp

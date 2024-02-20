@@ -29,7 +29,10 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
         GameObject clickButton = this.gameObject;
         // PushPop.Instance.pushPopButton.Remove(clickButton);
         GameManager.Instance.GameClear();
-        clickButton.GetComponent<Button>().interactable = false;
-        GameManager.Instance.buttonActive--;
+        if (clickButton.GetComponent<Button>().interactable)
+        {
+            GameManager.Instance.buttonActive--;
+            clickButton.GetComponent<Button>().interactable = false;
+        }
     }
 }

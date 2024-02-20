@@ -102,14 +102,15 @@ public class PushPop : MonoBehaviour
         float scale = Mathf.Min(boardRect.width / boardSprite.textureRect.size.x, boardRect.width / boardSprite.textureRect.size.y) * 0.95f;
         pushObject.transform.localScale = new Vector3(scale, scale, 1f);
         if (!pushTurn)
-        {
+        { // image flip
+            boardSizeUI.localScale = new Vector3(-1, 1, 1);
             pushObject.transform.rotation = Quaternion.Euler(0, 180f, 0);
+            Debug.Log("Rot: " + pushPopBoard.transform.rotation);
         }
         // polygon collider setting
         pushObject.AddComponent<PolygonCollider2D>();
         boardCollider = pushObject.GetComponent<PolygonCollider2D>();
         pushPopBoardObject.Add(pushObject);
-        
     }
 
     // pushpop button 생성할 grid
@@ -150,7 +151,6 @@ public class PushPop : MonoBehaviour
         {
             if (!_pos[i].activeSelf) // 기존 button이 활성화 되어있지 않다면 true
             {
-                Debug.Log("objectpooling");
                 _pos[i].SetActive(true);
                 return;
             }
