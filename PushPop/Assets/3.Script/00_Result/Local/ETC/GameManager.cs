@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour, IGameMode
 
     [Header("GameScript")]
     [SerializeField] private CostomPushpopManager pushpushScript;
+    public Bomb bombScript;
 
     // Bubble
     [Header("Bubble Info")]
@@ -102,6 +103,12 @@ public class GameManager : MonoBehaviour, IGameMode
 
     [Header("Speed Mode")]
     public float count = 0.25f;
+    
+    [Header("2P Player")]
+    public string ProfileName2P = string.Empty;
+    public int ProfileIndex2P = 0;
+    public int DefaultImage2P = 0;
+    public bool IsimageMode2P = true;
 
     #region Unity Callback
     private void Awake()
@@ -159,6 +166,7 @@ public class GameManager : MonoBehaviour, IGameMode
             case Mode.Memory:
                 break;
             case Mode.Bomb:
+                BombMode();
                 break;
         }
     }
@@ -175,7 +183,15 @@ public class GameManager : MonoBehaviour, IGameMode
     public void GameClear()
     { // Game End 시 호출하는 method
         // button active check
-        if (buttonActive == 0)
+        if(gameMode.Equals(Mode.Bomb))
+        {
+            if(bombScript.popList1P.Count.Equals(0) || bombScript.popList2P.Count.Equals(0))
+            {
+                bombScript.RepeatGameLogic();
+                return;
+            }
+        }
+        else if (buttonActive == 0)
         {
             switch (gameMode)
             {
@@ -190,10 +206,15 @@ public class GameManager : MonoBehaviour, IGameMode
                         Debug.Log("pop : " + pop);
                         Debug.Log("pop.spriteIndex : " + pop.spriteIndex);
                         spriteIndexs[i] = pop.spriteIndex;
-                        childPos[i] = pop.gameObject.transform.position;
+                        childPos[i] = pop.gameObject.transform.localPosition;
                     }
 
                     PushPushObject newPush = new PushPushObject(puzzleLogic.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
+                    string json = JsonUtility.ToJson(newPush);
+                    SQL_Manager.instance.SQL_AddPushpush(json, ProfileIndex);
+
+                    
+
                     pushpushScript.result.SetActive(true);
                     //출력
                     pushpushScript.resultText.text = Mold_Dictionary.instance.icon_Dictionry[puzzleLogic.currentPuzzle.PuzzleID];
@@ -232,6 +253,9 @@ public class GameManager : MonoBehaviour, IGameMode
                     {
                         StartCoroutine(PushPushCreate_Co());
                     }
+                    break;
+                case Mode.Bomb:
+
                     break;
             }
 
@@ -325,6 +349,7 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public void BombMode()
     {
+        BoardSize = new Vector2(600f, 600f);
         // 상단 배치
 
         // 게임 보드에 배치
@@ -341,8 +366,8 @@ public class GameManager : MonoBehaviour, IGameMode
         _puzzle.GetComponent<Image>().raycastTarget = false;
         _puzzle.GetComponent<RectTransform>().sizeDelta = BoardSize;
         //_puzzle.SetParent(bubble.transform);
-        /*bubble.touchCount = 1; */
-        bubble.touchCount = Random.Range(2, 10); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
+        bubble.touchCount = 1;
+        /*bubble.touchCount = Random.Range(2, 10); */// 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
     }
 
     /// <summary>
