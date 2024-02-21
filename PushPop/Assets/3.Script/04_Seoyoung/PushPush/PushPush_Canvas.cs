@@ -299,9 +299,9 @@ public class PushPush_Canvas : MonoBehaviour
         SelectedMold = selectedMoldIcon_Image.sprite;
 
         //pushpushGame_Panel.SetActive(true);
-        /*selectCategory_Panel.SetActive(false);
+        selectCategory_Panel.SetActive(false);
         selectMold_Panel.SetActive(false);
-        help_Canvas.gameObject.SetActive(false);*/
+        help_Canvas.gameObject.SetActive(false);
         //PushPush 게임 진입
         int puzzleIDIndex = int.Parse(moldIcon_List[currentPage - 1].name);
         puzzleLozic.SelectPuzzleButton(puzzleIDIndex);

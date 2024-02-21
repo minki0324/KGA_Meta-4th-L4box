@@ -11,6 +11,7 @@ public class Speed_Timer : MonoBehaviour
 
     [Header("패널")]
     [SerializeField] private GameObject SelectDifficulty_Panel;
+    [SerializeField] private GameObject Warning_Panel;
 
     [Header("타이머")]
     [SerializeField] private TMP_Text time_Text;
@@ -49,16 +50,13 @@ public class Speed_Timer : MonoBehaviour
         //타이머 코루틴 시작
         timer = StartCoroutine(Timer_co());
         // StartCoroutine(SliderLerp_co());
+
+        if(Warning_Panel.activeSelf)
+        {
+            Warning_Panel.SetActive(false);
+        }
     }
 
-    public void BackBtn_Clicked()
-    {
-        help_Canvas.gameObject.SetActive(true);
-        SelectDifficulty_Panel.SetActive(true);
-        speed_Canvas.Enable_Objects();
-
-        gameObject.SetActive(false);
-    }
 
     #endregion
 
@@ -93,5 +91,28 @@ public class Speed_Timer : MonoBehaviour
         min = currentTime / 60;
         time_Text.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
     }
+
+    public void BackBtn_Clicked()
+    {
+        Time.timeScale = 0;
+        Warning_Panel.SetActive(true);
+    }
+
+    public void GoOutBtn_Clicked()
+    {
+        Time.timeScale = 1;
+        help_Canvas.gameObject.SetActive(true);
+        SelectDifficulty_Panel.SetActive(true);
+        speed_Canvas.Enable_Objects();
+        Warning_Panel.SetActive(false);
+        gameObject.SetActive(false);
+    }
+
+    public void CancelBtn_Clicked()
+    {
+        Time.timeScale = 1;
+        Warning_Panel.SetActive(false);
+    }
+
     #endregion
 }

@@ -27,10 +27,7 @@ public class Main_Button : MonoBehaviour
   
 
     [Header("모드별 캔버스")]
-    [SerializeField] private Canvas pushMode_Canvas;
-    [SerializeField] private Canvas speedMode_Canvas;
-    [SerializeField] private Canvas memoryMode_Canvas;
-    [SerializeField] private Canvas Background_Canvas;  //도움말 & 뒤로가기 버튼 캔버스
+
     [SerializeField] private Help_Canvas help_Cavas;
 
     #region Unity Callback

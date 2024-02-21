@@ -6,9 +6,12 @@ using TMPro;
 
 public class Memory_Game : MonoBehaviour
 {
-    [Header("뒤로가기")]
-    [SerializeField] Canvas main_Canvas;
+    [Header("캔버스")]   
     [SerializeField] Canvas memory_Canvas;
+    [SerializeField] Help_Canvas help_Canvas;
+
+    [Header("패널")]
+    [SerializeField] GameObject gameSet_Panel;
     [SerializeField] GameObject Warning_Panel;
     [SerializeField] private Button back_Btn;
 
@@ -45,8 +48,11 @@ public class Memory_Game : MonoBehaviour
     {
         back_Btn.interactable = true;
 
-        main_Canvas.gameObject.SetActive(true);
-        memory_Canvas.gameObject.SetActive(false);
+        gameSet_Panel.SetActive(true);
+        help_Canvas.gameObject.SetActive(true);
+
+        Warning_Panel.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     //나가기 경고 패널의 취소 버튼 클릭 시 호출되는 메소드

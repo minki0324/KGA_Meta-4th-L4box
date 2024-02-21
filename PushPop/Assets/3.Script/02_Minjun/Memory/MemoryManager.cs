@@ -111,8 +111,8 @@ public class MemoryManager : MonoBehaviour
         //스코어초기화
         ResetScore();
         //메모리 로비로 나가기
-        StartCoroutine(ExitToLobby());
-        //SQL_Manager.instance.SQL_ProfileListSet()
+        //StartCoroutine(ExitToLobby());
+        SQL_Manager.instance.SQL_ProfileListSet();
     }
     private IEnumerator ExitToLobby()
     {

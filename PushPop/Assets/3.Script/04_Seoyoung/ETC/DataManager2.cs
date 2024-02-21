@@ -205,7 +205,6 @@ public class DataManager2 : MonoBehaviour
         File.WriteAllText(path + "/" + iconDict_fileName, jsonData.ToString());
     }
 
-
     public void Read_HelpScript()
     {
         //도움말 스크립트 읽어오는 함수

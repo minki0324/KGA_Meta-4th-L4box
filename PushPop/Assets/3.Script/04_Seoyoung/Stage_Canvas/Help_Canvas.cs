@@ -131,7 +131,7 @@ public class Help_Canvas : MonoBehaviour
                     break;
 
                 case Mode.Bomb:
-
+                    bomb_Canvas.Disable_Objects();
                     break;
             }
         }
@@ -164,7 +164,7 @@ public class Help_Canvas : MonoBehaviour
                     break;
 
                 case Mode.Bomb:
-
+                    bomb_Canvas.Enable_Objects();
                     break;
             }
 

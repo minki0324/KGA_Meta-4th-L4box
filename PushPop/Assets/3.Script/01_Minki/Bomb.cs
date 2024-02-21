@@ -83,6 +83,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     [Header("Other Component")]
     [SerializeField] private Button[] quitBtn;
+    [SerializeField] private Button profileBtn;
+    [SerializeField] private Button gameStartBtn;
     //waterfall 회전 변수들
     private bool rotateDirection = true; // true면 회전 방향이 +, false면 회전 방향이 -
     private float rotationZ = 0f; // 현재 Z 축 회전 각도
@@ -722,6 +724,18 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         CurrentProfile.SetActive(false);
         SelectProfile.SetActive(false);
         gameObject.SetActive(false);
+    }
+
+    public void Enable_Objects()
+    {
+        gameStartBtn.interactable = true;
+        profileBtn.interactable = true;
+    }
+
+    public void Disable_Objects()
+    {
+        gameStartBtn.interactable = false;
+        profileBtn.interactable = false;
     }
     #endregion
 }
