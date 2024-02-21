@@ -36,7 +36,6 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
     // Push Pop Button click method
     public void PushPopClick()
     {
-        Debug.Log("¿ÖÁö");
         GameObject clickButton = this.gameObject;
         if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
         {

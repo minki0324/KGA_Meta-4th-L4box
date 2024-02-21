@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour, IGameMode
     [SerializeField] private float bubbleSize;
 
     [SerializeField] private Transform[] pos = new Transform[4]; // pushpush, speed, bomb1, bomb2
-    private List<Transform> bubblePos = new List<Transform>(); // Mode에 따라 달라짐
+    public List<Transform> bubblePos = new List<Transform>(); // Mode에 따라 달라짐
 
     [Header("PushPop Info")]
     public Sprite moldIcon = null;

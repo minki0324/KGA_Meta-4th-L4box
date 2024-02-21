@@ -13,99 +13,101 @@ public enum Turn
 }
 
 /// <summary>
-/// 2ÀÎ ¸ğµå(ÆøÅº µ¹¸®±â) °ü·Ã Class
+/// 2ì¸ ëª¨ë“œ(í­íƒ„ ëŒë¦¬ê¸°) ê´€ë ¨ Class
 /// </summary>
 public class Bomb : MonoBehaviour, IPointerClickHandler
 {
+    [SerializeField] private GameObject changeBtn; // Backë²„íŠ¼ì„ ëª¨ë“  ëª¨ë“œ í†µí•©ìœ¼ë¡œ ì¨ì„œ ... ìŠ¤í¬ë¦½íŠ¸ë¡œ ë„ë ¤ë©´ ì°¸ì¡°í• ìˆ˜ë°–ì— ì—†ì,,
+    [SerializeField] private GameObject selectBtn;// Backë²„íŠ¼ì„ ëª¨ë“  ëª¨ë“œ í†µí•©ìœ¼ë¡œ ì¨ì„œ ... ìŠ¤í¬ë¦½íŠ¸ë¡œ ë„ë ¤ë©´ ì°¸ì¡°í• ìˆ˜ë°–ì— ì—†ì,,
+
     [Header("1P Player")]
-    [SerializeField] private Image playerImage1P = null;
-    [SerializeField] private TMP_Text playerName1P = null;
-    public List<GameObject> popList1P = new List<GameObject>();
-    [SerializeField] private TMP_Text inGameText1P = null;
-    [SerializeField] private Image inGameImage1P = null;
-    public bool Quit1P = false;
+    [SerializeField] private Image playerImage1P = null;    // ë¡œë¹„ì—ì„œ ë³´ì´ëŠ” 1P Image
+    [SerializeField] private TMP_Text playerName1P = null;  // ë¡œë¹„ì—ì„œ ë³´ì´ëŠ” 1P Name
+    public List<GameObject> popList1P = new List<GameObject>(); // 1Pì˜ Pushpop List
+    [SerializeField] private Image inGameImage1P = null;    // ê²Œì„ í™”ë©´ì—ì„œ ë³´ì´ëŠ” 1P Image
+    [SerializeField] private TMP_Text inGameText1P = null;  // ê²Œì„ í™”ë©´ì—ì„œ ë³´ì´ëŠ” 1P Name
+    private bool Quit1P = false;    // ê²Œì„ í™”ë©´ì—ì„œ ë’¤ë¡œê°€ê¸° ë²„íŠ¼ 1P
 
     [Header("2P Player")]
-    public Image playerImage2P = null;
-    public Image tempPlayerImage2P = null;
-    public TMP_Text playerName2P = null;
-    public TMP_Text tempPlayerName2P = null;
-    public bool isImageSelect = false;
-    public bool isUpdate = false;
-    public bool isSelect2P = false;
-    public List<GameObject> popList2P = new List<GameObject>();
-    [SerializeField] private TMP_Text inGameText2P = null;
-    [SerializeField] private Image inGameImage2P = null;
-    public bool Quit2P = false;
+    public Image playerImage2P = null;    // ë¡œë¹„ì—ì„œ ë³´ì´ëŠ” 2P Image
+    public Image tempPlayerImage2P = null;  // í”„ë¡œí•„ ì„ íƒ íŒë„¬ì—ì„œ ë³´ì´ëŠ” 2P Image
+    public TMP_Text playerName2P = null;    // ë¡œë¹„ì—ì„œ ë³´ì´ëŠ” 2P Name
+    public TMP_Text tempPlayerName2P = null;    // í”„ë¡œí•„ ì„ íƒ íŒë„¬ì—ì„œ ë³´ì´ëŠ” 2P Name
+    public bool isImageSelect = false;  // ì´ë¯¸ì§€ ê³ ë¥´ê¸°ì—ì„œ ì•„ì´ì½˜ì„ ì„ íƒ í–ˆëŠ”ì§€ 
+    public bool isUpdate = false;   // í”„ë¡œí•„ ìˆ˜ì •ëª¨ë“œì¸ì§€
+    public bool isSelect2P = false;     // 2P í”„ë¡œí•„ì´ ì„ íƒ ëëŠ”ì§€
+    public List<GameObject> popList2P = new List<GameObject>(); // 1Pì˜ Pushpop List
+    [SerializeField] private Image inGameImage2P = null;    // ê²Œì„ í™”ë©´ì—ì„œ ë³´ì´ëŠ” 2P Image
+    [SerializeField] private TMP_Text inGameText2P = null;  // ê²Œì„ í™”ë©´ì—ì„œ ë³´ì´ëŠ” 2P Name
+    private bool Quit2P = false;    // ê²Œì„ í™”ë©´ì—ì„œ ë’¤ë¡œê°€ê¸° ë²„íŠ¼ 2P
 
     [Header("Profile Obj")]
-    [SerializeField] private GameObject profilePanel = null;
-    [SerializeField] private Transform profileParent = null;
-    [SerializeField] private List<GameObject> profileList = new List<GameObject>();
-    [SerializeField] private string profile2PName = null;
-    [SerializeField] private TMP_InputField profile2PInput = null;
-    [SerializeField] private GameObject iconPanel = null;
-    [SerializeField] private GameObject checkPanel = null;
-    private int imageIndex = 0;
+    [SerializeField] private GameObject profilePanel = null;    // Profile Panel
+    [SerializeField] private Transform profileParent = null;    // Profile Panel Parent
+    [SerializeField] private List<GameObject> profileList = new List<GameObject>(); // Profile Panel List
+    [SerializeField] private string profile2PName = null;   // Profile Addì‹œ ê²Œì„ë§¤ë‹ˆì €ë‚˜ SQLë§¤ë‹ˆì €ì—ê²Œ ë³´ë‚´ì¤„ string ê°’
+    [SerializeField] private TMP_InputField profile2PInput = null;  // Profile Addí•˜ëŠ” Inputfield
+    [SerializeField] private GameObject iconPanel = null;   // ì´ë¯¸ì§€ ê³ ë¥´ê¸° í–ˆì„ ë•Œ ë‚˜ì˜¤ëŠ” ì•„ì´ì½˜ íŒë„¬
+    [SerializeField] private GameObject checkPanel = null;  // ì‚¬ì§„ ì°ê¸° í–ˆì„ ë•Œ ì²´í¬ íŒë„¬
+    private int imageIndex = 0; // ì´ë¯¸ì§€ ê³ ë¥´ê¸°ì˜ Icon Index
     private string imagePath = string.Empty;   // Camera Image Save Path
 
     [Header("Panel")]
-    public GameObject MainPanel = null;
-    public GameObject GamePanel = null;
-    public GameObject CreateImagePanel = null;    
-    public GameObject SelectProfile = null;
-    public GameObject CurrentProfile = null;
-    public GameObject help_Canvas = null;
-    public GameObject main_Canvas = null;
+    public GameObject MainPanel = null; // ê²Œì„ ë¡œë¹„
+    public GameObject GamePanel = null; // ê²Œì„ í™”ë©´
+    public GameObject CreateImagePanel = null;  // ì‚¬ì§„ ì°ê¸° íŒë„¬
+    public GameObject SelectProfile = null; // ì„ íƒ íŒë„¬
+    public GameObject CurrentProfile = null;    // ìµœì¢… í”„ë¡œí•„ íŒë„¬
+    public GameObject help_Canvas = null; // ì¶”í›„ êº¼ì£¼ê³  ì¼œì£¼ê³  í•˜ëŠ” ë¡œì§ë§Œ ëƒ…ë‘ê³  ì‚­ì œí•´ë„ ë  ë“¯ ?
+    public GameObject main_Canvas = null;   // ë©”ì¸ ìº”ë²„ìŠ¤
     public GameObject WarningPanel = null;
 
     [Header("ErrorLog")]
-    [SerializeField] private GameObject nameLog = null;
-    [SerializeField] private GameObject imageLog = null;
-    [SerializeField] private GameObject need2P = null;
+    [SerializeField] private GameObject nameLog = null; // í•œê¸€ë§Œ ì…ë ¥í•´ì£¼ì„¸ìš” ì—ëŸ¬ë¡œê·¸
+    [SerializeField] private GameObject imageLog = null;    // ì´ë¯¸ì§€ë¥¼ ì„ íƒí•´ì£¼ì„¸ìš” ì—ëŸ¬ë¡œê·¸
+    [SerializeField] private GameObject need2P = null;  // 2Pë¥¼ ì„ íƒí•´ì£¼ì„¸ìš” ì—ëŸ¬ë¡œê·¸
 
     [Header("BombGame")]
-    [SerializeField] private bool isStart = false;
-    [SerializeField] private Turn turn = new Turn();
-    [SerializeField] private SpriteAtlas atlas = null;
-    [SerializeField] private Sprite[] sprites = null;
-    [SerializeField] private float upperTimer = 12f;
-    [SerializeField] private float bottomTimer = 60f;
-    [SerializeField] private Vector2[] upperPos = new Vector2[2];
-    [SerializeField] private Vector2[] bottomPos = new Vector2[2];
-    [SerializeField] private GameObject upperBubble;
-    [SerializeField] private GameObject bottomBubble;
-    [SerializeField] private Transform[] Frame;
-    [SerializeField] private Image waterfall;
-    [SerializeField] private TMP_Text timerText;
-    [SerializeField] private Sprite[] upperBubbleSprite;
-    [SerializeField] private Animator endAnimation;
-    [SerializeField] private GameObject result;
+    [SerializeField] private bool isStart = false;  // ê²Œì„ ì‹œì‘ í–ˆëŠ”ì§€ íŒë‹¨í•˜ëŠ” Boolê°’
+    [SerializeField] private Turn turn = new Turn();    // Turn enum
+    [SerializeField] private SpriteAtlas atlas = null;  // spriteatlas
+    [SerializeField] private Sprite[] sprites = null;   // atlasì˜ spriteë“¤ ë°°ì—´
+    [SerializeField] private float upperTimer = 12f;    // ìœ„ ë°©ìš¸ì˜ ì œí•œì‹œê°„
+    [SerializeField] private float bottomTimer = 60f;   // ì „ì²´ ê²Œì„ì˜ ì œí•œì‹œê°„
+    [SerializeField] private Vector2[] upperPos = new Vector2[2];   // ìœ„ ë°©ìš¸ì˜ Pos
+    [SerializeField] private Vector2[] bottomPos = new Vector2[2];  // ì•„ë˜ ë°©ìš¸ì˜ Pos
+    [SerializeField] private GameObject upperBubble;    // ìœ„ ë°©ìš¸ ì˜¤ë¸Œì íŠ¸
+    [SerializeField] private GameObject bottomBubble;   // ì•„ë˜ ë°©ìš¸ ì˜¤ë¸Œì íŠ¸
+    [SerializeField] private Transform[] Frame; // Pushpop Boardê°€ ì†Œí™˜ë  Parent
+    [SerializeField] private Image waterfall;   // upperBubbleì•ˆì— ë“¤ì–´ìˆëŠ” ë¬¼ ì´ë¯¸ì§€
+    [SerializeField] private TMP_Text timerText;    // ì „ì²´ ì œí•œì‹œê°„ ì¶œë ¥ text
+    [SerializeField] private Sprite[] upperBubbleSprite;    // upperBubbleì— ë“¤ì–´ìˆëŠ” ë¬¼ ì´ë¯¸ì§€ë“¤ì˜ ë°°ì—´
+    [SerializeField] private Animator endAnimation; // ê²Œì„ ì¢…ë£Œí–ˆì„ ë•Œ ë‚˜ì˜¬ Animation
+    [SerializeField] private GameObject result; // ê²°ê³¼ì°½ Panel
 
     [Header("Other Component")]
-    [SerializeField] private Button[] quitBtn;
     [SerializeField] private Button profileBtn;
     [SerializeField] private Button gameStartBtn;
-    [SerializeField] private Sprite quitNormal_Sprite; //quit ¹öÆ° ¾È´­·ÈÀ» ¶§ ½ºÇÁ¶óÀÌÆ®
-    [SerializeField] private Sprite quitPressed_Sprite; //quit ¹öÆ° ´­·ÇÀ» ¶§ ½ºÇÁ¶óÀÌÆ®
+    [SerializeField] private Sprite quitNormal_Sprite; //quit ë²„íŠ¼ ì•ˆëˆŒë ¸ì„ ë•Œ ìŠ¤í”„ë¼ì´íŠ¸
+    [SerializeField] private Sprite quitPressed_Sprite; //quit ë²„íŠ¼ ëˆŒë ·ì„ ë•Œ ìŠ¤í”„ë¼ì´íŠ¸
+    [SerializeField] private Button[] quitBtn;  // ì–‘ìª½ì˜ ë‚˜ê°€ê¸° ë²„íŠ¼
 
+    //waterfall íšŒì „ ë³€ìˆ˜ë“¤
+    private bool rotateDirection = true; // trueë©´ íšŒì „ ë°©í–¥ì´ +, falseë©´ íšŒì „ ë°©í–¥ì´ -
+    private float rotationZ = 0f; // í˜„ì¬ Z ì¶• íšŒì „ ê°ë„
 
-    //waterfall È¸Àü º¯¼öµé
-    private bool rotateDirection = true; // true¸é È¸Àü ¹æÇâÀÌ +, false¸é È¸Àü ¹æÇâÀÌ -
-    private float rotationZ = 0f; // ÇöÀç Z Ãà È¸Àü °¢µµ
-
-    private Coroutine log;
-    private Coroutine waterfall_co;
+    private Coroutine log;  // ì—ëŸ¬ë¡œê·¸ ì½”ë£¨í‹´
+    private Coroutine waterfall_co; // ë¬¼ ì°¨ì˜¤ë¥´ëŠ” ì½”ë£¨í‹´
 
     #region Unity Callback
     private void Awake()
     {
-        // ÃÊ±â Sprite ¹è¿­ ¼¼ÆÃ
+        // ì´ˆê¸° Sprite ë°°ì—´ ì„¸íŒ…
         Sprite[] tempSprites = new Sprite[atlas.spriteCount];
         sprites = tempSprites;
         atlas.GetSprites(sprites);
 
-        // ¹öÆ° »çÀÌÁî ¼³Á¤
+        // ë²„íŠ¼ ì‚¬ì´ì¦ˆ ì„¤ì •
         PushPop.Instance.buttonSize = new Vector2(90f, 90f);
         PushPop.Instance.percentage = 0.8f;
 
@@ -132,17 +134,17 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     {
         if (!isStart) return;
         else if(bottomTimer <= 0.1f)
-        { // °ÔÀÓ ³¡
+        { // ê²Œì„ ë
             EndGame();
             if(waterfall_co != null)
-            { // upperbubble ÄÚ·çÆ¾ÀÌ µ¹¾Æ°¡°í ÀÖ´Ù¸é ½ºÅ¾
+            { // upperbubble ì½”ë£¨í‹´ì´ ëŒì•„ê°€ê³  ìˆë‹¤ë©´ ìŠ¤íƒ‘
                 StopCoroutine(waterfall_co);
             }
             return;
         }
         bottomTimer -= Time.deltaTime;
         
-        timerText.text = $"³²Àº½Ã°£\n{(int)bottomTimer}";
+        timerText.text = $"ë‚¨ì€ì‹œê°„\n{(int)bottomTimer}";
     }
 
     private void OnDisable()
@@ -170,13 +172,13 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     #region Other Method
     #region Profile
     private void PlayerSet1P()
-    { // º»ÀÎÀÇ ÇÁ·ÎÇÊÀ» Ãâ·ÂÇÏ´Â Method
+    { // ë³¸ì¸ì˜ í”„ë¡œí•„ì„ ì¶œë ¥í•˜ëŠ” Method
         if (GameManager.Instance.IsImageMode)
-        { // ÀÌ¹ÌÁö °í¸£±â ¼±ÅÃÇÑ ÇÃ·¹ÀÌ¾îÀÏ ¶§
+        { // ì´ë¯¸ì§€ ê³ ë¥´ê¸° ì„ íƒí•œ í”Œë ˆì´ì–´ì¼ ë•Œ
             playerImage1P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage];
         }
         else if(!GameManager.Instance.IsImageMode) 
-        { // »çÁø Âï±â¸¦ ¼±ÅÃÇÑ ÇÃ·¹ÀÌ¾îÀÏ ¶§
+        { // ì‚¬ì§„ ì°ê¸°ë¥¼ ì„ íƒí•œ í”Œë ˆì´ì–´ì¼ ë•Œ
             Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
             Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
             playerImage1P.sprite = profileSprite;
@@ -185,13 +187,13 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     public void Choice2P()
-    { // 2Player¸¦ ¼±ÅÃÇÏ´Â Btn ¿¬µ¿ Method
+    { // 2Playerë¥¼ ì„ íƒí•˜ëŠ” Btn ì—°ë™ Method
         if(GameManager.Instance.IsimageMode2P)
-        { // ÀÌ¹ÌÁö °í¸£±â ¼±ÅÃÇÑ ÇÃ·¹ÀÌ¾îÀÏ ¶§
+        { // ì´ë¯¸ì§€ ê³ ë¥´ê¸° ì„ íƒí•œ í”Œë ˆì´ì–´ì¼ ë•Œ
             playerImage2P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage2P];
         }
         else if(!GameManager.Instance.IsimageMode2P)
-        {// »çÁø Âï±â¸¦ ¼±ÅÃÇÑ ÇÃ·¹ÀÌ¾îÀÏ ¶§
+        {// ì‚¬ì§„ ì°ê¸°ë¥¼ ì„ íƒí•œ í”Œë ˆì´ì–´ì¼ ë•Œ
             Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
             Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
             playerImage2P.sprite = profileSprite;
@@ -201,11 +203,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     public void ImageSet(int index)
-    { // Profile¿¡ ³ÖÀ» Image ¼ÂÆÃÇÏ´Â Btn ¿¬µ¿ Method
+    { // Profileì— ë„£ì„ Image ì…‹íŒ…í•˜ëŠ” Btn ì—°ë™ Method
         if (!isUpdate)
-        { // Ã¹ µî·ÏÀÏ ¶§
+        { // ì²« ë“±ë¡ì¼ ë•Œ
             if (index.Equals(0))
-            { // »çÁø Âï±â ¹öÆ° ´­·¶À» ¶§
+            { // ì‚¬ì§„ ì°ê¸° ë²„íŠ¼ ëˆŒë €ì„ ë•Œ
                 imagePath = $"{Application.persistentDataPath}/Profile/{GameManager.Instance.UID}_{GameManager.Instance.ProfileIndex2P}.png";
                 SQL_Manager.instance.SQL_AddProfileImage($"{imagePath}", GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
 
@@ -214,9 +216,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
                 CreateImagePanel.SetActive(false);
             }
             else if (index.Equals(1))
-            { // ÀÌ¹ÌÁö °í¸£±â ¹öÆ° ´­·¶À» ¶§
+            { // ì´ë¯¸ì§€ ê³ ë¥´ê¸° ë²„íŠ¼ ëˆŒë €ì„ ë•Œ
                 if (!isImageSelect)
-                { // ÀÌ¹ÌÁö ¼±ÅÃÀ» ¾ÈÇßÀ» ¶§
+                { // ì´ë¯¸ì§€ ì„ íƒì„ ì•ˆí–ˆì„ ë•Œ
                     if (log != null)
                     {
                         StopCoroutine(log);
@@ -224,7 +226,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
                     log = StartCoroutine(PrintLog_co(imageLog));
                 }
                 else
-                { // ¼±ÅÃÇÑ ÀÌ¹ÌÁö°¡ ÀÖÀ» ¶§
+                { // ì„ íƒí•œ ì´ë¯¸ì§€ê°€ ìˆì„ ë•Œ
                     GameManager.Instance.IsimageMode2P = true;
                     AddProfile();
                     SQL_Manager.instance.SQL_AddProfileImage(imageIndex, GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
@@ -237,15 +239,15 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             }
         }
         else if (isUpdate)
-        { // ¼öÁ¤¸ğµåÀÏ ¶§
+        { // ìˆ˜ì •ëª¨ë“œì¼ ë•Œ
             if (index.Equals(0))
-            { // »çÁøÂï±â ¸ğµå ´­·¶À» ¶§
+            { // ì‚¬ì§„ì°ê¸° ëª¨ë“œ ëˆŒë €ì„ ë•Œ
 
             }
             else if (index.Equals(1))
-            { // ÀÌ¹ÌÁö °í¸£±â ¹öÆ° ´­·¶À» ¶§
+            { // ì´ë¯¸ì§€ ê³ ë¥´ê¸° ë²„íŠ¼ ëˆŒë €ì„ ë•Œ
                 if (isImageSelect)
-                { // ¼±ÅÃÇÑ ÀÌ¹ÌÁö°¡ ¾øÀ» ¶§
+                { // ì„ íƒí•œ ì´ë¯¸ì§€ê°€ ì—†ì„ ë•Œ
                     if (log != null)
                     {
                         StopCoroutine(log);
@@ -253,7 +255,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
                     log = StartCoroutine(PrintLog_co(imageLog));
                 }
                 else
-                { // ¼±ÅÃÇÑ ÀÌ¹ÌÁö°¡ ÀÖÀ» ¶§
+                { // ì„ íƒí•œ ì´ë¯¸ì§€ê°€ ìˆì„ ë•Œ
                     GameManager.Instance.IsimageMode2P = true;
                     AddProfile();
                     SQL_Manager.instance.SQL_UpdateProfile(GameManager.Instance.ProfileIndex2P, profile2PName, GameManager.Instance.UID, imageIndex);
@@ -268,35 +270,35 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // Profile List ¼ÂÆÃ ÈÄ Image, NameÀ» Ãâ·ÂÇÏ´Â Method (2P Mode, 1P·Î ¼³Á¤ÇØ³õÀº ÇÁ·ÎÇÊÀº Ãâ·Â X) 
+    // Profile List ì…‹íŒ… í›„ Image, Nameì„ ì¶œë ¥í•˜ëŠ” Method (2P Mode, 1Pë¡œ ì„¤ì •í•´ë†“ì€ í”„ë¡œí•„ì€ ì¶œë ¥ X) 
     public void PrintProfileList()
     {
-        // DB¿¡ UIDº°·Î ÀúÀåµÇ¾îÀÖ´Â ProfileµéÀ» SQL_Manager¿¡ List Up ÇØ³õÀ½
+        // DBì— UIDë³„ë¡œ ì €ì¥ë˜ì–´ìˆëŠ” Profileë“¤ì„ SQL_Managerì— List Up í•´ë†“ìŒ
         SQL_Manager.instance.SQL_ProfileListSet();
 
         for (int i = 0; i < profileList.Count; i++)
-        { // Ãâ·Â Àü ±âÁ¸¿¡ Ãâ·ÂµÇ¾î ÀÖ´Â List°¡ ÀÖ´Ù¸é ÃÊ±âÈ­
+        { // ì¶œë ¥ ì „ ê¸°ì¡´ì— ì¶œë ¥ë˜ì–´ ìˆëŠ” Listê°€ ìˆë‹¤ë©´ ì´ˆê¸°í™”
             Destroy(profileList[i].gameObject);
         }
         profileList.Clear();
 
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        { // SQL_Manager¿¡ Query¹®À» ÀÌ¿ëÇÏ¿© UID¿¡ ´ã±ä Profile¸¸Å­ List¸¦ ¼ÂÆÃÇÏ°í, ÇØ´ç ListÀÇ Count ¸¸Å­ Profile Panel »ı¼º
+        { // SQL_Managerì— Queryë¬¸ì„ ì´ìš©í•˜ì—¬ UIDì— ë‹´ê¸´ Profileë§Œí¼ Listë¥¼ ì…‹íŒ…í•˜ê³ , í•´ë‹¹ Listì˜ Count ë§Œí¼ Profile Panel ìƒì„±
             GameObject panel = Instantiate(profilePanel);
             panel.transform.SetParent(profileParent);
             profileList.Add(panel);
         }
 
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        { // PanelÀÇ Index º°·Î Profile_Information ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿Í¼­ name°ú image¸¦ Mode¿¡ ¸Â°Ô ¼ÂÆÃ
+        { // Panelì˜ Index ë³„ë¡œ Profile_Information ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì™€ì„œ nameê³¼ imageë¥¼ Modeì— ë§ê²Œ ì…‹íŒ…
             Profile_Information info = profileList[i].GetComponent<Profile_Information>();
             info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
             if (SQL_Manager.instance.Profile_list[i].imageMode)
-            { // ÀÌ¹ÌÁö ¼±ÅÃÀ¸·Î ¼³Á¤ ÇßÀ» °æ¿ì
+            { // ì´ë¯¸ì§€ ì„ íƒìœ¼ë¡œ ì„¤ì • í–ˆì„ ê²½ìš°
                 info.ProfileImage.sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
             }
             else
-            { // »çÁø Âï±â·Î ¼³Á¤ ÇßÀ» °æ¿ì
+            { // ì‚¬ì§„ ì°ê¸°ë¡œ ì„¤ì • í–ˆì„ ê²½ìš°
                 Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
                 Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
                 info.ProfileImage.sprite = profileSprite;
@@ -304,9 +306,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         }
 
         for(int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        { // ¼¼ÆÃÀ» ¸¶Ä£ ÈÄ º»ÀÎÀÇ ÇÁ·ÎÇÊÀº »èÁ¦
+        { // ì„¸íŒ…ì„ ë§ˆì¹œ í›„ ë³¸ì¸ì˜ í”„ë¡œí•„ì€ ì‚­ì œ
             if(GameManager.Instance.ProfileIndex == SQL_Manager.instance.Profile_list[i].index)
-            { // index = index·Î ¸ÅÄª ½ÃÄÑ³õÀº ·ÎÁ÷ Áß°£¿¡ ¿¹¿ÜÃ³¸®·Î »èÁ¦ÇÏ¸é index¿À·ù°¡ ³¯ °ÍÀ» ¿ì·ÁÇÏ¿© ¼¼ÆÃÀ» ´Ù ¸¶Ä£ ÈÄ º»ÀÎ ÇÁ·ÎÇÊ »èÁ¦
+            { // index = indexë¡œ ë§¤ì¹­ ì‹œì¼œë†“ì€ ë¡œì§ ì¤‘ê°„ì— ì˜ˆì™¸ì²˜ë¦¬ë¡œ ì‚­ì œí•˜ë©´ indexì˜¤ë¥˜ê°€ ë‚  ê²ƒì„ ìš°ë ¤í•˜ì—¬ ì„¸íŒ…ì„ ë‹¤ ë§ˆì¹œ í›„ ë³¸ì¸ í”„ë¡œí•„ ì‚­ì œ
                 Profile tempProfile = SQL_Manager.instance.Profile_list[i];
                 SQL_Manager.instance.Profile_list.Remove(tempProfile);
                 GameObject list = profileList[i];
@@ -317,29 +319,29 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
     
     public void Update_Profile()
-    { // Update Mode Bool°ª ¼³Á¤ Btn ¿¬µ¿ Method
+    { // Update Mode Boolê°’ ì„¤ì • Btn ì—°ë™ Method
         isUpdate = true;
     }
 
     public void DeleteProfile()
-    { // ÇÁ·ÎÇÊ »èÁ¦ Btn ¿¬µ¿ Method (2P)
+    { // í”„ë¡œí•„ ì‚­ì œ Btn ì—°ë™ Method (2P)
         SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileName2P, GameManager.Instance.ProfileIndex2P);
     }
 
     public void AddProfile()
-    { // Bomb ¸ğµå¿¡¼­ 2P ÇÁ·ÎÇÊ ¼±ÅÃ ½Ã Profile µî·ÏÇÏ´Â Btn ¿¬µ¿ Method
+    { // Bomb ëª¨ë“œì—ì„œ 2P í”„ë¡œí•„ ì„ íƒ ì‹œ Profile ë“±ë¡í•˜ëŠ” Btn ì—°ë™ Method
         int imageMode = -1;
         switch (GameManager.Instance.IsimageMode2P)
         {
-            case false: //  »çÁø Âï±â¸¦ ¼±ÅÃÇßÀ» ¶§
+            case false: //  ì‚¬ì§„ ì°ê¸°ë¥¼ ì„ íƒí–ˆì„ ë•Œ
                 imageMode = 0;
                 break;
-            case true:  //  Default ÀÌ¹ÌÁö¸¦ ¼±ÅÃÇßÀ» ¶§
+            case true:  //  Default ì´ë¯¸ì§€ë¥¼ ì„ íƒí–ˆì„ ë•Œ
                 imageMode = 1;
                 break;
         }
         if (!isUpdate)
-        { // Ã¹ µî·ÏÀÏ ¶§
+        { // ì²« ë“±ë¡ì¼ ë•Œ
             if (!string.IsNullOrWhiteSpace(profile2PName))
             {
                 GameManager.Instance.ProfileIndex2P = SQL_Manager.instance.SQL_AddProfile(profile2PName, imageMode);
@@ -353,27 +355,27 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             }
         }
         else if (isUpdate)
-        { // ¼öÁ¤ ÁßÀÏ ¶§
+        { // ìˆ˜ì • ì¤‘ì¼ ë•Œ
             SQL_Manager.instance.SQL_UpdateMode(imageMode, GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
         }
     }
 
     public void SendProfile()
-    { // Profile Add ÇÏ±â Àü InputField¿¡ ÀúÀåµÈ ÀÌ¸§À» º¯¼ö¿¡ ÀúÀåÇØÁÖ´Â Btn ¿¬µ¿ Method
+    { // Profile Add í•˜ê¸° ì „ InputFieldì— ì €ì¥ëœ ì´ë¦„ì„ ë³€ìˆ˜ì— ì €ì¥í•´ì£¼ëŠ” Btn ì—°ë™ Method
         profile2PName = profile2PInput.text;
         profile2PInput.text = string.Empty;
     }
 
     public void SelectImage(int index)
-    { // Profile Image Index¸¦ ÀúÀåÇÏ´Â Method
+    { // Profile Image Indexë¥¼ ì €ì¥í•˜ëŠ” Method
         imageIndex = index;
         isImageSelect = true;
     }
 
     public void DeleteBtnOpen()
-    { // »èÁ¦ ¹öÆ° List¸¸Å­ Ãâ·Â Btn ¿¬µ¿ Method
+    { // ì‚­ì œ ë²„íŠ¼ Listë§Œí¼ ì¶œë ¥ Btn ì—°ë™ Method
         if (profileList.Count > 0)
-        { // ÇÁ·ÎÇÊ ¸®½ºÆ®¿¡ ´ã±ä ProfilePanelÀÇ »èÁ¦ ¹öÆ°À» ²°´Ù ÄÑÁÜ
+        { // í”„ë¡œí•„ ë¦¬ìŠ¤íŠ¸ì— ë‹´ê¸´ ProfilePanelì˜ ì‚­ì œ ë²„íŠ¼ì„ ê»ë‹¤ ì¼œì¤Œ
             bool active = profileList[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
             for (int i = 0; i < profileList.Count; i++)
             {
@@ -381,14 +383,14 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             }
         }
         else
-        { // »èÁ¦ÇÒ ÇÁ·ÎÇÊÀÌ ¾ø´Â °æ¿ì
+        { // ì‚­ì œí•  í”„ë¡œí•„ì´ ì—†ëŠ” ê²½ìš°
             return;
         }
     }
 
     private char ValidateInput(string text, int charIndex, char addedChar)
-    { // Profile ¿µ¾î, ¼ıÀÚ ÀÔ·Â ¸øÇÏµµ·Ï ¼³Á¤
-        // ÀÔ·ÂµÈ ¹®ÀÚ°¡ ¿µ¾î ¾ËÆÄºª, ¼ıÀÚÀÎ °æ¿ì ÀÔ·ÂÀ» ¸·À½
+    { // Profile ì˜ì–´, ìˆ«ì ì…ë ¥ ëª»í•˜ë„ë¡ ì„¤ì •
+        // ì…ë ¥ëœ ë¬¸ìê°€ ì˜ì–´ ì•ŒíŒŒë²³, ìˆ«ìì¸ ê²½ìš° ì…ë ¥ì„ ë§‰ìŒ
         if ((addedChar >= 'a' && addedChar <= 'z') || (addedChar >= 'A' && addedChar <= 'Z') || (addedChar >= '0' && addedChar <= '9'))
         {
             if (log != null)
@@ -396,20 +398,21 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
                 StopCoroutine(log);
             }
             log = StartCoroutine(PrintLog_co(nameLog));
-            return '\0'; // ÀÔ·Â ¸·À½
+            return '\0'; // ì…ë ¥ ë§‰ìŒ
         }
 
-        // ´Ù¸¥ ¹®ÀÚ´Â Çã¿ë
+        // ë‹¤ë¥¸ ë¬¸ìëŠ” í—ˆìš©
         return addedChar;
     }
     #endregion
 
     #region Game Logic
     public void StartGame()
-    { // °ÔÀÓ ½ÃÀÛ ¹öÆ° ´­·¶À» ¶§ 2P ¼³Á¤ÀÌ µÇ¾î ÀÖ´ÂÁö È®ÀÎ ÈÄ GamePanel ÄÑÁÖ´Â Btn ¿¬µ¿ Method
+    { // ê²Œì„ ì‹œì‘ ë²„íŠ¼ ëˆŒë €ì„ ë•Œ 2P ì„¤ì •ì´ ë˜ì–´ ìˆëŠ”ì§€ í™•ì¸ í›„ GamePanel ì¼œì£¼ëŠ” Btn ì—°ë™ Method
         if(isSelect2P)
         {
             MainPanel.gameObject.SetActive(false);
+            help_Canvas.SetActive(false);
             GamePanel.SetActive(true);
             help_Canvas.SetActive(false);
             WarningPanel.SetActive(false);
@@ -417,7 +420,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             InitSetting();
         }
         else
-        { // 2P ¼±ÅÃÀÌ µÇÁö ¾ÊÀº °æ¿ì ErrorLog¸¦ Ãâ·ÂÇÏ°í return
+        { // 2P ì„ íƒì´ ë˜ì§€ ì•Šì€ ê²½ìš° ErrorLogë¥¼ ì¶œë ¥í•˜ê³  return
             if(log != null)
             {
                 StopCoroutine(log);
@@ -428,7 +431,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     public void RepeatGameLogic()
-    { // °ÔÀÓ ·ÎÁ÷ ¹İº¹ Method
+    { // ê²Œì„ ë¡œì§ ë°˜ë³µ Method
         switch(turn)
         {
             case Turn.Turn1P:
@@ -438,8 +441,13 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
                 turn = Turn.Turn1P;
                 break;
         }
+        // ìƒˆë¡œìš´ Sprite ìƒì„± ë° ë²„ë¸” ìœ„ì¹˜ ì„¸íŒ…
         PosSetting();
+
+        // ë²„íŠ¼ interactable ì„¤ì •í•˜ì—¬ ëˆ„êµ¬ì˜ í„´ì¸ì§€ ì„¤ì •
         TurnSetting();
+
+        // upperBubble ì´ˆê¸°í™” ë° ì½”ë£¨í‹´ ì¬ì‹¤í–‰
         if(waterfall_co != null)
         {
             StopCoroutine(waterfall_co);
@@ -449,75 +457,89 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     public void InitSetting()
-    { // °ÔÀÓ ÃÊ±â ½ÃÀÛ½Ã ¼ÂÆÃÇÏ´Â Method
-        // Timer ¼±¾ğ
+    { // ê²Œì„ ì´ˆê¸° ì‹œì‘ì‹œ ì…‹íŒ…í•˜ëŠ” Method
+        // Timer ì„ ì–¸
         upperTimer = 12f;
         bottomTimer = 60f;
-        // »ó´ÜÀÇ BubbleÀÇ À§Ä¡¸¦ ·£´ıÀ¸·Î ºÎ¿©ÇÏ¿© ÇØ´ç À§Ä¡¿¡ µû¶ó ¾î¶² ÇÃ·¹ÀÌ¾î°¡ ¸ÕÀú ½ÃÀÛÇÒÁö ÅÏÀ» ºÎ¿©
+        // ìƒë‹¨ì˜ Bubbleì˜ ìœ„ì¹˜ë¥¼ ëœë¤ìœ¼ë¡œ ë¶€ì—¬í•˜ì—¬ í•´ë‹¹ ìœ„ì¹˜ì— ë”°ë¼ ì–´ë–¤ í”Œë ˆì´ì–´ê°€ ë¨¼ì € ì‹œì‘í• ì§€ í„´ì„ ë¶€ì—¬
         int randomPos = Random.Range(0, 2);
         upperBubble.transform.localPosition = upperPos[randomPos];
         if(randomPos == 0)
         {
             bottomBubble.transform.localPosition = bottomPos[1];
-            turn = Turn.Turn1P; // 1P ¸ÕÀú ½ÃÀÛ
+            turn = Turn.Turn1P; // 1P ë¨¼ì € ì‹œì‘
         }
         else
         {
             bottomBubble.transform.localPosition = bottomPos[0];
-            turn = Turn.Turn2P; // 2P ¸ÕÀú ½ÃÀÛ
+            turn = Turn.Turn2P; // 2P ë¨¼ì € ì‹œì‘
         }
 
-        // Sprite ¹è¿­·Î °¢ ÇÃ·¹ÀÌ¾îµé¿¡°Ô ·£´ıÇÑ Sprite ºÎ¿© ¹× Pushpop »ı¼º
+        // Sprite ë°°ì—´ë¡œ ê° í”Œë ˆì´ì–´ë“¤ì—ê²Œ ëœë¤í•œ Sprite ë¶€ì—¬ ë° Pushpop ìƒì„±
         SetSpriteImage(Frame[0], popList1P);
         SetSpriteImage(Frame[1], popList2P);
         Frame[0].transform.GetChild(0).transform.localPosition = bottomPos[0];
         Frame[1].transform.GetChild(0).transform.localPosition = bottomPos[1];
         isStart = true;
+
+        // ë²„íŠ¼ interactable ì„¤ì •í•˜ì—¬ ëˆ„êµ¬ì˜ í„´ì¸ì§€ ì„¤ì •
         TurnSetting();
+
+        // upperBubble ì½”ë£¨í‹´ ì‹¤í–‰
         waterfall_co = StartCoroutine(Waterfall_co());
 
         // Profile Setting
         inGameText1P.text = GameManager.Instance.ProfileName;
         inGameText2P.text = GameManager.Instance.ProfileName2P;
         if(!GameManager.Instance.IsImageMode)
-        { // 1P °¡ »çÁø Âï±â¸¦ ¼±ÅÃÇÑ PlayerÀÏ °æ¿ì
+        { // 1P ê°€ ì‚¬ì§„ ì°ê¸°ë¥¼ ì„ íƒí•œ Playerì¼ ê²½ìš°
             Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
             Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
             inGameImage1P.sprite = profileSprite;
         }
         else if(GameManager.Instance.IsImageMode)
-        { // 1P °¡ ÀÌ¹ÌÁö °í¸£±â¸¦ ¼±ÅÃÇÑ PlayerÀÏ °æ¿ì
+        { // 1P ê°€ ì´ë¯¸ì§€ ê³ ë¥´ê¸°ë¥¼ ì„ íƒí•œ Playerì¼ ê²½ìš°
             inGameImage1P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage];
         }
 
         if (!GameManager.Instance.IsimageMode2P)
-        { // 2P °¡ »çÁø Âï±â¸¦ ¼±ÅÃÇÑ PlayerÀÏ °æ¿ì
+        { // 2P ê°€ ì‚¬ì§„ ì°ê¸°ë¥¼ ì„ íƒí•œ Playerì¼ ê²½ìš°
             Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
             Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
             inGameImage2P.sprite = profileSprite;
         }
         else if (GameManager.Instance.IsimageMode2P)
-        { // 2P °¡ ÀÌ¹ÌÁö °í¸£±â¸¦ ¼±ÅÃÇÑ PlayerÀÏ °æ¿ì
+        { // 2P ê°€ ì´ë¯¸ì§€ ê³ ë¥´ê¸°ë¥¼ ì„ íƒí•œ Playerì¼ ê²½ìš°
             inGameImage2P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage2P];
         }
     }
 
     private void PosSetting()
-    { // ÅÏ ³Ñ¾î°¬À» ¶§ °¢ Æ÷Áö¼Çµé ¼³Á¤ÇÏ´Â Method
+    { // í„´ ë„˜ì–´ê°”ì„ ë•Œ ê° í¬ì§€ì…˜ë“¤ ì„¤ì •í•˜ëŠ” Method
         if(turn.Equals(Turn.Turn1P))
-        { // 1P ÅÏ
+        { // 1P í„´
+            // ë²„íŠ¼ ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™” ë° ì‚­ì œ (ì¶”í›„ í’€ë§ìœ¼ë¡œ êµ¬í˜„í•œë‹¤ë©´ setactive falseë¡œ ë°”ê¾¸ë©´ ë ë“¯)
             popList2P.Clear();
-            Destroy(Frame[1].transform.GetChild(0).gameObject);    // Áö±İ ¿ÀºêÁ§Æ® Ç®¸µÀÇ List¸¦ ¹Ş¾Æ¿Ã ¼ö ¾ø´Â ±¸Á¶¶ó¼­ ÀÏ´Ü Destroy·Î ÇßÀ½, ÃßÈÄ ¼öÁ¤ÇØ¾ßÇÔ
+            Destroy(Frame[1].transform.GetChild(0).gameObject);    // ì§€ê¸ˆ ì˜¤ë¸Œì íŠ¸ í’€ë§ì˜ Listë¥¼ ë°›ì•„ì˜¬ ìˆ˜ ì—†ëŠ” êµ¬ì¡°ë¼ì„œ ì¼ë‹¨ Destroyë¡œ í–ˆìŒ, ì¶”í›„ ìˆ˜ì •í•´ì•¼í•¨
+
+            // Sprite ë°°ì—´ë¡œ ê° í”Œë ˆì´ì–´ë“¤ì—ê²Œ ëœë¤í•œ Sprite ë¶€ì—¬ ë° Pushpop ìƒì„±
             SetSpriteImage(Frame[1], popList2P);
-            Frame[1].transform.GetChild(1).transform.localPosition = bottomPos[1]; // DestroyÇÑ °´Ã¼´Â ´ÙÀ½ ÇÁ·¹ÀÓ¿¡ »èÁ¦µÊ
+
+            // ìƒˆë¡œìš´ sprite, popButton í¬ì§€ì…˜ ì„¤ì •
+            Frame[1].transform.GetChild(1).transform.localPosition = bottomPos[1]; // Destroyí•œ ê°ì²´ëŠ” ë‹¤ìŒ í”„ë ˆì„ì— ì‚­ì œë¨
             upperBubble.transform.localPosition = upperPos[0];
             bottomBubble.transform.localPosition = bottomPos[1];
         }
         else if(turn.Equals(Turn.Turn2P))
-        { // 2P ÅÏ
+        { // 2P í„´
+            // ë²„íŠ¼ ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™” ë° ì‚­ì œ (ì¶”í›„ í’€ë§ìœ¼ë¡œ êµ¬í˜„í•œë‹¤ë©´ setactive falseë¡œ ë°”ê¾¸ë©´ ë ë“¯)
             popList1P.Clear();
             Destroy(Frame[0].transform.GetChild(0).gameObject);
+
+            // Sprite ë°°ì—´ë¡œ ê° í”Œë ˆì´ì–´ë“¤ì—ê²Œ ëœë¤í•œ Sprite ë¶€ì—¬ ë° Pushpop ìƒì„±
             SetSpriteImage(Frame[0], popList1P);
+
+            // ìƒˆë¡œìš´ sprite, popButton í¬ì§€ì…˜ ì„¤ì •
             Frame[0].transform.GetChild(1).transform.localPosition = bottomPos[0];
             upperBubble.transform.localPosition = upperPos[1];
             bottomBubble.transform.localPosition = bottomPos[0];
@@ -525,9 +547,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     private void TurnSetting()
-    { // ÅÏ ¼¼ÆÃÇÏ´Â Method
+    { // í„´ ì„¸íŒ…í•˜ëŠ” Method
         if(turn.Equals(Turn.Turn1P))
-        { // 1P ÅÏ
+        { // 1P í„´
             for (int i = 0; i < popList2P.Count; i++)
             {
                 popList2P[i].GetComponent<Button>().interactable = false;
@@ -539,7 +561,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             }
         }
         else if(turn.Equals(Turn.Turn2P))
-        { // 2P ÅÏ
+        { // 2P í„´
             for (int i = 0; i < popList1P.Count; i++)
             {
                 popList1P[i].GetComponent<Button>().interactable = false;
@@ -553,15 +575,16 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     private void SetSpriteImage(Transform _parent, List<GameObject> _popList)
-    { // ¸Å°³º¯¼ö¸¦ ÀÌ¿ëÇØ °¢ PlayerÀÇ Sprite¿Í PopBtn ¼¼ÆÃÇÏ´Â Method
+    { // ë§¤ê°œë³€ìˆ˜ë¥¼ ì´ìš©í•´ ê° Playerì˜ Spriteì™€ PopBtn ì„¸íŒ…í•˜ëŠ” Method
         int randomIndex = Random.Range(0, sprites.Length);
 
         Sprite sprite = sprites[randomIndex];
         PushPop.Instance.boardSprite = sprite;
-        // Sprite ÀÌ¸§¿¡¼­ "(Clone)" ºÎºĞÀ» Á¦°Å
+        // Sprite ì´ë¦„ì—ì„œ "(Clone)" ë¶€ë¶„ì„ ì œê±°
         string spriteName = sprite.name.Replace("(Clone)", "").Trim();
 
-        // ÀÌ¸§¿¡¼­ ¼ıÀÚ ºÎºĞ¸¸ ÃßÃâÇÏ¿© int·Î º¯È¯
+        // ì´ë¦„ì—ì„œ ìˆ«ì ë¶€ë¶„ë§Œ ì¶”ì¶œí•˜ì—¬ intë¡œ ë³€í™˜
+        // ì´ ë¶€ë¶„ Pushpopì—ì„œ ìƒì„±í•˜ëŠ” ë¶€ë¶„ì´ë‘ ë§ì´ ê¼¬ì—¬ìˆìŒ...
         if (int.TryParse(spriteName, out int spriteNumber))
         {
             GameManager.Instance.PushPopStage = spriteNumber;
@@ -573,7 +596,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
                 GameObject pop = PushPop.Instance.PopParent.transform.GetChild(i).gameObject;
                 _popList.Add(pop);
             }
-            PushPop.Instance.pushPopBoardObject[0].transform.SetParent(_parent, false); // worldPositionStays¸¦ false·Î ¼³Á¤ÇÏ¿© ·ÎÄÃ À§Ä¡ À¯Áö
+            PushPop.Instance.pushPopBoardObject[0].transform.SetParent(_parent, false); // worldPositionStaysë¥¼ falseë¡œ ì„¤ì •í•˜ì—¬ ë¡œì»¬ ìœ„ì¹˜ ìœ ì§€
             GameObject temp = PushPop.Instance.pushPopBoardObject[0];
             PushPop.Instance.pushPopBoardObject.Remove(temp);
             Destroy(temp);
@@ -589,29 +612,29 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     public void BottomBubbleTouch()
-    { // ¹Ø¿¡ Å« ¹æ¿ïÀ» ÅÍÄ¡ÇÒ ¶§¸¶´Ù »ó´Ü ¹æ¿ïÀÇ ½Ã°£ÀÌ ÁÙ¾îµë
+    { // ë°‘ì— í° ë°©ìš¸ì„ í„°ì¹˜í•  ë•Œë§ˆë‹¤ ìƒë‹¨ ë°©ìš¸ì˜ ì‹œê°„ì´ ì¤„ì–´ë“¬
         upperTimer -= 0.1f;
     }
 
     private IEnumerator Waterfall_co()
-    { // ½Ã°£¿¡ µû¶ó bubble¼ÓÀÇ waterfallÀÇ sprite¸¦ °áÁ¤ÇÏ°í uppertimer°¡ 0º¸´Ù ÀÛ¾ÆÁö¸é °ÔÀÓ Á¾·á
-        waterfall.sprite = upperBubbleSprite[0]; // ¹æ¿ïÀÇ sprite¸¦ ÃÊ±â »óÅÂ·Î º¯°æ
+    { // ì‹œê°„ì— ë”°ë¼ bubbleì†ì˜ waterfallì˜ spriteë¥¼ ê²°ì •í•˜ê³  uppertimerê°€ 0ë³´ë‹¤ ì‘ì•„ì§€ë©´ ê²Œì„ ì¢…ë£Œ
+        waterfall.sprite = upperBubbleSprite[0]; // ë°©ìš¸ì˜ spriteë¥¼ ì´ˆê¸° ìƒíƒœë¡œ ë³€ê²½
 
         while (upperTimer > 0)
-        { // upperTimer°¡ 0º¸´Ù Å¬ ¶§±îÁö ¹İº¹
-            upperTimer -= Time.deltaTime; // upperTimer °¨¼Ò
+        { // upperTimerê°€ 0ë³´ë‹¤ í´ ë•Œê¹Œì§€ ë°˜ë³µ
+            upperTimer -= Time.deltaTime; // upperTimer ê°ì†Œ
 
-            // upperTimer °ª¿¡ µû¶ó waterfallÀÇ sprite º¯°æ
+            // upperTimer ê°’ì— ë”°ë¼ waterfallì˜ sprite ë³€ê²½
             if (upperTimer < 2) waterfall.sprite = upperBubbleSprite[5];
             else if (upperTimer < 4) waterfall.sprite = upperBubbleSprite[4];
             else if (upperTimer < 6) waterfall.sprite = upperBubbleSprite[3];
             else if (upperTimer < 8) waterfall.sprite = upperBubbleSprite[2];
             else if (upperTimer < 10) waterfall.sprite = upperBubbleSprite[1];
 
-            // Z Ãà È¸Àü Ã³¸®
+            // Z ì¶• íšŒì „ ì²˜ë¦¬
             if (rotateDirection)
             {
-                rotationZ += Time.deltaTime * 30; // ¼Óµµ Á¶Àı
+                rotationZ += Time.deltaTime * 30; // ì†ë„ ì¡°ì ˆ
                 if (rotationZ > 15)
                 {
                     rotateDirection = !rotateDirection;
@@ -619,7 +642,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             }
             else
             {
-                rotationZ -= Time.deltaTime * 30; // ¼Óµµ Á¶Àı
+                rotationZ -= Time.deltaTime * 30; // ì†ë„ ì¡°ì ˆ
                 if (rotationZ < -15)
                 {
                     rotateDirection = !rotateDirection;
@@ -628,16 +651,18 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
             waterfall.transform.rotation = Quaternion.Euler(0, 0, rotationZ);
 
-            yield return null; // ´ÙÀ½ ÇÁ·¹ÀÓ±îÁö ´ë±â
+            yield return null; // ë‹¤ìŒ í”„ë ˆì„ê¹Œì§€ ëŒ€ê¸°
         }
 
-        // while¹®À» ¹ş¾î³µ´Ù¸é upperTimer°¡ 0º¸´Ù ÀÛ¾ÆÁ³´Ù´Â °ÍÀ» ÀÇ¹ÌÇÏ±â¿¡ °ÔÀÓ Á¾·á
+        // whileë¬¸ì„ ë²—ì–´ë‚¬ë‹¤ë©´ upperTimerê°€ 0ë³´ë‹¤ ì‘ì•„ì¡Œë‹¤ëŠ” ê²ƒì„ ì˜ë¯¸í•˜ê¸°ì— ê²Œì„ ì¢…ë£Œ
         EndGame();
     }
 
     private void EndGame()
-    { // °ÔÀÓÀÌ Á¾·áµÆÀ» ¶§ Method
+    { // ê²Œì„ì´ ì¢…ë£Œëì„ ë•Œ Method
         isStart = false;
+
+        // ì¢…ë£Œ ì• ë‹ˆë©”ì´ì…˜ ì¼œì£¼ê³  ì• ë‹ˆë©”ì´ì…˜ ë‚˜ì˜¬ ìœ„ì¹˜ ì„¤ì •
         endAnimation.transform.gameObject.SetActive(true);
         if(turn.Equals(Turn.Turn1P))
         {
@@ -652,37 +677,40 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     private IEnumerator Result_Co()
-    { // °á°úÃ¢ Ãâ·Â ÄÚ·çÆ¾
+    { // ê²°ê³¼ì°½ ì¶œë ¥ ì½”ë£¨í‹´
         yield return new WaitForSeconds(1.2f);
         result.SetActive(true);
         yield return new WaitForSeconds(0.1f);
-        // ¿ÀºêÁ§Æ®µé »èÁ¦
+        // ì˜¤ë¸Œì íŠ¸ë“¤ ì‚­ì œ
         ResetGame();
         yield return null;
     }
 
     private void QuitGame()
-    { // Áß°£¿¡ °ÔÀÓ ³ª°¬À» ¶§ Method
+    { // ì¤‘ê°„ì— ê²Œì„ ë‚˜ê°”ì„ ë•Œ Method
         isStart = false;
         for(int i = 0; i < quitBtn.Length; i++)
         {
             quitBtn[i].interactable = true;
         }
         
-        // ¿ÀºêÁ§Æ® »èÁ¦
+        // ì˜¤ë¸Œì íŠ¸ ì‚­ì œ
         ResetGame();
         help_Canvas.SetActive(true);
     }
 
     private void ResetGame()
-    { // ¿ÀºêÁ§Æ®µé »èÁ¦ÇÏ´Â ¸Ş¼Òµå
+    { // ì˜¤ë¸Œì íŠ¸ë“¤ ì‚­ì œí•˜ëŠ” ë©”ì†Œë“œ
+        // ì¢…ë£Œ ì• ë‹ˆë©”ì´ì…˜ ë¹„í™œì„±í™”
         endAnimation.transform.gameObject.SetActive(false);
+        
+        // ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™” ë° Sprite ì‚­ì œ
         popList1P.Clear();
         popList2P.Clear();
         Destroy(Frame[0].transform.GetChild(0).gameObject);
         Destroy(Frame[1].transform.GetChild(0).gameObject);
 
-        // Bool°ª ÃÊ±âÈ­
+        // Boolê°’ ì´ˆê¸°í™”
         Quit1P = false;
         Quit2P = false;
 
@@ -693,7 +721,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
     #endregion
     private IEnumerator PrintLog_co(GameObject errorlog)
-    { // ErrorLog Ãâ·Â Coroutine
+    { // ErrorLog ì¶œë ¥ Coroutine
         errorlog.SetActive(true);
 
         yield return new WaitForSeconds(3f);
@@ -703,7 +731,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     public void QuitBtn(int _player)
-    { // ¸Å°³º¯¼ö 0Àº 1P / 1Àº 2P
+    { // ë§¤ê°œë³€ìˆ˜ 0ì€ 1P / 1ì€ 2P
         if(_player.Equals(0))
         {
             //Quit1P = true;
@@ -730,7 +758,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
 
-    //½ÃÀÛ½Ã quit ¹öÆ°µé ¼¼ÆÃ
+    //ì‹œì‘ì‹œ quit ë²„íŠ¼ë“¤ ì„¸íŒ…
     private void ButtonSetting()
     {
         Quit1P = false;
@@ -743,7 +771,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
 
-    //quitBtn[0]¹ø »óÅÂ º¯°æ ¸Ş¼Òµå
+    //quitBtn[0]ë²ˆ ìƒíƒœ ë³€ê²½ ë©”ì†Œë“œ
     private void Check_quitBtn_1P()
     {        
         if(!Quit1P)
@@ -760,7 +788,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
 
-    //quitBtn[1]¹ø »óÅÂ º¯°æ ¸Ş¼Òµå
+    //quitBtn[1]ë²ˆ ìƒíƒœ ë³€ê²½ ë©”ì†Œë“œ
     private void Check_quitBtn_2P()
     {
         if (!Quit2P)
@@ -775,7 +803,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    //³ª°¡±â Àü °æ°íÆĞ³Î ³ª°¡±â ¹öÆ°
+    //ë‚˜ê°€ê¸° ì „ ê²½ê³ íŒ¨ë„ ë‚˜ê°€ê¸° ë²„íŠ¼
     public void GoOutBtn_Clicked()
     {
         QuitGame();
@@ -787,7 +815,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
 
-    //³ª°¡±â Àü °æ°íÆĞ³Î Ãë¼Ò ¹öÆ°
+    //ë‚˜ê°€ê¸° ì „ ê²½ê³ íŒ¨ë„ ì·¨ì†Œ ë²„íŠ¼
     public void CancelBtn_Clicked()
     {
         Time.timeScale = 1;
@@ -795,11 +823,15 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         ButtonSetting();
     }
 
-    //ÁÂÃø ÇÏ´Ü ³ª°¡±â ¹öÆ°
+    //ì¢Œì¸¡ í•˜ë‹¨ ë‚˜ê°€ê¸° ë²„íŠ¼
     public void BackBtn_Clicked()
     {
 
         main_Canvas.SetActive(true);
+        selectBtn.SetActive(true);
+        changeBtn.SetActive(false);
+        playerImage2P.gameObject.SetActive(false);
+        playerName2P.gameObject.SetActive(false);
         GamePanel.SetActive(false);
         CreateImagePanel.SetActive(false);
         CurrentProfile.SetActive(false);

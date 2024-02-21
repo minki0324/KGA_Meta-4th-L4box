@@ -5,22 +5,22 @@ using UnityEngine.UI;
 
 public class Speed_Timer : MonoBehaviour
 {
-    [Header("Äµ¹ö½º")]
+    [Header("ìº”ë²„ìŠ¤")]
     [SerializeField] private Speed_Canvas speed_Canvas;
     [SerializeField] private Help_Canvas help_Canvas;
 
-    [Header("ÆĞ³Î")]
+    [Header("íŒ¨ë„")]
     [SerializeField] private GameObject SelectDifficulty_Panel;
     [SerializeField] private GameObject Warning_Panel;
 
-    [Header("Å¸ÀÌ¸Ó")]
+    [Header("íƒ€ì´ë¨¸")]
     [SerializeField] private TMP_Text time_Text;
     public Slider time_Slider;
 
-    [Header("¾ÆÀÌÄÜ ÀÌ¹ÌÁö")]
+    [Header("ì•„ì´ì½˜ ì´ë¯¸ì§€")]
     [SerializeField] private Image Mold_Image;
 
-    [Header("µÚ·Î°¡±â ¹öÆ°")]
+    [Header("ë’¤ë¡œê°€ê¸° ë²„íŠ¼")]
     [SerializeField] private Button Back_Btn;
 
     public int currentTime;
@@ -32,22 +32,22 @@ public class Speed_Timer : MonoBehaviour
 
     private void OnEnable()
     {
-        //½Ã°£ ÃÊ±âÈ­
+        //ì‹œê°„ ì´ˆê¸°í™”
         // currentTime = GameManager.Instance.ShutdownTime + 1;
-        currentTime = 0; // 0ºÎÅÍ Á¦ÇÑ½Ã°£±îÁö +
+        currentTime = 0; // 0ë¶€í„° ì œí•œì‹œê°„ê¹Œì§€ +
                          // currentTime = 10 +1;
         SetText();
 
-        //½½¶óÀÌ´õ ÃÊ±âÈ­
+        //ìŠ¬ë¼ì´ë” ì´ˆê¸°í™”
         time_Slider.maxValue = 1f;
         time_Slider.minValue = 0f;
         time_Slider.value = 0f;
         time_Slider.gameObject.SetActive(false);
 
-        //¸ôµå ¾ÆÀÌÄÜ ÀÌ¹ÌÁö ÃÊ±âÈ­
+        //ëª°ë“œ ì•„ì´ì½˜ ì´ë¯¸ì§€ ì´ˆê¸°í™”
         // Mold_Image.sprite = speed_Canvas.moldIcon;
 
-        //Å¸ÀÌ¸Ó ÄÚ·çÆ¾ ½ÃÀÛ
+        //íƒ€ì´ë¨¸ ì½”ë£¨í‹´ ì‹œì‘
         timer = StartCoroutine(Timer_co());
         // StartCoroutine(SliderLerp_co());
 
@@ -55,6 +55,24 @@ public class Speed_Timer : MonoBehaviour
         {
             Warning_Panel.SetActive(false);
         }
+        gameObject.SetActive(false);
+
+        // Back Method
+        if (PushPop.Instance.pushPopBoardObject.Count > 0)
+        {
+            Destroy(PushPop.Instance.pushPopBoardObject[0]);
+            PushPop.Instance.pushPopBoardObject.Clear();
+        }
+
+        if (GameManager.Instance.bubbleObject.Count > 0)
+        {
+            Destroy(GameManager.Instance.bubbleObject[0]);
+            GameManager.Instance.bubbleObject.Clear();
+        }
+
+        GameManager.Instance.bubblePos.Clear(); // bubble transform modeì— ë”°ë¼ ë‹¬ë¼ì§
+        PushPop.Instance.PushPopClear();
+        StopCoroutine(timer);
     }
 
 
@@ -62,7 +80,7 @@ public class Speed_Timer : MonoBehaviour
 
 
     #region Other Method
-    //Å¸ÀÌ¸Ó ÄÚ·çÆ¾
+    //íƒ€ì´ë¨¸ ì½”ë£¨í‹´
     private IEnumerator Timer_co()
     {
         // game ready
@@ -72,22 +90,22 @@ public class Speed_Timer : MonoBehaviour
         while (true)
         {
             currentTime += cashing;
-            GameManager.Instance.TimeScore = currentTime; // score ÀúÀå
+            GameManager.Instance.TimeScore = currentTime; // score ì €ì¥
             SetText();
 
             if (currentTime <= 0)
             {
-                //°æ°í¹® ¶ç¿ì±â
+                //ê²½ê³ ë¬¸ ë„ìš°ê¸°
                 yield break;
             }
             yield return new WaitForSeconds(cashing);
         }
     }
 
-    //½ÃºĞÃÊ º¯È¯ & ÅØ½ºÆ® Æ÷¸Ë ÁöÁ¤ ÇÔ¼ö
+    //ì‹œë¶„ì´ˆ ë³€í™˜ & í…ìŠ¤íŠ¸ í¬ë§· ì§€ì • í•¨ìˆ˜
     public void SetText()
     {
-        sec = currentTime % 60;    //60À¸·Î ³ª´« ³ª¸ÓÁö = ÃÊ
+        sec = currentTime % 60;    //60ìœ¼ë¡œ ë‚˜ëˆˆ ë‚˜ë¨¸ì§€ = ì´ˆ
         min = currentTime / 60;
         time_Text.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
     }

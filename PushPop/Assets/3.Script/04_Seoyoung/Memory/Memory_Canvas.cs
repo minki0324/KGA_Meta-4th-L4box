@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 
-//TimeSetting_Panel¿¡ ÂüÁ¶ ³Ö±â
+//TimeSetting_Panelì— ì°¸ì¡° ë„£ê¸°
 public class Memory_Canvas : MonoBehaviour
 {
     //public struct Rank
@@ -19,29 +19,29 @@ public class Memory_Canvas : MonoBehaviour
     //}
 
 
-    [Header("ÆĞ³Î")]
+    [Header("íŒ¨ë„")]
     [SerializeField] private Canvas main_Canvas;
     [SerializeField] private GameObject gameSet_Panel; 
     [SerializeField] private Canvas memoryGame_Canvas;
     [SerializeField] private Help_Canvas help_Canvas;
 
-    [Header("°³ÀÎ ±â·Ï")] 
+    [Header("ê°œì¸ ê¸°ë¡")] 
     [SerializeField] private Image profile_Image;
     [SerializeField] private TMP_Text profileName_Text;
     [SerializeField] private TMP_Text score_Text;
 
 
-    [Header("¹öÆ°")]
+    [Header("ë²„íŠ¼")]
     [SerializeField] private Button gameStart_Btn;
 
 
-    [Header("·©Å·")]
+    [Header("ë­í‚¹")]
     [SerializeField] private GameObject rankObject;
    // [SerializeField] private List<Rank> rank_List = new List<Rank>();
-    [SerializeField] private List<Image> rankIconImage_List = new List<Image>();
-    [SerializeField] private List<Image> profileImage_List = new List<Image>();
-    [SerializeField] private List<TMP_Text> profileName_List = new List<TMP_Text>();
-    [SerializeField] private List<TMP_Text> scoreText_List = new List<TMP_Text>();
+    [SerializeField] private Image[] profileImage_Array;
+    [SerializeField] private TMP_Text[] profileName_Array;
+    [SerializeField] private TMP_Text[] scoreText_Array;
+
 
     #region Unity Callback
     private void OnEnable()
@@ -63,11 +63,7 @@ public class Memory_Canvas : MonoBehaviour
        
     }
 
-    private void Start()
-    {
-        Init();
-    }
-
+  
     private void OnDisable()
     {
         //help_Canvas.gameObject.SetActive(false);
@@ -76,19 +72,9 @@ public class Memory_Canvas : MonoBehaviour
     #endregion
 
     #region Other Method
-    public void Init()
-    {
-        for (int i = 0; i < rankObject.transform.childCount; i++)
-        {
-            rankIconImage_List.Add(rankObject.transform.GetChild(i).GetChild(0).GetComponent<Image>());
-            profileImage_List.Add(rankObject.transform.GetChild(i).GetChild(1).GetComponent<Image>());
-            profileName_List.Add(rankObject.transform.GetChild(i).GetChild(2).GetComponent<TMP_Text>());
-            scoreText_List.Add(rankObject.transform.GetChild(i).GetChild(3).GetComponent<TMP_Text>());
-        }
 
-    }
 
-    //°ÔÀÓ ½ÃÀÛ ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ÇÔ¼ö
+    //ê²Œì„ ì‹œì‘ ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
     public void GameStartBtn_Clicked()
     {
         gameSet_Panel.SetActive(false);
@@ -100,11 +86,9 @@ public class Memory_Canvas : MonoBehaviour
 
     public void BackBtn_Clicked()
     {
-
-        main_Canvas.gameObject.SetActive(true);
+        gameSet_Panel.gameObject.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
-
-        gameObject.SetActive(false);
+        main_Canvas.gameObject.SetActive(true);
     }
 
     public void EnableObjects()
@@ -115,6 +99,11 @@ public class Memory_Canvas : MonoBehaviour
     public void DisalbeObjects()
     {
         gameStart_Btn.interactable = false;
+    }
+
+    public void RankingLoad()
+    {
+        //Ranking.instance.LoadScore(scoreText_Array, profileImage_Array, profileName_Array);
     }
 
     #endregion
