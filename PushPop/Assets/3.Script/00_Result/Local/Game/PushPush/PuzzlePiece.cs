@@ -10,15 +10,6 @@ public class PuzzlePiece : MonoBehaviour
     public PuzzleObject puzzle;
 
     #region Unity Callback
-    private void OnEnable()
-    {
-        Debug.Log(transform.GetComponent<RectTransform>().sizeDelta);
-        
-    }
-    private void Update()
-    {
-        Debug.Log("업데이드 : " + transform.GetComponent<RectTransform>().sizeDelta);
-    }
     #endregion
 
     #region Other Method

@@ -22,12 +22,6 @@ public class PushPush_Game : MonoBehaviour
 
     #region Unity Callback
 
-    private void OnEnable()
-    {
-        Mold_Image.sprite = pushpush_Canvas.SelectedMold;
-    }
-
-
     #endregion
 
     #region Other Method
@@ -50,7 +44,14 @@ public class PushPush_Game : MonoBehaviour
         pushpush_Canvas.Enable_Objects();
         gameObject.SetActive(false);
     }
-
+    public void TimeScalezero()
+    {
+        Time.timeScale = 0;
+    }
+    public void TimeScaleOwn()
+    {
+        Time.timeScale = 1;
+    }
 
     //꾸미기 패널의 뒤로가기 버튼 
     public void UndoBtn_Clicked()
