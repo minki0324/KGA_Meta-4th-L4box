@@ -12,7 +12,7 @@ public class MemoryBoard : MonoBehaviour
     private Queue<MemoryPushpop> CorrectBtnQueue = new Queue<MemoryPushpop>();
     private MemoryPushpop currentOrderPushPop;
     private WaitForSeconds WaitTime = new WaitForSeconds(0.5f);
-    MemoryStageData stage;
+    public MemoryStageData stage { get; private set; }
     private void Awake()
     {
         for (int i = 0; i < transform.childCount; i++)
@@ -25,8 +25,14 @@ public class MemoryBoard : MonoBehaviour
     {
         stage = MemoryManager.Instance.GetStage();
         RandCorrectDraw(stage.CorrectCount);
-        //StartCoroutine(ReadyGame());
-        StartCoroutine(InOrder());
+        if (stage.isSpecialStage)
+        {
+            StartCoroutine(InOrder());
+        }
+        else
+        {
+            StartCoroutine(ReadyGame());
+        }
 
 
     }
@@ -103,7 +109,7 @@ public class MemoryBoard : MonoBehaviour
         yield return new WaitForSeconds(2f);
         //1초 뒤 반짝이기
         CorrectBtnPlayBlink();
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         BtnAllPlay();
     }
     private IEnumerator InOrder()
