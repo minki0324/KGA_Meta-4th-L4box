@@ -98,7 +98,7 @@ public class Help_Canvas : MonoBehaviour
                     break;
             }
 
-           
+            
         }
  
     }
@@ -131,7 +131,7 @@ public class Help_Canvas : MonoBehaviour
                     break;
 
                 case Mode.Bomb:
-
+                    bomb_Canvas.Disable_Objects();
                     break;
             }
         }
@@ -164,7 +164,7 @@ public class Help_Canvas : MonoBehaviour
                     break;
 
                 case Mode.Bomb:
-
+                    bomb_Canvas.Enable_Objects();
                     break;
             }
 
@@ -243,12 +243,14 @@ public class Help_Canvas : MonoBehaviour
 
             //2인모드 도움맒
             case Mode.Bomb:
-                maxPage = 1;
-                switch (currentPage)
-                {
-                    case 1:
+                maxPage = DataManager2.instance.helpScripts_List[3].script.Count;
 
-                        break;
+                for (int i = 0; i < DataManager2.instance.helpScripts_List[3].script.Count; i++)
+                {
+                    if (currentPage == DataManager2.instance.helpScripts_List[3].script[i].pageNum)
+                    {
+                        help_Description.text = DataManager2.instance.helpScripts_List[3].script[i].content;
+                    }
                 }
                 break;
         }
@@ -256,6 +258,23 @@ public class Help_Canvas : MonoBehaviour
         page_Text.text = $"{currentPage}/{maxPage}";
     }
 
+    public void Button_Enable()
+    {
+        Back_Btn.interactable = true;
+        help_Btn.interactable = true;
+
+        Back_Btn.GetComponent<Image>().color = new Color(188f, 188f, 188f);
+        help_Btn.GetComponent<Image>().color = new Color(188f, 188f, 188f);
+    }
+
+    public void Button_Disable()
+    {
+        Back_Btn.interactable = false;
+        help_Btn.interactable = false;
+
+        Back_Btn.GetComponent<Image>().color = new Color(255f, 255f, 255f);
+        help_Btn.GetComponent<Image>().color = new Color(255f, 255f, 255f);
+    }
 
 
 

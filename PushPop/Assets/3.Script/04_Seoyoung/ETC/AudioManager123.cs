@@ -39,8 +39,7 @@ public class AudioManager123 : MonoBehaviour
         {
             Destroy(gameObject);
             return;
-        }
-    
+        }    
     }
 
     private void Start()

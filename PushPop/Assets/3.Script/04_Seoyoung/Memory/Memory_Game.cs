@@ -6,9 +6,12 @@ using TMPro;
 
 public class Memory_Game : MonoBehaviour
 {
-    [Header("µÚ·Î°¡±â")]
-    [SerializeField] Canvas main_Canvas;
+    [Header("ìº”ë²„ìŠ¤")]   
     [SerializeField] Canvas memory_Canvas;
+    [SerializeField] Help_Canvas help_Canvas;
+
+    [Header("íŒ¨ë„")]
+    [SerializeField] GameObject gameSet_Panel;
     [SerializeField] GameObject Warning_Panel;
     [SerializeField] private Button back_Btn;
 
@@ -32,7 +35,7 @@ public class Memory_Game : MonoBehaviour
     #endregion
 
     #region Other Method
-    //ÁÂÃø ÇÏ´Ü µÚ·Î°¡±â ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ¸Ş¼Òµå
+    //ì¢Œì¸¡ í•˜ë‹¨ ë’¤ë¡œê°€ê¸° ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
     public void BackBtn_Clicked()
     {
         Warning_Panel.SetActive(true);
@@ -41,17 +44,22 @@ public class Memory_Game : MonoBehaviour
     }
 
 
-    //³ª°¡±â °æ°í ÆĞ³ÎÀÇ ³ª°¡±â ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ¸Ş¼Òµå
+    //ë‚˜ê°€ê¸° ê²½ê³  íŒ¨ë„ì˜ ë‚˜ê°€ê¸° ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
     public void GoOutBtn_Clicked()
     {
         back_Btn.interactable = true;
+        gameSet_Panel.SetActive(true);
+        // ì—¬ê¸° ë‹¤ ì‚´ë ¸ìŒ 
+        help_Canvas.gameObject.SetActive(true);
+
+        gameObject.SetActive(false);
         Warning_Panel.SetActive(false);
         Time.timeScale = 1f;
         //main_Canvas.gameObject.SetActive(true);
         //memory_Canvas.gameObject.SetActive(false);
     }
 
-    //³ª°¡±â °æ°í ÆĞ³ÎÀÇ Ãë¼Ò ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ¸Ş¼Òµå
+    //ë‚˜ê°€ê¸° ê²½ê³  íŒ¨ë„ì˜ ì·¨ì†Œ ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
     public void CancelBtn_Clicked()
     {
         back_Btn.interactable = true;

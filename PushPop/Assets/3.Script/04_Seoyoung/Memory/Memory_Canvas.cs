@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 
-//TimeSetting_Panel¿¡ ÂüÁ¶ ³Ö±â
+//TimeSetting_Panelì— ì°¸ì¡° ë„£ê¸°
 public class Memory_Canvas : MonoBehaviour
 {
     //public struct Rank
@@ -19,23 +19,23 @@ public class Memory_Canvas : MonoBehaviour
     //}
 
 
-    [Header("ÆĞ³Î")]
+    [Header("íŒ¨ë„")]
     [SerializeField] private Canvas main_Canvas;
     [SerializeField] private GameObject gameSet_Panel; 
     [SerializeField] private Canvas memoryGame_Canvas;
     [SerializeField] private Help_Canvas help_Canvas;
 
-    [Header("°³ÀÎ ±â·Ï")] 
+    [Header("ê°œì¸ ê¸°ë¡")] 
     [SerializeField] private Image profile_Image;
     [SerializeField] private TMP_Text profileName_Text;
     [SerializeField] private TMP_Text score_Text;
 
 
-    [Header("¹öÆ°")]
+    [Header("ë²„íŠ¼")]
     [SerializeField] private Button gameStart_Btn;
 
 
-    [Header("·©Å·")]
+    [Header("ë­í‚¹")]
     [SerializeField] private GameObject rankObject;
    // [SerializeField] private List<Rank> rank_List = new List<Rank>();
     [SerializeField] private Image[] profileImage_Array;
@@ -59,6 +59,8 @@ public class Memory_Canvas : MonoBehaviour
         {
             help_Canvas.gameObject.SetActive(true);
         }
+
+       
     }
 
   
@@ -72,7 +74,7 @@ public class Memory_Canvas : MonoBehaviour
     #region Other Method
 
 
-    //°ÔÀÓ ½ÃÀÛ ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ÇÔ¼ö
+    //ê²Œì„ ì‹œì‘ ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
     public void GameStartBtn_Clicked()
     {
         gameSet_Panel.SetActive(false);
@@ -86,7 +88,6 @@ public class Memory_Canvas : MonoBehaviour
     {
         gameSet_Panel.gameObject.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
-
         main_Canvas.gameObject.SetActive(true);
     }
 
@@ -100,11 +101,7 @@ public class Memory_Canvas : MonoBehaviour
         gameStart_Btn.interactable = false;
     }
 
-    public void Calculate_Rank()
-    {
-        //µğºñ¿¡¼­ °³ÀÎ ·©Å· ÀĞ¾î¿Â ÈÄ °è»ê
-    }
-    public void RangkinLoad()
+    public void RankingLoad()
     {
         //Ranking.instance.LoadScore(scoreText_Array, profileImage_Array, profileName_Array);
     }

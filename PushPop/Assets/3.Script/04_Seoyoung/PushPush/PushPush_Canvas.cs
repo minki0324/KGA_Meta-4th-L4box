@@ -83,6 +83,9 @@ public class PushPush_Canvas : MonoBehaviour
         selectMold_Panel.SetActive(false);
         pushpushGame_Panel.SetActive(false);
 
+        help_Canvas.transform.SetParent(gameObject.transform);
+        help_Canvas.transform.SetSiblingIndex(3);
+
         currentPage = 1;
         maxPage = moldIcon_List.Count;
         Page_Text.text = $"{currentPage}/{maxPage}";
@@ -232,6 +235,7 @@ public class PushPush_Canvas : MonoBehaviour
 
             help_Canvas.Back_Btn.interactable = false;
             help_Canvas.Help_Btn.interactable = false;
+
         }
 
     }
@@ -330,6 +334,9 @@ public class PushPush_Canvas : MonoBehaviour
     //좌측 하단 뒤로가기 버튼 클릭 시 호출되는 함수
     public void BackBtn_Clicked()
     {
+        help_Canvas.transform.SetParent(null);
+        help_Canvas.transform.SetAsLastSibling();
+
         main_Canvas.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
