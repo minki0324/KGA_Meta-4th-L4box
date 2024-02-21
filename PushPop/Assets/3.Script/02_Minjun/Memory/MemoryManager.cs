@@ -87,8 +87,8 @@ public class MemoryManager : MonoBehaviour
         Life = 3;
         ResetLife();
         //점수 기록하기
-        SQL_Manager.instance.SQL_SetScore(
-            GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, Score, null, GameManager.Instance.UID);
+/*        SQL_Manager.instance.SQL_SetScore(
+            GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, Score, null, GameManager.Instance.UID);*/
         //스코어초기화
         ResetScore();
         //메모리 로비로 나가기
@@ -105,9 +105,9 @@ public class MemoryManager : MonoBehaviour
         //라이프초기화
         Life = 3;
         ResetLife();
-        Ranking.instance.score = Score;
+        /*Ranking.instance.score = Score;
         Ranking.instance.test_Set_Score();
-        Ranking.instance.test_Print_Rank("Memory");
+        Ranking.instance.test_Print_Rank("Memory");*/
         //스코어초기화
         ResetScore();
         //메모리 로비로 나가기

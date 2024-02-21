@@ -1,25 +1,48 @@
 using System.Linq;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
+#region Other Class
+[System.Serializable]
+public class RankList
+{
+    public List<Rank> ranks = new List<Rank>();
+}
+
+[System.Serializable]
+public class Rank
+{
+    public string name;
+    public int index;
+    public int score;
+    public List<int> spriteName;
+    public List<int> timer;
+
+    public Rank(string name, int index, int score, List<int> spriteName, List<int> timer)
+    {
+        this.name = name;
+        this.index = index;
+        this.score = score;
+        this.spriteName = spriteName;
+        this.timer = timer;
+    }
+}
+#endregion
+
+/// <summary>
+/// Ranking관련 Class
+/// </summary>
 public class Ranking : MonoBehaviour
 {
     public static Ranking instance = null;
 
-    [Header("score")]
-    [SerializeField] private TMP_Text score_txt;
-    public int score;
-
-    [Header("timer")]
-    [SerializeField] private TMP_Text timer_txt;
-    public float timer;
-
-    [Header("Rank")]
-    [SerializeField] private TMP_Text[] Name_Text;
-    [SerializeField] private TMP_Text[] Rank_Text;
+    private string rankPath = string.Empty; // Rank Json Path
+    private List<Rank> rankList = new List<Rank>(); // Rank List
 
     #region Unity Callback
     private void Awake()
@@ -27,85 +50,205 @@ public class Ranking : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
             return;
         }
+
+
+        rankPath = Application.persistentDataPath + "/Rank";
+        LoadRanking();
     }
     #endregion
 
     #region Other Method
-    // 스코어 저장 btn연동 테스트 메소드
-    public void test_Set_Score()
+    #region Rank Set
+    /// <summary>
+    /// name과 index로 RankList에 동일한 Rank를 가져와 Score를 갱신해주는 Method
+    /// </summary>
+    /// <param name="_name"></param>
+    /// <param name="_index"></param>
+    /// <param name="_score"></param>
+    public void SetScore(string _name, int _index, int _score)
     {
-        //score = int.Parse(score_txt.text.ToString());
+        var existingRank = rankList.FirstOrDefault(r => r.name == _name && r.index == _index);
 
-        SQL_Manager.instance.SQL_SetScore(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, score, null, GameManager.Instance.UID);
+        if (existingRank != null)
+        { // 기존 점수와 비교하여 새 점수가 더 높으면 갱신
+            existingRank.score = Math.Max(_score, existingRank.score);
+        }
+        else
+        { // 새로운 랭크 추가, 이때 timer는 빈 리스트로 초기화
+            rankList.Add(new Rank(_name, _index, _score, new List<int>(), new List<int>()));
+        }
+        // 저장
+        SaveRanking();
     }
 
-    // 타이머 저장 btn연동 테스트 메소드
-    public void UpdateTimerScore(float timer)
-    {
-        SQL_Manager.instance.SQL_SetScore(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, null, timer, GameManager.Instance.UID);
+    /// <summary>
+    /// Name과 Index로 RankList에 동일한 Rank를 선택하여 SpriteName에 맞는 랭킹을 갱신해주는 Method
+    /// </summary>
+    /// <param name="_name"></param>
+    /// <param name="_index"></param>
+    /// <param name="_spriteName"></param>
+    /// <param name="_Timer"></param>
+    public void SetTimer(string _name, int _index, int _spriteName, int _Timer)
+    { 
+        var existingRank = rankList.FirstOrDefault(r => r.name == _name && r.index == _index);
+
+        if (existingRank != null)
+        { // 해당 spriteName의 인덱스.
+            int spriteIndex = existingRank.spriteName.IndexOf(_spriteName);
+
+            if (spriteIndex >= 0)
+            { // spriteName이 이미 존재하며, 새로운 timer가 기존 값보다 작은 경우 갱신
+                if (existingRank.timer[spriteIndex] > _Timer)
+                {
+                    existingRank.timer[spriteIndex] = _Timer;
+                }
+            }
+            else
+            { // 새로운 spriteName과 timer 값을 추가
+                existingRank.spriteName.Add(_spriteName);
+                existingRank.timer.Add(_Timer);
+            }
+        }
+        else
+        { // 새로운 랭크 추가, 이 경우 score는 초기값(예: 0)으로 설정
+            rankList.Add(new Rank(_name, _index, 0, new List<int> { _spriteName }, new List<int> { _Timer }));
+        }
+
+        SaveRanking();
     }
+    #endregion
 
-    // 특정 시점에 어떤 mode인지(speed, memory) 매개변수를 받아서 랭킹을 호출해주는 메소드
-    public void test_Print_Rank(string mode)
+    #region Rank Load
+    /// <summary>
+    /// RankList에 담겨져 있는 Rank들을 상위 3개만 출력하도록 정렬 후 매개변수로 받은 Text, Image에 프로필과 함께 출력해주는 Method
+    /// </summary>
+    /// <param name="_Score"></param>
+    /// <param name="_image"></param>
+    /// <param name="_name"></param>
+    public void LoadScore(TMP_Text[] _Score, Image[] _image, TMP_Text[] _name)
     {
-        // 1. 랭킹 정보 가져오기
-        SQL_Manager.instance.SQL_PrintRanking();
+        SQL_Manager.instance.SQL_ProfileListSet();
 
-        List<Rank> sortedRankList = new List<Rank>();
+        // 스코어가 높은 순으로 랭크 리스트를 정렬하고, 상위 3개의 랭크만 선택.
+        var topRanks = rankList
+            .Where(r => r.score > 0)
+            .OrderByDescending(r => r.score)
+            .Take(3)
+            .ToList();
 
-        if (mode == "Speed")
-        {
-            // Speed 모드: 타이머가 0보다 큰 항목만 포함하여 타이머가 낮은 순으로 정렬
-            sortedRankList = SQL_Manager.instance.Rank_List
-                .Where(r => r.timer > 0) // 타이머가 0보다 큰 항목만 선택
-                .OrderBy(r => r.timer)
-                .ThenByDescending(r => r.score)
-                .Take(3)
-                .ToList();
-        }
-        else if (mode == "Memory")
-        {
-            // Memory 모드: 점수가 0보다 큰 항목만 포함하여 점수가 높은 순으로 정렬
-            sortedRankList = SQL_Manager.instance.Rank_List
-                .Where(r => r.score > 0) // 점수가 0보다 큰 항목만 선택
-                .OrderByDescending(r => r.score)
-                .ThenBy(r => r.timer)
-                .Take(3)
-                .ToList();
-        }
-
-        // 2. UI에 출력
-        for (int i = 0; i < sortedRankList.Count; i++)
-        {
-            if (i < Name_Text.Length)
-            {
-                Name_Text[i].text = sortedRankList[i].name;
-                // Mode에 따라 다른 정보 출력
-                if (mode == "Speed")
-                {
-                    Rank_Text[i].text = "Timer: " + sortedRankList[i].timer.ToString("F3");
-                }
-                else if (mode == "Memory")
-                {
-                    Rank_Text[i].text = "Score: " + sortedRankList[i].score.ToString();
-                }
+        for (int i = 0; i < topRanks.Count; i++)
+        { // 선택된 상위 3개의 랭크에 대해 text 배열을 업데이트.
+            if (i < _Score.Length)
+            { 
+                _Score[i].text = topRanks[i].score.ToString();
             }
         }
 
-        // 나머지 UI 항목들을 비우기
-        for (int i = sortedRankList.Count; i < Name_Text.Length; i++)
-        {
-            Name_Text[i].text = "";
-            Rank_Text[i].text = "";
+        for (int i = topRanks.Count; i < _Score.Length; i++)
+        { // 만약 상위 3위를 채우지 못한 경우, 남은 텍스트 요소를 비움.
+            _Score[i].text = "";
+        }
+
+        for(int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        { // SQL에 등록되어 있는 Profile
+            for(int j = 0; j < topRanks.Count; j++)
+            { // 정렬된 List
+                if (SQL_Manager.instance.Profile_list[i].index == topRanks[j].index)
+                { // Profile Index와 정렬된 List의 Index가 일치한 걸 찾아옴
+                    _name[j].text = SQL_Manager.instance.Profile_list[i].name;
+                    if(SQL_Manager.instance.Profile_list[i].imageMode)
+                    { // 이미지 고르기를 선택한 플레이어
+                        _image[j].sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
+                    }
+                    else if(!SQL_Manager.instance.Profile_list[i].imageMode)
+                    { // 사진 찍기를 선택한 플레이어
+                        Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
+                        Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
+                        _image[j].sprite = profileSprite;
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// RankList에 담겨져 있는 Rank들 중 동일한 SpriteName의 Rank를 찾아 Clear가 빠른 순서대로 정렬하여 Text와 Image에 출력해주는 Method
+    /// </summary>
+    /// <param name="_timer"></param>
+    /// <param name="_image"></param>
+    /// <param name="_name"></param>
+    /// <param name="_spriteName"></param>
+    public void LoadTimer(TMP_Text[] _timer, Image[] _image, TMP_Text[] _name, int _spriteName)
+    {
+        SQL_Manager.instance.SQL_ProfileListSet();
+
+        // 특정 spriteName에 대한 모든 타이머 기록을 찾아서 정렬하고 상위 3개를 선택합니다.
+        var topRanks = rankList
+         .Where(r => r.spriteName.Contains(_spriteName))
+         .SelectMany(r => r.timer.Select((timer, index) => new { Rank = r, Timer = timer }))
+         .Where(x => x.Rank.spriteName.Contains(_spriteName))
+         .OrderBy(x => x.Timer)
+         .Take(3)
+         .ToList();
+
+        for(int i = 0; i < topRanks.Count; i++)
+        {// 선택된 상위 3개의 랭크에 대해 text 배열을 업데이트.
+            if (i < _timer.Length)
+            {
+                _timer[i].text = topRanks[i].Timer.ToString();
+            }
+        }
+
+        for (int i = topRanks.Count; i < _timer.Length; i++)
+        { // 만약 상위 3위를 채우지 못한 경우, 남은 텍스트 요소를 비움.
+            _timer[i].text = "";
+        }
+
+        Debug.Log(topRanks[0].Rank.index);
+        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        { // SQL에 등록되어 있는 Profile
+            for (int j = 0; j < topRanks.Count; j++)
+            { // 정렬된 List
+                if (SQL_Manager.instance.Profile_list[i].index == topRanks[j].Rank.index)
+                { // Profile Index와 정렬된 List의 Index가 일치한 걸 찾아옴
+                    _name[j].text = SQL_Manager.instance.Profile_list[i].name;
+                    if (SQL_Manager.instance.Profile_list[i].imageMode)
+                    { // 이미지 고르기를 선택한 플레이어
+                        _image[j].sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
+                    }
+                    else if (!SQL_Manager.instance.Profile_list[i].imageMode)
+                    { // 사진 찍기를 선택한 플레이어
+                        Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
+                        Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
+                        _image[j].sprite = profileSprite;
+                    }
+                }
+            }
         }
     }
     #endregion
 
+    private void SaveRanking()
+    { // 랭킹 데이터 JSON으로 저장
+        RankList rankListWrapper = new RankList { ranks = rankList };
+        string json = JsonUtility.ToJson(rankListWrapper, true);
+        File.WriteAllText(rankPath, json);
+    }
+    
+    private void LoadRanking()
+    { // JSON에서 랭킹 데이터 불러오기
+        if (File.Exists(rankPath))
+        {
+            string json = File.ReadAllText(rankPath);
+            RankList rankListWrapper = JsonUtility.FromJson<RankList>(json);
+            rankList = rankListWrapper.ranks;
+        }
+    }
+    #endregion
 }

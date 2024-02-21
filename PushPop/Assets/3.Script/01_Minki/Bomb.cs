@@ -17,78 +17,82 @@ public enum Turn
 /// </summary>
 public class Bomb : MonoBehaviour, IPointerClickHandler
 {
+    [SerializeField] private GameObject changeBtn; // Back버튼을 모든 모드 통합으로 써서 ... 스크립트로 끄려면 참조할수밖에 없읍,,
+    [SerializeField] private GameObject selectBtn;// Back버튼을 모든 모드 통합으로 써서 ... 스크립트로 끄려면 참조할수밖에 없읍,,
+
     [Header("1P Player")]
-    [SerializeField] private Image playerImage1P = null;
-    [SerializeField] private TMP_Text playerName1P = null;
-    public List<GameObject> popList1P = new List<GameObject>();
-    [SerializeField] private TMP_Text inGameText1P = null;
-    [SerializeField] private Image inGameImage1P = null;
-    private bool Quit1P = false;
+    [SerializeField] private Image playerImage1P = null;    // 로비에서 보이는 1P Image
+    [SerializeField] private TMP_Text playerName1P = null;  // 로비에서 보이는 1P Name
+    public List<GameObject> popList1P = new List<GameObject>(); // 1P의 Pushpop List
+    [SerializeField] private Image inGameImage1P = null;    // 게임 화면에서 보이는 1P Image
+    [SerializeField] private TMP_Text inGameText1P = null;  // 게임 화면에서 보이는 1P Name
+    private bool Quit1P = false;    // 게임 화면에서 뒤로가기 버튼 1P
 
     [Header("2P Player")]
-    public Image playerImage2P = null;
-    public Image tempPlayerImage2P = null;
-    public TMP_Text playerName2P = null;
-    public TMP_Text tempPlayerName2P = null;
-    public bool isImageSelect = false;
-    public bool isUpdate = false;
-    public bool isSelect2P = false;
-    public List<GameObject> popList2P = new List<GameObject>();
-    [SerializeField] private TMP_Text inGameText2P = null;
-    [SerializeField] private Image inGameImage2P = null;
-    private bool Quit2P = false;
+    public Image playerImage2P = null;    // 로비에서 보이는 2P Image
+    public Image tempPlayerImage2P = null;  // 프로필 선택 판넬에서 보이는 2P Image
+    public TMP_Text playerName2P = null;    // 로비에서 보이는 2P Name
+    public TMP_Text tempPlayerName2P = null;    // 프로필 선택 판넬에서 보이는 2P Name
+    public bool isImageSelect = false;  // 이미지 고르기에서 아이콘을 선택 했는지 
+    public bool isUpdate = false;   // 프로필 수정모드인지
+    public bool isSelect2P = false;     // 2P 프로필이 선택 됐는지
+    public List<GameObject> popList2P = new List<GameObject>(); // 1P의 Pushpop List
+    [SerializeField] private Image inGameImage2P = null;    // 게임 화면에서 보이는 2P Image
+    [SerializeField] private TMP_Text inGameText2P = null;  // 게임 화면에서 보이는 2P Name
+    private bool Quit2P = false;    // 게임 화면에서 뒤로가기 버튼 2P
 
     [Header("Profile Obj")]
-    [SerializeField] private GameObject profilePanel = null;
-    [SerializeField] private Transform profileParent = null;
-    [SerializeField] private List<GameObject> profileList = new List<GameObject>();
-    [SerializeField] private string profile2PName = null;
-    [SerializeField] private TMP_InputField profile2PInput = null;
-    [SerializeField] private GameObject iconPanel = null;
-    [SerializeField] private GameObject checkPanel = null;
-    private int imageIndex = 0;
+    [SerializeField] private GameObject profilePanel = null;    // Profile Panel
+    [SerializeField] private Transform profileParent = null;    // Profile Panel Parent
+    [SerializeField] private List<GameObject> profileList = new List<GameObject>(); // Profile Panel List
+    [SerializeField] private string profile2PName = null;   // Profile Add시 게임매니저나 SQL매니저에게 보내줄 string 값
+    [SerializeField] private TMP_InputField profile2PInput = null;  // Profile Add하는 Inputfield
+    [SerializeField] private GameObject iconPanel = null;   // 이미지 고르기 했을 때 나오는 아이콘 판넬
+    [SerializeField] private GameObject checkPanel = null;  // 사진 찍기 했을 때 체크 판넬
+    private int imageIndex = 0; // 이미지 고르기의 Icon Index
     private string imagePath = string.Empty;   // Camera Image Save Path
 
     [Header("Panel")]
-    public GameObject MainPanel = null;
-    public GameObject GamePanel = null;
-    public GameObject CreateImagePanel = null;    
-    public GameObject SelectProfile = null;
-    public GameObject CurrentProfile = null;
-    public GameObject help_Canvas = null;
-    public GameObject main_Canvas = null;
+    public GameObject MainPanel = null; // 게임 로비
+    public GameObject GamePanel = null; // 게임 화면
+    public GameObject CreateImagePanel = null;  // 사진 찍기 판넬
+    public GameObject SelectProfile = null; // 선택 판넬
+    public GameObject CurrentProfile = null;    // 최종 프로필 판넬
+    public GameObject help_Canvas = null; // 추후 꺼주고 켜주고 하는 로직만 냅두고 삭제해도 될 듯 ?
+    public GameObject main_Canvas = null;   // 메인 캔버스
 
     [Header("ErrorLog")]
-    [SerializeField] private GameObject nameLog = null;
-    [SerializeField] private GameObject imageLog = null;
-    [SerializeField] private GameObject need2P = null;
+    [SerializeField] private GameObject nameLog = null; // 한글만 입력해주세요 에러로그
+    [SerializeField] private GameObject imageLog = null;    // 이미지를 선택해주세요 에러로그
+    [SerializeField] private GameObject need2P = null;  // 2P를 선택해주세요 에러로그
 
     [Header("BombGame")]
-    [SerializeField] private bool isStart = false;
-    [SerializeField] private Turn turn = new Turn();
-    [SerializeField] private SpriteAtlas atlas = null;
-    [SerializeField] private Sprite[] sprites = null;
-    [SerializeField] private float upperTimer = 12f;
-    [SerializeField] private float bottomTimer = 60f;
-    [SerializeField] private Vector2[] upperPos = new Vector2[2];
-    [SerializeField] private Vector2[] bottomPos = new Vector2[2];
-    [SerializeField] private GameObject upperBubble;
-    [SerializeField] private GameObject bottomBubble;
-    [SerializeField] private Transform[] Frame;
-    [SerializeField] private Image waterfall;
-    [SerializeField] private TMP_Text timerText;
-    [SerializeField] private Sprite[] upperBubbleSprite;
-    [SerializeField] private Animator endAnimation;
-    [SerializeField] private GameObject result;
+    [SerializeField] private bool isStart = false;  // 게임 시작 했는지 판단하는 Bool값
+    [SerializeField] private Turn turn = new Turn();    // Turn enum
+    [SerializeField] private SpriteAtlas atlas = null;  // spriteatlas
+    [SerializeField] private Sprite[] sprites = null;   // atlas의 sprite들 배열
+    [SerializeField] private float upperTimer = 12f;    // 위 방울의 제한시간
+    [SerializeField] private float bottomTimer = 60f;   // 전체 게임의 제한시간
+    [SerializeField] private Vector2[] upperPos = new Vector2[2];   // 위 방울의 Pos
+    [SerializeField] private Vector2[] bottomPos = new Vector2[2];  // 아래 방울의 Pos
+    [SerializeField] private GameObject upperBubble;    // 위 방울 오브젝트
+    [SerializeField] private GameObject bottomBubble;   // 아래 방울 오브젝트
+    [SerializeField] private Transform[] Frame; // Pushpop Board가 소환될 Parent
+    [SerializeField] private Image waterfall;   // upperBubble안에 들어있는 물 이미지
+    [SerializeField] private TMP_Text timerText;    // 전체 제한시간 출력 text
+    [SerializeField] private Sprite[] upperBubbleSprite;    // upperBubble에 들어있는 물 이미지들의 배열
+    [SerializeField] private Animator endAnimation; // 게임 종료했을 때 나올 Animation
+    [SerializeField] private GameObject result; // 결과창 Panel
 
     [Header("Other Component")]
-    [SerializeField] private Button[] quitBtn;
+    [SerializeField] private Button[] quitBtn;  // 양쪽의 나가기 버튼
+
     //waterfall 회전 변수들
     private bool rotateDirection = true; // true면 회전 방향이 +, false면 회전 방향이 -
     private float rotationZ = 0f; // 현재 Z 축 회전 각도
 
-    private Coroutine log;
-    private Coroutine waterfall_co;
+    private Coroutine log;  // 에러로그 코루틴
+    private Coroutine waterfall_co; // 물 차오르는 코루틴
 
     #region Unity Callback
     private void Awake()
@@ -404,6 +408,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         if(isSelect2P)
         {
             MainPanel.gameObject.SetActive(false);
+            help_Canvas.SetActive(false);
             GamePanel.SetActive(true);
             InitSetting();
         }
@@ -429,8 +434,13 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
                 turn = Turn.Turn1P;
                 break;
         }
+        // 새로운 Sprite 생성 및 버블 위치 세팅
         PosSetting();
+
+        // 버튼 interactable 설정하여 누구의 턴인지 설정
         TurnSetting();
+
+        // upperBubble 초기화 및 코루틴 재실행
         if(waterfall_co != null)
         {
             StopCoroutine(waterfall_co);
@@ -464,7 +474,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         Frame[0].transform.GetChild(0).transform.localPosition = bottomPos[0];
         Frame[1].transform.GetChild(0).transform.localPosition = bottomPos[1];
         isStart = true;
+
+        // 버튼 interactable 설정하여 누구의 턴인지 설정
         TurnSetting();
+
+        // upperBubble 코루틴 실행
         waterfall_co = StartCoroutine(Waterfall_co());
 
         // Profile Setting
@@ -497,18 +511,28 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     { // 턴 넘어갔을 때 각 포지션들 설정하는 Method
         if(turn.Equals(Turn.Turn1P))
         { // 1P 턴
+            // 버튼 리스트 초기화 및 삭제 (추후 풀링으로 구현한다면 setactive false로 바꾸면 될듯)
             popList2P.Clear();
             Destroy(Frame[1].transform.GetChild(0).gameObject);    // 지금 오브젝트 풀링의 List를 받아올 수 없는 구조라서 일단 Destroy로 했음, 추후 수정해야함
+
+            // Sprite 배열로 각 플레이어들에게 랜덤한 Sprite 부여 및 Pushpop 생성
             SetSpriteImage(Frame[1], popList2P);
+
+            // 새로운 sprite, popButton 포지션 설정
             Frame[1].transform.GetChild(1).transform.localPosition = bottomPos[1]; // Destroy한 객체는 다음 프레임에 삭제됨
             upperBubble.transform.localPosition = upperPos[0];
             bottomBubble.transform.localPosition = bottomPos[1];
         }
         else if(turn.Equals(Turn.Turn2P))
         { // 2P 턴
+            // 버튼 리스트 초기화 및 삭제 (추후 풀링으로 구현한다면 setactive false로 바꾸면 될듯)
             popList1P.Clear();
             Destroy(Frame[0].transform.GetChild(0).gameObject);
+
+            // Sprite 배열로 각 플레이어들에게 랜덤한 Sprite 부여 및 Pushpop 생성
             SetSpriteImage(Frame[0], popList1P);
+
+            // 새로운 sprite, popButton 포지션 설정
             Frame[0].transform.GetChild(1).transform.localPosition = bottomPos[0];
             upperBubble.transform.localPosition = upperPos[1];
             bottomBubble.transform.localPosition = bottomPos[0];
@@ -553,6 +577,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         string spriteName = sprite.name.Replace("(Clone)", "").Trim();
 
         // 이름에서 숫자 부분만 추출하여 int로 변환
+        // 이 부분 Pushpop에서 생성하는 부분이랑 많이 꼬여있음...
         if (int.TryParse(spriteName, out int spriteNumber))
         {
             GameManager.Instance.PushPopStage = spriteNumber;
@@ -629,6 +654,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void EndGame()
     { // 게임이 종료됐을 때 Method
         isStart = false;
+
+        // 종료 애니메이션 켜주고 애니메이션 나올 위치 설정
         endAnimation.transform.gameObject.SetActive(true);
         if(turn.Equals(Turn.Turn1P))
         {
@@ -666,7 +693,10 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     private void ResetGame()
     { // 오브젝트들 삭제하는 메소드
+        // 종료 애니메이션 비활성화
         endAnimation.transform.gameObject.SetActive(false);
+        
+        // 리스트 초기화 및 Sprite 삭제
         popList1P.Clear();
         popList2P.Clear();
         Destroy(Frame[0].transform.GetChild(0).gameObject);
@@ -711,12 +741,17 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             result.SetActive(false);
             GamePanel.SetActive(false);
             MainPanel.SetActive(true);
+            help_Canvas.SetActive(true);
         }
     }
 
     public void BackBtn_Clicked()
     {
         main_Canvas.SetActive(true);
+        selectBtn.SetActive(true);
+        changeBtn.SetActive(false);
+        playerImage2P.gameObject.SetActive(false);
+        playerName2P.gameObject.SetActive(false);
         GamePanel.SetActive(false);
         CreateImagePanel.SetActive(false);
         CurrentProfile.SetActive(false);
