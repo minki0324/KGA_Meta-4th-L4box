@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 
 /// <summary>
@@ -56,6 +57,10 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     {
         SelectProfilePanel.SetActive(true);
         _profileNameAdd.onValidateInput += ValidateInput;
+        _profileNameAdd.characterLimit = 6;
+//        _profileNameAdd.onValueChanged.AddListener(
+//    (word) => _profileNameAdd.text = Regex.Replace(word, @"[^0-9a-zA-Z가-힣]", "")
+//);
     }
 
     private void Start()
@@ -293,8 +298,35 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     // Profile Add 하기 전 InputField에 저장된 이름을 변수에 저장해주는 Btn 연동 Method
     public void SendProfile()
     {
-        _profileName = _profileNameAdd.text;
-        _profileNameAdd.text = string.Empty;
+        bool bPossibleName = true;
+
+        for(int i = 0; i < _profileNameAdd.text.Length; i++)
+        {
+            if (Regex.IsMatch(_profileNameAdd.text[i].ToString(), @"[^0-9a-zA-Z가-힣]"))
+            {
+                Debug.Log("ㅋㅋ아 초성치지 말라고;;");
+                //_profileNameAdd.text = Regex.Replace(_profileNameAdd.text, @"[^0-9a-zA-Z가-힣]", string.Empty); //초성만 지우는애
+                _profileNameAdd.text = String.Empty;    //다지우는애
+                bPossibleName = false;
+            }
+        }
+
+        if (bPossibleName)
+        {
+            if (_profileNameAdd.text != string.Empty || _profileNameAdd.text.Length > 1)
+            {
+                _profileName = _profileNameAdd.text;
+                Debug.Log(_profileNameAdd.text.Length);
+                _profileNameAdd.text = string.Empty;
+                CreateNamePanel.SetActive(false);
+                CreateImagePanel.SetActive(true);
+            }
+            else
+            {
+
+            }
+
+        }
 
         /*SQL_Manager.instance.SQL_ProfileListSet();
         GameManager.Instance.ProfileIndex = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index+1;*/
