@@ -23,7 +23,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public List<GameObject> popList1P = new List<GameObject>();
     [SerializeField] private TMP_Text inGameText1P = null;
     [SerializeField] private Image inGameImage1P = null;
-    private bool Quit1P = false;
+    public bool Quit1P = false;
 
     [Header("2P Player")]
     public Image playerImage2P = null;
@@ -36,7 +36,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public List<GameObject> popList2P = new List<GameObject>();
     [SerializeField] private TMP_Text inGameText2P = null;
     [SerializeField] private Image inGameImage2P = null;
-    private bool Quit2P = false;
+    public bool Quit2P = false;
 
     [Header("Profile Obj")]
     [SerializeField] private GameObject profilePanel = null;
@@ -57,6 +57,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public GameObject CurrentProfile = null;
     public GameObject help_Canvas = null;
     public GameObject main_Canvas = null;
+    public GameObject WarningPanel = null;
 
     [Header("ErrorLog")]
     [SerializeField] private GameObject nameLog = null;
@@ -85,6 +86,10 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Button[] quitBtn;
     [SerializeField] private Button profileBtn;
     [SerializeField] private Button gameStartBtn;
+    [SerializeField] private Sprite quitNormal_Sprite; //quit 버튼 안눌렸을 때 스프라이트
+    [SerializeField] private Sprite quitPressed_Sprite; //quit 버튼 눌렷을 때 스프라이트
+
+
     //waterfall 회전 변수들
     private bool rotateDirection = true; // true면 회전 방향이 +, false면 회전 방향이 -
     private float rotationZ = 0f; // 현재 Z 축 회전 각도
@@ -116,6 +121,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         {
             help_Canvas.gameObject.SetActive(true);
         }
+
+        if(WarningPanel.activeSelf)
+        {
+            WarningPanel.SetActive(false);
+        }
     }
 
     private void Update()
@@ -138,13 +148,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void OnDisable()
     {
         profile2PInput.onValidateInput -= ValidateInput;
-        isSelect2P = false;
-
-        if (help_Canvas.activeSelf)
-        {
-            help_Canvas.SetActive(false);
-        }
-        
+        isSelect2P = false;       
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -407,6 +411,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         {
             MainPanel.gameObject.SetActive(false);
             GamePanel.SetActive(true);
+            help_Canvas.SetActive(false);
+            WarningPanel.SetActive(false);
+            ButtonSetting();
             InitSetting();
         }
         else
@@ -664,6 +671,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         
         // 오브젝트 삭제
         ResetGame();
+        help_Canvas.SetActive(true);
     }
 
     private void ResetGame()
@@ -698,23 +706,92 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     { // 매개변수 0은 1P / 1은 2P
         if(_player.Equals(0))
         {
-            Quit1P = true;
-            quitBtn[0].interactable = false;
+            //Quit1P = true;
+            // quitBtn[0].interactable = false;
+            Check_quitBtn_1P();
+            
         }
         else if (_player.Equals(1))
         {
-            Quit2P = true;
-            quitBtn[1].interactable = false;
+            //Quit2P = true;
+            // quitBtn[1].interactable = false;
+            Check_quitBtn_2P();
+           
         }
 
         if(Quit1P && Quit2P)
         {
-            QuitGame();
-            result.SetActive(false);
-            GamePanel.SetActive(false);
-            MainPanel.SetActive(true);
+            Time.timeScale = 0;
+            quitBtn[0].interactable = false;
+            quitBtn[1].interactable = false;
+            WarningPanel.SetActive(true);
+           
         }
     }
+
+
+    //시작시 quit 버튼들 세팅
+    private void ButtonSetting()
+    {
+        Quit1P = false;
+        quitBtn[0].GetComponent<Image>().sprite = quitNormal_Sprite;
+        quitBtn[0].interactable = true;
+
+        Quit2P = false;
+        quitBtn[1].GetComponent<Image>().sprite = quitNormal_Sprite;
+        quitBtn[0].interactable = true;
+    }
+
+
+    //quitBtn[0]번 상태 변경 메소드
+    private void Check_quitBtn_1P()
+    {        
+        if(!Quit1P)
+        {
+            Quit1P = true;          
+            quitBtn[0].GetComponent<Image>().sprite = quitPressed_Sprite;
+        }
+        else
+        {
+            Quit1P = false;       
+            quitBtn[0].GetComponent<Image>().sprite = quitNormal_Sprite;
+        }
+      
+    }
+
+
+    //quitBtn[1]번 상태 변경 메소드
+    private void Check_quitBtn_2P()
+    {
+        if (!Quit2P)
+        {
+            Quit2P = true;
+            quitBtn[1].GetComponent<Image>().sprite = quitPressed_Sprite;
+        }
+        else
+        {
+            Quit2P = false;      
+            quitBtn[1].GetComponent<Image>().sprite = quitNormal_Sprite;
+        }
+    }
+
+
+    public void GoOutBtn_Clicked()
+    {
+        QuitGame();
+        result.SetActive(false);
+        GamePanel.SetActive(false);
+        MainPanel.SetActive(true);
+        WarningPanel.SetActive(false);
+        Time.timeScale = 1;
+    }
+
+    public void CancelBtn_Clicked()
+    {
+        Time.timeScale = 1;
+        WarningPanel.SetActive(false);
+    }
+
 
     public void BackBtn_Clicked()
     {
