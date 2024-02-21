@@ -53,8 +53,8 @@ public class PushPopEditor : Editor
 
         PushPopTest pushPopTest = (PushPopTest)target;
 
-        show = EditorGUILayout.Foldout(show, "PushPop Edit X");
-        
+        show = EditorGUILayout.Foldout(show, "Don't Edit");
+
         if (show)
         {
             EditorGUI.indentLevel += 2;
@@ -63,13 +63,13 @@ public class PushPopEditor : Editor
             EditorGUILayout.PropertyField(boardPrefabUI);
             EditorGUILayout.PropertyField(boardPrefab);
             EditorGUILayout.PropertyField(buttonCanvas);
-            EditorGUILayout.PropertyField(percentage);
-            EditorGUILayout.PropertyField(buttonSize);
             EditorGUILayout.PropertyField(posPrefab);
             EditorGUILayout.PropertyField(spriteAtlas);
             EditorGUI.indentLevel -= 2;
         }
 
+        EditorGUILayout.PropertyField(percentage);
+        EditorGUILayout.PropertyField(buttonSize);
         // EditorGUILayout.PropertyField(boardSprite);
         EditorGUILayout.PropertyField(spriteName);
         if (GUILayout.Button("PushPop"))

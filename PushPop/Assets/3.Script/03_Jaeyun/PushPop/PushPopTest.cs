@@ -19,6 +19,7 @@ public class PushPopTest : MonoBehaviour
     public GameObject boardPrefabUI;
     public RectTransform boardSizeUI;
     private GameObject pushPopBoard = null; // instantiate object
+    public Transform buttonCanvas;
 
     [Header("PushPop Board")]
     public GameObject boardPrefab = null; // board Prefab
@@ -28,18 +29,19 @@ public class PushPopTest : MonoBehaviour
 
     [Header("Sprite Setting")]
     public Sprite boardSprite = null; // board sprite, custom sprite out line setting 필요 
-    public string spriteName = string.Empty;
     public SpriteAtlas spriteAtlas = null;
 
-    [Header("Grid & Button Size")]
-    public Transform buttonCanvas;
     private Vector2 grid = Vector2.zero;
-    public float percentage = 0; // gameobject에 따른 gird 비율
-    public Vector2 buttonSize = Vector2.zero; // x, y 동일
 
     [Header("Grid Pos")]
     public GameObject posPrefab = null; // grid에 지정할 pos prefab
     private List<GameObject> pos = new List<GameObject>();
+    
+    [Header("Setting")]
+    public float percentage = 0; // gameobject에 따른 gird 비율
+    public Vector2 buttonSize = Vector2.zero; // x, y 동일
+
+    public string spriteName = string.Empty;
 
     [Header("Result")]
     public int buttonCount = 0;
@@ -105,15 +107,16 @@ public class PushPopTest : MonoBehaviour
         grid.y = (int)(boardSize.y / percentage);
 
         // grid pos setting
-        for (int col = 0; col <= grid.x; col++)
+        for (int y = 0; y <= grid.y; y++)
         {
-            for (int row = 0; row <= grid.y; row++)
+            for (int x = 0; x <= grid.x; x++)
             {
-                float posX = -boardSize.x / grid.x * col;
-                float posY = -boardSize.y / grid.y * row;
+                float posX = -boardSize.x / grid.x * x;
+                float posY = -boardSize.y / grid.y * y;
                 GetPushPopButton(pos, posPrefab, transform, posX, posY);
             }
         }
+
         buttonCount = activePos.Count;
     }
 
