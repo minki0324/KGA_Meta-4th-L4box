@@ -8133,6 +8133,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bedaa8f39df9ee544b3341cdea76d02a, type: 2}
   - {fileID: 11400000, guid: 101253ea2aedf6d4bb7702a007ccc8d3, type: 2}
   - {fileID: 11400000, guid: 477ca134c32920645b060ea71485b9ac, type: 2}
+  - {fileID: 11400000, guid: a022932372f521e49baec83bb9fd7dad, type: 2}
   ClearCount: 0
   successCount: 0
   currentPuzzle: {fileID: 0}
@@ -52732,6 +52733,26 @@ PrefabInstance:
       propertyPath: Lobby
       value: 
       objectReference: {fileID: 2044466436}
+    - target: {fileID: 3410106166621884647, guid: b18826af53fae19469d1318a0a43b76b, type: 3}
+      propertyPath: stages.Array.size
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 3410106166621884647, guid: b18826af53fae19469d1318a0a43b76b, type: 3}
+      propertyPath: stages.Array.data[18]
+      value: 
+      objectReference: {fileID: 11400000, guid: 48fbd43a5f5c3d046b5a31dd1744072f, type: 2}
+    - target: {fileID: 3410106166621884647, guid: b18826af53fae19469d1318a0a43b76b, type: 3}
+      propertyPath: stages.Array.data[19]
+      value: 
+      objectReference: {fileID: 11400000, guid: 74038f743912f3049af7b830faec36af, type: 2}
+    - target: {fileID: 3410106166621884647, guid: b18826af53fae19469d1318a0a43b76b, type: 3}
+      propertyPath: stages.Array.data[20]
+      value: 
+      objectReference: {fileID: 11400000, guid: b7f478d675bd3534ea4a17a13d07a98a, type: 2}
+    - target: {fileID: 3410106166621884647, guid: b18826af53fae19469d1318a0a43b76b, type: 3}
+      propertyPath: stages.Array.data[21]
+      value: 
+      objectReference: {fileID: 11400000, guid: e3500a54fc82b85428cfb21a5457ae4c, type: 2}
     - target: {fileID: 3410106167408923047, guid: b18826af53fae19469d1318a0a43b76b, type: 3}
       propertyPath: m_IsActive
       value: 0

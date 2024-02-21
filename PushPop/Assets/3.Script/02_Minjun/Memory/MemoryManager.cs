@@ -92,7 +92,7 @@ public class MemoryManager : MonoBehaviour
         //스코어초기화
         ResetScore();
         //메모리 로비로 나가기
-       // StartCoroutine(ExitToLobby());
+        StartCoroutine(ExitToLobby());
     }
     public void onStageFail(bool isGiveUp)
     {//게임종료메소드

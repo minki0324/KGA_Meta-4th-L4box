@@ -102,9 +102,14 @@ public class MemoryPushpop : MonoBehaviour
         memoryBoard.BtnAllStop(); //버튼동작정지
         MemoryManager.Instance.PlayStartPanel("훌륭 해요!");//애니메이션 멘트재생
         yield return new WaitForSeconds(2f);
-
-        Destroy(memoryBoard.gameObject); //현재보드 지우기
         MemoryManager.Instance.currentStage++; //스테이지 Index증가
+        Debug.Log(MemoryManager.Instance.currentStage);
+         if(MemoryManager.Instance.stages.Length< MemoryManager.Instance.currentStage)
+        {
+            Debug.Log("스테이지를 모두 클리어 하셨습니다. 추카합니다!");
+            yield break;
+        }
+        Destroy(memoryBoard.gameObject); //현재보드 지우기
         MemoryManager.Instance.SetStageIndex(); //스테이지 텍스트 문구변경
 
         //다음스테이지?로이동(새로운보드 꺼내주기) manager에서 
