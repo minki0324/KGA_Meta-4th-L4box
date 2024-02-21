@@ -6,4 +6,5 @@ public class MemoryStageData : ScriptableObject
 {
     public GameObject board;
     public int CorrectCount;
+    public bool isSpecialStage;
 }

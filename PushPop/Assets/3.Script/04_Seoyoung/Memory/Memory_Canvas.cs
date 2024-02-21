@@ -38,10 +38,10 @@ public class Memory_Canvas : MonoBehaviour
     [Header("랭킹")]
     [SerializeField] private GameObject rankObject;
    // [SerializeField] private List<Rank> rank_List = new List<Rank>();
-    [SerializeField] private List<Image> rankIconImage_List = new List<Image>();
-    [SerializeField] private List<Image> profileImage_List = new List<Image>();
-    [SerializeField] private List<TMP_Text> profileName_List = new List<TMP_Text>();
-    [SerializeField] private List<TMP_Text> scoreText_List = new List<TMP_Text>();
+    [SerializeField] private Image[] profileImage_Array;
+    [SerializeField] private TMP_Text[] profileName_Array;
+    [SerializeField] private TMP_Text[] scoreText_Array;
+
 
     #region Unity Callback
     private void OnEnable()
@@ -61,11 +61,7 @@ public class Memory_Canvas : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        Init();
-    }
-
+  
     private void OnDisable()
     {
         //help_Canvas.gameObject.SetActive(false);
@@ -74,17 +70,7 @@ public class Memory_Canvas : MonoBehaviour
     #endregion
 
     #region Other Method
-    public void Init()
-    {
-        for (int i = 0; i < rankObject.transform.childCount; i++)
-        {
-            rankIconImage_List.Add(rankObject.transform.GetChild(i).GetChild(0).GetComponent<Image>());
-            profileImage_List.Add(rankObject.transform.GetChild(i).GetChild(1).GetComponent<Image>());
-            profileName_List.Add(rankObject.transform.GetChild(i).GetChild(2).GetComponent<TMP_Text>());
-            scoreText_List.Add(rankObject.transform.GetChild(i).GetChild(3).GetComponent<TMP_Text>());
-        }
 
-    }
 
     //게임 시작 버튼 클릭 시 호출되는 함수
     public void GameStartBtn_Clicked()
@@ -98,10 +84,10 @@ public class Memory_Canvas : MonoBehaviour
 
     public void BackBtn_Clicked()
     {
-        main_Canvas.gameObject.SetActive(true);
+        gameSet_Panel.gameObject.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
 
-        gameObject.SetActive(false);
+        main_Canvas.gameObject.SetActive(true);
     }
 
     public void EnableObjects()
@@ -117,6 +103,10 @@ public class Memory_Canvas : MonoBehaviour
     public void Calculate_Rank()
     {
         //디비에서 개인 랭킹 읽어온 후 계산
+    }
+    public void RangkinLoad()
+    {
+        //Ranking.instance.LoadScore(scoreText_Array, profileImage_Array, profileName_Array);
     }
 
     #endregion

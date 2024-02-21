@@ -36,6 +36,17 @@ public class MemoryPushpop : MonoBehaviour
         
     }
     #region onButton에 넣어주는메소드
+    public void onBtnClick()
+    {
+        if (memoryBoard.stage.isSpecialStage)
+        {
+            InOrderBtn();
+        }
+        else
+        {
+            MemoryBtnClick();
+        }
+    }
     public void MemoryBtnClick()
     {
         if (isCorrect)
@@ -68,6 +79,7 @@ public class MemoryPushpop : MonoBehaviour
         MemoryManager.Instance.AddScore(); //점수 증가
         if (memoryBoard.isStageClear())
         {
+          
             onStageClear();
         }
     }
@@ -79,8 +91,8 @@ public class MemoryPushpop : MonoBehaviour
         //해당 버튼이 흔들리게 설정(애니메이션)
         //라이프 모두소진시 실패
         if (MemoryManager.Instance.Life == 0)
-        {
-            MemoryManager.Instance.onStageFail();
+        {//결과창호출
+            MemoryManager.Instance.ResultPanel.SetActive(true);
         }
 
     }
@@ -102,14 +114,24 @@ public class MemoryPushpop : MonoBehaviour
         memoryBoard.BtnAllStop(); //버튼동작정지
         MemoryManager.Instance.PlayStartPanel("훌륭 해요!");//애니메이션 멘트재생
         yield return new WaitForSeconds(2f);
-
-        Destroy(memoryBoard.gameObject); //현재보드 지우기
         MemoryManager.Instance.currentStage++; //스테이지 Index증가
+        Debug.Log(MemoryManager.Instance.currentStage);
+        //준비된 스테이지 < 현재스테이지
+         if(MemoryManager.Instance.stages.Length< MemoryManager.Instance.currentStage)
+        {
+            Debug.Log("스테이지를 모두 클리어 하셨습니다. 축하합니다!");
+            //결과창호출
+            MemoryManager.Instance.ResultPanel.SetActive(true);
+            yield break;
+        }
+        Destroy(memoryBoard.gameObject); //현재보드 지우기
         MemoryManager.Instance.SetStageIndex(); //스테이지 텍스트 문구변경
 
         //다음스테이지?로이동(새로운보드 꺼내주기) manager에서 
         MemoryManager.Instance.CreatBoard();
     }
+
+   
     #endregion
 
 
