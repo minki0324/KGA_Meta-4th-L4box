@@ -8,7 +8,7 @@ using TMPro;
 
 public class CustomPushpopManager : MonoBehaviour
 {
-    public static CustomPushpopManager Instance;
+    public static CustomPushpopManager Instance = null;
 
 
     [SerializeField] private RectTransform CustomArea;
@@ -32,6 +32,9 @@ public class CustomPushpopManager : MonoBehaviour
     public Image resultImage;
     public bool isCustomMode;
     public Action onCustomEnd;
+
+    public GameObject decoPanel;
+
     private void Awake()
     {
         Instance = this;
@@ -162,6 +165,8 @@ public class CustomPushpopManager : MonoBehaviour
     }
     public void onCustomEndmethod()
     {
+        if (StackPops.Count == 0) return;
+        decoPanel.SetActive(false);
         onCustomEnd?.Invoke();
     }
     public void DestroyChildren()
