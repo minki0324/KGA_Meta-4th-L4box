@@ -102,6 +102,7 @@ public class Speed_Timer : MonoBehaviour
     {
         Time.timeScale = 1;
         help_Canvas.gameObject.SetActive(true);
+        help_Canvas.Button_Enable();
         SelectDifficulty_Panel.SetActive(true);
         speed_Canvas.Enable_Objects();
         Warning_Panel.SetActive(false);

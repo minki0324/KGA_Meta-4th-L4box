@@ -68,6 +68,8 @@ public class Speed_Canvas : MonoBehaviour
     {
         selectDifficulty_Panel.SetActive(true);
         help_Canvas.gameObject.SetActive(true);
+        help_Canvas.transform.SetParent(gameObject.transform);
+        help_Canvas.transform.SetSiblingIndex(3);
     }
 
     private void Start()
@@ -88,6 +90,7 @@ public class Speed_Canvas : MonoBehaviour
     {
         help_Canvas.gameObject.SetActive(false);
         selectCategory_Panel.SetActive(false);
+
     }
 
     #endregion
@@ -194,8 +197,10 @@ public class Speed_Canvas : MonoBehaviour
         {
             ready_Panel.SetActive(true);
 
-            help_Canvas.Back_Btn.enabled = false;
-            help_Canvas.Help_Btn.enabled = false;
+
+            help_Canvas.Back_Btn.interactable = false;
+            help_Canvas.Help_Btn.interactable = false;
+           
 
             selected_Image.sprite = button.GetComponent<Image>().sprite;
             selected_Text.text = button.transform.GetChild(0).GetComponent<TMP_Text>().text;
@@ -211,8 +216,8 @@ public class Speed_Canvas : MonoBehaviour
         if (!help_Canvas.bisHelpPanelOn)
         {
             ready_Panel.SetActive(false);
-            help_Canvas.Back_Btn.enabled = true;
-            help_Canvas.Help_Btn.enabled = true;
+            help_Canvas.Back_Btn.interactable = true;
+            help_Canvas.Help_Btn.interactable = true;
         }
     }
 
@@ -246,11 +251,11 @@ public class Speed_Canvas : MonoBehaviour
             }
             else
             {
+                help_Canvas.transform.SetParent(null);
+                help_Canvas.transform.SetAsLastSibling();
 
                 gameObject.SetActive(false);
                 main_Canvas.gameObject.SetActive(true);
-
-
             }
         }
 

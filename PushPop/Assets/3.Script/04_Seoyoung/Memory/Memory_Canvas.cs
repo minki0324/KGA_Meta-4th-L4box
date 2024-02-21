@@ -59,6 +59,8 @@ public class Memory_Canvas : MonoBehaviour
         {
             help_Canvas.gameObject.SetActive(true);
         }
+
+       
     }
 
     private void Start()
@@ -98,6 +100,7 @@ public class Memory_Canvas : MonoBehaviour
 
     public void BackBtn_Clicked()
     {
+
         main_Canvas.gameObject.SetActive(true);
         help_Canvas.gameObject.SetActive(false);
 
@@ -112,11 +115,6 @@ public class Memory_Canvas : MonoBehaviour
     public void DisalbeObjects()
     {
         gameStart_Btn.interactable = false;
-    }
-
-    public void Calculate_Rank()
-    {
-        //디비에서 개인 랭킹 읽어온 후 계산
     }
 
     #endregion

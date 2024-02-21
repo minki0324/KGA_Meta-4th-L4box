@@ -798,6 +798,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     //좌측 하단 나가기 버튼
     public void BackBtn_Clicked()
     {
+
         main_Canvas.SetActive(true);
         GamePanel.SetActive(false);
         CreateImagePanel.SetActive(false);

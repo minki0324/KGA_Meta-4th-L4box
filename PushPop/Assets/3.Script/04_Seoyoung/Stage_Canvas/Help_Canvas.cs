@@ -98,7 +98,7 @@ public class Help_Canvas : MonoBehaviour
                     break;
             }
 
-           
+            
         }
  
     }
@@ -258,6 +258,23 @@ public class Help_Canvas : MonoBehaviour
         page_Text.text = $"{currentPage}/{maxPage}";
     }
 
+    public void Button_Enable()
+    {
+        Back_Btn.interactable = true;
+        help_Btn.interactable = true;
+
+        Back_Btn.GetComponent<Image>().color = new Color(188f, 188f, 188f);
+        help_Btn.GetComponent<Image>().color = new Color(188f, 188f, 188f);
+    }
+
+    public void Button_Disable()
+    {
+        Back_Btn.interactable = false;
+        help_Btn.interactable = false;
+
+        Back_Btn.GetComponent<Image>().color = new Color(255f, 255f, 255f);
+        help_Btn.GetComponent<Image>().color = new Color(255f, 255f, 255f);
+    }
 
 
 

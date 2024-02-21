@@ -20,9 +20,9 @@ public class Option : MonoBehaviour
 
     private void Start()
     {
+        //PlayerPrefs.DeleteAll();
         Init();
         gameObject.SetActive(false);
-       // PlayerPrefs.DeleteAll();
     }
     #endregion
 
@@ -47,8 +47,7 @@ public class Option : MonoBehaviour
         }
         else
         {
-            Master_Slider.value = Master_Slider.maxValue;
-                //(Master_Slider.minValue + Master_Slider.maxValue) * 0.5f;
+            Master_Slider.value = (Master_Slider.minValue + Master_Slider.maxValue) * 0.5f;
         }
 
         if (PlayerPrefs.HasKey("BGMVolume"))
