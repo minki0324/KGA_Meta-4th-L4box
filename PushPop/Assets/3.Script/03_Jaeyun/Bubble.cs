@@ -35,6 +35,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
                 break;
             case Mode.Speed:
                 Speed_Timer speedTimer = FindObjectOfType<Speed_Timer>();
+                if (speedTimer == null) return;
                 speedTimer.time_Slider.gameObject.SetActive(true);
                 GameManager.Instance.SpeedModePushPopCreate();
                 break;

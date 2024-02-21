@@ -58,6 +58,23 @@ public class Speed_Timer : MonoBehaviour
         speed_Canvas.Enable_Objects();
 
         gameObject.SetActive(false);
+
+        // Back Method
+        if (PushPop.Instance.pushPopBoardObject.Count > 0)
+        {
+            Destroy(PushPop.Instance.pushPopBoardObject[0]);
+            PushPop.Instance.pushPopBoardObject.Clear();
+        }
+
+        if (GameManager.Instance.bubbleObject.Count > 0)
+        {
+            Destroy(GameManager.Instance.bubbleObject[0]);
+            GameManager.Instance.bubbleObject.Clear();
+        }
+
+        GameManager.Instance.bubblePos.Clear(); // bubble transform mode에 따라 달라짐
+        PushPop.Instance.PushPopClear();
+        StopCoroutine(timer);
     }
 
     #endregion
