@@ -7,44 +7,44 @@ using TMPro;
 public class MemoryManager : MonoBehaviour
 {
     public static MemoryManager Instance;
-    [SerializeField] private Animator StartPanel; //°ÔÀÓ½ÃÀÛ ,ÈÇ¸¢ÇØ¿ä Àç»ıÇØÁÖ´Â ÆÇ³Ú Ani
-    [SerializeField] public TMP_Text StageIndex; //È­¸é»ó Ç¥½ÃÇÏ´Â ½ºÅ×ÀÌÁö
-    [SerializeField] public TMP_Text ScoreText; //Á¡¼öÅØ½ºÆ®
-    [SerializeField] private GameObject Lobby; //Çª½ÃÇª½Ã ½ºÇÇµå ¸Ş¸ğ¸® ¼±ÅÃÃ¢
-    [SerializeField] public GameObject ResultPanel; //¶óÀÌÇÁ¼ÒÁø , AllClear½Ã ¶ß´Â °á°úÃ¢
-    [SerializeField] private GameObject[] Heart; //¸ñ¼û³ªÅ¸³»´Â ÇÏÆ®¿ÀºêÁ§Æ® ¹è¿­
+    [SerializeField] private Animator StartPanel; //ê²Œì„ì‹œì‘ ,í›Œë¥­í•´ìš” ì¬ìƒí•´ì£¼ëŠ” íŒë„¬ Ani
+    [SerializeField] public TMP_Text StageIndex; //í™”ë©´ìƒ í‘œì‹œí•˜ëŠ” ìŠ¤í…Œì´ì§€
+    [SerializeField] public TMP_Text ScoreText; //ì ìˆ˜í…ìŠ¤íŠ¸
+    [SerializeField] private GameObject Lobby; //í‘¸ì‹œí‘¸ì‹œ ìŠ¤í”¼ë“œ ë©”ëª¨ë¦¬ ì„ íƒì°½
+    [SerializeField] public GameObject ResultPanel; //ë¼ì´í”„ì†Œì§„ , AllClearì‹œ ëœ¨ëŠ” ê²°ê³¼ì°½
+    [SerializeField] private GameObject[] Heart; //ëª©ìˆ¨ë‚˜íƒ€ë‚´ëŠ” í•˜íŠ¸ì˜¤ë¸Œì íŠ¸ ë°°ì—´
     
-    public MemoryBoard currentBoard; //ÇöÀç ¼ÒÈ¯µÇÀÖ´Â Çª½ÃÆËº¸µåÆÇ
-    public int currentStage = 1; //ÇöÀç½ºÅ×ÀÌÁö
-    public int Life = 3; //ÇöÀç¶óÀÌÇÁ
-    public int Score = 0; //ÇöÀç½ºÄÚ¾î
-    public MemoryStageData[] stages; //½ºÅ×ÀÌÁö ScriptableObject ¹è¿­ ÇöÀç½ºÅ×ÀÌÁö¿¡µû¶ó ¼³Á¤ÀÌ´Ù¸§ / º¸µåÆÇ,Á¤´ä°¹¼ö, ½ºÆä¼È½ºÅ×ÀÌÁö¿©ºÎ
-    public Transform SapwnPos; //Çª½ÃÆËº¸µåÆÇ ¼ÒÈ¯À§Ä¡
+    public MemoryBoard currentBoard; //í˜„ì¬ ì†Œí™˜ë˜ìˆëŠ” í‘¸ì‹œíŒë³´ë“œíŒ
+    public int currentStage = 1; //í˜„ì¬ìŠ¤í…Œì´ì§€
+    public int Life = 3; //í˜„ì¬ë¼ì´í”„
+    public int Score = 0; //í˜„ì¬ìŠ¤ì½”ì–´
+    public MemoryStageData[] stages; //ìŠ¤í…Œì´ì§€ ScriptableObject ë°°ì—´ í˜„ì¬ìŠ¤í…Œì´ì§€ì—ë”°ë¼ ì„¤ì •ì´ë‹¤ë¦„ / ë³´ë“œíŒ,ì •ë‹µê°¯ìˆ˜, ìŠ¤í˜ì…œìŠ¤í…Œì´ì§€ì—¬ë¶€
+    public Transform SapwnPos; //í‘¸ì‹œíŒë³´ë“œíŒ ì†Œí™˜ìœ„ì¹˜
     private void Awake()
     {
         Instance = this;
     }
     private void OnEnable()
     {
-        //Ã³À½ GameplayÆÇ³Ú ½ÃÀÛ½Ã º¸µåÆÇ¼ÒÈ¯(°ÔÀÓ½ÃÀÛ) 
+        //ì²˜ìŒ GameplayíŒë„¬ ì‹œì‘ì‹œ ë³´ë“œíŒì†Œí™˜(ê²Œì„ì‹œì‘) 
         CreatBoard();
     }
     public void CreatBoard()
-    {//ÇöÀç ½ºÅ×ÀÌÁö¿¡ ¸Â´Â º¸µåÆÇ ¼ÒÈ¯
+    {//í˜„ì¬ ìŠ¤í…Œì´ì§€ì— ë§ëŠ” ë³´ë“œíŒ ì†Œí™˜
         Instantiate(stages[currentStage - 1].board, SapwnPos.position, Quaternion.identity, gameObject.transform);
     }
     public MemoryStageData GetStage()
-    {//´Ù¸¥°÷¿¡¼­ ÇöÀç½ºÅ×ÀÌÁö °¡Á®¿À±â
+    {//ë‹¤ë¥¸ê³³ì—ì„œ í˜„ì¬ìŠ¤í…Œì´ì§€ ê°€ì ¸ì˜¤ê¸°
         return stages[currentStage - 1];
     }
     public void PlayStartPanel(string Text)
-    { //³Ö¾îÁØ ¸Å
+    { //ë„£ì–´ì¤€ ë§¤
         StartPanel.transform.GetChild(0).GetComponent<TMP_Text>().text = Text;
         StartPanel.SetTrigger("isStart");
     }
     public void SetStageIndex()
     {
-        StageIndex.text = $"{currentStage} ½ºÅ×ÀÌÁö";
+        StageIndex.text = $"{currentStage} ìŠ¤í…Œì´ì§€";
     }
     public void LifeRemove()
     {
@@ -71,57 +71,57 @@ public class MemoryManager : MonoBehaviour
     public void AddScore()
     {
         Score += 100;
-        ScoreText.text = $"Á¡¼ö : {Score}";
+        ScoreText.text = $"ì ìˆ˜ : {Score}";
     }
     public void ResetScore()
     {
         Score = 0;
-        ScoreText.text = $"Á¡¼ö : {Score}";
+        ScoreText.text = $"ì ìˆ˜ : {Score}";
     }
-    #region °ÔÀÓÀÌ ³¡³µÀ»¶§ ½Â¸®ÆĞ¹è or Æ÷±â
-    //Stage ´ÜÀ§ ÆÇ´ÜÀº MemoryPushpop¿¡ ÀÖÀ½
+    #region ê²Œì„ì´ ëë‚¬ì„ë•Œ ìŠ¹ë¦¬íŒ¨ë°° or í¬ê¸°
+    //Stage ë‹¨ìœ„ íŒë‹¨ì€ MemoryPushpopì— ìˆìŒ
     public void onStageEnd(bool isRetry =false)
-    {//ResultPanel ´Ù½Ã½ÃÀÛ¹öÆ°  : ÀúÀåÇÏ°í ´Ù½Ã½ÃÀÛ
-        //ÇöÀçº¸µå ²¨ÁÖ±â
+    {//ResultPanel ë‹¤ì‹œì‹œì‘ë²„íŠ¼  : ì €ì¥í•˜ê³  ë‹¤ì‹œì‹œì‘
+        //í˜„ì¬ë³´ë“œ êº¼ì£¼ê¸°
 
         Destroy(currentBoard.gameObject);
-        //stageÃÊ±âÈ­
+        //stageì´ˆê¸°í™”
         currentStage = 1;
         SetStageIndex();
-        //¶óÀÌÇÁÃÊ±âÈ­
+        //ë¼ì´í”„ì´ˆê¸°í™”
         Life = 3;
         ResetLife();
-        //Á¡¼ö ±â·ÏÇÏ±â //¸ÓÁöÈÄ ÁÖ¼®Ç®±â
+        //ì ìˆ˜ ê¸°ë¡í•˜ê¸° //ë¨¸ì§€í›„ ì£¼ì„í’€ê¸°
         //Ranking.instance.SetScore(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, Score);
-        //½ºÄÚ¾îÃÊ±âÈ­
+        //ìŠ¤ì½”ì–´ì´ˆê¸°í™”
         ResetScore();
        
         if (isRetry)
-        {//´Ù½ÃÇÏ±â ¹öÆ°
+        {//ë‹¤ì‹œí•˜ê¸° ë²„íŠ¼
             CreatBoard();
         }
         else
-        {//³ª°¡±â ¹öÆ°
+        {//ë‚˜ê°€ê¸° ë²„íŠ¼
             StartCoroutine(ExitToLobby());
         }
     }
     public void onStageFail(bool isGiveUp)
-    {//°ÔÀÓÁ¾·á¸Ş¼Òµå (Æ÷±â) °ÔÀÓµµÁß Back¹öÆ° : ÀúÀå¾ÈµÇ°í ³ª°¡Áü
-        //ÇöÀçº¸µå ²¨ÁÖ±â
+    {//ê²Œì„ì¢…ë£Œë©”ì†Œë“œ (í¬ê¸°) ê²Œì„ë„ì¤‘ Backë²„íŠ¼ : ì €ì¥ì•ˆë˜ê³  ë‚˜ê°€ì§
+        //í˜„ì¬ë³´ë“œ êº¼ì£¼ê¸°
         Destroy(currentBoard.gameObject);
-        //stageÃÊ±âÈ­
+        //stageì´ˆê¸°í™”
         currentStage = 1;
         SetStageIndex();
 
-        //¶óÀÌÇÁÃÊ±âÈ­
+        //ë¼ì´í”„ì´ˆê¸°í™”
         Life = 3;
         ResetLife();
-        Ranking.instance.score = Score;
+        /*Ranking.instance.score = Score;
         Ranking.instance.test_Set_Score();
-        Ranking.instance.test_Print_Rank("Memory");
-        //½ºÄÚ¾îÃÊ±âÈ­
+        Ranking.instance.test_Print_Rank("Memory");*/
+        //ìŠ¤ì½”ì–´ì´ˆê¸°í™”
         ResetScore();
-        //¸Ş¸ğ¸® ·Îºñ·Î ³ª°¡±â
+        //ë©”ëª¨ë¦¬ ë¡œë¹„ë¡œ ë‚˜ê°€ê¸°
         StartCoroutine(ExitToLobby());
         //SQL_Manager.instance.SQL_ProfileListSet()
 
@@ -129,8 +129,8 @@ public class MemoryManager : MonoBehaviour
     #endregion
 
     private IEnumerator ExitToLobby()
-    {//·Îºñ³ª°¡±â
-        PlayStartPanel("°ÔÀÓÁ¾·á");
+    {//ë¡œë¹„ë‚˜ê°€ê¸°
+        PlayStartPanel("ê²Œì„ì¢…ë£Œ");
         yield return new WaitForSeconds(2f);
         Lobby.SetActive(true);
         gameObject.SetActive(false);

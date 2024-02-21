@@ -34,22 +34,6 @@ public class Profile
     }
 }
 
-public class Rank
-{
-    public string name { get; private set; }
-    public int index { get; private set; }
-    public int score { get; private set; }
-    public float timer { get; private set; }
-
-    public Rank(string name, int index, int score, float timer)
-    {
-        this.name = name;
-        this.index = index;
-        this.score = score;
-        this.timer = timer;
-    }
-}
-
 // 서버 접속 Class
 public class server_info
 {
@@ -84,7 +68,6 @@ public class SQL_Manager : MonoBehaviour
     public string DB_path = string.Empty;   // Json Path (DB)
     public int UID;                         
     public List<Profile> Profile_list = new List<Profile>();
-    public List<Rank> Rank_List = new List<Rank>();
 
     #region Unity Callback
     private void Awake()
@@ -603,7 +586,7 @@ public class SQL_Manager : MonoBehaviour
     }
 
     #endregion
-
+/*
     #region Rank
     /// <summary>
     /// Ranking Table에 Score, Timer를 넘겨주는 Method.
@@ -736,7 +719,7 @@ public class SQL_Manager : MonoBehaviour
         }
     }
     #endregion
-
+*/
     #region PushPush
     /// <summary>
     /// PushPush게임 진행 후 Custom한 Object와 Btn들의 정보를 DB에 전달하는 Method
