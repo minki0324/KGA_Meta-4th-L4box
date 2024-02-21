@@ -243,12 +243,14 @@ public class Help_Canvas : MonoBehaviour
 
             //2인모드 도움맒
             case Mode.Bomb:
-                maxPage = 1;
-                switch (currentPage)
-                {
-                    case 1:
+                maxPage = DataManager2.instance.helpScripts_List[3].script.Count;
 
-                        break;
+                for (int i = 0; i < DataManager2.instance.helpScripts_List[3].script.Count; i++)
+                {
+                    if (currentPage == DataManager2.instance.helpScripts_List[3].script[i].pageNum)
+                    {
+                        help_Description.text = DataManager2.instance.helpScripts_List[3].script[i].content;
+                    }
                 }
                 break;
         }

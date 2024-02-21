@@ -739,7 +739,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
         Quit2P = false;
         quitBtn[1].GetComponent<Image>().sprite = quitNormal_Sprite;
-        quitBtn[0].interactable = true;
+        quitBtn[1].interactable = true;
     }
 
 
@@ -775,7 +775,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         }
     }
 
-
+    //나가기 전 경고패널 나가기 버튼
     public void GoOutBtn_Clicked()
     {
         QuitGame();
@@ -786,13 +786,16 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         Time.timeScale = 1;
     }
 
+
+    //나가기 전 경고패널 취소 버튼
     public void CancelBtn_Clicked()
     {
         Time.timeScale = 1;
         WarningPanel.SetActive(false);
+        ButtonSetting();
     }
 
-
+    //좌측 하단 나가기 버튼
     public void BackBtn_Clicked()
     {
         main_Canvas.SetActive(true);
