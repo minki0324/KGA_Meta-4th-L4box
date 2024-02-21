@@ -116,7 +116,7 @@ public class MemoryManager : MonoBehaviour
     }
     private IEnumerator ExitToLobby()
     {
-        PlayStartPanel("왤케못하니?");
+        PlayStartPanel("게임종료");
         yield return new WaitForSeconds(2f);
         Lobby.SetActive(true);
         gameObject.SetActive(false);

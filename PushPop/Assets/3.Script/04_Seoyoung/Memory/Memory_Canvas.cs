@@ -46,18 +46,9 @@ public class Memory_Canvas : MonoBehaviour
     #region Unity Callback
     private void OnEnable()
     {
-        if(!gameSet_Panel.activeSelf)
-        {
-            gameSet_Panel.SetActive(true);
-        }
-
         if (memoryGame_Canvas.gameObject.activeSelf)
         {
             memoryGame_Canvas.gameObject.SetActive(false);
-        }
-        if(!help_Canvas.gameObject.activeSelf)
-        {
-            help_Canvas.gameObject.SetActive(true);
         }
     }
 
@@ -101,7 +92,7 @@ public class Memory_Canvas : MonoBehaviour
         main_Canvas.gameObject.SetActive(true);
         help_Canvas.gameObject.SetActive(false);
 
-        gameObject.SetActive(false);
+        gameSet_Panel.SetActive(false);
     }
 
     public void EnableObjects()

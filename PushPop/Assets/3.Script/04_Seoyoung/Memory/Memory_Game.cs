@@ -37,6 +37,7 @@ public class Memory_Game : MonoBehaviour
     {
         Warning_Panel.SetActive(true);
         back_Btn.interactable = false;
+        Time.timeScale = 0f;
     }
 
 
@@ -44,18 +45,19 @@ public class Memory_Game : MonoBehaviour
     public void GoOutBtn_Clicked()
     {
         back_Btn.interactable = true;
-
-        main_Canvas.gameObject.SetActive(true);
-        memory_Canvas.gameObject.SetActive(false);
+        Warning_Panel.SetActive(false);
+        Time.timeScale = 1f;
+        //main_Canvas.gameObject.SetActive(true);
+        //memory_Canvas.gameObject.SetActive(false);
     }
 
     //나가기 경고 패널의 취소 버튼 클릭 시 호출되는 메소드
     public void CancelBtn_Clicked()
     {
         back_Btn.interactable = true;
-
         Warning_Panel.SetActive(false);
-      
+        Time.timeScale = 1f;
+
     }
 
     #endregion
