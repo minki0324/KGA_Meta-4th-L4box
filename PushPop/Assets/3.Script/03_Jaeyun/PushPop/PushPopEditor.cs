@@ -1,4 +1,4 @@
-/*using UnityEditor; // Editor
+using UnityEditor; // Editor
 using UnityEngine;
 
 [CanEditMultipleObjects]
@@ -8,31 +8,43 @@ public class PushPopEditor : Editor
     // push pop canvas
     SerializedProperty pushPopCanvas;
     SerializedProperty pushPopButtonPrefab;
+    SerializedProperty boardPrefabUI;
 
     // push pop board
     SerializedProperty boardPrefab;
     SerializedProperty boardSprite;
+    SerializedProperty spriteName;
+    SerializedProperty spriteAtlas;
 
     // grid size
+    SerializedProperty buttonCanvas;
     SerializedProperty percentage;
     SerializedProperty buttonSize;
 
     // grid pos
     SerializedProperty posPrefab;
+    SerializedProperty buttonCount;
+
+    bool show = false;
 
     private void OnEnable()
     {
         // Inspector
         pushPopCanvas = serializedObject.FindProperty("pushPopCanvas");
         pushPopButtonPrefab = serializedObject.FindProperty("pushPopButtonPrefab");
+        boardPrefabUI = serializedObject.FindProperty("boardPrefabUI");
 
         boardPrefab = serializedObject.FindProperty("boardPrefab");
         boardSprite = serializedObject.FindProperty("boardSprite");
+        spriteName = serializedObject.FindProperty("spriteName");
+        spriteAtlas = serializedObject.FindProperty("spriteAtlas");
 
+        buttonCanvas = serializedObject.FindProperty("buttonCanvas");
         percentage = serializedObject.FindProperty("percentage");
         buttonSize = serializedObject.FindProperty("buttonSize");
 
         posPrefab = serializedObject.FindProperty("posPrefab");
+        buttonCount = serializedObject.FindProperty("buttonCount");
     }
 
     public override void OnInspectorGUI()
@@ -40,34 +52,32 @@ public class PushPopEditor : Editor
         serializedObject.Update();
 
         PushPopTest pushPopTest = (PushPopTest)target;
-        EditorGUILayout.PropertyField(pushPopCanvas);
-        EditorGUILayout.PropertyField(pushPopButtonPrefab);
-        if (GUILayout.Button("Create Board"))
-        {
-            pushPopTest.CreatePushPopBoard();
-        }
 
-        EditorGUILayout.PropertyField(boardPrefab);
-        EditorGUILayout.PropertyField(boardSprite);
-        if (GUILayout.Button("CreateGrid"))
+        show = EditorGUILayout.Foldout(show, "Don't Edit");
+
+        if (show)
         {
-            pushPopTest.CreateGrid();
+            EditorGUI.indentLevel += 2;
+            EditorGUILayout.PropertyField(pushPopCanvas);
+            EditorGUILayout.PropertyField(pushPopButtonPrefab);
+            EditorGUILayout.PropertyField(boardPrefabUI);
+            EditorGUILayout.PropertyField(boardPrefab);
+            EditorGUILayout.PropertyField(buttonCanvas);
+            EditorGUILayout.PropertyField(posPrefab);
+            EditorGUILayout.PropertyField(spriteAtlas);
+            EditorGUI.indentLevel -= 2;
         }
 
         EditorGUILayout.PropertyField(percentage);
         EditorGUILayout.PropertyField(buttonSize);
-        if (GUILayout.Button("PushPopButtonSetting"))
+        // EditorGUILayout.PropertyField(boardSprite);
+        EditorGUILayout.PropertyField(spriteName);
+        if (GUILayout.Button("PushPop"))
         {
-            pushPopTest.PushPopButtonSetting();
+            pushPopTest.PushPop();
         }
-
-        EditorGUILayout.PropertyField(posPrefab);
-        if (GUILayout.Button("DestroyObject"))
-        {
-            pushPopTest.DestroyObject();
-        }
+        EditorGUILayout.PropertyField(buttonCount);
 
         serializedObject.ApplyModifiedProperties();
     }
 }
-*/

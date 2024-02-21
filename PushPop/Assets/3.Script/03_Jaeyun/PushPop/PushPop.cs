@@ -124,13 +124,12 @@ public class PushPop : MonoBehaviour
         grid.x = (int)(boardSize.x / percentage);
         grid.y = (int)(boardSize.y / percentage);
 
-        // grid pos setting
-        for (int col = 0; col <= grid.x; col++)
+        for (int y = 0; y <= grid.y; y++)
         {
-            for (int row = 0; row <= grid.y; row++)
+            for (int x = 0; x <= grid.x; x++)
             {
-                float posX = -boardSize.x / grid.x * col;
-                float posY = -boardSize.y / grid.y * row;
+                float posX = -boardSize.x / grid.x * x;
+                float posY = -boardSize.y / grid.y * y;
                 GetPushPopButton(pos, PosPrefab, _pushPopBoardObject.transform, posX, posY);
             }
         }
