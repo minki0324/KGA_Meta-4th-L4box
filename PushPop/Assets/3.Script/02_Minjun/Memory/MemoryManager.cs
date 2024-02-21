@@ -11,6 +11,7 @@ public class MemoryManager : MonoBehaviour
     [SerializeField] public TMP_Text StageIndex;
     [SerializeField] public TMP_Text ScoreText;
     [SerializeField] private GameObject Lobby;
+    [SerializeField] public GameObject ResultPanel;
     [SerializeField] private GameObject[] Heart;
     
     public MemoryBoard currentBoard;
@@ -76,9 +77,12 @@ public class MemoryManager : MonoBehaviour
         Score = 0;
         ScoreText.text = $"점수 : {Score}";
     }
-    public void onStageFail()
-    {//게임종료메소드
+    #region 게임이 끝났을때 승리패배 or 포기
+    //Stage 단위 판단은 MemoryPushpop에 있음
+    public void onStageEnd(bool isRetry =false)
+    {//ResultPanel 다시시작버튼  : 저장하고 다시시작
         //현재보드 꺼주기
+
         Destroy(currentBoard.gameObject);
         //stage초기화
         currentStage = 1;
@@ -86,16 +90,22 @@ public class MemoryManager : MonoBehaviour
         //라이프초기화
         Life = 3;
         ResetLife();
-        //점수 기록하기
-        SQL_Manager.instance.SQL_SetScore(
-            GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, Score, null, GameManager.Instance.UID);
+        //점수 기록하기 //머지후 주석풀기
+        //Ranking.instance.SetScore(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, Score);
         //스코어초기화
         ResetScore();
-        //메모리 로비로 나가기
-        StartCoroutine(ExitToLobby());
+       
+        if (isRetry)
+        {//다시하기 버튼
+            CreatBoard();
+        }
+        else
+        {//나가기 버튼
+            StartCoroutine(ExitToLobby());
+        }
     }
     public void onStageFail(bool isGiveUp)
-    {//게임종료메소드
+    {//게임종료메소드 (포기) 게임도중 Back버튼 : 저장안되고 나가짐
         //현재보드 꺼주기
         Destroy(currentBoard.gameObject);
         //stage초기화
@@ -113,7 +123,10 @@ public class MemoryManager : MonoBehaviour
         //메모리 로비로 나가기
         StartCoroutine(ExitToLobby());
         //SQL_Manager.instance.SQL_ProfileListSet()
+
     }
+    #endregion
+
     private IEnumerator ExitToLobby()
     {
         PlayStartPanel("게임종료");
