@@ -10,6 +10,13 @@ public class PuzzlePiece : MonoBehaviour
     public PuzzleObject puzzle;
     private Sprite puzzleSprite;
     private float centerPos;
+    public Coroutine puzzleMove;
+
+    private void OnDisable()
+    {
+        if (puzzleMove == null) return;
+        StopCoroutine(puzzleMove);
+    }
 
     public IEnumerator PuzzleMove_Co()
     { // bubble 터졌을 때 실행되는 Method
@@ -47,8 +54,10 @@ public class PuzzlePiece : MonoBehaviour
     {
         // AlphaCalculate(puzzleSprite);
         // pointY = transform.position.y + puzzle.puzzleCenter.y;
+        
         Debug.Log($"puzzle position: {transform.position.y}, puzzle center: {puzzle.puzzleCenter.y}");
-        StartCoroutine(PuzzleMove_Co());
+        
+        puzzleMove = StartCoroutine(PuzzleMove_Co());
     }
 
     public void AlphaCalculate(Sprite _sprite)

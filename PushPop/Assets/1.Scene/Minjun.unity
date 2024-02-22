@@ -900,7 +900,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1054,6 +1054,7 @@ MonoBehaviour:
   resultText: {fileID: 1250999713}
   resultImage: {fileID: 136261532}
   isCustomMode: 0
+  decoPanel: {fileID: 0}
 --- !u!114 &26004436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3237,6 +3238,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  bubblePos: []
   moldIcon: {fileID: 0}
   PushPopStage: 0
   BoardSize: {x: 0, y: 0}
@@ -4836,7 +4838,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.000030517578}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: -400}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &170451891
 MonoBehaviour:
@@ -21335,7 +21337,9 @@ MonoBehaviour:
   help_Canvas: {fileID: 192599597}
   selectCategory_Panel: {fileID: 2139549487}
   selectMold_Panel: {fileID: 334746}
+  puzzle_Panel: {fileID: 0}
   pushpushGame_Panel: {fileID: 26004432}
+  Warning_Panel: {fileID: 0}
   bubblePanel: {fileID: 0}
   selectCategory_ScrollView: {fileID: 206831385}
   content_ScrollView: {fileID: 1270678983}
@@ -21343,6 +21347,9 @@ MonoBehaviour:
   prievious_Btn: {fileID: 607942987}
   gameStart_Btn: {fileID: 641763000}
   Back_Btn: {fileID: 1870907863}
+  GameBack_Btn: {fileID: 0}
+  GoOut_Btn: {fileID: 0}
+  Cancle_Btn: {fileID: 0}
   selectedCategory_Text: {fileID: 1603236348}
   selectedMoldIcon_Image: {fileID: 144095327}
   selectedMoldIcon_Text: {fileID: 1327957697}
@@ -23349,6 +23356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2e84b7d82331244786c0f32159e1560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  custom: {fileID: 0}
 --- !u!114 &936303245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26351,10 +26359,6 @@ MonoBehaviour:
   _timesetPanel: {fileID: 0}
   _buttonPanel: {fileID: 1071428230}
   _gameModePanel: {fileID: 250840333}
-  pushMode_Canvas: {fileID: 0}
-  speedMode_Canvas: {fileID: 0}
-  memoryMode_Canvas: {fileID: 0}
-  Background_Canvas: {fileID: 0}
   help_Cavas: {fileID: 192599597}
 --- !u!114 &1071428233
 MonoBehaviour:
@@ -31966,6 +31970,7 @@ MonoBehaviour:
   speed_Canvas: {fileID: 159901738}
   help_Canvas: {fileID: 0}
   SelectDifficulty_Panel: {fileID: 1119224442}
+  Warning_Panel: {fileID: 0}
   time_Text: {fileID: 455660645}
   time_Slider: {fileID: 127731522}
   Mold_Image: {fileID: 0}
@@ -35979,11 +35984,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 171ae90e7d537e6469dd8169399cf24f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  changeBtn: {fileID: 0}
+  selectBtn: {fileID: 0}
   playerImage1P: {fileID: 928011392}
   playerName1P: {fileID: 2039781106}
   popList1P: []
-  inGameText1P: {fileID: 2142454177}
   inGameImage1P: {fileID: 746197285}
+  inGameText1P: {fileID: 2142454177}
   playerImage2P: {fileID: 66354527}
   tempPlayerImage2P: {fileID: 812421239}
   playerName2P: {fileID: 1806511560}
@@ -35992,8 +35999,8 @@ MonoBehaviour:
   isUpdate: 0
   isSelect2P: 0
   popList2P: []
-  inGameText2P: {fileID: 101980082}
   inGameImage2P: {fileID: 2009814963}
+  inGameText2P: {fileID: 101980082}
   profilePanel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
   profileParent: {fileID: 2043979452}
   profileList: []
@@ -36003,11 +36010,14 @@ MonoBehaviour:
   checkPanel: {fileID: 2132238482}
   MainPanel: {fileID: 1876265513}
   GamePanel: {fileID: 92455886}
+  CreateNamePanel: {fileID: 0}
   CreateImagePanel: {fileID: 1267456591}
   SelectProfile: {fileID: 1492714852}
   CurrentProfile: {fileID: 232586291}
+  deletePanel: {fileID: 0}
   help_Canvas: {fileID: 192599596}
   main_Canvas: {fileID: 2044466436}
+  WarningPanel: {fileID: 0}
   nameLog: {fileID: 431685559}
   imageLog: {fileID: 2047683985}
   need2P: {fileID: 1286813812}
@@ -36039,6 +36049,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: df8c9ca8870e2244fbcc116b419df9c7, type: 3}
   endAnimation: {fileID: 1177305978}
   result: {fileID: 143713288}
+  profileBtn: {fileID: 0}
+  gameStartBtn: {fileID: 0}
+  quitNormal_Sprite: {fileID: 0}
+  quitPressed_Sprite: {fileID: 0}
   quitBtn:
   - {fileID: 1980892431}
   - {fileID: 752966200}
@@ -41169,18 +41183,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed81ab607e31f9b45ad1323ae3fbcc47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score_txt: {fileID: 0}
-  score: 0
-  timer_txt: {fileID: 0}
-  timer: 0
-  Name_Text:
-  - {fileID: 412474556}
-  - {fileID: 2040850244}
-  - {fileID: 450493539}
-  Rank_Text:
-  - {fileID: 1973551950}
-  - {fileID: 919555183}
-  - {fileID: 795927365}
 --- !u!4 &1709264987
 Transform:
   m_ObjectHideFlags: 0
@@ -41484,9 +41486,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1722306345
 MonoBehaviour:
@@ -49234,7 +49236,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!223 &2044466437
 Canvas:
   m_ObjectHideFlags: 0
@@ -52885,7 +52887,7 @@ PrefabInstance:
       objectReference: {fileID: 186934237}
     - target: {fileID: 3410106166433306269, guid: b18826af53fae19469d1318a0a43b76b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3410106166621884644, guid: b18826af53fae19469d1318a0a43b76b, type: 3}
       propertyPath: main_Canvas
@@ -52893,7 +52895,7 @@ PrefabInstance:
       objectReference: {fileID: 2044466437}
     - target: {fileID: 3410106166621884645, guid: b18826af53fae19469d1318a0a43b76b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3410106166621884647, guid: b18826af53fae19469d1318a0a43b76b, type: 3}
       propertyPath: Lobby

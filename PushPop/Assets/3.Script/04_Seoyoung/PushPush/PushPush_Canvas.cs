@@ -14,8 +14,11 @@ public class PushPush_Canvas : MonoBehaviour
     [Header("Panel")]
     [SerializeField] private GameObject selectCategory_Panel;
     [SerializeField] private GameObject selectMold_Panel;
+    [SerializeField] private GameObject puzzle_Panel;
     [SerializeField] private GameObject pushpushGame_Panel;
+    [SerializeField] private GameObject Warning_Panel;
     [SerializeField] private GameObject bubblePanel;
+
 
     [Header("ScrollView")]
     [SerializeField] private ScrollRect selectCategory_ScrollView;
@@ -26,6 +29,9 @@ public class PushPush_Canvas : MonoBehaviour
     [SerializeField] private Button prievious_Btn;
     [SerializeField] private Button gameStart_Btn;
     [SerializeField] private Button Back_Btn;
+    [SerializeField] private Button GameBack_Btn;   //게임 시작 후 뜨는 좌측하단 뒤로가기
+    [SerializeField] private Button GoOut_Btn;
+    [SerializeField] private Button Cancle_Btn;
 
     [Header("Selected Mold Icon Image & Text")]
     [SerializeField] private TMP_Text selectedCategory_Text;    //선택된 카테고리 텍스트
@@ -81,7 +87,14 @@ public class PushPush_Canvas : MonoBehaviour
         selectCategory_Panel.SetActive(true);
         //background_Canvas.gameObject.SetActive(true);
         selectMold_Panel.SetActive(false);
-        pushpushGame_Panel.SetActive(false);
+        //pushpushGame_Panel.SetActive(false);
+        GameBack_Btn.gameObject.SetActive(false);
+
+        if(Warning_Panel.activeSelf)
+        {
+            Warning_Panel.SetActive(false);
+        }
+
 
         help_Canvas.transform.SetParent(gameObject.transform);
         help_Canvas.transform.SetSiblingIndex(3);
@@ -302,7 +315,9 @@ public class PushPush_Canvas : MonoBehaviour
     {
         SelectedMold = selectedMoldIcon_Image.sprite;
 
+
         //pushpushGame_Panel.SetActive(true);
+        GameBack_Btn.gameObject.SetActive(true);
         selectCategory_Panel.SetActive(false);
         selectMold_Panel.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
@@ -331,7 +346,7 @@ public class PushPush_Canvas : MonoBehaviour
 
     }
 
-    //좌측 하단 뒤로가기 버튼 클릭 시 호출되는 함수
+    //좌측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
     public void BackBtn_Clicked()
     {
         help_Canvas.transform.SetParent(null);
@@ -341,6 +356,35 @@ public class PushPush_Canvas : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+
+    //게임 시작 후 좌측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
+    public void Game_BackBtn_Clicked()
+    {
+        Time.timeScale = 0;
+        Warning_Panel.SetActive(true);
+        GameBack_Btn.interactable = false;
+    }
+
+
+    public void GoOutBtn_Clicked()
+    {
+        Time.timeScale = 1;
+        GameBack_Btn.interactable = true;
+        GameBack_Btn.gameObject.SetActive(false);
+        puzzle_Panel.SetActive(false);
+        pushpushGame_Panel.SetActive(false);
+        Warning_Panel.SetActive(false);
+        selectCategory_Panel.SetActive(true);
+        help_Canvas.gameObject.SetActive(true);
+        Enable_Objects();
+    }
+
+    public void CancelBtn_Clicked()
+    {
+        Time.timeScale = 1;
+        GameBack_Btn.interactable = true;
+        Warning_Panel.SetActive(false);
+    }
 
     //우측 하단 도움말 버튼 클릭 시 호출되는 함수 :  도움말 버튼 눌리면 그 외 버튼 비활성화
     public void Disable_Objects()

@@ -12,6 +12,7 @@ public class MemoryManager : MonoBehaviour
     [SerializeField] public TMP_Text ScoreText; //점수텍스트
     [SerializeField] private GameObject Lobby; //푸시푸시 스피드 메모리 선택창
     [SerializeField] public GameObject ResultPanel; //라이프소진 , AllClear시 뜨는 결과창
+    [SerializeField] public GameObject WarngingPanel;   
     [SerializeField] private GameObject[] Heart; //목숨나타내는 하트오브젝트 배열
     
     public MemoryBoard currentBoard; //현재 소환되있는 푸시팝보드판
@@ -82,8 +83,9 @@ public class MemoryManager : MonoBehaviour
     //Stage 단위 판단은 MemoryPushpop에 있음
     public void onStageEnd(bool isRetry =false)
     {//ResultPanel 다시시작버튼  : 저장하고 다시시작
-        //현재보드 꺼주기
+        Memory_Canvas canvas = transform.root.GetComponent<Memory_Canvas>();
 
+        //현재보드 꺼주기
         Destroy(currentBoard.gameObject);
         //stage초기화
         currentStage = 1;
@@ -91,11 +93,13 @@ public class MemoryManager : MonoBehaviour
         //라이프초기화
         Life = 3;
         ResetLife();
-        //점수 기록하기 //머지후 주석풀기
-        //Ranking.instance.SetScore(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, Score);
+        //점수 기록하기
+        Ranking.instance.SetScore(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, Score);
         //스코어초기화
         ResetScore();
-       
+
+        canvas.RankingLoad();
+
         if (isRetry)
         {//다시하기 버튼
             CreatBoard();
@@ -116,22 +120,26 @@ public class MemoryManager : MonoBehaviour
         //라이프초기화
         Life = 3;
         ResetLife();
-        /*Ranking.instance.score = Score;
-        Ranking.instance.test_Set_Score();
-        Ranking.instance.test_Print_Rank("Memory");*/
+   
         //스코어초기화
         ResetScore();
+        Time.timeScale = 1f;
         //메모리 로비로 나가기
-        //StartCoroutine(ExitToLobby());
+        StartCoroutine(ExitToLobby());
         //SQL_Manager.instance.SQL_ProfileListSet()
     }
     #endregion
 
     private IEnumerator ExitToLobby()
     {//로비나가기
+        WarngingPanel.SetActive(false);
+        ResultPanel.SetActive(false);
+
         PlayStartPanel("게임종료");
+        Debug.Log("코루틴전");
         yield return new WaitForSeconds(2f);
-        Lobby.SetActive(true);
-        gameObject.SetActive(false);
+        Debug.Log("코루틴후");
+
+        GetComponent<Memory_Game>().GoOutBtn_Clicked();
     }
 }

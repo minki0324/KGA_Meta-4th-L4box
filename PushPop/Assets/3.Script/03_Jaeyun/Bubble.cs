@@ -10,9 +10,11 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     private Animator bubbleAnimator;
     private Vector2 bubbleSize = Vector2.zero;
     public int touchCount = 0;
-    
+
+
     [Header("Move Parameter")]
     // Bubble moving
+    private float currentSpeed = 0f;
     private Coroutine moveCoroutine = null;
     [SerializeField] private AnimationCurve decelOverTime;
     [SerializeField] private float decel = 250f; // move 속도 감소
@@ -30,6 +32,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         switch (gameMode)
         {
             case Mode.PushPush:
+                currentSpeed = 0f;
                 PuzzlePiece piece = transform.parent.GetComponent<PuzzlePiece>();
                 piece.OnBubbleDestroy();
                 break;
@@ -170,7 +173,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     // Bubble lerp Translate moving, pushpush, speed mode에서만 사용
     private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed)
     {
-        float currentSpeed = _maxSpeed; // maxSpeed 초기화
+        currentSpeed = _maxSpeed; // maxSpeed 초기화
         float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y 같음
 
         // 속도가 0이 되었을 때까지 이동

@@ -59,7 +59,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public GameObject CreateImagePanel = null;  // 사진 찍기 판넬
     public GameObject SelectProfile = null; // 선택 판넬
     public GameObject CurrentProfile = null;    // 최종 프로필 판넬
-    public GameObject help_Canvas = null; // 추후 꺼주고 켜주고 하는 로직만 냅두고 삭제해도 될 듯 ?
+    public GameObject deletePanel = null; // 삭제 판넬
+    public Help_Canvas help_Canvas = null; // 추후 꺼주고 켜주고 하는 로직만 냅두고 삭제해도 될 듯 ?
     public GameObject main_Canvas = null;   // 메인 캔버스
     public GameObject WarningPanel = null;
 
@@ -413,9 +414,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         if(isSelect2P)
         {
             MainPanel.gameObject.SetActive(false);
-            help_Canvas.SetActive(false);
+            help_Canvas.gameObject.SetActive(false);
             GamePanel.SetActive(true);
-            help_Canvas.SetActive(false);
+            help_Canvas.gameObject.SetActive(false);
             WarningPanel.SetActive(false);
             ButtonSetting();
             InitSetting();
@@ -697,7 +698,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         
         // 오브젝트 삭제
         ResetGame();
-        help_Canvas.SetActive(true);
+        help_Canvas.gameObject.SetActive(true);
     }
 
     private void ResetGame()
@@ -802,10 +803,23 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public void ProfileInputName_BackBtn_Clicked()
     {
         profile2PInput.text = string.Empty;
-        CurrentProfile.SetActive(true);
+        SelectProfile.SetActive(true);
         CreateNamePanel.SetActive(false);
      
     }
+
+
+    //프로필 선택/ 프로필 변경 버튼 
+    public void Select2PBtn_Clicked()
+    {
+        SelectProfile.SetActive(true);
+        PrintProfileList();
+        help_Canvas.Button_Disable();
+        gameStartBtn.interactable = false;
+    }
+
+
+
 
     //나가기 전 경고패널 나가기 버튼
     public void GoOutBtn_Clicked()

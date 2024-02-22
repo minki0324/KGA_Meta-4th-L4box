@@ -20,7 +20,7 @@ public class PuzzleLozic : MonoBehaviour
     public Transform frampPos;
     [Header("피스들 설정 위치")] //임시
     public Transform[] piecePos;
-    private float puzzleJudgmentDistance = 301111; // 퍼즐 판정 거리.
+    private float puzzleJudgmentDistance = 30; // 퍼즐 판정 거리.
     public List<Puzzle> puzzles = new List<Puzzle>(); //모든 퍼즐 종류를 담아놓는 리스트
     public int ClearCount=0; //맞춰야하는 퍼즐 갯수
     public int successCount= 0; //맞춘 갯수
@@ -32,16 +32,16 @@ public class PuzzleLozic : MonoBehaviour
     [SerializeField] private GameObject DecorationPanel;
     private void OnEnable()
     {
+        onPuzzleClear += ActiveCustomPanel; //커스텀판넬 활성화
         onPuzzleClear += DestroyChildren; //퍼즐완료시 프레임 , 피스들 모두삭제
         onPuzzleClear += CraetBoard; //완성된 퍼즐보드 생산
-        onPuzzleClear += ActiveCustomPanel; //커스텀판넬 활성화
         onPuzzleClear += AtiveOnDecoPanel; //데코판넬활성화
     }
     private void OnDisable()
     {
+        onPuzzleClear -= ActiveCustomPanel;
         onPuzzleClear -= DestroyChildren;
         onPuzzleClear -= CraetBoard;
-        onPuzzleClear -= ActiveCustomPanel;
         onPuzzleClear -= AtiveOnDecoPanel; //데코판넬활성화
     }
     public bool checkdistance(Vector3 currentPosition )
@@ -195,6 +195,7 @@ public class PuzzleLozic : MonoBehaviour
     public void ClearPieceList()
     {
         pieceList.Clear();
+        DestroyChildren();
     }
     public void AtiveOnDecoPanel()
     {

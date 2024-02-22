@@ -46,8 +46,8 @@ public class Help_Canvas : MonoBehaviour
     }
     private void OnEnable()
     {
-        Back_Btn.enabled = true;
-        help_Btn.enabled = true;
+
+        Button_Enable();
         switch(GameManager.Instance.gameMode)
         {
             case Mode.PushPush:
@@ -263,8 +263,9 @@ public class Help_Canvas : MonoBehaviour
         Back_Btn.interactable = true;
         help_Btn.interactable = true;
 
-        Back_Btn.GetComponent<Image>().color = new Color(188f, 188f, 188f);
-        help_Btn.GetComponent<Image>().color = new Color(188f, 188f, 188f);
+        Back_Btn.GetComponent<Image>().color = new Color(255f, 255f, 255f);
+        help_Btn.GetComponent<Image>().color = new Color(255f, 255f, 255f);
+
     }
 
     public void Button_Disable()
@@ -272,8 +273,8 @@ public class Help_Canvas : MonoBehaviour
         Back_Btn.interactable = false;
         help_Btn.interactable = false;
 
-        Back_Btn.GetComponent<Image>().color = new Color(255f, 255f, 255f);
-        help_Btn.GetComponent<Image>().color = new Color(255f, 255f, 255f);
+        Back_Btn.GetComponent<Image>().color = new Color(188f, 188f, 188f);
+        help_Btn.GetComponent<Image>().color = new Color(188f, 188f, 188f);
     }
 
 

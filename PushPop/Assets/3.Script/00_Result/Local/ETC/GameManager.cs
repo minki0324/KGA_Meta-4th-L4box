@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 
 public enum Mode // GameMode
 {
@@ -98,6 +98,12 @@ public class GameManager : MonoBehaviour, IGameMode
     public int ProfileIndex2P = 0;
     public int DefaultImage2P = 0;
     public bool IsimageMode2P = true;
+
+    [Header("Speed Print")]
+    [SerializeField] private TMP_Text[] printName;
+    [SerializeField] private TMP_Text[] printTimer;
+    [SerializeField] private Image[] printImage;
+    [SerializeField] private Sprite noneSprite;
 
     #region Unity Callback
     private void Awake()
@@ -236,7 +242,9 @@ public class GameManager : MonoBehaviour, IGameMode
                         bubblePos.Clear(); // bubble transform mode에 따라 달라짐
                         PushPop.Instance.PushPopClear();
                         speed_Timer.StopCoroutine(speed_Timer.timer);
-                        // Ranking SQL Update
+                        Debug.Log(PushPop.Instance.boardSprite.name);
+                        Ranking.instance.SetTimer(ProfileName, ProfileIndex, int.Parse(PushPop.Instance.boardSprite.name), speed_Timer.currentTime);
+                        // speed_Timer.resultPanel.SetActive(true);
                         // Ranking.instance.UpdateTimerScore(PushPop.Instance.currentTime);
                     }
                     else
@@ -350,8 +358,8 @@ public class GameManager : MonoBehaviour, IGameMode
         _puzzle.GetComponent<Image>().raycastTarget = false;
         _puzzle.GetComponent<RectTransform>().sizeDelta = BoardSize;
         //_puzzle.SetParent(bubble.transform);
-        bubble.touchCount = 1;
-        /*bubble.touchCount = Random.Range(2, 10); */// 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
+        /*bubble.touchCount = 1;*/
+        bubble.touchCount = Random.Range(2, 10); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
     }
 
     /// <summary>
@@ -387,4 +395,18 @@ public class GameManager : MonoBehaviour, IGameMode
     }
     #endregion
 
+    public void PrintSpeed(int _spriteName)
+    {
+        Ranking.instance.LoadTimer(printTimer, printImage, printName, _spriteName);
+    }
+
+    public void RankClear()
+    {
+        for(int i = 0; i < printTimer.Length; i++)
+        {
+            printTimer[i].text = string.Empty;
+            printName[i].text = string.Empty;
+            printImage[i].sprite = noneSprite;
+        }
+    }
 }

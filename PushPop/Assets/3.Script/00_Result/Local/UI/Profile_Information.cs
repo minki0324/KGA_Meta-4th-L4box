@@ -84,7 +84,15 @@ public class Profile_Information : MonoBehaviour
         GameManager.Instance.UID = SQL_Manager.instance.UID;
 
         Profile_ profile = FindObjectOfType<Profile_>();
-        profile._deletePanel.SetActive(true);
+        Bomb bomb = FindObjectOfType<Bomb>();
+        if(profile != null)
+        {
+            profile._deletePanel.SetActive(true);
+        }
+        else if(bomb != null)
+        {
+            bomb.deletePanel.SetActive(true);
+        }
     }
     #endregion
 }

@@ -20,7 +20,6 @@ public class Set_Time : MonoBehaviour
     [SerializeField] private Canvas Background_Canvas;  //도움말 & 뒤로가기 버튼 캔버스
     [SerializeField] private Main_Button main_Button;   //메인 버튼
 
-
     [Header("시간 증가/감소 버튼")]
     [SerializeField] private Button IncreaseTime_Btn;
     [SerializeField] private Button DecreaseTime_Btn;
@@ -174,6 +173,7 @@ public class Set_Time : MonoBehaviour
         else if (GameManager.Instance.gameMode.Equals(Mode.Memory))
         { // 메모리 시작
             memoryMode_Canvas.SetActive(true);
+            memoryMode_Canvas.GetComponent<Memory_Canvas>().RankingLoad();
         }
         else if (GameManager.Instance.gameMode.Equals(Mode.Bomb))
         { // 2인모드 시작

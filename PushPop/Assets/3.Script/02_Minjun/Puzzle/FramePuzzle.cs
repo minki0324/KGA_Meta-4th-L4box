@@ -7,15 +7,16 @@ using UnityEngine.EventSystems;
 public class FramePuzzle : MonoBehaviour,  IPointerDownHandler , IPointerUpHandler
 {
     private Image _myImage;
+    [SerializeField] private CustomPushpopManager custom;
     private void OnEnable()
     {
-        CustomPushpopManager.Instance.onCustomEnd += PushButtonActiveOn; // 설치한 버튼들 활성화
-        CustomPushpopManager.Instance.onCustomEnd += CustomModeEnd; // 버튼 설치할 수 있게하는 bool true;
+        custom.onCustomEnd += PushButtonActiveOn; // 설치한 버튼들 활성화
+        custom.onCustomEnd += CustomModeEnd; // 버튼 설치할 수 있게하는 bool true;
     }
     private void OnDisable()
     {
-        CustomPushpopManager.Instance.onCustomEnd -= PushButtonActiveOn; // 설치한 버튼들 활성화
-        CustomPushpopManager.Instance.onCustomEnd -= CustomModeEnd; // 버튼 설치할 수 있게하는 bool true;
+        custom.onCustomEnd -= PushButtonActiveOn; // 설치한 버튼들 활성화
+        custom.onCustomEnd -= CustomModeEnd; // 버튼 설치할 수 있게하는 bool true;
     }
     void Start()
     {

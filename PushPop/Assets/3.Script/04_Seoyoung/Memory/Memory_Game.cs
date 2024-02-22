@@ -47,13 +47,14 @@ public class Memory_Game : MonoBehaviour
     //나가기 경고 패널의 나가기 버튼 클릭 시 호출되는 메소드
     public void GoOutBtn_Clicked()
     {
+        Debug.Log("ㅇㅇ");
         back_Btn.interactable = true;
         gameSet_Panel.SetActive(true);
         help_Canvas.gameObject.SetActive(true);
 
+
+       // Warning_Panel.SetActive(false);
         gameObject.SetActive(false);
-        Warning_Panel.SetActive(false);
-        Time.timeScale = 1f;
         //main_Canvas.gameObject.SetActive(true);
         //memory_Canvas.gameObject.SetActive(false);
     }

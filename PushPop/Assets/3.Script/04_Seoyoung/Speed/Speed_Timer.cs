@@ -12,6 +12,7 @@ public class Speed_Timer : MonoBehaviour
     [Header("패널")]
     [SerializeField] private GameObject SelectDifficulty_Panel;
     [SerializeField] private GameObject Warning_Panel;
+    public GameObject resultPanel;
 
     [Header("타이머")]
     [SerializeField] private TMP_Text time_Text;

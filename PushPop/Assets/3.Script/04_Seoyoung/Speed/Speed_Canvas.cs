@@ -206,6 +206,7 @@ public class Speed_Canvas : MonoBehaviour
             selected_Text.text = button.transform.GetChild(0).GetComponent<TMP_Text>().text;
 
             moldIcon = selected_Image.sprite;
+            GameManager.Instance.PrintSpeed(int.Parse(moldIcon.name));
         }
     }
 

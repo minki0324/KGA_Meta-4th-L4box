@@ -153,6 +153,7 @@ public class Ranking : MonoBehaviour
         for (int i = topRanks.Count; i < _Score.Length; i++)
         { // 만약 상위 3위를 채우지 못한 경우, 남은 텍스트 요소를 비움.
             _Score[i].text = "";
+            _name[i].text = "";
         }
 
         for(int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
@@ -201,7 +202,9 @@ public class Ranking : MonoBehaviour
         {// 선택된 상위 3개의 랭크에 대해 text 배열을 업데이트.
             if (i < _timer.Length)
             {
-                _timer[i].text = topRanks[i].Timer.ToString();
+                int sec = topRanks[i].Timer % 60;    //60으로 나눈 나머지 = 초
+                int min = topRanks[i].Timer / 60;
+                 _timer[i].text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
             }
         }
 
@@ -210,7 +213,6 @@ public class Ranking : MonoBehaviour
             _timer[i].text = "";
         }
 
-        Debug.Log(topRanks[0].Rank.index);
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
         { // SQL에 등록되어 있는 Profile
             for (int j = 0; j < topRanks.Count; j++)

@@ -104,7 +104,7 @@ public class Memory_Canvas : MonoBehaviour
 
     public void RankingLoad()
     {
-        //Ranking.instance.LoadScore(scoreText_Array, profileImage_Array, profileName_Array);
+        Ranking.instance.LoadScore(scoreText_Array, profileImage_Array, profileName_Array);
     }
 
     #endregion
