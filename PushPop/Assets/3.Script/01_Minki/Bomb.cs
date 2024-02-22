@@ -108,8 +108,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         atlas.GetSprites(sprites);
 
         // 버튼 사이즈 설정
-        PushPop.Instance.buttonSize = new Vector2(90f, 90f);
-        PushPop.Instance.percentage = 0.8f;
+        PushPop.Instance.buttonSize = new Vector2(80f, 80f);
+        PushPop.Instance.percentage = 0.67f;
 
         GameManager.Instance.GameStart();
     }
@@ -246,7 +246,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             }
             else if (index.Equals(1))
             { // 이미지 고르기 버튼 눌렀을 때
-                if (isImageSelect)
+                if (!isImageSelect)
                 { // 선택한 이미지가 없을 때
                     if (log != null)
                     {
@@ -731,32 +731,24 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     public void QuitBtn(int _player)
-    { // 매개변수 0은 1P / 1은 2P
+    { // 매개변수 0은 1P / 1은 2P Btn연동 Method
         if(_player.Equals(0))
         {
-            //Quit1P = true;
-            // quitBtn[0].interactable = false;
             Check_quitBtn_1P();
-            
         }
         else if (_player.Equals(1))
         {
-            //Quit2P = true;
-            // quitBtn[1].interactable = false;
             Check_quitBtn_2P();
-           
         }
 
         if(Quit1P && Quit2P)
-        {
+        { // 두 버튼 모두 나가기를 눌렀을 때
             Time.timeScale = 0;
             quitBtn[0].interactable = false;
             quitBtn[1].interactable = false;
             WarningPanel.SetActive(true);
-           
         }
     }
-
 
     //시작시 quit 버튼들 세팅
     private void ButtonSetting()
@@ -826,7 +818,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     //좌측 하단 나가기 버튼
     public void BackBtn_Clicked()
     {
-
         main_Canvas.SetActive(true);
         selectBtn.SetActive(true);
         changeBtn.SetActive(false);
