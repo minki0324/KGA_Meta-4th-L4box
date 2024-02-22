@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using System.Text;	// 인코딩
+using System.Text;   // 인코딩
+using System.Text.RegularExpressions;
+using System.Globalization;
 using LitJson;
 
 #region ObjectClass
@@ -63,6 +65,7 @@ public class DataManager2 : MonoBehaviour
 
     private string path = string.Empty;
 
+
     #region Unity Callback
 
     private void Awake()
@@ -83,10 +86,10 @@ public class DataManager2 : MonoBehaviour
         path = Application.streamingAssetsPath;
         Read_HelpScript();
 
-        //Save_Category();
-        //Save_Icon();
+        Save_Category();
+        Save_Icon();
 
-       
+
 
         //Read_Category();
         //Read_Icon();
@@ -150,8 +153,15 @@ public class DataManager2 : MonoBehaviour
 
         #endregion
 
+
+
+
         JsonData jsonData = JsonMapper.ToJson(categoryDicts_List);
-        File.WriteAllText(path + "/" + categoryDict_fileName, jsonData.ToString());
+
+        //byte[] b = System.Text.UTF8Encoding.UTF8.GetBytes(jsonData.ToString());
+
+        //File.WriteAllBytes(path + "/" + categoryDict_fileName, b);
+        File.WriteAllText(path + "/" + categoryDict_fileName, Decode_EncodedNonASCIICharacters(jsonData.ToString()));
     }
 
     //icon.json 읽어와서 Dictionary로 변환하는 메소드
@@ -202,7 +212,7 @@ public class DataManager2 : MonoBehaviour
         #endregion
 
         JsonData jsonData = JsonMapper.ToJson(iconDicts_List);
-        File.WriteAllText(path + "/" + iconDict_fileName, jsonData.ToString());
+        File.WriteAllText(path + "/" + iconDict_fileName, Decode_EncodedNonASCIICharacters(jsonData.ToString()));
     }
 
     public void Read_HelpScript()
@@ -213,10 +223,10 @@ public class DataManager2 : MonoBehaviour
 
         string JsonString = File.ReadAllText(path + "/" + helpScript_fileName);
         JsonData jsonData = JsonMapper.ToObject(JsonString);
-       // byte[] encoding = Encoding.UTF8.GetBytes(File.ReadAllText(JsonString));
-        
+        // byte[] encoding = Encoding.UTF8.GetBytes(File.ReadAllText(JsonString));
 
-       
+
+
 
 
         for (int i = 0; i < jsonData.Count; i++)
@@ -227,11 +237,11 @@ public class DataManager2 : MonoBehaviour
 
             //Debug.Log(jsonData[i]["script"]); //Json Data Array로 나옴 -> 안풀림..
 
-       
+
 
             for (int j = 0; j < jsonData[i]["script"].Count; j++)
             {
-                JsonData  item = JsonMapper.ToObject<JsonData>(jsonData[i]["script"].ToJson());
+                JsonData item = JsonMapper.ToObject<JsonData>(jsonData[i]["script"].ToJson());
                 Scripts script = new Scripts();
                 script.pageNum = int.Parse(item[j]["page"].ToString());
                 script.content = item[j]["content"].ToString();
@@ -239,15 +249,26 @@ public class DataManager2 : MonoBehaviour
 
                 helpScript.script.Add(script);
                 //Debug.Log(script.pageNum + "," + script.content);
-                
+
             }
 
-             helpScripts_List.Add(helpScript);
+            helpScripts_List.Add(helpScript);
 
         }
 
     }
 
+    //유니코드 -> 한글 변환 메소드
+    public string Decode_EncodedNonASCIICharacters(string value)
+    {
+        return Regex.Replace(
+               value,
+               @"\\u(?<Value>[a-zA-Z0-9]{4})",
+               m =>
+               {
+                   return ((char)int.Parse(m.Groups["Value"].Value, NumberStyles.HexNumber)).ToString();
+               });
+    }
 
     #endregion
 }

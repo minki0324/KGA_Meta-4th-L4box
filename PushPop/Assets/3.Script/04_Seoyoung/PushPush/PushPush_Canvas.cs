@@ -158,6 +158,7 @@ public class PushPush_Canvas : MonoBehaviour
             
             switch (key)
             {
+               
                 case 10:
                     for (int i = 0; i < icon_List10.Count; i++)
                     {
