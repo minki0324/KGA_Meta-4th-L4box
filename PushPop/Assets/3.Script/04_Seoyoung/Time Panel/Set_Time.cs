@@ -18,6 +18,7 @@ public class Set_Time : MonoBehaviour
     [SerializeField] private GameObject main_Canvas;
 
     [SerializeField] private Canvas Background_Canvas;  //도움말 & 뒤로가기 버튼 캔버스
+    [SerializeField] private Main_Button main_Button;   //메인 버튼
 
     [Header("시간 증가/감소 버튼")]
     [SerializeField] private Button IncreaseTime_Btn;
@@ -38,13 +39,19 @@ public class Set_Time : MonoBehaviour
     private void OnEnable()
     {
         time = 300;
-        /*main_Canvas.Disable_Button();*/
+        Calculate_Time();
+        main_Button.Disable_Button();
     }
 
     private void Start()
     {
         /*Init();*/
         Calculate_Time();
+    }
+
+    private void OnDisable()
+    {
+        main_Button.Enable_Button();
     }
 
     private void Update()
@@ -76,7 +83,7 @@ public class Set_Time : MonoBehaviour
         Confirm_Btn.onClick.AddListener(ConfirmBtn_Clicked);
         Back_Btn.onClick.AddListener(() => {
             gameObject.SetActive(false);
-            GameManager.Instance._gameMode = GameMode.None;
+            
 
         });
     }
@@ -85,7 +92,15 @@ public class Set_Time : MonoBehaviour
     {
         sec = time % 60;    //60으로 나눈 나머지 = 초
         min = time / 60;
-        TimeText.text = $"{string.Format("{0:0}", min)}분 {sec}초";
+        if(time % 60 == 0)
+        {
+            TimeText.text = $"{string.Format("{0:0}", min)}분";
+        }
+        else
+        {
+            TimeText.text = $"{string.Format("{0:0}", min)}분 {sec}초";
+        }
+      
     }
 
 
@@ -146,7 +161,7 @@ public class Set_Time : MonoBehaviour
 
     public void ConfirmBtn_Clicked()
     {
-        GameManager.Instance.ShutdownTime = time;
+        //GameManager.Instance.ShutdownTime = time;
         if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
         { // 푸시푸시 시작
             pushpushMode_Canvas.SetActive(true);
@@ -158,13 +173,20 @@ public class Set_Time : MonoBehaviour
         else if (GameManager.Instance.gameMode.Equals(Mode.Memory))
         { // 메모리 시작
             memoryMode_Canvas.SetActive(true);
+            memoryMode_Canvas.GetComponent<Memory_Canvas>().RankingLoad();
         }
         else if (GameManager.Instance.gameMode.Equals(Mode.Bomb))
         { // 2인모드 시작
             bombMode_Canvas.SetActive(true);
         }
         gameObject.SetActive(false);
-        main_Canvas.SetActive(false);
+        main_Canvas.gameObject.SetActive(false);
+    }
+
+
+    public void BackBtnClicked()
+    { 
+        gameObject.SetActive(false);
     }
     #endregion
 

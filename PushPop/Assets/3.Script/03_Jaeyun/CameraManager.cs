@@ -5,6 +5,9 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 외부 Camera 연동 Class
+/// </summary>
 public class CameraManager : MonoBehaviour
 {
 	[SerializeField] private Image captureImage;
@@ -23,7 +26,6 @@ public class CameraManager : MonoBehaviour
 		Debug.Log(_filePath);
 		if (!File.Exists(_filePath))
 		{ // 해당 Directory 없을 시 생성
-			Debug.Log("생성함 ?");
 			Directory.CreateDirectory(_filePath);
 		}
 
@@ -58,7 +60,14 @@ public class CameraManager : MonoBehaviour
 				captureImage.sprite = Sprite.Create(captureTexture, rect, new Vector2(0.5f, 0.5f));
 
 				// Profile_index 설정
-				GameManager.Instance.IsImageMode = false;
+				if(GameManager.Instance.gameMode == Mode.Bomb)
+				{
+					GameManager.Instance.IsimageMode2P = false;
+				}
+				else
+				{
+					GameManager.Instance.IsImageMode = false;
+				}
 				profile.AddProfile();
 
 				// capture texture save

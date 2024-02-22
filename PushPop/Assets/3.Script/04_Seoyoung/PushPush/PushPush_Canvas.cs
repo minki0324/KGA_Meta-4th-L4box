@@ -14,8 +14,11 @@ public class PushPush_Canvas : MonoBehaviour
     [Header("Panel")]
     [SerializeField] private GameObject selectCategory_Panel;
     [SerializeField] private GameObject selectMold_Panel;
+    [SerializeField] private GameObject puzzle_Panel;
     [SerializeField] private GameObject pushpushGame_Panel;
+    [SerializeField] private GameObject Warning_Panel;
     [SerializeField] private GameObject bubblePanel;
+
 
     [Header("ScrollView")]
     [SerializeField] private ScrollRect selectCategory_ScrollView;
@@ -26,6 +29,9 @@ public class PushPush_Canvas : MonoBehaviour
     [SerializeField] private Button prievious_Btn;
     [SerializeField] private Button gameStart_Btn;
     [SerializeField] private Button Back_Btn;
+    [SerializeField] private Button GameBack_Btn;   //게임 시작 후 뜨는 좌측하단 뒤로가기
+    [SerializeField] private Button GoOut_Btn;
+    [SerializeField] private Button Cancle_Btn;
 
     [Header("Selected Mold Icon Image & Text")]
     [SerializeField] private TMP_Text selectedCategory_Text;    //선택된 카테고리 텍스트
@@ -60,7 +66,7 @@ public class PushPush_Canvas : MonoBehaviour
 
     //푸쉬푸쉬 게임에 넘겨줄 이미지
     public Sprite SelectedMold { get; private set; }
-    [SerializeField] private GameObject blurPanel;
+    //[SerializeField] private GameObject blurPanel;
     int currentPage;
     int maxPage;
 
@@ -81,7 +87,17 @@ public class PushPush_Canvas : MonoBehaviour
         selectCategory_Panel.SetActive(true);
         //background_Canvas.gameObject.SetActive(true);
         selectMold_Panel.SetActive(false);
-        pushpushGame_Panel.SetActive(false);
+        //pushpushGame_Panel.SetActive(false);
+        GameBack_Btn.gameObject.SetActive(false);
+
+        if(Warning_Panel.activeSelf)
+        {
+            Warning_Panel.SetActive(false);
+        }
+
+
+        help_Canvas.transform.SetParent(gameObject.transform);
+        help_Canvas.transform.SetSiblingIndex(3);
 
         currentPage = 1;
         maxPage = moldIcon_List.Count;
@@ -138,8 +154,8 @@ public class PushPush_Canvas : MonoBehaviour
         {     
             //key는 카테고리 딕셔너리 key값
             moldIcon_List.Clear();
-
-
+            
+            
             switch (key)
             {
                 case 10:
@@ -221,7 +237,7 @@ public class PushPush_Canvas : MonoBehaviour
 
             maxPage = moldIcon_List.Count;
             selectedCategory_Text.text = Mold_Dictionary.instance.category_Dictionary[key];
-            blurPanel.SetActive(true);
+            //blurPanel.SetActive(true);
             selectedMoldIcon_Image.sprite = moldIcon_List[currentPage - 1];
             selectedMoldIcon_Text.text = Mold_Dictionary.instance.icon_Dictionry[int.Parse(moldIcon_List[currentPage - 1].name)];
             Page_Text.text = $"{currentPage}/{maxPage}";
@@ -230,8 +246,9 @@ public class PushPush_Canvas : MonoBehaviour
             //버튼 enable = false 함수
             Disable_Objects();
 
-            help_Canvas.Back_Btn.enabled = false;
-            help_Canvas.Help_Btn.enabled = false;
+            help_Canvas.Back_Btn.interactable = false;
+            help_Canvas.Help_Btn.interactable = false;
+
         }
 
     }
@@ -287,7 +304,7 @@ public class PushPush_Canvas : MonoBehaviour
 
     public void BubbleStart_Clicked()
     {
-        blurPanel.SetActive(false);
+        //blurPanel.SetActive(false);
         selectCategory_Panel.SetActive(false);
         selectMold_Panel.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
@@ -298,10 +315,12 @@ public class PushPush_Canvas : MonoBehaviour
     {
         SelectedMold = selectedMoldIcon_Image.sprite;
 
+
         //pushpushGame_Panel.SetActive(true);
-        /*selectCategory_Panel.SetActive(false);
+        GameBack_Btn.gameObject.SetActive(true);
+        selectCategory_Panel.SetActive(false);
         selectMold_Panel.SetActive(false);
-        help_Canvas.gameObject.SetActive(false);*/
+        help_Canvas.gameObject.SetActive(false);
         //PushPush 게임 진입
         int puzzleIDIndex = int.Parse(moldIcon_List[currentPage - 1].name);
         puzzleLozic.SelectPuzzleButton(puzzleIDIndex);
@@ -316,8 +335,8 @@ public class PushPush_Canvas : MonoBehaviour
             //버튼 enable = true 함수
             Enable_Objects();
 
-            help_Canvas.Back_Btn.enabled = true;
-            help_Canvas.Help_Btn.enabled = true;
+            help_Canvas.Back_Btn.interactable = true;
+            help_Canvas.Help_Btn.interactable = true;
 
             selectMold_Panel.SetActive(false);
             moldIcon_List.Clear();
@@ -327,20 +346,52 @@ public class PushPush_Canvas : MonoBehaviour
 
     }
 
-    //좌측 하단 뒤로가기 버튼 클릭 시 호출되는 함수
+    //좌측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
     public void BackBtn_Clicked()
     {
+        help_Canvas.transform.SetParent(null);
+        help_Canvas.transform.SetAsLastSibling();
+
         main_Canvas.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
 
+
+    //게임 시작 후 좌측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
+    public void Game_BackBtn_Clicked()
+    {
+        Time.timeScale = 0;
+        Warning_Panel.SetActive(true);
+        GameBack_Btn.interactable = false;
+    }
+
+
+    public void GoOutBtn_Clicked()
+    {
+        Time.timeScale = 1;
+        GameBack_Btn.interactable = true;
+        GameBack_Btn.gameObject.SetActive(false);
+        puzzle_Panel.SetActive(false);
+        pushpushGame_Panel.SetActive(false);
+        Warning_Panel.SetActive(false);
+        selectCategory_Panel.SetActive(true);
+        help_Canvas.gameObject.SetActive(true);
+        Enable_Objects();
+    }
+
+    public void CancelBtn_Clicked()
+    {
+        Time.timeScale = 1;
+        GameBack_Btn.interactable = true;
+        Warning_Panel.SetActive(false);
+    }
 
     //우측 하단 도움말 버튼 클릭 시 호출되는 함수 :  도움말 버튼 눌리면 그 외 버튼 비활성화
     public void Disable_Objects()
     {
         for (int i = 0; i < categoryBtn_List.Count; i++)
         {
-            categoryBtn_List[i].enabled = false;
+            categoryBtn_List[i].interactable = false;
         }
 
         selectCategory_ScrollView.enabled = false;
@@ -353,7 +404,7 @@ public class PushPush_Canvas : MonoBehaviour
     {
         for (int i = 0; i < categoryBtn_List.Count; i++)
         {
-            categoryBtn_List[i].enabled = true;
+            categoryBtn_List[i].interactable = true;
         }
 
         selectCategory_ScrollView.enabled = true;

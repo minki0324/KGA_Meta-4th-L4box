@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 
 #region Other Class
@@ -30,22 +31,6 @@ public class Profile
             imageMode = true;
         }
         defaultImage = _defaultImage;
-    }
-}
-
-public class Rank
-{
-    public string name { get; private set; }
-    public int index { get; private set; }
-    public int score { get; private set; }
-    public float timer { get; private set; }
-
-    public Rank(string name, int index, int score, float timer)
-    {
-        this.name = name;
-        this.index = index;
-        this.score = score;
-        this.timer = timer;
     }
 }
 
@@ -80,10 +65,9 @@ public class SQL_Manager : MonoBehaviour
     public MySqlDataReader reader;
 
 
-    public string DB_path = string.Empty;   // Json경로 (DB)
-    public int UID;
+    public string DB_path = string.Empty;   // Json Path (DB)
+    public int UID;                         
     public List<Profile> Profile_list = new List<Profile>();
-    public List<Rank> Rank_List = new List<Rank>();
 
     #region Unity Callback
     private void Awake()
@@ -602,7 +586,7 @@ public class SQL_Manager : MonoBehaviour
     }
 
     #endregion
-
+/*
     #region Rank
     /// <summary>
     /// Ranking Table에 Score, Timer를 넘겨주는 Method.
@@ -732,6 +716,90 @@ public class SQL_Manager : MonoBehaviour
             Debug.Log(e.Message);
             if (!reader.IsClosed) reader.Close();
             return;
+        }
+    }
+    #endregion
+*/
+    #region PushPush
+    /// <summary>
+    /// PushPush게임 진행 후 Custom한 Object와 Btn들의 정보를 DB에 전달하는 Method
+    /// </summary>
+    /// <param name="_jsonData"></param>
+    /// <param name="_profileIndex"></param>
+    public void SQL_AddPushpush(string _jsonData, int _profileIndex)
+    {
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+
+            // 2. 현재 ProfileIndex에 대한 레코드 수 확인
+            string countQuery = $"SELECT COUNT(*) FROM PushPush WHERE ProfileIndex = {_profileIndex};";
+            MySqlCommand countCmd = new MySqlCommand(countQuery, connection);
+            int recordCount = Convert.ToInt32(countCmd.ExecuteScalar());
+
+            // 3. 레코드 수가 6개 이상이면 가장 오래된 레코드 삭제
+            if (recordCount >= 6)
+            {
+                string deleteOldestQuery = $"DELETE FROM PushPush WHERE ProfileIndex = {_profileIndex} ORDER BY CreatedAt LIMIT 1;";
+                MySqlCommand deleteCmd = new MySqlCommand(deleteOldestQuery, connection);
+                deleteCmd.ExecuteNonQuery();
+            }
+
+            // 4. 새 레코드 삽입
+            string SQL_command = $"INSERT INTO PushPush (ProfileIndex, ObjInfo) VALUES('{_profileIndex}', '{_jsonData}');";
+            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
+            cmd.ExecuteNonQuery();
+
+            return; 
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+            return;
+        }
+    }
+
+    /// <summary>
+    /// DB에 저장된 PushPushObject Class를 List로 받아오는 Method
+    /// </summary>
+    /// <param name="_profileIndex"></param>
+    /// <returns></returns>
+    public List<PushPushObject> SQL_SetPushPush(int _profileIndex)
+    {
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return null;
+            }
+
+            // 2. JSON 데이터를 읽어와서 PushPushObject 리스트로 변환
+            // 최근 순서대로 데이터를 정렬하여 조회
+            string selectCommand = $"SELECT ObjInfo FROM PushPush WHERE ProfileIndex = '{_profileIndex}' ORDER BY CreatedAt DESC;";
+            MySqlCommand selectCmd = new MySqlCommand(selectCommand, connection);
+
+            List<PushPushObject> push = new List<PushPushObject>();
+
+            while (reader.Read())
+            {
+                string jsonData = reader.GetString("ObjInfo");
+                PushPushObject pushObject = JsonUtility.FromJson<PushPushObject>(jsonData);
+                push.Add(pushObject);
+            }
+
+            if (!reader.IsClosed) reader.Close();
+            return push;
+        }
+        catch (Exception e)
+        {
+            if (!reader.IsClosed) reader.Close();
+            Debug.Log(e.Message);
+            return null;
         }
     }
     #endregion

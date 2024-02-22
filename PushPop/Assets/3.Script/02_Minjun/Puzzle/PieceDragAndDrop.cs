@@ -35,7 +35,7 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 
         if (puzzleLozic == null)
         {
-            transform.parent.TryGetComponent(out puzzleLozic);
+            puzzleLozic = FindObjectOfType<PuzzleLozic>();
         }
         //클릭했을때 오브젝트 위치 그대로 포지션을 옮기기위한 계산
         _distance = (Vector3)eventData.position - _rect.position;
@@ -77,7 +77,8 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             {
                 Debug.Log("스테이지를 클리어 했습니다! 잘했어요!!");
           
-                puzzleLozic.onClear?.Invoke();
+                puzzleLozic.onPuzzleClear?.Invoke();
+                puzzleLozic.successCount = 0;
             }
         }
     }

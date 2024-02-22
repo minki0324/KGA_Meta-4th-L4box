@@ -6,7 +6,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
+
+/// <summary>
+/// Profile 관련 행동 처리 Class
+/// </summary>
 public class Profile_ : MonoBehaviour, IPointerClickHandler
 {
     [Header("Profile_Panel")]
@@ -35,12 +40,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     [Header("Image")]
     public int _imageIndex = -1;
-    private string _imagePath = string.Empty;
+    private string _imagePath = string.Empty;   // Camera Image Save Path
 
     [Header("Text")]
     public TMP_Text SelectName;
     private string _profileName = string.Empty;
-    public string PreviousName = string.Empty;
 
     [Header("bool")]
     public bool _isImageSelect = false;
@@ -52,6 +56,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     private void OnEnable()
     {
         SelectProfilePanel.SetActive(true);
+        _profileNameAdd.onValidateInput += ValidateInput;
+        _profileNameAdd.characterLimit = 6;
+//        _profileNameAdd.onValueChanged.AddListener(
+//    (word) => _profileNameAdd.text = Regex.Replace(word, @"[^0-9a-zA-Z가-힣]", "")
+//);
     }
 
     private void Start()
@@ -62,7 +71,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         Debug.Log("Device GUID: " + _uniqueID);
 
         // 한글 입력만 가능하도록 이벤트 추가
-        _profileNameAdd.onValidateInput += ValidateInput;
+    }
+
+    private void OnDisable()
+    {
+        _profileNameAdd.onValidateInput -= ValidateInput;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -141,6 +154,8 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     // Profile List 셋팅 후 Image, Name을 출력하는 Method
     public void PrintProfileList()
     {
+        _profileNameAdd.text = string.Empty;
+
         // DB에 UID별로 저장되어있는 Profile들을 SQL_Manager에 List Up 해놓음
         SQL_Manager.instance.SQL_ProfileListSet();
 
@@ -282,23 +297,51 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // Profile Add?�� name?�� ????��?��?��?�� Btn ?��?�� Method
+    // Profile Add 하기 전 InputField에 저장된 이름을 변수에 저장해주는 Btn 연동 Method
     public void SendProfile()
     {
-        _profileName = _profileNameAdd.text;
-        _profileNameAdd.text = string.Empty;
+        bool bPossibleName = true;
+
+        for(int i = 0; i < _profileNameAdd.text.Length; i++)
+        {
+            if (Regex.IsMatch(_profileNameAdd.text[i].ToString(), @"[^0-9a-zA-Z가-힣]"))
+            {
+                Debug.Log("ㅋㅋ아 초성치지 말라고;;");
+                //_profileNameAdd.text = Regex.Replace(_profileNameAdd.text, @"[^0-9a-zA-Z가-힣]", string.Empty); //초성만 지우는애
+                _profileNameAdd.text = String.Empty;    //다지우는애
+                bPossibleName = false;
+            }
+        }
+
+        if (bPossibleName)
+        {
+            if (_profileNameAdd.text != string.Empty || _profileNameAdd.text.Length > 1)
+            {
+                _profileName = _profileNameAdd.text;
+                Debug.Log(_profileNameAdd.text.Length);
+                _profileNameAdd.text = string.Empty;
+                CreateNamePanel.SetActive(false);
+                CreateImagePanel.SetActive(true);
+            }
+            else
+            {
+
+            }
+
+        }
 
         /*SQL_Manager.instance.SQL_ProfileListSet();
         GameManager.Instance.ProfileIndex = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index+1;*/
     }
 
-    // Profile Image ?��?��?�� 번호 ?��?�� Btn ?��?�� Method
+    // Profile Image Index를 저장하는 Method
     public void SelectImage(int index)
     {
         _imageIndex = index;
         _isImageSelect = true;
     }
 
+    // Error_log 출력 Coroutine
     private IEnumerator PrintLog_co(GameObject errorlog)
     {
         errorlog.SetActive(true);
@@ -309,7 +352,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         log = null;
     }
 
-    // Profile 영어 입력 못하도록 설정
+    // Profile 영어, 숫자 입력 못하도록 설정
     private char ValidateInput(string text, int charIndex, char addedChar)
     {
         // 입력된 문자가 영어 알파벳, 숫자인 경우 입력을 막음

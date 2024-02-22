@@ -27,16 +27,14 @@ public class Main_Button : MonoBehaviour
   
 
     [Header("모드별 캔버스")]
-    [SerializeField] private Canvas pushMode_Canvas;
-    [SerializeField] private Canvas speedMode_Canvas;
-    [SerializeField] private Canvas memoryMode_Canvas;
-    [SerializeField] private Canvas Background_Canvas;  //도움말 & 뒤로가기 버튼 캔버스
+
     [SerializeField] private Help_Canvas help_Cavas;
 
     #region Unity Callback
     private void OnEnable()
     {
         Enable_Button();
+        help_Cavas.gameObject.SetActive(false);
     }
     #endregion
 
@@ -45,8 +43,8 @@ public class Main_Button : MonoBehaviour
     //푸시푸시 모드 패널(버튼) 클릭 시 호출될 함수
     public void PushPushBtn_Clicked()
     {
-        pushMode_Canvas.gameObject.SetActive(true);
-        gameObject.SetActive(false);
+        _timesetPanel.SetActive(true);
+        Disable_Button();
     }
 
 
@@ -54,7 +52,7 @@ public class Main_Button : MonoBehaviour
     public void SpeedBtn_Clicked()
     {
         _timesetPanel.SetActive(true);
-        //Disable_Button();
+        Disable_Button();
     }
 
 
@@ -62,7 +60,7 @@ public class Main_Button : MonoBehaviour
     public void MemoryBtn_Clicked()
     {
         _timesetPanel.SetActive(true);
-       // Disable_Button();
+        Disable_Button();
     }
 
 
@@ -108,27 +106,46 @@ public class Main_Button : MonoBehaviour
 
     public void Enable_Button()
     {
-        _optionBtn.enabled = true;
-        _profileBtn.enabled = true;
-        _homeBtn.enabled = true;
-        _collectionBtn.enabled = true;
-        _mode2PBtn.enabled = true;
-        _pushModeBtn.enabled = true;
-        _speedModeBtn.enabled = true;
-        _memoryModeBtn.enabled = true;
+        //_optionBtn.enabled = true;
+        //_profileBtn.enabled = true;
+        //_homeBtn.enabled = true;
+        //_collectionBtn.enabled = true;
+        //_mode2PBtn.enabled = true;
+        //_pushModeBtn.enabled = true;
+        //_speedModeBtn.enabled = true;
+        //_memoryModeBtn.enabled = true;
+
+        _optionBtn.interactable = true;
+        _profileBtn.interactable = true;
+        _homeBtn.interactable = true;
+        _collectionBtn.interactable = true;
+        _mode2PBtn.interactable = true;
+        _pushModeBtn.interactable = true;
+        _speedModeBtn.interactable = true;
+        _memoryModeBtn.interactable = true;
 
     }
 
-  /*  public void Disable_Button()
+    public void Disable_Button()
     {
-        _optionBtn.enabled = false;
-        _profileBtn.enabled = false;
-        _homeBtn.enabled = false;
-        _collectionBtn.enabled = false;
-        _mode2PBtn.enabled = false;
-        _pushModeBtn.enabled = false;
-        _speedModeBtn.enabled = false;
-        _memoryModeBtn.enabled = false;
-    }*/
+        //_optionBtn.enabled = false;
+        //_profileBtn.enabled = false;
+        //_homeBtn.enabled = false;
+        //_collectionBtn.enabled = false;
+        //_mode2PBtn.enabled = false;
+        //_pushModeBtn.enabled = false;
+        //_speedModeBtn.enabled = false;
+        //_memoryModeBtn.enabled = false;
+
+
+        _optionBtn.interactable = false;
+        _profileBtn.interactable = false;
+        _homeBtn.interactable = false;
+        _collectionBtn.interactable = false;
+        _mode2PBtn.interactable = false;
+        _pushModeBtn.interactable = false;
+        _speedModeBtn.interactable = false;
+        _memoryModeBtn.interactable = false;
+    }
     #endregion
 }

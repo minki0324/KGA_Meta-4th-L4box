@@ -1,18 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
-public enum GameMode
-{
-    //°ÔÀÓ¸Å´ÏÀú¿¡ ³ÖÀ» °Í
-    None = 0,
-    PushPush,
-    Speed,
-    Memory,
-    Bomb
-}
+using TMPro;
 
 public enum Mode // GameMode
 {
@@ -57,12 +47,11 @@ public class PuzzleObject
 public class GameManager : MonoBehaviour, IGameMode
 {
     public static GameManager Instance = null;
-    public GameMode _gameMode; // delete ÇÊ¿ä
     public Mode gameMode;
-    public int ShutdownTime; // delete ÇÊ¿ä
-
+   
     [Header("GameScript")]
-    [SerializeField] private CostomPushpopManager pushpushScript;
+    [SerializeField] private CustomPushpopManager pushpushScript;
+    public Bomb bombScript;
 
     // Bubble
     [Header("Bubble Info")]
@@ -72,11 +61,14 @@ public class GameManager : MonoBehaviour, IGameMode
     [SerializeField] private float bubbleSize;
 
     [SerializeField] private Transform[] pos = new Transform[4]; // pushpush, speed, bomb1, bomb2
-    private List<Transform> bubblePos = new List<Transform>(); // Mode¿¡ µû¶ó ´Ş¶óÁü
+    public List<Transform> bubblePos = new List<Transform>(); // Modeì— ë”°ë¼ ë‹¬ë¼ì§
 
     [Header("PushPop Info")]
+    public Sprite moldIcon = null;
     public int PushPopStage = 0;
     public Vector2 BoardSize;
+    [SerializeField] Transform boardPos = null;
+    public int buttonActive = 0;
 
     [Header("Puzzle Info")]
     public Vector2 puzzleSize;
@@ -86,7 +78,6 @@ public class GameManager : MonoBehaviour, IGameMode
     public List<PushPushObject> push = new List<PushPushObject>();
 
     [Header("Score")]
-    [SerializeField] private TMP_Text scoreText;
     private Coroutine timer = null;
     public int Score = 0;
     public float TimeScore = 0;
@@ -97,13 +88,27 @@ public class GameManager : MonoBehaviour, IGameMode
     public int ProfileIndex;
     public int DefaultImage;
     public Sprite[] ProfileImages;
-    public bool IsImageMode = true; // false = »çÁøÂï±â, true = ÀÌ¹ÌÁö ¼±ÅÃ
+    public bool IsImageMode = true; // false = ì‚¬ì§„ì°ê¸°, true = ì´ë¯¸ì§€ ì„ íƒ
 
+    [Header("Speed Mode")]
+    public float count = 0.25f;
+
+    [Header("2P Player")]
+    public string ProfileName2P = string.Empty;
+    public int ProfileIndex2P = 0;
+    public int DefaultImage2P = 0;
+    public bool IsimageMode2P = true;
+
+    [Header("Speed Print")]
+    [SerializeField] private TMP_Text[] printName;
+    [SerializeField] private TMP_Text[] printTimer;
+    [SerializeField] private Image[] printImage;
+    [SerializeField] private Sprite noneSprite;
 
     #region Unity Callback
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
@@ -128,21 +133,23 @@ public class GameManager : MonoBehaviour, IGameMode
     }
 
     public void GameStart()
-    { // game Start ½Ã È£ÃâµÇ´Â method
+    { // game Start ì‹œ í˜¸ì¶œë˜ëŠ” method
         /*if (gameMode.Equals(0))
         {
             for (int i = 0; i < pos[(int)gameMode].transform.childCount; i++)
-            { // ÁöÁ¤µÈ position
+            { // ì§€ì •ëœ position
                 bubblePos.Add(pos[(int)gameMode].GetChild(i));
             }
         }*/
 
-        // score ÃÊ±âÈ­
+        // score ì´ˆê¸°í™”
         Score = 0;
         TimeScore = 0;
+        buttonActive = 0;
+        count = 0.25f;
 
-        timer = StartCoroutine(GameReady_Co()); // Game ½ÃÀÛ Àü ´ë±â
-        
+        timer = StartCoroutine(GameReady_Co()); // Game ì‹œì‘ ì „ ëŒ€ê¸°
+
         switch (gameMode)
         {
             case Mode.PushPush:
@@ -154,86 +161,137 @@ public class GameManager : MonoBehaviour, IGameMode
             case Mode.Memory:
                 break;
             case Mode.Bomb:
+                BombMode();
                 break;
         }
     }
 
-    private IEnumerator GameReady_Co()
+    public IEnumerator GameReady_Co()
     {
-        // game start ¹®±¸ ¶ç¿öÁÖ±â, panel ´Ù ¸·¾Æ¹ö¸®¸é µÉµí?
-        // ÁØºñ~~
+        // game start ë¬¸êµ¬ ë„ì›Œì£¼ê¸°, panel ë‹¤ ë§‰ì•„ë²„ë¦¬ë©´ ë ë“¯?
+        // ì¤€ë¹„~~
         yield return new WaitForSeconds(2f);
-        // ½ÃÀÛ!!
+        // ì‹œì‘!!
         yield return new WaitForSeconds(1f);
-
-        while (true)
-        {
-            TimeScore += Time.deltaTime;
-            scoreText.text = TimeScore.ToString("F3");
-            yield return null;
-        }
     }
 
     public void GameClear()
-    { // Game End ½Ã È£ÃâÇÏ´Â method
-        if (PushPop.Instance.pushPopButton.Count == 0)
+    { // Game End ì‹œ í˜¸ì¶œí•˜ëŠ” method
+        // button active check
+        if (gameMode.Equals(Mode.Bomb))
         {
-            Debug.Log("°ÔÀÓÅ¬¸®¾î");
-           
-
-            switch(gameMode)
+            if (bombScript.popList1P.Count.Equals(0) || bombScript.popList2P.Count.Equals(0))
+            {
+                bombScript.RepeatGameLogic();
+                return;
+            }
+        }
+        else if (buttonActive == 0)
+        {
+            switch (gameMode)
             {
                 case Mode.PushPush:
-                    //´ã°í
-                    int[] spriteIndexs = new int[pushpushScript.puzzleBoard.transform.childCount];
-                    Vector2[] childPos = new Vector2[pushpushScript.puzzleBoard.transform.childCount];
-                    for(int i = 0; i< pushpushScript.puzzleBoard.transform.childCount; i++)
+                    if(PushPop.Instance.pushPopButton.Count == 0)
                     {
-                        PushPopButton pop = pushpushScript.puzzleBoard.transform.GetChild(i).GetComponent<PushPopButton>();
-                        Debug.Log("¹è¿­ : " + spriteIndexs[i]);
-                        Debug.Log("pop : " + pop);
-                        Debug.Log("pop.spriteIndex : " + pop.spriteIndex);
-                        spriteIndexs[i] = pop.spriteIndex;
-                        childPos[i] = pop.gameObject.transform.position;
-                    }
+                        //ë‹´ê³ 
+                        int[] spriteIndexs = new int[pushpushScript.puzzleBoard.transform.childCount];
+                        Vector2[] childPos = new Vector2[pushpushScript.puzzleBoard.transform.childCount];
+                        for (int i = 0; i < pushpushScript.puzzleBoard.transform.childCount; i++)
+                        {
+                            PushPopButton pop = pushpushScript.puzzleBoard.transform.GetChild(i).GetComponent<PushPopButton>();
+                            Debug.Log("ë°°ì—´ : " + spriteIndexs[i]);
+                            Debug.Log("pop : " + pop);
+                            Debug.Log("pop.spriteIndex : " + pop.spriteIndex);
+                            spriteIndexs[i] = pop.spriteIndex;
+                            childPos[i] = pop.gameObject.transform.localPosition;
+                        }
 
-                    PushPushObject newPush = new PushPushObject(puzzleLogic.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
-                    pushpushScript.result.SetActive(true);
-                    //Ãâ·Â
-                    pushpushScript.resultText.text = Mold_Dictionary.instance.icon_Dictionry[puzzleLogic.currentPuzzle.PuzzleID];
-                    /*pushpushScript.resultImage.sprite = puzzleLogic.currentPuzzle.board;*/
+                        PushPushObject newPush = new PushPushObject(puzzleLogic.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
+                        string json = JsonUtility.ToJson(newPush);
+                        SQL_Manager.instance.SQL_AddPushpush(json, ProfileIndex);
 
-                    pushpushScript.puzzleBoard.GetComponent<Animator>().SetTrigger("Clear");
+                        pushpushScript.result.SetActive(true);
+                        //ì¶œë ¥
+                        pushpushScript.resultText.text = Mold_Dictionary.instance.icon_Dictionry[puzzleLogic.currentPuzzle.PuzzleID];
+                        /*pushpushScript.resultImage.sprite = puzzleLogic.currentPuzzle.board;*/
 
-                    for (int i = 0; i < pushpushScript.puzzleBoard.transform.childCount; i++)
-                    {
-                        pushpushScript.puzzleBoard.transform.GetChild(i).GetComponent<Button>().interactable = true;
+
+                        for (int i = 0; i < pushpushScript.puzzleBoard.transform.childCount; i++)
+                        {
+                            pushpushScript.puzzleBoard.transform.GetChild(i).GetComponent<Button>().interactable = true;
+                        }
+
+                        bubblePos.Clear(); // bubble transform modeì— ë”°ë¼ ë‹¬ë¼ì§
+                        PushPop.Instance.PushPopClear();
                     }
                     break;
+
+                case Mode.Speed:
+                    // button active false
+                    for (int i = 0; i < PushPop.Instance.buttonCanvas.childCount; i++)
+                    {
+                        PushPop.Instance.buttonCanvas.GetChild(i).gameObject.SetActive(false);
+                    }
+
+                    Speed_Timer speed_Timer = FindObjectOfType<Speed_Timer>();
+                    speed_Timer.time_Slider.value += count;
+                    if (speed_Timer.time_Slider.value.Equals(1f))
+                    {
+                        Debug.Log("Game Clear");
+                        // Game Clear
+                        bubblePos.Clear(); // bubble transform modeì— ë”°ë¼ ë‹¬ë¼ì§
+                        PushPop.Instance.PushPopClear();
+                        speed_Timer.StopCoroutine(speed_Timer.timer);
+                        Debug.Log(PushPop.Instance.boardSprite.name);
+                        Ranking.instance.SetTimer(ProfileName, ProfileIndex, int.Parse(PushPop.Instance.boardSprite.name), speed_Timer.currentTime);
+                        // speed_Timer.resultPanel.SetActive(true);
+                        // Ranking.instance.UpdateTimerScore(PushPop.Instance.currentTime);
+                    }
+                    else
+                    {
+                        StartCoroutine(PushPushCreate_Co());
+                    }
+                    break;
+                case Mode.Bomb:
+
+                    break;
             }
-
-            bubblePos.Clear(); // bubble transform mode¿¡ µû¶ó ´Ş¶óÁü
-
-            PushPop.Instance.PushPopClear();
 
             if (timer != null)
             {
                 StopCoroutine(timer); // timer coroutine stop;
             }
-
-            // Ranking SQL Update
-            // Ranking.instance.UpdateTimerScore(timeScore);
         }
+    }
+
+    private IEnumerator PushPushCreate_Co()
+    {
+        // animation
+        Animator pushAni = PushPop.Instance.pushPopAni.GetComponent<Animator>();
+        pushAni.SetTrigger("Turning");
+
+        yield return new WaitForSeconds(2f);
+
+        PushPop.Instance.pushTurn = !PushPop.Instance.pushTurn;
+        bubblePos.Clear();
+        PushPop.Instance.PushPopClear();
+
+        // pushpop ìƒì„±, PushPop.Instance.pushTurn == falseì¼ ë•Œ Rotate 180 ëŒë ¤ì¤€ ë’¤ì— add
+        PushPop.Instance.CreatePushPopBoard(PushPop.Instance.pushPopCanvas);
+        PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
+        PushPop.Instance.PushPopButtonSetting(PushPop.Instance.buttonCanvas);
+        buttonActive = PushPop.Instance.activePos.Count;
     }
 
     public void PushPushMode()
     {
-        // puzzle »ı¼º
+        BoardSize = new Vector2(520f, 400f); // scale
+        // puzzle ìƒì„±
         if (puzzleLogic == null)
         {
             puzzleLogic = FindObjectOfType<PuzzleLozic>();
         }
-        if(!puzzleLogic.gameObject.activeSelf)
+        if (!puzzleLogic.gameObject.activeSelf)
         {
             puzzleLogic.gameObject.SetActive(true);
         }
@@ -243,74 +301,80 @@ public class GameManager : MonoBehaviour, IGameMode
         {
             CreateBubble(puzzleClass[i].puzzleArea, puzzleClass[i].puzzleCenter, puzzleClass[i].puzzleObject);
         }
-        // puzzle ÀüºÎ ¸ÂÃèÀ» ½Ã if ()
 
-        // pushpop »ı¼º
-           /* for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
-            {
-                PushPop.Instance.CreatePushPop(PushPop.Instance.pushPopBoardObject[i]);
-            }*/
     }
 
     public void SpeedMode()
     {
-        // position count ÇÑ °³, À§Ä¡ °¡¿îµ¥, scale Á¶Á¤
+        StartCoroutine(GameReady_Co());
+        // position count í•œ ê°œ, ìœ„ì¹˜ ê°€ìš´ë°, scale ì¡°ì •
         bubbleSize = 500f; // speed mode bubble size setting
-        BoardSize = new Vector2(bubbleSize, bubbleSize);
+        BoardSize = new Vector2(300f, 300f); // scale
 
         // bubble position
-        //CreateBubble();
+        GameObject board = Instantiate(PushPop.Instance.boardPrefabUI, PushPop.Instance.pushPopCanvas); // image
+        board.GetComponent<Image>().sprite = PushPop.Instance.boardSprite;
+        PushPop.Instance.pushPopBoardObject.Add(board);
+        CreateBubble(BoardSize, board.transform.localPosition, board);
+    }
 
-        if (this.bubbleObject.Count == 0)
-        { // touch count 0º¸´Ù ÀÛÀ» ½Ã
-            // pushpop »ı¼º
-            for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
-            {
-                PushPop.Instance.CreatePushPop(PushPop.Instance.pushPopBoardObject[i]);
-                Destroy(gameObject);
-            }
+    public void SpeedModePushPopCreate()
+    {
+        BoardSize = new Vector2(700f, 700f); // scale
+        for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
+        {
+            Destroy(PushPop.Instance.pushPopBoardObject[i]);
         }
+        PushPop.Instance.pushPopBoardObject.Clear();
+
+        // pushpop ìƒì„±
+        PushPop.Instance.CreatePushPopBoard(PushPop.Instance.pushPopCanvas);
+        PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
+        PushPop.Instance.PushPopButtonSetting(PushPop.Instance.buttonCanvas);
+        buttonActive = PushPop.Instance.activePos.Count;
     }
 
     public void MemoryMode()
     {
-        // pushpop buttonÃ³·³ »ı¼º
+        // pushpop buttonì²˜ëŸ¼ ìƒì„±
     }
 
     public void BombMode()
     {
-        // »ó´Ü ¹èÄ¡
+        BoardSize = new Vector2(600f, 600f);
+        // ìƒë‹¨ ë°°ì¹˜
 
-        // °ÔÀÓ º¸µå¿¡ ¹èÄ¡
+        // ê²Œì„ ë³´ë“œì— ë°°ì¹˜
 
     }
 
     private void CreateBubble(Vector2 _size, Vector2 _pos, GameObject _puzzle)
-    { // bubble size, pos, parent »ó¼Ó setting method
+    { // bubble size, pos, parent ìƒì† setting method
         GameObject bubbleObject = Instantiate(bubblePrefab, _puzzle.transform);
         Bubble bubble = bubbleObject.GetComponent<Bubble>();
 
         this.bubbleObject.Add(bubbleObject);
         bubble.BubbleSetting(_size, _pos, _puzzle.transform);
         _puzzle.GetComponent<Image>().raycastTarget = false;
+        _puzzle.GetComponent<RectTransform>().sizeDelta = BoardSize;
         //_puzzle.SetParent(bubble.transform);
-        /*bubble.touchCount = 1; */
-        bubble.touchCount = Random.Range(2, 10); // 2 ~ 9È¸, Modeº°·Î ´Ù¸£°Ô ¼³Á¤ ... todo touch count ¹Ù²ãÁÙ °Í
+        /*bubble.touchCount = 1;*/
+        bubble.touchCount = Random.Range(2, 10); // 2 ~ 9íšŒ, Modeë³„ë¡œ ë‹¤ë¥´ê²Œ ì„¤ì • ... todo touch count ë°”ê¿”ì¤„ ê²ƒ
     }
 
     /// <summary>
-    /// º¯°æÇÒ gameobject¸¦ ¸Å°³º¯¼ö·Î ¹Ş¾Æ¼­ ±× ¾ÈÀÇ Image Component¸¦ ÅëÇØ ÇÁ·ÎÇÊ ÀÌ¹ÌÁö¸¦ Ãâ·Â
+    /// ë³€ê²½í•  gameobjectë¥¼ ë§¤ê°œë³€ìˆ˜ë¡œ ë°›ì•„ì„œ ê·¸ ì•ˆì˜ Image Componentë¥¼ í†µí•´ í”„ë¡œí•„ ì´ë¯¸ì§€ë¥¼ ì¶œë ¥
     /// </summary>
     /// <param name="printobj"></param>
     public void ProfileImagePrint(GameObject printobj)
     {
         Image image = printobj.GetComponent<Image>();
 
-        if (IsImageMode) // ÀÌ¹ÌÁö ¼±ÅÃ¸ğµå
-        {   // ÀúÀåµÈ IndexÀÇ ÀÌ¹ÌÁö¸¦ ÇÁ·ÎÇÊ Sprite¿¡ ³Ö¾îÁÜ
+        if (IsImageMode) // ì´ë¯¸ì§€ ì„ íƒëª¨ë“œ
+        {   // ì €ì¥ëœ Indexì˜ ì´ë¯¸ì§€ë¥¼ í”„ë¡œí•„ Spriteì— ë„£ì–´ì¤Œ
             image.sprite = ProfileImages[DefaultImage];
         }
-        else if (!IsImageMode) // »çÁøÂï±â ¸ğµå
+        else if (!IsImageMode) // ì‚¬ì§„ì°ê¸° ëª¨ë“œ
         {
             Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, ProfileIndex);
             Sprite profileSprite = TextureToSprite(profileTexture);
@@ -319,7 +383,7 @@ public class GameManager : MonoBehaviour, IGameMode
     }
 
     /// <summary>
-    /// SQL_Manager¿¡¼­ Texture2D·Î º¯È¯ÇÑ ÀÌ¹ÌÁöÆÄÀÏÀ» Sprite·Î ÇÑ¹ø ´õ º¯È¯ÇÏ´Â Method
+    /// SQL_Managerì—ì„œ Texture2Dë¡œ ë³€í™˜í•œ ì´ë¯¸ì§€íŒŒì¼ì„ Spriteë¡œ í•œë²ˆ ë” ë³€í™˜í•˜ëŠ” Method
     /// </summary>
     /// <param name="texture"></param>
     /// <returns></returns>
@@ -331,4 +395,18 @@ public class GameManager : MonoBehaviour, IGameMode
     }
     #endregion
 
+    public void PrintSpeed(int _spriteName)
+    {
+        Ranking.instance.LoadTimer(printTimer, printImage, printName, _spriteName);
+    }
+
+    public void RankClear()
+    {
+        for(int i = 0; i < printTimer.Length; i++)
+        {
+            printTimer[i].text = string.Empty;
+            printName[i].text = string.Empty;
+            printImage[i].sprite = noneSprite;
+        }
+    }
 }

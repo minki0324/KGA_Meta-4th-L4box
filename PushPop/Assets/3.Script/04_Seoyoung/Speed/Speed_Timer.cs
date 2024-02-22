@@ -1,116 +1,157 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class Speed_Timer : MonoBehaviour
 {
-    [Header("Äµ¹ö½º")]
+    [Header("ìº”ë²„ìŠ¤")]
     [SerializeField] private Speed_Canvas speed_Canvas;
     [SerializeField] private Help_Canvas help_Canvas;
 
-    [Header("ÆĞ³Î")]
+    [Header("íŒ¨ë„")]
     [SerializeField] private GameObject SelectDifficulty_Panel;
+    [SerializeField] private GameObject Warning_Panel;
+    public GameObject resultPanel;
 
-    [Header("Å¸ÀÌ¸Ó")]
+    [Header("íƒ€ì´ë¨¸")]
     [SerializeField] private TMP_Text time_Text;
-    [SerializeField] private Slider time_Slider;
+    public Slider time_Slider;
 
-    [Header("¾ÆÀÌÄÜ ÀÌ¹ÌÁö")]
+    [Header("ì•„ì´ì½˜ ì´ë¯¸ì§€")]
     [SerializeField] private Image Mold_Image;
 
-    [Header("µÚ·Î°¡±â ¹öÆ°")]
+    [Header("ë’¤ë¡œê°€ê¸° ë²„íŠ¼")]
     [SerializeField] private Button Back_Btn;
 
     public int currentTime;
-    int sec;
-    int min;
+    private int sec;
+    private int min;
+    public Coroutine timer = null;
 
     #region Unity Callback
 
     private void OnEnable()
     {
-        //½Ã°£ ÃÊ±âÈ­
-       currentTime = GameManager.Instance.ShutdownTime + 1;
-       // currentTime = 10 +1;
+        //ì‹œê°„ ì´ˆê¸°í™”
+        // currentTime = GameManager.Instance.ShutdownTime + 1;
+        currentTime = 0; // 0ë¶€í„° ì œí•œì‹œê°„ê¹Œì§€ +
+                         // currentTime = 10 +1;
         SetText();
 
-        //½½¶óÀÌ´õ ÃÊ±âÈ­
-        time_Slider.maxValue = currentTime;
+        //ìŠ¬ë¼ì´ë” ì´ˆê¸°í™”
+        time_Slider.maxValue = 1f;
         time_Slider.minValue = 0f;
-        time_Slider.value = time_Slider.maxValue;
+        time_Slider.value = 0f;
+        time_Slider.gameObject.SetActive(false);
 
-        //¸ôµå ¾ÆÀÌÄÜ ÀÌ¹ÌÁö ÃÊ±âÈ­
-        Mold_Image.sprite = speed_Canvas.moldIcon;
+        //ëª°ë“œ ì•„ì´ì½˜ ì´ë¯¸ì§€ ì´ˆê¸°í™”
+        // Mold_Image.sprite = speed_Canvas.moldIcon;
 
-        //Å¸ÀÌ¸Ó ÄÚ·çÆ¾ ½ÃÀÛ
-        StartCoroutine(Timer_co());
-        StartCoroutine(SliderLerp_co());
+        //íƒ€ì´ë¨¸ ì½”ë£¨í‹´ ì‹œì‘
+        timer = StartCoroutine(Timer_co());
+        // StartCoroutine(SliderLerp_co());
+
+        if(Warning_Panel.activeSelf)
+        {
+            Warning_Panel.SetActive(false);
+        }
+        //gameObject.SetActive(false);
+
+        // Back Method
+        if (PushPop.Instance.pushPopBoardObject.Count > 0)
+        {
+            Destroy(PushPop.Instance.pushPopBoardObject[0]);
+            PushPop.Instance.pushPopBoardObject.Clear();
+        }
+
+        if (GameManager.Instance.bubbleObject.Count > 0)
+        {
+            Destroy(GameManager.Instance.bubbleObject[0]);
+            GameManager.Instance.bubbleObject.Clear();
+        }
+
+        GameManager.Instance.bubblePos.Clear(); // bubble transform modeì— ë”°ë¼ ë‹¬ë¼ì§
+        PushPop.Instance.PushPopClear();
+        StopCoroutine(timer);
     }
 
-    public void BackBtn_Clicked()
-    {
-        help_Canvas.gameObject.SetActive(true);
-        SelectDifficulty_Panel.SetActive(true);
-        speed_Canvas.Enable_Objects();
-
-
-        gameObject.SetActive(false);
-    }
 
     #endregion
 
 
     #region Other Method
-    //Å¸ÀÌ¸Ó ÄÚ·çÆ¾
+    //íƒ€ì´ë¨¸ ì½”ë£¨í‹´
     private IEnumerator Timer_co()
     {
+        // game ready
+        StartCoroutine(GameManager.Instance.GameReady_Co());
         int cashing = 1;
 
-        while(true)
-        {      
-            currentTime -= cashing;
+        while (true)
+        {
+            currentTime += cashing;
+            GameManager.Instance.TimeScore = currentTime; // score ì €ì¥
             SetText();
-          
+
             if (currentTime <= 0)
             {
-                //°æ°í¹® ¶ç¿ì±â
+                //ê²½ê³ ë¬¸ ë„ìš°ê¸°
                 yield break;
             }
             yield return new WaitForSeconds(cashing);
         }
     }
 
-
-    //½½¶óÀÌ´õ °ª º¯È­ ÄÚ·çÆ¾
-    private IEnumerator SliderLerp_co()
-    {
-        float cashing = 0.05f;
-        float currentT = currentTime;
-
-        while(true)
-        {
-            currentT -= cashing;
-            time_Slider.value = currentT;
-
-            if (currentT <= 0)
-            {
-                //°æ°í¹® ¶ç¿ì±â
-                yield break;
-            }
-            yield return new WaitForSeconds(cashing);
-        }
-    }
-
-
-
-    //½ÃºĞÃÊ º¯È¯ & ÅØ½ºÆ® Æ÷¸Ë ÁöÁ¤ ÇÔ¼ö
+    //ì‹œë¶„ì´ˆ ë³€í™˜ & í…ìŠ¤íŠ¸ í¬ë§· ì§€ì • í•¨ìˆ˜
     public void SetText()
     {
-        sec = currentTime % 60;    //60À¸·Î ³ª´« ³ª¸ÓÁö = ÃÊ
+        sec = currentTime % 60;    //60ìœ¼ë¡œ ë‚˜ëˆˆ ë‚˜ë¨¸ì§€ = ì´ˆ
         min = currentTime / 60;
-        time_Text.text = $"{string.Format("{0:0}", min)}ºĞ {sec}ÃÊ";
+        time_Text.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
     }
+
+    public void BackBtn_Clicked()
+    {
+        Time.timeScale = 0;
+        Warning_Panel.SetActive(true);
+        
+    }
+
+    public void GoOutBtn_Clicked()
+    {
+        Time.timeScale = 1;
+
+        // Back Method
+        if (PushPop.Instance.pushPopBoardObject.Count > 0)
+        {
+            Destroy(PushPop.Instance.pushPopBoardObject[0]);
+            PushPop.Instance.pushPopBoardObject.Clear();
+        }
+
+        if (GameManager.Instance.bubbleObject.Count > 0)
+        {
+            Destroy(GameManager.Instance.bubbleObject[0]);
+            GameManager.Instance.bubbleObject.Clear();
+        }
+
+        GameManager.Instance.bubblePos.Clear(); // bubble transform modeì— ë”°ë¼ ë‹¬ë¼ì§
+        PushPop.Instance.PushPopClear();
+        StopCoroutine(timer);
+
+        help_Canvas.gameObject.SetActive(true);
+        help_Canvas.Button_Enable();
+        SelectDifficulty_Panel.SetActive(true);
+        speed_Canvas.Enable_Objects();
+        Warning_Panel.SetActive(false);
+        gameObject.SetActive(false);
+    }
+
+    public void CancelBtn_Clicked()
+    {
+        Time.timeScale = 1;
+        Warning_Panel.SetActive(false);
+    }
+
     #endregion
 }
