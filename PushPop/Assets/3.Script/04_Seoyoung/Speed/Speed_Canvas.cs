@@ -225,6 +225,7 @@ public class Speed_Canvas : MonoBehaviour
     //준비창의 게임시작 버튼 눌렀을 때 호출되는 함수
     public void GameStartBtn_Clicked()
     {
+        Debug.Log("먼데");
         speedGame_Panel.SetActive(true);
         selectCategory_Panel.SetActive(false);
         selectDifficulty_Panel.SetActive(false);

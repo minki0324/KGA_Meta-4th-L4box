@@ -55,6 +55,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [Header("Panel")]
     public GameObject MainPanel = null; // 게임 로비
     public GameObject GamePanel = null; // 게임 화면
+    public GameObject CreateNamePanel = null;   //이름 입력 판넬
     public GameObject CreateImagePanel = null;  // 사진 찍기 판넬
     public GameObject SelectProfile = null; // 선택 판넬
     public GameObject CurrentProfile = null;    // 최종 프로필 판넬
@@ -793,6 +794,17 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             Quit2P = false;      
             quitBtn[1].GetComponent<Image>().sprite = quitNormal_Sprite;
         }
+    }
+
+
+
+    //프로필 이름 입력창 뒤로가기 버튼
+    public void ProfileInputName_BackBtn_Clicked()
+    {
+        profile2PInput.text = string.Empty;
+        CurrentProfile.SetActive(true);
+        CreateNamePanel.SetActive(false);
+     
     }
 
     //나가기 전 경고패널 나가기 버튼

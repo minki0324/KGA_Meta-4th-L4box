@@ -72,7 +72,7 @@ public class Help_Canvas : MonoBehaviour
         help_Panel.SetActive(false); 
     }
 
-    //우측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
+    //좌측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
     public void BackBtn_Clicked()
     {
         if(!bisHelpPanelOn)
@@ -104,7 +104,7 @@ public class Help_Canvas : MonoBehaviour
     }
 
 
-    //좌측하단 도움말 버튼 눌리면 호출될 메소드
+    //우측하단 도움말 버튼 눌리면 호출될 메소드
     public void HelpBtn_Clicked()
     {     
         if(!bisHelpPanelOn)

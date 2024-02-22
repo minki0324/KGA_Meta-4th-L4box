@@ -89,6 +89,7 @@ public class Memory_Canvas : MonoBehaviour
         gameSet_Panel.gameObject.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
         main_Canvas.gameObject.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     public void EnableObjects()

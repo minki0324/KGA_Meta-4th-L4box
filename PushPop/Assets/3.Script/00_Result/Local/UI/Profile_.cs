@@ -154,6 +154,8 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     // Profile List 셋팅 후 Image, Name을 출력하는 Method
     public void PrintProfileList()
     {
+        _profileNameAdd.text = string.Empty;
+
         // DB에 UID별로 저장되어있는 Profile들을 SQL_Manager에 List Up 해놓음
         SQL_Manager.instance.SQL_ProfileListSet();
 

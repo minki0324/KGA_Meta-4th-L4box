@@ -453,6 +453,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  bubblePos: []
   moldIcon: {fileID: 0}
   PushPopStage: 0
   BoardSize: {x: 0, y: 0}
@@ -3703,10 +3704,9 @@ MonoBehaviour:
   score_Text: {fileID: 1540790346}
   gameStart_Btn: {fileID: 1657521986}
   rankObject: {fileID: 687380211}
-  rankIconImage_List: []
-  profileImage_List: []
-  profileName_List: []
-  scoreText_List: []
+  profileImage_Array: []
+  profileName_Array: []
+  scoreText_Array: []
 --- !u!114 &326659354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19444,18 +19444,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed81ab607e31f9b45ad1323ae3fbcc47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score_txt: {fileID: 0}
-  score: 0
-  timer_txt: {fileID: 0}
-  timer: 0
-  Name_Text:
-  - {fileID: 111703621}
-  - {fileID: 927949930}
-  - {fileID: 1679243639}
-  Rank_Text:
-  - {fileID: 1094051722}
-  - {fileID: 855171146}
-  - {fileID: 123073598}
 --- !u!4 &1609024469
 Transform:
   m_ObjectHideFlags: 0
@@ -45046,12 +45034,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 171ae90e7d537e6469dd8169399cf24f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  changeBtn: {fileID: 0}
+  selectBtn: {fileID: 0}
   playerImage1P: {fileID: 1808198099671997757}
   playerName1P: {fileID: 1808198098486610658}
   popList1P: []
-  inGameText1P: {fileID: 1808198098910958228}
   inGameImage1P: {fileID: 1808198098599311722}
-  Quit1P: 0
+  inGameText1P: {fileID: 1808198098910958228}
   playerImage2P: {fileID: 1808198099739390057}
   tempPlayerImage2P: {fileID: 1808198098395384185}
   playerName2P: {fileID: 1808198099918140980}
@@ -45060,9 +45049,8 @@ MonoBehaviour:
   isUpdate: 0
   isSelect2P: 0
   popList2P: []
-  inGameText2P: {fileID: 1808198099895816134}
   inGameImage2P: {fileID: 1808198099755086890}
-  Quit2P: 0
+  inGameText2P: {fileID: 1808198099895816134}
   profilePanel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
   profileParent: {fileID: 1808198098493578501}
   profileList: []
@@ -45109,13 +45097,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: df8c9ca8870e2244fbcc116b419df9c7, type: 3}
   endAnimation: {fileID: 1808198099642808898}
   result: {fileID: 1808198099792396343}
-  quitBtn:
-  - {fileID: 1808198099491761476}
-  - {fileID: 1808198099841929092}
   profileBtn: {fileID: 1808198098139225132}
   gameStartBtn: {fileID: 1808198099855403073}
   quitNormal_Sprite: {fileID: 21300000, guid: 911e8d9d9bbc39f4ea7954285f69455d, type: 3}
   quitPressed_Sprite: {fileID: 21300000, guid: a65cc37934fc43445ab82708cdffb866, type: 3}
+  quitBtn:
+  - {fileID: 1808198099491761476}
+  - {fileID: 1808198099841929092}
 --- !u!223 &1808198099618146642
 Canvas:
   m_ObjectHideFlags: 0
@@ -50591,6 +50579,7 @@ MonoBehaviour:
   StageIndex: {fileID: 3565502321627129254}
   ScoreText: {fileID: 3565502321123927011}
   Lobby: {fileID: 2084374408}
+  ResultPanel: {fileID: 0}
   Heart:
   - {fileID: 3565502320860708006}
   - {fileID: 3565502320919337285}
@@ -51099,6 +51088,7 @@ MonoBehaviour:
   resultText: {fileID: 9113467011787232568}
   resultImage: {fileID: 9113467012136614485}
   isCustomMode: 0
+  decoPanel: {fileID: 0}
 --- !u!1 &9113467010637860611
 GameObject:
   m_ObjectHideFlags: 0

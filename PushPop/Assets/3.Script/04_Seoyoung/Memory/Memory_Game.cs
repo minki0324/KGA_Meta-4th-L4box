@@ -49,7 +49,6 @@ public class Memory_Game : MonoBehaviour
     {
         back_Btn.interactable = true;
         gameSet_Panel.SetActive(true);
-        // 여기 다 살렸음 
         help_Canvas.gameObject.SetActive(true);
 
         gameObject.SetActive(false);
