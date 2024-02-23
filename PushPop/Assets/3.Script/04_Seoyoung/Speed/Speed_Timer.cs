@@ -49,19 +49,17 @@ public class Speed_Timer : MonoBehaviour
         time_Slider.minValue = 0f;
         time_Slider.value = 0f;
         time_Slider.gameObject.SetActive(false);
-
+        
         //몰드 아이콘 이미지 초기화
         // Mold_Image.sprite = speed_Canvas.moldIcon;
 
         //타이머 코루틴 시작
         timer = StartCoroutine(Timer_co());
-        // StartCoroutine(SliderLerp_co());
 
         if(Warning_Panel.activeSelf)
         {
             Warning_Panel.SetActive(false);
         }
-        //gameObject.SetActive(false);
 
         // Back Method
         if (PushPop.Instance.pushPopBoardObject.Count > 0)
@@ -78,7 +76,6 @@ public class Speed_Timer : MonoBehaviour
 
         GameManager.Instance.bubblePos.Clear(); // bubble transform mode에 따라 달라짐
         PushPop.Instance.PushPopClear();
-        StopCoroutine(timer);
     }
 
 
@@ -120,7 +117,6 @@ public class Speed_Timer : MonoBehaviour
     {
         Time.timeScale = 0;
         Warning_Panel.SetActive(true);
-        
     }
 
     public void GoOutBtn_Clicked()

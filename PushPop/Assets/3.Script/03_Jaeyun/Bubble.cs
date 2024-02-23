@@ -90,17 +90,14 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         // Bubble Move
         Vector2 dir = (_bubblePosition - _touchPosition).normalized;// Touch Position의 반대 방향
         float speed = (_bubblePosition - _touchPosition).magnitude;
-        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, speed));
+        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, speed, Mode.PushPush)); // jaeyun todo 나중에 기본과 알아서 잘 통합해줄 것
 
         // bubble 터트렸을 때
         touchCount--;
         if (touchCount <= 0)
         {
             GameManager.Instance.bubbleObject.Remove(gameObject);
-            // puzzle move
-           
             Destroy(gameObject);
-
         }
     }
 
@@ -109,11 +106,9 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         // Bubble move
         Vector2 dir = (_bubblePosition - _touchPosition).normalized;
         float speed = (_bubblePosition - _touchPosition).magnitude;
-        // dir.y = 0f; //좌우로만 이동
-
         moveCoroutine = StartCoroutine(BubbleMove_Co(dir, speed));
-        touchCount--;
 
+        touchCount--;
         if (touchCount <= 0)
         {
             GameManager.Instance.bubbleObject.Remove(gameObject);
@@ -172,7 +167,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
     // Bubble lerp Translate moving, pushpush, speed mode에서만 사용
     private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed)
-    {
+    { // speed mode bubble moving
         currentSpeed = _maxSpeed; // maxSpeed 초기화
         float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y 같음
 
@@ -198,6 +193,46 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
             { // boundary up
                 _dir = Vector2.Reflect(_dir, Vector2.down).normalized;
                 transform.parent.position = new Vector2(transform.position.x, Screen.height - ((bubbleSize.y * bubbleScale / 2f) + 10f));
+            }
+
+            transform.parent.Translate(_dir * (Time.deltaTime * currentSpeed * speedRate)); // bubble move
+
+            // moving lerp
+            float lerpDecel = decelOverTime.Evaluate(1 - currentSpeed / _maxSpeed) * decel;
+            currentSpeed = Mathf.Max(0f, currentSpeed - lerpDecel * Time.deltaTime);
+
+            yield return null;
+        }
+    }
+
+
+    private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed, Mode _gameMode)
+    { // pushpush mode bubble moving
+        currentSpeed = _maxSpeed; // maxSpeed 초기화
+        float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y 같음
+
+        // 속도가 0이 되었을 때까지 이동
+        while (currentSpeed >= 0)
+        {
+            if (0f + (bubbleSize.x * bubbleScale / 2f) > transform.position.x)
+            { // boundary left
+                _dir = Vector2.Reflect(_dir, Vector2.right).normalized;
+                transform.position = new Vector2((bubbleSize.x * bubbleScale / 2f) + 10f, transform.position.y);
+            }
+            else if (transform.position.x > Screen.width - (bubbleSize.x * bubbleScale / 2f))
+            { // boundary right
+                _dir = Vector2.Reflect(_dir, Vector2.left).normalized;
+                transform.position = new Vector2(Screen.width - ((bubbleSize.x * bubbleScale / 2f) + 10f), transform.position.y);
+            }
+            else if (0f + (bubbleSize.y * bubbleScale / 2f) > transform.position.y)
+            { // boundary bottom
+                _dir = Vector2.Reflect(_dir, Vector2.up).normalized;
+                transform.position = new Vector2(transform.position.x, (bubbleSize.y * bubbleScale / 2f) + 10f);
+            }
+            else if (transform.position.y > Screen.height - (bubbleSize.y * bubbleScale / 2f))
+            { // boundary up
+                _dir = Vector2.Reflect(_dir, Vector2.down).normalized;
+                transform.position = new Vector2(transform.position.x, Screen.height - ((bubbleSize.y * bubbleScale / 2f) + 10f));
             }
 
             transform.parent.Translate(_dir * (Time.deltaTime * currentSpeed * speedRate)); // bubble move

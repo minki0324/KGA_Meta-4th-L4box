@@ -1,4 +1,4 @@
-/*using UnityEditor; // Editor
+using UnityEditor; // Editor
 using UnityEngine;
 
 [CanEditMultipleObjects]
@@ -70,7 +70,7 @@ public class PushPopEditor : Editor
 
         EditorGUILayout.PropertyField(percentage);
         EditorGUILayout.PropertyField(buttonSize);
-        // EditorGUILayout.PropertyField(boardSprite);
+
         EditorGUILayout.PropertyField(spriteName);
         if (GUILayout.Button("PushPop"))
         {
@@ -81,4 +81,3 @@ public class PushPopEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 }
-*/

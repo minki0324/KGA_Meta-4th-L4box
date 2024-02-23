@@ -30,6 +30,9 @@ public class PuzzleLozic : MonoBehaviour
     public List<PuzzlePiece> pieceList = new List<PuzzlePiece>();
     public SpriteAtlas atlas;
     [SerializeField] private GameObject DecorationPanel;
+
+    private GameObject shadow = null;
+
     private void OnEnable()
     {
         onPuzzleClear += ActiveCustomPanel; //커스텀판넬 활성화
@@ -87,7 +90,9 @@ public class PuzzleLozic : MonoBehaviour
             pieceList[i].transform.GetComponent<Image>().raycastTarget = true;
             pieceList[i].transform.GetComponent<PieceDragAndDrop>().enabled = true;
         }
-        PuzzleInstantiate(FrameObject, frampPos.position, currentPuzzle.shadow, false);
+
+        if (shadow != null) return;
+        shadow = PuzzleInstantiate(FrameObject, frampPos.position, currentPuzzle.shadow, false);
     }
 
     public  void SettingPuzzle()
@@ -139,6 +144,7 @@ public class PuzzleLozic : MonoBehaviour
         //커스텀모드 활성화
         costom.EnableThisComponent();
         costom.isCustomMode = true;
+        shadow = null; // shadow 중복 안되도록
     }
     private void ActiveCustomPanel()
     {

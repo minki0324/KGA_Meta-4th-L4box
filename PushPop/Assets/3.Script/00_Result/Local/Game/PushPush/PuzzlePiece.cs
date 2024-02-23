@@ -52,11 +52,6 @@ public class PuzzlePiece : MonoBehaviour
 
     public void OnBubbleDestroy()
     {
-        // AlphaCalculate(puzzleSprite);
-        // pointY = transform.position.y + puzzle.puzzleCenter.y;
-        
-        Debug.Log($"puzzle position: {transform.position.y}, puzzle center: {puzzle.puzzleCenter.y}");
-        
         puzzleMove = StartCoroutine(PuzzleMove_Co());
     }
 
