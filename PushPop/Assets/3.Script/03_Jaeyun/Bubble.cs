@@ -34,6 +34,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
             case Mode.PushPush:
                 currentSpeed = 0f;
                 PuzzlePiece piece = transform.parent.GetComponent<PuzzlePiece>();
+                if (GameManager.Instance.backButtonClick) return;
                 piece.OnBubbleDestroy();
                 break;
             case Mode.Speed:

@@ -110,6 +110,7 @@ public class GameManager : MonoBehaviour, IGameMode
 
     [Header("Other")]
     [SerializeField] private Sprite noneSprite;
+    public bool backButtonClick = false;
 
     #region Unity Callback
     private void Awake()
