@@ -106,11 +106,9 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         // Bubble move
         Vector2 dir = (_bubblePosition - _touchPosition).normalized;
         float speed = (_bubblePosition - _touchPosition).magnitude;
-        // dir.y = 0f; //좌우로만 이동
-
         moveCoroutine = StartCoroutine(BubbleMove_Co(dir, speed));
-        touchCount--;
 
+        touchCount--;
         if (touchCount <= 0)
         {
             GameManager.Instance.bubbleObject.Remove(gameObject);
@@ -169,7 +167,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
     // Bubble lerp Translate moving, pushpush, speed mode에서만 사용
     private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed)
-    {
+    { // speed mode bubble moving
         currentSpeed = _maxSpeed; // maxSpeed 초기화
         float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y 같음
 
@@ -209,7 +207,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
 
     private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed, Mode _gameMode)
-    {
+    { // pushpush mode bubble moving
         currentSpeed = _maxSpeed; // maxSpeed 초기화
         float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y 같음
 
