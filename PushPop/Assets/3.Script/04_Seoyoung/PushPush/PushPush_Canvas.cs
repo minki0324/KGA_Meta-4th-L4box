@@ -314,8 +314,8 @@ public class PushPush_Canvas : MonoBehaviour
     //몰드 선택 패널에서 게임시작 버튼을 누르면 호출되는 메소드
     public void GameStartBtn_Clicked()
     {
+        GameManager.Instance.backButtonClick = false;
         SelectedMold = selectedMoldIcon_Image.sprite;
-
 
         //pushpushGame_Panel.SetActive(true);
         GameBack_Btn.gameObject.SetActive(true);
@@ -364,6 +364,7 @@ public class PushPush_Canvas : MonoBehaviour
         Time.timeScale = 0;
         Warning_Panel.SetActive(true);
         GameBack_Btn.interactable = false;
+        GameManager.Instance.backButtonClick = true;
     }
 
 
@@ -383,6 +384,7 @@ public class PushPush_Canvas : MonoBehaviour
     public void CancelBtn_Clicked()
     {
         Time.timeScale = 1;
+        GameManager.Instance.backButtonClick = false;
         GameBack_Btn.interactable = true;
         Warning_Panel.SetActive(false);
     }
