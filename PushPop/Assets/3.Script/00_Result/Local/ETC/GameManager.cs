@@ -181,8 +181,11 @@ public class GameManager : MonoBehaviour, IGameMode
     public IEnumerator GameReady_Co()
     {
         // game start 문구 띄워주기, panel 다 막아버리면 될듯?
+        AudioManager.instance.SetCommonAudioClip_SFX(1);
         // 준비~~
         yield return new WaitForSeconds(2f);
+
+        AudioManager.instance.SetCommonAudioClip_SFX(2);
         // 시작!!
         yield return new WaitForSeconds(1f);
     }

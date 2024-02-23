@@ -26,7 +26,7 @@ public class Profile_Information : MonoBehaviour
     // 프로필 선택 후 Join Btn 연동 Method
     public void Join()
     {
-        AudioManager123.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         if (GameManager.Instance.gameMode == Mode.Bomb)
         { // Bomb 모드에서 2번째 Player를 선택했을 때
             GameManager.Instance.ProfileName2P = SQL_Manager.instance.Profile_list[Receive_Index()].name;
@@ -80,7 +80,7 @@ public class Profile_Information : MonoBehaviour
     // 선택한 버튼의 name, UID GameManager에 넘겨주면서 삭제 확인 PopUp창 켜주는 Method
     public void DeleteInfo()
     {
-        AudioManager123.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         GameManager.Instance.ProfileName = SQL_Manager.instance.Profile_list[Receive_Index()].name;
         GameManager.Instance.ProfileIndex = SQL_Manager.instance.Profile_list[Receive_Index()].index;
         GameManager.Instance.UID = SQL_Manager.instance.UID;
