@@ -247,9 +247,10 @@ public class GameManager : MonoBehaviour, IGameMode
                         bubblePos.Clear(); // bubble transform mode에 따라 달라짐
                         PushPop.Instance.PushPopClear();
                         speed_Timer.StopCoroutine(speed_Timer.timer);
-                        Debug.Log(PushPop.Instance.boardSprite.name);
+
                         Ranking.instance.SetTimer(ProfileName, ProfileIndex, int.Parse(PushPop.Instance.boardSprite.name), speed_Timer.currentTime);
-                        // speed_Timer.resultPanel.SetActive(true);
+                        speed_Timer.resultPanel.SetActive(true);
+                        speed_Timer.Result();
                         // Ranking.instance.UpdateTimerScore(PushPop.Instance.currentTime);
                     }
                     else

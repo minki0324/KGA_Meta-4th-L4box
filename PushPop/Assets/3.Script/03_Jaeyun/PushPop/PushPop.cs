@@ -108,7 +108,6 @@ public class PushPop : MonoBehaviour
         { // image flip
             boardSizeUI.localScale = new Vector3(-1, 1, 1);
             pushObject.transform.rotation = Quaternion.Euler(0, 180f, 0);
-            Debug.Log("Rot: " + pushPopBoard.transform.rotation);
         }
         // polygon collider setting
         pushObject.AddComponent<PolygonCollider2D>();

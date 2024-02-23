@@ -255,8 +255,6 @@ public class Ranking : MonoBehaviour
                 {
                     if(topRanks[i].Rank.spriteName[j] == _spriteName)
                     {
-                        Debug.Log("탑랭크 : " + topRanks[i].Rank.spriteName[j]);
-                        Debug.Log("매개변수" + _spriteName);
                         int sec = topRanks[i].Timer % 60;    //60으로 나눈 나머지 = 초
                         int min = topRanks[i].Timer / 60;
                         _timer[i].text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";

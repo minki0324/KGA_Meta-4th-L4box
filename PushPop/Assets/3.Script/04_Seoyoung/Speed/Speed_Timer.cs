@@ -24,6 +24,11 @@ public class Speed_Timer : MonoBehaviour
     [Header("뒤로가기 버튼")]
     [SerializeField] private Button Back_Btn;
 
+    [Header("Result")]
+    [SerializeField] private Image resultImage;
+    [SerializeField] private TMP_Text resultTimer;
+    [SerializeField] private TMP_Text resultLog;
+
     public int currentTime;
     private int sec;
     private int min;
@@ -153,5 +158,12 @@ public class Speed_Timer : MonoBehaviour
         Warning_Panel.SetActive(false);
     }
 
+    public void Result()
+    {
+        resultImage.sprite = speed_Canvas.moldIcon;
+        resultTimer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+        // 나중에 Dialog Manager만들 예정
+        // resultLog.text = 
+    }
     #endregion
 }
