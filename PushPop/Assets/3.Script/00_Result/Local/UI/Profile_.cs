@@ -23,20 +23,20 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     public GameObject CheckPanel;
 
     [Header("Button")]
-    [SerializeField] private Button _profileCreateBtn;
+    [SerializeField] private Button profileCreateBtn;
 
     [Header("GUID")]
-    private string _uniqueID;
+    private string uniqueID;
 
     [Header("Other Object")]
-    [SerializeField] private GameObject _profilePanel;
-    [SerializeField] private GameObject _profileLog;
-    [SerializeField] private GameObject _nameLog;
+    [SerializeField] private GameObject profilePanel;
+    [SerializeField] private GameObject profileLog;
+    [SerializeField] private GameObject nameLog;
     [SerializeField] private TMP_InputField _profileNameAdd;
-    [SerializeField] private Transform _panelParent;
-    [SerializeField] private List<GameObject> _panelList;
-    public GameObject _deletePanel;
-    public Image _profileImage;
+    [SerializeField] private Transform panelParent;
+    [SerializeField] private List<GameObject> panelList;
+    public GameObject DeletePanel;
+    public Image ProfileImage;
 
     [Header("Image")]
     public int _imageIndex = -1;
@@ -68,7 +68,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         // GUID를 확인하고, GUID에 맞는 UID index를 설정
         LoadOrCreateGUID();
 
-        Debug.Log("Device GUID: " + _uniqueID);
+        Debug.Log("Device GUID: " + uniqueID);
 
         // 한글 입력만 가능하도록 이벤트 추가
     }
@@ -101,18 +101,18 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     {
         if (PlayerPrefs.HasKey("DeviceGUID"))
         { // 기존 GUID가 있는 경우 해당 GUID를 변수에 담아줌
-            _uniqueID = PlayerPrefs.GetString("DeviceGUID");
+            uniqueID = PlayerPrefs.GetString("DeviceGUID");
         }
         else
         { // 첫 접속시 GUID를 부여하고 해당 GUID를 변수에 담아줌
-            _uniqueID = Guid.NewGuid().ToString();
+            uniqueID = Guid.NewGuid().ToString();
 
             // PlayerPrefs에 GUID를 저장
-            PlayerPrefs.SetString("DeviceGUID", _uniqueID);
+            PlayerPrefs.SetString("DeviceGUID", uniqueID);
             PlayerPrefs.Save();
         }
         // GUID를 가지고 DB와 연동하여 UID를 부여받음
-        SQL_Manager.instance.SQL_AddUser(_uniqueID);
+        SQL_Manager.instance.SQL_AddUser(uniqueID);
 
         // 해당 UID가 가지고 있는 Profile들을 출력
         PrintProfileList();
@@ -159,22 +159,22 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         // DB에 UID별로 저장되어있는 Profile들을 SQL_Manager에 List Up 해놓음
         SQL_Manager.instance.SQL_ProfileListSet();
 
-        for (int i = 0; i < _panelList.Count; i++)
+        for (int i = 0; i < panelList.Count; i++)
         { // 출력 전 기존에 출력되어 있는 List가 있다면 초기화
-            Destroy(_panelList[i].gameObject);
+            Destroy(panelList[i].gameObject);
         }
-        _panelList.Clear();
+        panelList.Clear();
         
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
         { // SQL_Manager에 Query문을 이용하여 UID에 담긴 Profile만큼 List를 셋팅하고, 해당 List의 Count 만큼 Profile Panel 생성
-            GameObject panel = Instantiate(_profilePanel);
-            panel.transform.SetParent(_panelParent);
-            _panelList.Add(panel);
+            GameObject panel = Instantiate(profilePanel);
+            panel.transform.SetParent(panelParent);
+            panelList.Add(panel);
         }
 
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
         { // Panel의 Index 별로 Profile_Information 컴포넌트를 가져와서 name과 image를 Mode에 맞게 셋팅
-            Profile_Information info = _panelList[i].GetComponent<Profile_Information>();
+            Profile_Information info = panelList[i].GetComponent<Profile_Information>();
             info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
             if (SQL_Manager.instance.Profile_list[i].imageMode)
             { // 이미지 선택으로 설정 했을 경우
@@ -232,7 +232,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
                     {
                         StopCoroutine(log);
                     }
-                    log = StartCoroutine(PrintLog_co(_profileLog));
+                    log = StartCoroutine(PrintLog_co(profileLog));
                 }
                 else
                 { // 선택한 이미지가 있을 때
@@ -261,7 +261,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
                     {
                         StopCoroutine(log);
                     }
-                    log = StartCoroutine(PrintLog_co(_profileLog));
+                    log = StartCoroutine(PrintLog_co(profileLog));
                 }
                 else
                 { // 선택한 이미지가 있을 때
@@ -282,12 +282,12 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     // 삭제 버튼 List만큼 출력
     public void DeleteBtnOpen()
     {
-        if (_panelList.Count > 0)
+        if (panelList.Count > 0)
         {
-            bool active = _panelList[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
-            for (int i = 0; i < _panelList.Count; i++)
+            bool active = panelList[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
+            for (int i = 0; i < panelList.Count; i++)
             {
-                _panelList[i].GetComponent<Profile_Information>().DelBtn.SetActive(!active);
+                panelList[i].GetComponent<Profile_Information>().DelBtn.SetActive(!active);
             }
         }
         else
@@ -362,7 +362,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             {
                 StopCoroutine(log);
             }
-            log = StartCoroutine(PrintLog_co(_nameLog));
+            log = StartCoroutine(PrintLog_co(nameLog));
             return '\0'; // 입력 막음
         }
 
