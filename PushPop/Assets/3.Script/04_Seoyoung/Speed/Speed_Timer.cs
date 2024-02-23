@@ -40,6 +40,14 @@ public class Speed_Timer : MonoBehaviour
     {
         //시간 초기화
         // currentTime = GameManager.Instance.ShutdownTime + 1;
+        Init();
+    }
+    #endregion
+
+
+    #region Other Method
+    public void Init()
+    {
         currentTime = 0; // 0부터 제한시간까지 +
                          // currentTime = 10 +1;
         SetText();
@@ -49,14 +57,14 @@ public class Speed_Timer : MonoBehaviour
         time_Slider.minValue = 0f;
         time_Slider.value = 0f;
         time_Slider.gameObject.SetActive(false);
-        
+
         //몰드 아이콘 이미지 초기화
         // Mold_Image.sprite = speed_Canvas.moldIcon;
 
         //타이머 코루틴 시작
         timer = StartCoroutine(Timer_co());
 
-        if(Warning_Panel.activeSelf)
+        if (Warning_Panel.activeSelf)
         {
             Warning_Panel.SetActive(false);
         }
@@ -78,11 +86,6 @@ public class Speed_Timer : MonoBehaviour
         PushPop.Instance.PushPopClear();
     }
 
-
-    #endregion
-
-
-    #region Other Method
     //타이머 코루틴
     private IEnumerator Timer_co()
     {
@@ -145,6 +148,7 @@ public class Speed_Timer : MonoBehaviour
         SelectDifficulty_Panel.SetActive(true);
         speed_Canvas.Enable_Objects();
         Warning_Panel.SetActive(false);
+        resultPanel.SetActive(false);
         gameObject.SetActive(false);
     }
 
