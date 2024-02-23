@@ -115,12 +115,17 @@ public class Speed_Timer : MonoBehaviour
 
     public void BackBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+
         Time.timeScale = 0;
         Warning_Panel.SetActive(true);
     }
 
     public void GoOutBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.SetAudioClip_BGM(1);
+
         Time.timeScale = 1;
 
         // Back Method

@@ -36,6 +36,7 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
     // Push Pop Button click method
     public void PushPopClick()
     {
+       
         GameObject clickButton = this.gameObject;
         if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
         {
@@ -54,9 +55,11 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
         }
         if (clickButton.GetComponent<Button>().interactable)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(4);
             GameManager.Instance.buttonActive--;
             clickButton.GetComponent<Button>().interactable = false;
         }
         GameManager.Instance.GameClear();
     }
+
 }

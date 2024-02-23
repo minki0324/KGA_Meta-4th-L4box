@@ -23,6 +23,7 @@ public class PushPush_Canvas : MonoBehaviour
     [Header("ScrollView")]
     [SerializeField] private ScrollRect selectCategory_ScrollView;
     [SerializeField] private GameObject content_ScrollView;
+    [SerializeField] private GameObject categoryIcon_Prefab;
 
     [Header("Button")]
     [SerializeField] private Button next_Btn;
@@ -102,6 +103,8 @@ public class PushPush_Canvas : MonoBehaviour
         currentPage = 1;
         maxPage = moldIcon_List.Count;
         Page_Text.text = $"{currentPage}/{maxPage}";
+
+        AudioManager.instance.SetAudioClip_BGM(1);
     }
 
 
@@ -128,12 +131,13 @@ public class PushPush_Canvas : MonoBehaviour
         // gameObject.SetActive(false);
 
       
-        for (int i = 0; i < content_ScrollView.transform.childCount; i++)
+        for (int i = 0; i < categoryIcon_List.Count; i++)
         {
+            GameObject a = Instantiate(categoryIcon_Prefab, content_ScrollView.transform);
+
             //버튼 리스트 초기화
             categoryBtn_List.Add(content_ScrollView.transform.GetChild(i).transform.GetChild(0).GetComponent<Button>());
             categoryBtn_List[i].GetComponent<Image>().sprite = categoryIcon_List[i];
-
 
             //텍스트 리스트 초기화
             categoryText_List.Add(categoryBtn_List[i].transform.GetChild(0).GetComponent<TMP_Text>());
@@ -154,8 +158,9 @@ public class PushPush_Canvas : MonoBehaviour
         {     
             //key는 카테고리 딕셔너리 key값
             moldIcon_List.Clear();
-            
-            
+
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
+
             switch (key)
             {
                
@@ -257,6 +262,7 @@ public class PushPush_Canvas : MonoBehaviour
     //몰드 선택 패널에서 다음 버튼을 클릭 시 호출되는 메소드
     public void NextBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         if (currentPage < maxPage)
         {
             prievious_Btn.enabled = true;
@@ -281,6 +287,7 @@ public class PushPush_Canvas : MonoBehaviour
     //몰드 선택 패널에서 이전 버튼을 클릭 시 호출되는 메소드
     public void PreviousBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         if (currentPage > 0)
         {
             next_Btn.enabled = true;
@@ -314,8 +321,10 @@ public class PushPush_Canvas : MonoBehaviour
     //몰드 선택 패널에서 게임시작 버튼을 누르면 호출되는 메소드
     public void GameStartBtn_Clicked()
     {
-        SelectedMold = selectedMoldIcon_Image.sprite;
+        AudioManager.instance.SetCommonAudioClip_SFX(0);
+        AudioManager.instance.SetAudioClip_BGM(2);
 
+        SelectedMold = selectedMoldIcon_Image.sprite;
 
         //pushpushGame_Panel.SetActive(true);
         GameBack_Btn.gameObject.SetActive(true);
@@ -336,6 +345,8 @@ public class PushPush_Canvas : MonoBehaviour
             //버튼 enable = true 함수
             Enable_Objects();
 
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
+
             help_Canvas.Back_Btn.interactable = true;
             help_Canvas.Help_Btn.interactable = true;
 
@@ -350,9 +361,11 @@ public class PushPush_Canvas : MonoBehaviour
     //좌측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
     public void BackBtn_Clicked()
     {
-        help_Canvas.transform.SetParent(null);
-        help_Canvas.transform.SetAsLastSibling();
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.SetAudioClip_BGM(0);
 
+        help_Canvas.transform.SetParent(null);
+        help_Canvas.transform.SetAsLastSibling();  
         main_Canvas.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
@@ -361,6 +374,7 @@ public class PushPush_Canvas : MonoBehaviour
     //게임 시작 후 좌측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
     public void Game_BackBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         Time.timeScale = 0;
         Warning_Panel.SetActive(true);
         GameBack_Btn.interactable = false;
@@ -369,6 +383,8 @@ public class PushPush_Canvas : MonoBehaviour
 
     public void GoOutBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.SetAudioClip_BGM(1);
         Time.timeScale = 1;
         GameBack_Btn.interactable = true;
         GameBack_Btn.gameObject.SetActive(false);
@@ -382,6 +398,7 @@ public class PushPush_Canvas : MonoBehaviour
 
     public void CancelBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         Time.timeScale = 1;
         GameBack_Btn.interactable = true;
         Warning_Panel.SetActive(false);

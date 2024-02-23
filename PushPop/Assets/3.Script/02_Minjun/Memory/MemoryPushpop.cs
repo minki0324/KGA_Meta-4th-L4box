@@ -73,6 +73,8 @@ public class MemoryPushpop : MonoBehaviour
     #region 정답,오답판정메소드
     private void Correct()
     {//정답메소드
+        AudioManager.instance.SetAudioClip_SFX(3,false);
+
         //todo 점수주기
         button.interactable = false; //누른버튼은 비활성화
         memoryBoard.CurrentCorrectCount++; //정답카운트 증가
@@ -85,6 +87,8 @@ public class MemoryPushpop : MonoBehaviour
     }
     private void Incorrect()
     {//오답메소드
+        AudioManager.instance.SetAudioClip_SFX(0, false);
+
         //라이프 깎기(MemoryManager)
         MemoryManager.Instance.Life--;
         MemoryManager.Instance.LifeRemove();
@@ -92,6 +96,7 @@ public class MemoryPushpop : MonoBehaviour
         //라이프 모두소진시 실패
         if (MemoryManager.Instance.Life == 0)
         {//결과창호출
+            AudioManager.instance.SetAudioClip_SFX(5, false);
             MemoryManager.Instance.ResultPanel.SetActive(true);
         }
 
@@ -112,6 +117,8 @@ public class MemoryPushpop : MonoBehaviour
     {//클리어 코루틴
         //훌륭해요 애니메이션
         memoryBoard.BtnAllStop(); //버튼동작정지
+
+        AudioManager.instance.SetAudioClip_SFX(4, false);
         MemoryManager.Instance.PlayStartPanel("훌륭 해요!");//애니메이션 멘트재생
         yield return new WaitForSeconds(2f);
         MemoryManager.Instance.currentStage++; //스테이지 Index증가
@@ -121,6 +128,7 @@ public class MemoryPushpop : MonoBehaviour
         {
             Debug.Log("스테이지를 모두 클리어 하셨습니다. 축하합니다!");
             //결과창호출
+            AudioManager.instance.SetAudioClip_SFX(5, false);
             MemoryManager.Instance.ResultPanel.SetActive(true);
             yield break;
         }
@@ -139,6 +147,7 @@ public class MemoryPushpop : MonoBehaviour
     public void PlayBlink()
     {
         ani.SetTrigger("isBlink");
+        AudioManager.instance.SetAudioClip_SFX(2, false);
     }
     #region
     #endregion

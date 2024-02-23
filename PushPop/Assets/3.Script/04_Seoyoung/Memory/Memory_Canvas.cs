@@ -49,7 +49,8 @@ public class Memory_Canvas : MonoBehaviour
     #region Unity Callback
     private void OnEnable()
     {
-        if(!gameSet_Panel.activeSelf)
+        AudioManager.instance.SetAudioClip_BGM(1);
+        if (!gameSet_Panel.activeSelf)
         {
             gameSet_Panel.SetActive(true);
         }
@@ -80,9 +81,9 @@ public class Memory_Canvas : MonoBehaviour
     //게임 시작 버튼 클릭 시 호출되는 함수
     public void GameStartBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(0);
         gameSet_Panel.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
-
         memoryGame_Canvas.gameObject.SetActive(true);    
     }
 
@@ -91,6 +92,8 @@ public class Memory_Canvas : MonoBehaviour
     {
         gameSet_Panel.gameObject.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
+
+        AudioManager.instance.SetAudioClip_BGM(0);
         main_Canvas.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
