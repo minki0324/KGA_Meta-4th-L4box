@@ -103,6 +103,11 @@ public class GameManager : MonoBehaviour, IGameMode
     [SerializeField] private TMP_Text[] printName;
     [SerializeField] private TMP_Text[] printTimer;
     [SerializeField] private Image[] printImage;
+    [SerializeField] private TMP_Text printNamePersonal;
+    [SerializeField] private TMP_Text printTimerPersonal;
+    [SerializeField] private Image printImagePersonal;
+
+    [Header("Other")]
     [SerializeField] private Sprite noneSprite;
 
     #region Unity Callback
@@ -398,6 +403,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public void PrintSpeed(int _spriteName)
     {
         Ranking.instance.LoadTimer(printTimer, printImage, printName, _spriteName);
+        Ranking.instance.LoadTimer_Personal(printNamePersonal, printTimerPersonal, printImagePersonal, _spriteName);
     }
 
     public void RankClear()
