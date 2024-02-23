@@ -39,7 +39,6 @@ public class Speed_Timer : MonoBehaviour
     private void OnEnable()
     {
         //시간 초기화
-        // currentTime = GameManager.Instance.ShutdownTime + 1;
         Init();
     }
     #endregion
@@ -62,6 +61,7 @@ public class Speed_Timer : MonoBehaviour
         // Mold_Image.sprite = speed_Canvas.moldIcon;
 
         //타이머 코루틴 시작
+        time_Text.color = new Color(0, 0, 0, 1); // black으로 초기화
         timer = StartCoroutine(Timer_co());
 
         if (Warning_Panel.activeSelf)
@@ -84,6 +84,7 @@ public class Speed_Timer : MonoBehaviour
 
         GameManager.Instance.bubblePos.Clear(); // bubble transform mode에 따라 달라짐
         PushPop.Instance.PushPopClear();
+        GameManager.Instance.pushpushCreate_Co = null;
     }
 
     //타이머 코루틴
@@ -99,13 +100,22 @@ public class Speed_Timer : MonoBehaviour
             GameManager.Instance.TimeScore = currentTime; // score 저장
             SetText();
 
-            if (currentTime <= 0)
+            if (currentTime.Equals(50))
             {
-                //경고문 띄우기
-                yield break;
+                time_Text.color = TimerCountColorChange("#FF0000");
             }
             yield return new WaitForSeconds(cashing);
         }
+    }
+
+    private Color TimerCountColorChange(string _colorCode)
+    {
+        Color newColor = new Color(0, 0, 0, 1);
+        if (ColorUtility.TryParseHtmlString(_colorCode, out newColor))
+        {
+            return newColor;
+        }
+        return newColor;
     }
 
     //시분초 변환 & 텍스트 포맷 지정 함수
@@ -142,6 +152,10 @@ public class Speed_Timer : MonoBehaviour
         GameManager.Instance.bubblePos.Clear(); // bubble transform mode에 따라 달라짐
         PushPop.Instance.PushPopClear();
         StopCoroutine(timer);
+        if (GameManager.Instance.pushpushCreate_Co != null)
+        {
+            GameManager.Instance.StopCoroutine(GameManager.Instance.pushpushCreate_Co); // speed pushpop create 초기화
+        }
 
         help_Canvas.gameObject.SetActive(true);
         help_Canvas.Button_Enable();

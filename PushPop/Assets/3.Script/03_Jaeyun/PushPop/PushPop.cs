@@ -102,7 +102,9 @@ public class PushPop : MonoBehaviour
         pushObject.GetComponent<SpriteRenderer>().sprite = boardSprite;
         // size setting
         Rect boardRect = pushPopBoard.GetComponent<RectTransform>().rect;
-        float scale = Mathf.Min(boardRect.width / boardSprite.textureRect.size.x, boardRect.width / boardSprite.textureRect.size.y) * 0.95f;
+        Vector2 boardSize = GameManager.Instance.BoardSizeGameObject;
+        float scale = Mathf.Min(boardSize.x / boardSprite.textureRect.size.x, boardSize.x / boardSprite.textureRect.size.y) * 0.95f;
+        // float scale = Mathf.Min(boardRect.width / boardSprite.textureRect.size.x, boardRect.width / boardSprite.textureRect.size.y) * 0.95f;
         pushObject.transform.localScale = new Vector3(scale, scale, 1f);
         if (!pushTurn)
         { // image flip
