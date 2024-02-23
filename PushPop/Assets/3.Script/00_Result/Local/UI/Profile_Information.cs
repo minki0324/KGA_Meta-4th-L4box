@@ -64,13 +64,13 @@ public class Profile_Information : MonoBehaviour
             { // 사진 찍기를 선택한 플레이어
                 Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
                 Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-                profile._profileImage.sprite = profileSprite;
+                profile.ProfileImage.sprite = profileSprite;
             }
             else if (GameManager.Instance.IsImageMode)
             { // 이미지 고르기를 선택한 플레이어
                 GameManager.Instance.DefaultImage = SQL_Manager.instance.Profile_list[Receive_Index()].defaultImage;
                 Sprite profileSprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[Receive_Index()].defaultImage];
-                profile._profileImage.sprite = profileSprite;
+                profile.ProfileImage.sprite = profileSprite;
             }
             profile.SelectName.text = GameManager.Instance.ProfileName;
             profile.CurrnetProfilePanel.SetActive(true);
@@ -89,7 +89,7 @@ public class Profile_Information : MonoBehaviour
         Bomb bomb = FindObjectOfType<Bomb>();
         if(profile != null)
         {
-            profile._deletePanel.SetActive(true);
+            profile.DeletePanel.SetActive(true);
         }
         else if(bomb != null)
         {

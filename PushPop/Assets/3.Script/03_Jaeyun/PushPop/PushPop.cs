@@ -10,7 +10,7 @@ public class PushPop : MonoBehaviour
 
     [Header("PushPop Canvas")]
     public Transform pushPopCanvas = null; // Canvas_PushPop
-    [SerializeField] private GameObject pushPopButtonPrefab = null; // PushPop Button Prefab
+    public GameObject pushPopButtonPrefab = null; // PushPop Button Prefab
     public GameObject boardPrefabUI = null; // PushPop Board Canvas Prefab
     private RectTransform boardSizeUI;
     public List<GameObject> pushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
@@ -102,7 +102,9 @@ public class PushPop : MonoBehaviour
         pushObject.GetComponent<SpriteRenderer>().sprite = boardSprite;
         // size setting
         Rect boardRect = pushPopBoard.GetComponent<RectTransform>().rect;
-        float scale = Mathf.Min(boardRect.width / boardSprite.textureRect.size.x, boardRect.width / boardSprite.textureRect.size.y) * 0.95f;
+        Vector2 boardSize = GameManager.Instance.BoardSizeGameObject;
+        float scale = Mathf.Min(boardSize.x / boardSprite.textureRect.size.x, boardSize.x / boardSprite.textureRect.size.y) * 0.95f;
+        // float scale = Mathf.Min(boardRect.width / boardSprite.textureRect.size.x, boardRect.width / boardSprite.textureRect.size.y) * 0.95f;
         pushObject.transform.localScale = new Vector3(scale, scale, 1f);
         if (!pushTurn)
         { // image flip

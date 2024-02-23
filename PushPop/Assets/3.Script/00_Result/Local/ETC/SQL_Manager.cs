@@ -730,6 +730,7 @@ public class SQL_Manager : MonoBehaviour
     {
         try
         {
+            if (!reader.IsClosed) reader.Close();
             // 1. SQL 서버에 접속 되어 있는지 확인
             if (!ConnectionCheck(connection))
             {
@@ -772,6 +773,7 @@ public class SQL_Manager : MonoBehaviour
     {
         try
         {
+            if (!reader.IsClosed) reader.Close();
             // 1. SQL 서버에 접속 되어 있는지 확인
             if (!ConnectionCheck(connection))
             {
@@ -782,17 +784,23 @@ public class SQL_Manager : MonoBehaviour
             // 최근 순서대로 데이터를 정렬하여 조회
             string selectCommand = $"SELECT ObjInfo FROM PushPush WHERE ProfileIndex = '{_profileIndex}' ORDER BY CreatedAt DESC;";
             MySqlCommand selectCmd = new MySqlCommand(selectCommand, connection);
+            reader = selectCmd.ExecuteReader();
 
             List<PushPushObject> push = new List<PushPushObject>();
 
-            while (reader.Read())
+            if (reader.HasRows)
             {
-                string jsonData = reader.GetString("ObjInfo");
-                PushPushObject pushObject = JsonUtility.FromJson<PushPushObject>(jsonData);
-                push.Add(pushObject);
+                while (reader.Read())
+                {
+                    string jsonData = reader.GetString("ObjInfo");
+                    PushPushObject pushObject = JsonUtility.FromJson<PushPushObject>(jsonData);
+                    push.Add(pushObject);
+                }
+                if (!reader.IsClosed) reader.Close();
             }
 
-            if (!reader.IsClosed) reader.Close();
+            Debug.Log(push.Count);
+
             return push;
         }
         catch (Exception e)

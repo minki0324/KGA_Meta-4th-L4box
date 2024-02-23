@@ -151,11 +151,14 @@ public class CustomPushpopManager : MonoBehaviour
     {
         while (StackPops.Count > 0)
         {
-            GameObject objs = StackFakePops.Pop();
-            Destroy(objs);
             GameObject obj = StackPops.Pop(); // Queue에서 오브젝트를 하나씩 제거
             Destroy(obj); // 해당 오브젝트를 파괴
             PushPop.Instance.pushPopButton.Remove(obj);
+        }
+        while (StackFakePops.Count > 0)
+        {
+            GameObject objs = StackFakePops.Pop();
+            Destroy(objs);
         }
     }
 
@@ -179,4 +182,8 @@ public class CustomPushpopManager : MonoBehaviour
         }
     }
 
+    public void SetMoaMoaList()
+    { // MoaMoa 메인화면에 출력할 6개의 컬렉션을 출력하는 Btn 연동 Method
+        
+    }
 }

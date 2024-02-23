@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.U2D;
 
 public enum Mode // GameMode
 {
@@ -68,6 +69,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public Sprite moldIcon = null;
     public int PushPopStage = 0;
     public Vector2 BoardSize;
+    public Vector2 BoardSizeGameObject;
     [SerializeField] Transform boardPos = null;
     public int buttonActive = 0;
 
@@ -76,7 +78,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public Vector2 finalCenter;
     public List<PuzzleObject> puzzleClass = new List<PuzzleObject>();
     [SerializeField] private PuzzleLozic puzzleLogic;
-    public List<PushPushObject> push = new List<PushPushObject>();
+    public List<PushPushObject> pushlist = new List<PushPushObject>();
 
     [Header("Score")]
     private Coroutine timer = null;
@@ -93,6 +95,7 @@ public class GameManager : MonoBehaviour, IGameMode
 
     [Header("Speed Mode")]
     public float count = 0.25f;
+    public Coroutine pushpushCreate_Co = null;
 
     [Header("2P Player")]
     public string ProfileName2P = string.Empty;
@@ -109,7 +112,10 @@ public class GameManager : MonoBehaviour, IGameMode
     [SerializeField] private Image printImagePersonal;
 
     [Header("Other")]
+    [SerializeField] private SpriteAtlas atlas;
     [SerializeField] private Sprite noneSprite;
+    public bool backButtonClick = false;
+    [SerializeField] private Sprite[] btnSprites;
 
     #region Unity Callback
     private void Awake()
@@ -208,9 +214,6 @@ public class GameManager : MonoBehaviour, IGameMode
                         for (int i = 0; i < pushpushScript.puzzleBoard.transform.childCount; i++)
                         {
                             PushPopButton pop = pushpushScript.puzzleBoard.transform.GetChild(i).GetComponent<PushPopButton>();
-                            Debug.Log("배열 : " + spriteIndexs[i]);
-                            Debug.Log("pop : " + pop);
-                            Debug.Log("pop.spriteIndex : " + pop.spriteIndex);
                             spriteIndexs[i] = pop.spriteIndex;
                             childPos[i] = pop.gameObject.transform.localPosition;
                         }
@@ -220,10 +223,38 @@ public class GameManager : MonoBehaviour, IGameMode
                         SQL_Manager.instance.SQL_AddPushpush(json, ProfileIndex);
 
                         pushpushScript.result.SetActive(true);
+
+                        // PushPushList 세팅
+                        List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileIndex);
+                        if(pushlist == null)
+                        {
+                            Debug.Log("널");
+                        }
+                        
                         //출력
                         pushpushScript.resultText.text = Mold_Dictionary.instance.icon_Dictionry[puzzleLogic.currentPuzzle.PuzzleID];
-                        /*pushpushScript.resultImage.sprite = puzzleLogic.currentPuzzle.board;*/
 
+                        // List를 자동으로 먼저한 순서대로 담기게 해놨음
+                        pushpushScript.resultImage.sprite = atlas.GetSprite(pushlist[0].spriteName.ToString());
+
+                        // 기존 PushPush에서 사용했던 크기로 먼저 세팅
+                        pushpushScript.resultImage.SetNativeSize();
+                        pushpushScript.resultImage.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                        for(int i = 0; i < pushlist[0].childIndex; i++)
+                        { // PushPushObject Class에 저장되어있는 Btn의 index
+                            // 저장된 만큼버튼 생성 및 부모설정
+                            GameObject pop = Instantiate(PushPop.Instance.pushPopButtonPrefab, pushpushScript.resultImage.transform);
+
+                            // 버튼의 색깔 Index에 맞게 Sprite 변경
+                            pop.GetComponent<Image>().sprite = btnSprites[pushlist[0].childSpriteIndex[i]];
+
+                            // Scale과 Position 세팅
+                            pop.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                            pop.transform.localPosition = pushlist[0].childPosition[i];
+                        }
+
+                        // 세팅이 끝났으면 컬렉션 Bubble의 크기만큼 스케일 조정
+                        pushpushScript.resultImage.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
 
                         for (int i = 0; i < pushpushScript.puzzleBoard.transform.childCount; i++)
                         {
@@ -244,9 +275,8 @@ public class GameManager : MonoBehaviour, IGameMode
 
                     Speed_Timer speed_Timer = FindObjectOfType<Speed_Timer>();
                     speed_Timer.time_Slider.value += count;
-                    if (speed_Timer.time_Slider.value.Equals(1f))
+                    if (speed_Timer.time_Slider.value.Equals(1f) || speed_Timer.currentTime.Equals(60))
                     {
-                        Debug.Log("Game Clear");
                         // Game Clear
                         bubblePos.Clear(); // bubble transform mode에 따라 달라짐
                         PushPop.Instance.PushPopClear();
@@ -259,7 +289,7 @@ public class GameManager : MonoBehaviour, IGameMode
                     }
                     else
                     {
-                        StartCoroutine(PushPushCreate_Co());
+                        pushpushCreate_Co = StartCoroutine(PushPushCreate_Co());
                     }
                     break;
                 case Mode.Bomb:
@@ -276,11 +306,13 @@ public class GameManager : MonoBehaviour, IGameMode
 
     private IEnumerator PushPushCreate_Co()
     {
+        BoardSize = new Vector2(700f, 700f);
+
         // animation
         Animator pushAni = PushPop.Instance.pushPopAni.GetComponent<Animator>();
         pushAni.SetTrigger("Turning");
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
 
         PushPop.Instance.pushTurn = !PushPop.Instance.pushTurn;
         bubblePos.Clear();
@@ -315,30 +347,43 @@ public class GameManager : MonoBehaviour, IGameMode
     }
 
     public void SpeedMode()
-    {
+    { // speed mode start
         StartCoroutine(GameReady_Co());
         // position count 한 개, 위치 가운데, scale 조정
-        bubbleSize = 500f; // speed mode bubble size setting
+        bubbleSize = 300f; // speed mode bubble size setting
         BoardSize = new Vector2(300f, 300f); // scale
 
         // bubble position
         GameObject board = Instantiate(PushPop.Instance.boardPrefabUI, PushPop.Instance.pushPopCanvas); // image
         board.GetComponent<Image>().sprite = PushPop.Instance.boardSprite;
+        board.GetComponent<RectTransform>().sizeDelta = BoardSize;
         PushPop.Instance.pushPopBoardObject.Add(board);
         CreateBubble(BoardSize, board.transform.localPosition, board);
     }
 
     public void SpeedModePushPopCreate()
     {
-        BoardSize = new Vector2(700f, 700f); // scale
         for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
         {
             Destroy(PushPop.Instance.pushPopBoardObject[i]);
         }
         PushPop.Instance.pushPopBoardObject.Clear();
 
+        StartCoroutine(SpeedBoardStartCreate_Co());
+    }
+
+    private IEnumerator SpeedBoardStartCreate_Co()
+    { // bubble 터졌을 때
         // pushpop 생성
+        BoardSize = new Vector2(700f, 700f);
+        BoardSizeGameObject = new Vector2(700f, 700f);
         PushPop.Instance.CreatePushPopBoard(PushPop.Instance.pushPopCanvas);
+        Animator pushAni = PushPop.Instance.pushPopAni.GetComponent<Animator>();
+        // pushAni.SetTrigger("Growing");
+
+        yield return new WaitForSeconds(1.5f);
+
+        BoardSize = new Vector2(700f, 700f);
         PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
         PushPop.Instance.PushPopButtonSetting(PushPop.Instance.buttonCanvas);
         buttonActive = PushPop.Instance.activePos.Count;
@@ -366,10 +411,10 @@ public class GameManager : MonoBehaviour, IGameMode
         this.bubbleObject.Add(bubbleObject);
         bubble.BubbleSetting(_size, _pos, _puzzle.transform);
         _puzzle.GetComponent<Image>().raycastTarget = false;
-        _puzzle.GetComponent<RectTransform>().sizeDelta = BoardSize;
+        // _puzzle.GetComponent<RectTransform>().sizeDelta = BoardSize;
         //_puzzle.SetParent(bubble.transform);
         /*bubble.touchCount = 1;*/
-        bubble.touchCount = Random.Range(2, 10); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
+        bubble.touchCount = Random.Range(10, 21); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
     }
 
     /// <summary>

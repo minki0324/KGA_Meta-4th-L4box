@@ -21,6 +21,7 @@ public class Speed_Canvas : MonoBehaviour
     [SerializeField] private GameObject selectCategory_Panel;
     [SerializeField] private GameObject ready_Panel;
     [SerializeField] private GameObject speedGame_Panel;
+    [SerializeField] private GameObject resultPanel;
 
     [Header("캔버스")]
     [SerializeField] private Canvas main_Canvas;
@@ -54,6 +55,7 @@ public class Speed_Canvas : MonoBehaviour
 
     [SerializeField] private List<Button> iconButton_List;
 
+    [SerializeField] private Speed_Timer speedTimer;
 
    
     //스피드게임에 넘겨줄 변수
@@ -375,6 +377,12 @@ public class Speed_Canvas : MonoBehaviour
 
     }
 
+    public void RestartButton()
+    {
+        resultPanel.SetActive(false);
+        speedTimer.Init();
+        GameManager.Instance.SpeedMode(); // Speed Mode restart
+    }
 
 
 

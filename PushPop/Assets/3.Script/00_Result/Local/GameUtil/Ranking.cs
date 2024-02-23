@@ -32,6 +32,31 @@ public class Rank
         this.timer = timer;
     }
 }
+
+[System.Serializable]
+public class VersusData
+{
+    public BombVersus[] games = new BombVersus[2];
+}
+[System.Serializable]
+public class BombVersus
+{
+    public string Player1PName;
+    public string Player2PName;
+    public int Player1PIndex;
+    public int Player2PIndex;
+    // true면 1P가 이긴 게임 false면 2P가 이긴 게임
+    public bool Result = false;
+
+    public BombVersus(string player1PName, string player2PName, int player1PIndex, int player2PIndex, bool result)
+    {
+        Player1PName = player1PName;
+        Player2PName = player2PName;
+        Player1PIndex = player1PIndex;
+        Player2PIndex = player2PIndex;
+        Result = result;
+    }
+}
 #endregion
 
 /// <summary>
@@ -42,7 +67,9 @@ public class Ranking : MonoBehaviour
     public static Ranking instance = null;
 
     private string rankPath = string.Empty; // Rank Json Path
+    private string versusPath = string.Empty; // Bomb Versus Json Path
     private List<Rank> rankList = new List<Rank>(); // Rank List
+    private VersusData versusData = new VersusData();
 
     #region Unity Callback
     private void Awake()
@@ -59,7 +86,10 @@ public class Ranking : MonoBehaviour
 
 
         rankPath = Application.persistentDataPath + "/Rank";
+        versusPath = Application.persistentDataPath + "/Versus";
+
         LoadRanking();
+        LoadVersus();
     }
     #endregion
 
@@ -121,6 +151,24 @@ public class Ranking : MonoBehaviour
         }
 
         SaveRanking();
+    }
+
+    public void SetBombVersus(int _index1P, string _name1P, int _index2P, string _name2P, bool _result)
+    { // 새로운 게임 결과 생성
+        BombVersus newGameResult = new BombVersus(_name1P, _name2P, _index1P, _index2P,  _result);
+
+        // 만약 [0]에 이미 게임 결과가 존재한다면, 그 결과를 [1]으로 이동
+        // [1]에 이미 결과가 있다면, [0]의 결과로 대체되고, [1]의 결과는 삭제.
+        if (versusData.games[0] != null)
+        {
+            versusData.games[1] = versusData.games[0];
+        }
+
+        // 새로운 게임 결과를 [0]에 저장
+        versusData.games[0] = newGameResult;
+
+        // 변경사항을 파일에 저장하는 메소드 호출
+        SaveVersus();
     }
     #endregion
 
@@ -346,15 +394,43 @@ public class Ranking : MonoBehaviour
             }
         }
     }
-    #endregion
 
+   
+    public void LoadVersusResult(TMP_Text[] _winText, TMP_Text[] _loseText, Image[] _winImage, Image[] _loseImage)
+    {
+        // VersusList 최신화
+        LoadVersus();
+
+        // Profile Image 최신화
+        SQL_Manager.instance.SQL_ProfileListSet();
+
+        for (int i = 0; i < versusData.games.Length; i++)
+        {
+            BombVersus currentGame = versusData.games[i];
+
+            if (currentGame.Result)
+            { // 1P가 이긴 경우
+                SetGameResultText(_winText[i], _loseText[i], currentGame.Player1PName, currentGame.Player2PName);
+                SetPlayerProfileImage(_winImage[i], currentGame.Player1PIndex, true);
+                SetPlayerProfileImage(_loseImage[i], currentGame.Player2PIndex, false);
+            }
+            else
+            { // 1P가 진 경우
+                SetGameResultText(_loseText[i], _winText[i], currentGame.Player1PName, currentGame.Player2PName);
+                SetPlayerProfileImage(_loseImage[i], currentGame.Player1PIndex, true);
+                SetPlayerProfileImage(_winImage[i], currentGame.Player2PIndex, false);
+            }
+        }
+    }
+    #endregion
+    #region Json
     private void SaveRanking()
     { // 랭킹 데이터 JSON으로 저장
         RankList rankListWrapper = new RankList { ranks = rankList };
         string json = JsonUtility.ToJson(rankListWrapper, true);
         File.WriteAllText(rankPath, json);
     }
-    
+
     private void LoadRanking()
     { // JSON에서 랭킹 데이터 불러오기
         if (File.Exists(rankPath))
@@ -364,5 +440,58 @@ public class Ranking : MonoBehaviour
             rankList = rankListWrapper.ranks;
         }
     }
+    public void SaveVersus()
+    { // 2인 모드 결과를 저장
+        string json = JsonUtility.ToJson(versusData, true);
+        File.WriteAllText(versusPath, json);
+    }
+
+    public void LoadVersus()
+    { // 2인 모드 결과 불러오기
+        if (File.Exists(versusPath))
+        {
+            string json = File.ReadAllText(versusPath);
+            versusData = JsonUtility.FromJson<VersusData>(json);
+        }
+    }
+    #endregion
+
+    private void SetPlayerProfileImage(Image image, int playerIndex, bool isWinner)
+    {
+        Profile profile = GetPlayerProfile(playerIndex);
+
+        if (profile != null)
+        {
+            if (profile.imageMode)
+            {
+                image.sprite = GameManager.Instance.ProfileImages[profile.defaultImage];
+            }
+            else
+            {
+                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, profile.index);
+                Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
+                image.sprite = profileSprite;
+            }
+        }
+    }
+
+    private Profile GetPlayerProfile(int playerIndex)
+    {
+        foreach (Profile profile in SQL_Manager.instance.Profile_list)
+        {
+            if (profile.index == playerIndex)
+            {
+                return profile;
+            }
+        }
+        return null;
+    }
+
+    private void SetGameResultText(TMP_Text winText, TMP_Text loseText, string winPlayerName, string losePlayerName)
+    {
+        winText.text = winPlayerName;
+        loseText.text = losePlayerName;
+    }
+
     #endregion
 }
