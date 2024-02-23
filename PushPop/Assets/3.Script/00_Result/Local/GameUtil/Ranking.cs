@@ -179,6 +179,52 @@ public class Ranking : MonoBehaviour
     }
 
     /// <summary>
+    /// RankList에 담겨 있는 본인의 기록을 조회하고, 기록이 있다면 rankList에 담긴 본인의 기록을 출력, 없다면 공백으로 출력
+    /// </summary>
+    /// <param name="_name"></param>
+    /// <param name="_Score"></param>
+    /// <param name="_image"></param>
+    public void LoadScore_Personal(TMP_Text _name, TMP_Text _Score, Image _image)
+    {
+        SQL_Manager.instance.SQL_ProfileListSet();
+
+        // 게임매니저에 저장된 프로필 Infomation을 이용하여 rankList에 본인의 기록이 있는지 조회
+        var userRecord = rankList.FirstOrDefault(r => r.name == GameManager.Instance.ProfileName && r.index == GameManager.Instance.ProfileIndex);
+
+        if (userRecord != null)
+        { // 사용자 기록이 있을 경우, 정보를 표시.
+            if(userRecord.score != 0)
+            {
+                _name.text = userRecord.name;
+                _Score.text = userRecord.score.ToString();
+            }
+            else if (userRecord.score == 0)
+            { // 사용자 기록이 없을 경우, 공백을 표시.
+                _name.text = GameManager.Instance.ProfileName;
+                _Score.text = "";
+            }
+        }
+        
+
+        for(int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        {
+            if(SQL_Manager.instance.Profile_list[i].index == GameManager.Instance.ProfileIndex)
+            { // Profile Index가 같다면
+                if (SQL_Manager.instance.Profile_list[i].imageMode)
+                { // 이미지 고르기를 선택한 플레이어
+                    _image.sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
+                }
+                else if (!SQL_Manager.instance.Profile_list[i].imageMode)
+                { // 사진 찍기를 선택한 플레이어
+                    Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
+                    Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
+                    _image.sprite = profileSprite;
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// RankList에 담겨져 있는 Rank들 중 동일한 SpriteName의 Rank를 찾아 Clear가 빠른 순서대로 정렬하여 Text와 Image에 출력해주는 Method
     /// </summary>
     /// <param name="_timer"></param>
@@ -189,22 +235,36 @@ public class Ranking : MonoBehaviour
     {
         SQL_Manager.instance.SQL_ProfileListSet();
 
-        // 특정 spriteName에 대한 모든 타이머 기록을 찾아서 정렬하고 상위 3개를 선택합니다.
+        // 특정 spriteName에 대한 모든 타이머 기록을 찾아서 정렬하고 상위 3개를 선택.
         var topRanks = rankList
-         .Where(r => r.spriteName.Contains(_spriteName))
-         .SelectMany(r => r.timer.Select((timer, index) => new { Rank = r, Timer = timer }))
-         .Where(x => x.Rank.spriteName.Contains(_spriteName))
-         .OrderBy(x => x.Timer)
-         .Take(3)
-         .ToList();
+            .Where(r => r.spriteName.Contains(_spriteName)) // 먼저 spriteName을 포함하는 Rank만 필터링
+            .Select(r => new {
+                Rank = r,
+                Timer = r.timer[r.spriteName.IndexOf(_spriteName)] // 해당 spriteName에 해당하는 타이머만 선택
+    })
+            .Where(x => x.Rank.spriteName.Contains(_spriteName))
+            .OrderBy(x => x.Timer)
+            .Take(3)
+            .ToList();
 
-        for(int i = 0; i < topRanks.Count; i++)
-        {// 선택된 상위 3개의 랭크에 대해 text 배열을 업데이트.
+        for (int i = 0; i < topRanks.Count; i++)
+        { // 선택된 상위 3개의 랭크에 대해 text 배열을 업데이트.
             if (i < _timer.Length)
             {
-                int sec = topRanks[i].Timer % 60;    //60으로 나눈 나머지 = 초
-                int min = topRanks[i].Timer / 60;
-                 _timer[i].text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+                for(int j = 0; j < topRanks[i].Rank.spriteName.Count; j++)
+                {
+                    if(topRanks[i].Rank.spriteName[j] == _spriteName)
+                    {
+                        int sec = topRanks[i].Timer % 60;    //60으로 나눈 나머지 = 초
+                        int min = topRanks[i].Timer / 60;
+                        _timer[i].text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+                        break;
+                    }
+                    else
+                    {
+                        _timer[i].text = "";
+                    }
+                }
             }
         }
 
@@ -230,6 +290,58 @@ public class Ranking : MonoBehaviour
                         Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
                         _image[j].sprite = profileSprite;
                     }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// RankList에 담겨 있는 본인의 기록을 조회하고, 기록이 있다면 rankList에 담긴 본인의 기록을 출력, 없다면 공백으로 출력
+    /// </summary>
+    /// <param name="_name"></param>
+    /// <param name="_timer"></param>
+    /// <param name="_image"></param>
+    /// <param name="_spriteName"></param>
+    public void LoadTimer_Personal(TMP_Text _name, TMP_Text _timer, Image _image, int _spriteName)
+    {
+        SQL_Manager.instance.SQL_ProfileListSet();
+
+        var userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex && r.spriteName.Contains(_spriteName));
+
+        if (userRecord != null)
+        {
+            for (int i = 0; i < userRecord.spriteName.Count; i++)
+            {
+                if (userRecord.spriteName[i] == _spriteName)
+                {
+                    int sec = userRecord.timer[i] % 60;    //60으로 나눈 나머지 = 초
+                    int min = userRecord.timer[i] / 60;
+                    _name.text = GameManager.Instance.ProfileName;
+                    _timer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+                    break;
+                }
+               
+            }
+        }
+        else
+        {
+            _name.text = GameManager.Instance.ProfileName;
+            _timer.text = "";
+        }
+
+        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        {
+            if (SQL_Manager.instance.Profile_list[i].index == GameManager.Instance.ProfileIndex)
+            { // Profile Index가 같다면
+                if (SQL_Manager.instance.Profile_list[i].imageMode)
+                { // 이미지 고르기를 선택한 플레이어
+                    _image.sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
+                }
+                else if (!SQL_Manager.instance.Profile_list[i].imageMode)
+                { // 사진 찍기를 선택한 플레이어
+                    Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
+                    Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
+                    _image.sprite = profileSprite;
                 }
             }
         }

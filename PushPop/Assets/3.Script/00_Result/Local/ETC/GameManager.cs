@@ -103,6 +103,11 @@ public class GameManager : MonoBehaviour, IGameMode
     [SerializeField] private TMP_Text[] printName;
     [SerializeField] private TMP_Text[] printTimer;
     [SerializeField] private Image[] printImage;
+    [SerializeField] private TMP_Text printNamePersonal;
+    [SerializeField] private TMP_Text printTimerPersonal;
+    [SerializeField] private Image printImagePersonal;
+
+    [Header("Other")]
     [SerializeField] private Sprite noneSprite;
 
     #region Unity Callback
@@ -242,9 +247,10 @@ public class GameManager : MonoBehaviour, IGameMode
                         bubblePos.Clear(); // bubble transform mode에 따라 달라짐
                         PushPop.Instance.PushPopClear();
                         speed_Timer.StopCoroutine(speed_Timer.timer);
-                        Debug.Log(PushPop.Instance.boardSprite.name);
+
                         Ranking.instance.SetTimer(ProfileName, ProfileIndex, int.Parse(PushPop.Instance.boardSprite.name), speed_Timer.currentTime);
-                        // speed_Timer.resultPanel.SetActive(true);
+                        speed_Timer.resultPanel.SetActive(true);
+                        speed_Timer.Result();
                         // Ranking.instance.UpdateTimerScore(PushPop.Instance.currentTime);
                     }
                     else
@@ -398,6 +404,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public void PrintSpeed(int _spriteName)
     {
         Ranking.instance.LoadTimer(printTimer, printImage, printName, _spriteName);
+        Ranking.instance.LoadTimer_Personal(printNamePersonal, printTimerPersonal, printImagePersonal, _spriteName);
     }
 
     public void RankClear()

@@ -41,6 +41,9 @@ public class Memory_Canvas : MonoBehaviour
     [SerializeField] private Image[] profileImage_Array;
     [SerializeField] private TMP_Text[] profileName_Array;
     [SerializeField] private TMP_Text[] scoreText_Array;
+    [SerializeField] private Image progileImage_Personal;
+    [SerializeField] private TMP_Text profileName_Personal;
+    [SerializeField] private TMP_Text scoreText_Personal;
 
 
     #region Unity Callback
@@ -105,6 +108,7 @@ public class Memory_Canvas : MonoBehaviour
     public void RankingLoad()
     {
         Ranking.instance.LoadScore(scoreText_Array, profileImage_Array, profileName_Array);
+        Ranking.instance.LoadScore_Personal(profileName_Personal, scoreText_Personal, progileImage_Personal);
     }
 
     #endregion
