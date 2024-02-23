@@ -10,6 +10,7 @@ public enum Mode // GameMode
     Speed,
     Memory,
     Bomb,
+    None
 }
 
 public class PushPushObject
