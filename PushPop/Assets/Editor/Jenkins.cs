@@ -17,7 +17,7 @@ public class Jenkins
         }
         options.scenes = scenes.ToArray();
         // 타겟 경로(빌드 결과물이 여기 생성됨)
-        options.locationPathName = $"../Build/PushPop{PlayerSettings.bundleVersion}.apk";
+        options.locationPathName = $"../Build/PushPop.apk";
         // 빌드 타겟
         options.target = BuildTarget.Android;
 

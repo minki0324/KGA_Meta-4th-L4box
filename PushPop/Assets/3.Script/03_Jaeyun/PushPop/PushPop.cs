@@ -102,9 +102,9 @@ public class PushPop : MonoBehaviour
         pushObject.GetComponent<SpriteRenderer>().sprite = boardSprite;
         // size setting
         Rect boardRect = pushPopBoard.GetComponent<RectTransform>().rect;
-        Vector2 boardSize = GameManager.Instance.BoardSizeGameObject;
-        float scale = Mathf.Min(boardSize.x / boardSprite.textureRect.size.x, boardSize.x / boardSprite.textureRect.size.y) * 0.95f;
-        // float scale = Mathf.Min(boardRect.width / boardSprite.textureRect.size.x, boardRect.width / boardSprite.textureRect.size.y) * 0.95f;
+        // Vector2 boardSize = GameManager.Instance.BoardSizeGameObject;
+        // float scale = Mathf.Min(boardSize.x / boardSprite.textureRect.size.x, boardSize.x / boardSprite.textureRect.size.y) * 0.95f;
+        float scale = Mathf.Min(boardRect.width / boardSprite.textureRect.size.x, boardRect.width / boardSprite.textureRect.size.y) * 0.95f;
         pushObject.transform.localScale = new Vector3(scale, scale, 1f);
         if (!pushTurn)
         { // image flip
@@ -168,7 +168,7 @@ public class PushPop : MonoBehaviour
     // PushPop position Object Pooling
     private void GetPushPopButton(List<GameObject> _pos, GameObject _prefab, Transform _parent, float _posX, float _posY)
     {
-        /*_parent = this.gameObject.transform;*/
+        _parent = this.gameObject.transform;
 
         for (int i = 0; i < _pos.Count; i++)
         {
@@ -198,11 +198,14 @@ public class PushPop : MonoBehaviour
         }
         pushPopBoardObject.Clear();
 
-        for (int i = 0; i < activePos.Count; i++)
+        if (!activePos.Count.Equals(0))
         {
-            activePos[i].SetActive(false);
+            for (int i = 0; i < activePos.Count; i++)
+            {
+                activePos[i].SetActive(false);
+            }
+            activePos.Clear();
         }
-        activePos.Clear();
 
         for (int i = 0; i < pushPopButton.Count; i++)
         {
