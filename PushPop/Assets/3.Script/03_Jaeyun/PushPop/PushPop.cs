@@ -10,7 +10,7 @@ public class PushPop : MonoBehaviour
 
     [Header("PushPop Canvas")]
     public Transform pushPopCanvas = null; // Canvas_PushPop
-    [SerializeField] private GameObject pushPopButtonPrefab = null; // PushPop Button Prefab
+    public GameObject pushPopButtonPrefab = null; // PushPop Button Prefab
     public GameObject boardPrefabUI = null; // PushPop Board Canvas Prefab
     private RectTransform boardSizeUI;
     public List<GameObject> pushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
