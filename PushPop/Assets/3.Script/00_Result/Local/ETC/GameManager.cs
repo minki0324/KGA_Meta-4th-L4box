@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.U2D;
 
 public enum Mode // GameMode
 {
@@ -77,7 +78,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public Vector2 finalCenter;
     public List<PuzzleObject> puzzleClass = new List<PuzzleObject>();
     [SerializeField] private PuzzleLozic puzzleLogic;
-    public List<PushPushObject> push = new List<PushPushObject>();
+    public List<PushPushObject> pushlist = new List<PushPushObject>();
 
     [Header("Score")]
     private Coroutine timer = null;
@@ -111,8 +112,10 @@ public class GameManager : MonoBehaviour, IGameMode
     [SerializeField] private Image printImagePersonal;
 
     [Header("Other")]
+    [SerializeField] private SpriteAtlas atlas;
     [SerializeField] private Sprite noneSprite;
     public bool backButtonClick = false;
+    [SerializeField] private Sprite[] btnSprites;
 
     #region Unity Callback
     private void Awake()
@@ -208,9 +211,6 @@ public class GameManager : MonoBehaviour, IGameMode
                         for (int i = 0; i < pushpushScript.puzzleBoard.transform.childCount; i++)
                         {
                             PushPopButton pop = pushpushScript.puzzleBoard.transform.GetChild(i).GetComponent<PushPopButton>();
-                            Debug.Log("배열 : " + spriteIndexs[i]);
-                            Debug.Log("pop : " + pop);
-                            Debug.Log("pop.spriteIndex : " + pop.spriteIndex);
                             spriteIndexs[i] = pop.spriteIndex;
                             childPos[i] = pop.gameObject.transform.localPosition;
                         }
@@ -220,10 +220,38 @@ public class GameManager : MonoBehaviour, IGameMode
                         SQL_Manager.instance.SQL_AddPushpush(json, ProfileIndex);
 
                         pushpushScript.result.SetActive(true);
+
+                        // PushPushList 세팅
+                        List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileIndex);
+                        if(pushlist == null)
+                        {
+                            Debug.Log("널");
+                        }
+                        
                         //출력
                         pushpushScript.resultText.text = Mold_Dictionary.instance.icon_Dictionry[puzzleLogic.currentPuzzle.PuzzleID];
-                        /*pushpushScript.resultImage.sprite = puzzleLogic.currentPuzzle.board;*/
 
+                        // List를 자동으로 먼저한 순서대로 담기게 해놨음
+                        pushpushScript.resultImage.sprite = atlas.GetSprite(pushlist[0].spriteName.ToString());
+
+                        // 기존 PushPush에서 사용했던 크기로 먼저 세팅
+                        pushpushScript.resultImage.SetNativeSize();
+                        pushpushScript.resultImage.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                        for(int i = 0; i < pushlist[0].childIndex; i++)
+                        { // PushPushObject Class에 저장되어있는 Btn의 index
+                            // 저장된 만큼버튼 생성 및 부모설정
+                            GameObject pop = Instantiate(PushPop.Instance.pushPopButtonPrefab, pushpushScript.resultImage.transform);
+
+                            // 버튼의 색깔 Index에 맞게 Sprite 변경
+                            pop.GetComponent<Image>().sprite = btnSprites[pushlist[0].childSpriteIndex[i]];
+
+                            // Scale과 Position 세팅
+                            pop.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                            pop.transform.localPosition = pushlist[0].childPosition[i];
+                        }
+
+                        // 세팅이 끝났으면 컬렉션 Bubble의 크기만큼 스케일 조정
+                        pushpushScript.resultImage.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
 
                         for (int i = 0; i < pushpushScript.puzzleBoard.transform.childCount; i++)
                         {
