@@ -44,7 +44,9 @@ public class Main_Button : MonoBehaviour
     public void PushPushBtn_Clicked()
     {
         _timesetPanel.SetActive(true);
-        Disable_Button();
+        GameManager.Instance.GameModeSetting(0);
+        AudioManager123.instance.SetCommonAudioClip_SFX(3);
+      
     }
 
 
@@ -52,7 +54,9 @@ public class Main_Button : MonoBehaviour
     public void SpeedBtn_Clicked()
     {
         _timesetPanel.SetActive(true);
-        Disable_Button();
+        GameManager.Instance.GameModeSetting(1);
+        AudioManager123.instance.SetCommonAudioClip_SFX(3);
+        
     }
 
 
@@ -60,7 +64,17 @@ public class Main_Button : MonoBehaviour
     public void MemoryBtn_Clicked()
     {
         _timesetPanel.SetActive(true);
-        Disable_Button();
+        GameManager.Instance.GameModeSetting(2);
+        AudioManager123.instance.SetCommonAudioClip_SFX(3);
+     
+    }
+
+    //2인모드 버튼 클릭 시 호출
+    public void BombBtn_Clicked()
+    {
+        _timesetPanel.SetActive(true);
+        GameManager.Instance.GameModeSetting(0);
+        AudioManager123.instance.SetCommonAudioClip_SFX(3);
     }
 
 
@@ -70,14 +84,14 @@ public class Main_Button : MonoBehaviour
         _profilePanel.SetActive(true);
         _gameModePanel.SetActive(false);
         _buttonPanel.SetActive(false);
-        /*AudioManager123.instance.SetAudioClip_SFX(0);*/
+        AudioManager123.instance.SetCommonAudioClip_SFX(3);
     }
 
     //환경설정 버튼 클릭 시 호출
     public void OptionBtn_Clicked()
     {
         _optionPanel.SetActive(true);
-        AudioManager123.instance.SetAudioClip_SFX(0);
+        AudioManager123.instance.SetCommonAudioClip_SFX(3);
     }
 
 
@@ -87,20 +101,16 @@ public class Main_Button : MonoBehaviour
         //네트워크 씬으로 이동 + 필요한 함수 호출해주세요 :)
         
         Debug.Log("네트워크 씬으로 넘어가기");
-        AudioManager123.instance.SetAudioClip_SFX(0);
+        AudioManager123.instance.SetCommonAudioClip_SFX(3);
     }
 
-    //2인모드 버튼 클릭 시 호출
-    public void Mode2PBtn_Clicked()
-    {
-        AudioManager123.instance.SetAudioClip_SFX(0);
-    }
+
     
     //홈 아이콘 클릭 시 호출 - L4Box 홈페이지로 켜기
     public void HomeBtn_Clicked()
     {
         Application.OpenURL("https://www.l4box.com/");
-        AudioManager123.instance.SetAudioClip_SFX(0);
+        AudioManager123.instance.SetCommonAudioClip_SFX(3);
     }
 
 

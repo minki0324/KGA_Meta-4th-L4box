@@ -22,7 +22,20 @@ public class AudioManager123 : MonoBehaviour
     private List<AudioClip> bgmClip_List;
 
     [SerializeField]
-    private List<AudioClip> sfxClip_List;
+    private List<AudioClip> pushSfxClip_List;
+
+    [SerializeField]
+    private List<AudioClip> speedSfxClip_List;
+
+    [SerializeField]
+    private List<AudioClip> memorySfxClip_List;
+
+    [SerializeField]
+    private List<AudioClip> bombSfxClip_List;
+
+    [SerializeField]
+    private List<AudioClip> commonSfxClip_List;
+
 
     [SerializeField]
     private List<Button> btn_List;
@@ -55,14 +68,33 @@ public class AudioManager123 : MonoBehaviour
     {
         audioSource_arr[1].clip = bgmClip_List[index];       
         audioSource_arr[1].Play();
-        audioSource_arr[1].loop = true;
-        
+        audioSource_arr[1].loop = true;        
     }
 
-    public void SetAudioClip_SFX(int index)
+    public void SetAudioClip_SFX(Mode gameMode, int index)
+    {     
+        switch(gameMode)
+        {
+            case Mode.PushPush:
+                audioSource_arr[2].PlayOneShot(pushSfxClip_List[index]);
+                break;
+
+            case Mode.Speed:
+                audioSource_arr[2].PlayOneShot(speedSfxClip_List[index]);
+                break;
+
+            case Mode.Memory:
+                audioSource_arr[2].PlayOneShot(memorySfxClip_List[index]);
+                break;
+
+            case Mode.Bomb:
+                audioSource_arr[2].PlayOneShot(bombSfxClip_List[index]);
+                break;
+        }
+    }
+
+    public void SetCommonAudioClip_SFX(int index)
     {
-        //audioSource_arr[2].clip = sfxClip_List[index];
-        audioSource_arr[2].PlayOneShot(sfxClip_List[index]);
-     
+        audioSource_arr[2].PlayOneShot(commonSfxClip_List[index]);
     }
 }

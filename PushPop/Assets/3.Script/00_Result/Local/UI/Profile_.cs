@@ -282,7 +282,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     // 삭제 버튼 List만큼 출력
     public void DeleteBtnOpen()
     {
-        if(_panelList.Count > 0)
+        if (_panelList.Count > 0)
         {
             bool active = _panelList[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
             for (int i = 0; i < _panelList.Count; i++)
@@ -369,5 +369,16 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         // 다른 문자는 허용
         return addedChar;
     }
+
+
+    public void BackBtn_CreateNamePanel_Clicked()
+    {
+        
+        AudioManager123.instance.SetCommonAudioClip_SFX(3);
+        CreateNamePanel.SetActive(false);
+        PrintProfileList();
+        SelectProfilePanel.SetActive(true);
+    }
+
     #endregion
 }
