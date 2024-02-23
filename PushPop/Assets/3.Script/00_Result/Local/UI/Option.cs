@@ -16,13 +16,17 @@ public class Option : MonoBehaviour
 
     #region Unity Callback
 
+    private void Awake()
+    {
+        Init();
+        gameObject.SetActive(false);
+    }
 
 
     private void Start()
     {
         //PlayerPrefs.DeleteAll();
-        Init();
-        gameObject.SetActive(false);
+     
     }
     #endregion
 
@@ -92,7 +96,7 @@ public class Option : MonoBehaviour
             case "Master":
                 volume = Master_Slider.value;
                 PlayerPrefs.DeleteKey("MasterVolume");
-                    PlayerPrefs.SetFloat("MasterVolume", volume);
+                PlayerPrefs.SetFloat("MasterVolume", volume);
                 break;
 
 
