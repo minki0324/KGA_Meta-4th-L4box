@@ -94,6 +94,12 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Sprite quitPressed_Sprite; //quit 버튼 눌렷을 때 스프라이트
     [SerializeField] private Button[] quitBtn;  // 양쪽의 나가기 버튼
 
+    [Header("Versus")]
+    [SerializeField] private TMP_Text[] winText;
+    [SerializeField] private TMP_Text[] loseText;
+    [SerializeField] private Image[] winProfileImage;
+    [SerializeField] private Image[] loseProfileImage;
+
     //waterfall 회전 변수들
     private bool rotateDirection = true; // true면 회전 방향이 +, false면 회전 방향이 -
     private float rotationZ = 0f; // 현재 Z 축 회전 각도
@@ -746,6 +752,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         {
             StopCoroutine(waterfall_co);
         }
+    }
+
+    public void PrintVersus()
+    {
+        Ranking.instance.LoadVersusResult(winText, loseText, winProfileImage, loseProfileImage);
     }
     #endregion
     private IEnumerator PrintLog_co(GameObject errorlog)
