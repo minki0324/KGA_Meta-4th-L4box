@@ -153,6 +153,14 @@ public class Ranking : MonoBehaviour
         SaveRanking();
     }
 
+    /// <summary>
+    /// Multi Mode의 결과를 저장하는 Method / Bool값 True일 경우 1P의 승리, False일 경우 2P의 승리
+    /// </summary>
+    /// <param name="_index1P"></param>
+    /// <param name="_name1P"></param>
+    /// <param name="_index2P"></param>
+    /// <param name="_name2P"></param>
+    /// <param name="_result"></param>
     public void SetBombVersus(int _index1P, string _name1P, int _index2P, string _name2P, bool _result)
     { // 새로운 게임 결과 생성
         BombVersus newGameResult = new BombVersus(_name1P, _name2P, _index1P, _index2P,  _result);
@@ -396,7 +404,13 @@ public class Ranking : MonoBehaviour
         }
     }
 
-   
+   /// <summary>
+   /// Multi Lobby에서 최근 2개의 게임 결과를 출력하는 Method
+   /// </summary>
+   /// <param name="_winText"></param>
+   /// <param name="_loseText"></param>
+   /// <param name="_winImage"></param>
+   /// <param name="_loseImage"></param>
     public void LoadVersusResult(TMP_Text[] _winText, TMP_Text[] _loseText, Image[] _winImage, Image[] _loseImage)
     {
         // VersusList 최신화
@@ -408,6 +422,7 @@ public class Ranking : MonoBehaviour
         for (int i = 0; i < versusData.games.Length; i++)
         {
             BombVersus currentGame = versusData.games[i];
+            
             if(currentGame != null)
             {
                 if (currentGame.Result)
@@ -425,11 +440,47 @@ public class Ranking : MonoBehaviour
             }
             else
             {
-                return;
+                _winText[i].text = "";
+                _loseText[i].text = "";
+                _winImage[i].sprite = GameManager.Instance.noneSprite;
+                _loseImage[i].sprite = GameManager.Instance.noneSprite;
             }
         }
     }
+
+    /// <summary>
+    /// 게임이 끝나고 해당 한판에 대한 결과만 출력하는 Method
+    /// </summary>
+    /// <param name="_winText"></param>
+    /// <param name="_loseText"></param>
+    /// <param name="_winImage"></param>
+    /// <param name="_loseImage"></param>
+    public void LoadVersusResult_Personal(TMP_Text _winText, TMP_Text _loseText, Image _winImage, Image _loseImage)
+    {
+        // VersusList 최신화
+        LoadVersus();
+
+        // Profile Image 최신화
+        SQL_Manager.instance.SQL_ProfileListSet();
+
+        // 최근 게임을 가져옴
+        BombVersus _currentGame = versusData.games[0];
+
+        if (_currentGame.Result)
+        { // 1P가 이긴 경우
+            SetGameResultText(_winText, _loseText, _currentGame.Player1PName, _currentGame.Player2PName);
+            SetPlayerProfileImage(_winImage, _currentGame.Player1PIndex, true);
+            SetPlayerProfileImage(_loseImage, _currentGame.Player2PIndex, false);
+        }
+        else
+        { // 1P가 진 경우
+            SetGameResultText(_loseText, _winText, _currentGame.Player1PName, _currentGame.Player2PName);
+            SetPlayerProfileImage(_loseImage, _currentGame.Player1PIndex, true);
+            SetPlayerProfileImage(_winImage, _currentGame.Player2PIndex, false);
+        }
+    }
     #endregion
+
     #region Json
     private void SaveRanking()
     { // 랭킹 데이터 JSON으로 저장

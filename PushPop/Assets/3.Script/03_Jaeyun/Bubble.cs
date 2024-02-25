@@ -123,7 +123,6 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
     public void BombMode(Vector2 _player1, Vector2 _player2, bool _onlyMove)
     { // only move 시 상단에 배치 및 touch 기능 없음
-        float timer = 0;
         Vector2 dir = Vector2.zero;
         // player1 turn -> if 로 바꾸기
         dir = _player1 - _player2;

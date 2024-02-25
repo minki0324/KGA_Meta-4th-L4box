@@ -95,10 +95,14 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Button[] quitBtn;  // 양쪽의 나가기 버튼
 
     [Header("Versus")]
-    [SerializeField] private TMP_Text[] winText;
-    [SerializeField] private TMP_Text[] loseText;
-    [SerializeField] private Image[] winProfileImage;
-    [SerializeField] private Image[] loseProfileImage;
+    [SerializeField] private TMP_Text[] winTexts;
+    [SerializeField] private TMP_Text winText;
+    [SerializeField] private TMP_Text[] loseTexts;
+    [SerializeField] private TMP_Text loseText;
+    [SerializeField] private Image[] winProfileImages;
+    [SerializeField] private Image winProfileImage;
+    [SerializeField] private Image[] loseProfileImages;
+    [SerializeField] private Image loseProfileImage;
 
     //waterfall 회전 변수들
     private bool rotateDirection = true; // true면 회전 방향이 +, false면 회전 방향이 -
@@ -693,27 +697,37 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         isStart = false;
         b10minleft = false;
 
+        bool result = false;
+
+        // turn은 푸쉬팝을 누르고 있는 사람을 뜻하기 때문에 본인의 턴에 게임이 종료 됐다면 패배
+        if(turn == Turn.Turn1P) result = false;
+        else if (turn == Turn.Turn2P) result = true;
+
+        Ranking.instance.SetBombVersus(GameManager.Instance.ProfileIndex, GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex2P, GameManager.Instance.ProfileName2P, result);
+       
         // 종료 애니메이션 켜주고 애니메이션 나올 위치 설정
         endAnimation.transform.gameObject.SetActive(true);
         AudioManager.instance.SetAudioClip_SFX(1, false);
-        if (turn.Equals(Turn.Turn1P))
-        {
-            endAnimation.transform.localPosition = bottomPos[0];
-        }
-        else if (turn.Equals(Turn.Turn2P))
-        {
-            endAnimation.transform.localPosition = bottomPos[1];
-        }
+
+        if (turn.Equals(Turn.Turn1P)) endAnimation.transform.localPosition = bottomPos[0];
+        else if (turn.Equals(Turn.Turn2P)) endAnimation.transform.localPosition = bottomPos[1];
+
         endAnimation.SetTrigger("EndGame");
         StartCoroutine(Result_Co());
     }
 
     private IEnumerator Result_Co()
     { // 결과창 출력 코루틴
+        // 애니메이션 출력 기다림
         yield return new WaitForSeconds(1.2f);
+
+        // 결과창 출력
         AudioManager.instance.SetCommonAudioClip_SFX(7);
         result.SetActive(true);
+        Ranking.instance.LoadVersusResult_Personal(winText, loseText, winProfileImage, loseProfileImage);
+        
         yield return new WaitForSeconds(0.1f);
+        
         // 오브젝트들 삭제
         ResetGame();
         yield return null;
@@ -756,7 +770,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     public void PrintVersus()
     {
-        Ranking.instance.LoadVersusResult(winText, loseText, winProfileImage, loseProfileImage);
+        Ranking.instance.LoadVersusResult(winTexts, loseTexts, winProfileImages, loseProfileImages);
     }
     #endregion
     private IEnumerator PrintLog_co(GameObject errorlog)

@@ -70,7 +70,6 @@ public class GameManager : MonoBehaviour, IGameMode
     public int PushPopStage = 0;
     public Vector2 BoardSize;
     public Vector2 BoardSizeGameObject;
-    [SerializeField] Transform boardPos = null;
     public int buttonActive = 0;
 
     [Header("Puzzle Info")]
@@ -113,7 +112,7 @@ public class GameManager : MonoBehaviour, IGameMode
 
     [Header("Other")]
     [SerializeField] private SpriteAtlas atlas;
-    [SerializeField] private Sprite noneSprite;
+    public Sprite noneSprite;
     public bool backButtonClick = false;
     [SerializeField] private Sprite[] btnSprites;
 
