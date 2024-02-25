@@ -34,7 +34,10 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
             case Mode.PushPush:
                 currentSpeed = 0f;
                 PuzzlePiece piece = transform.parent.GetComponent<PuzzlePiece>();
-                piece.OnBubbleDestroy();
+                if(piece != null && piece.gameObject.activeSelf)
+                {
+                    piece.OnBubbleDestroy();
+                }
                 break;
             case Mode.Speed:
                 Speed_Timer speedTimer = FindObjectOfType<Speed_Timer>();
@@ -46,6 +49,10 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
                 break;
             case Mode.Bomb:
                 break;
+        }
+        if( moveCoroutine != null )
+        {
+            StopCoroutine(moveCoroutine);
         }
     }
 

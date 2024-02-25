@@ -246,11 +246,12 @@ public class Ranking : MonoBehaviour
                 _name.text = userRecord.name;
                 _Score.text = userRecord.score.ToString();
             }
-            else if (userRecord.score == 0)
-            { // 사용자 기록이 없을 경우, 공백을 표시.
-                _name.text = GameManager.Instance.ProfileName;
-                _Score.text = "";
-            }
+        }
+        else if(userRecord == null)
+        {
+            // 사용자 기록이 없을 경우, 공백을 표시.
+            _name.text = GameManager.Instance.ProfileName;
+            _Score.text = "";
         }
         
 

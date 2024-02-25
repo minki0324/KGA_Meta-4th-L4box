@@ -30,8 +30,8 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     [Header("Other Object")]
     [SerializeField] private GameObject profilePanel;
-    [SerializeField] private GameObject profileLog;
-    [SerializeField] private GameObject nameLog;
+    [SerializeField] private TMP_Text profileLog;
+    [SerializeField] private TMP_Text nameLog;
     [SerializeField] private TMP_InputField _profileNameAdd;
     [SerializeField] private Transform panelParent;
     [SerializeField] private List<GameObject> panelList;
@@ -50,8 +50,6 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     public bool _isImageSelect = false;
     public bool _isUpdate = false;
     
-    private Coroutine log;
-
     #region Unity Callback
     private void OnEnable()
     {
@@ -228,11 +226,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             { // 이미지 고르기 버튼 눌렀을 때
                 if (!_isImageSelect)
                 { // 이미지 선택을 안했을 때
-                    if (log != null)
+                    if (DialogManager.instance.log != null)
                     {
-                        StopCoroutine(log);
+                        StopCoroutine(DialogManager.instance.log);
                     }
-                    log = StartCoroutine(PrintLog_co(profileLog));
+                    DialogManager.instance.log = StartCoroutine(DialogManager.instance.Print_Dialog(nameLog, "이미지를 선택해주세요."));
                 }
                 else
                 { // 선택한 이미지가 있을 때
@@ -257,11 +255,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             { // 이미지 고르기 버튼 눌렀을 때
                 if (!_isImageSelect)
                 { // 선택한 이미지가 없을 때
-                    if (log != null)
+                    if (DialogManager.instance.log != null)
                     {
-                        StopCoroutine(log);
+                        StopCoroutine(DialogManager.instance.log);
                     }
-                    log = StartCoroutine(PrintLog_co(profileLog));
+                    DialogManager.instance.log = StartCoroutine(DialogManager.instance.Print_Dialog(nameLog, "이미지를 선택해주세요."));
                 }
                 else
                 { // 선택한 이미지가 있을 때
@@ -306,7 +304,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         {
             if (Regex.IsMatch(_profileNameAdd.text[i].ToString(), @"[^0-9a-zA-Z가-힣]"))
             {
-                Debug.Log("ㅋㅋ아 초성치지 말라고;;");
+                if (DialogManager.instance.log != null)
+                {
+                    StopCoroutine(DialogManager.instance.log);
+                }
+                DialogManager.instance.log = StartCoroutine(DialogManager.instance.Print_Dialog(nameLog, "초성 입력은 불가능합니다."));
                 //_profileNameAdd.text = Regex.Replace(_profileNameAdd.text, @"[^0-9a-zA-Z가-힣]", string.Empty); //초성만 지우는애
                 _profileNameAdd.text = String.Empty;    //다지우는애
                 bPossibleName = false;
@@ -315,7 +317,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
         if (bPossibleName)
         {
-            if (_profileNameAdd.text != string.Empty || _profileNameAdd.text.Length > 1)
+            if (_profileNameAdd.text != string.Empty && _profileNameAdd.text.Length > 1)
             {
                 _profileName = _profileNameAdd.text;
                 Debug.Log(_profileNameAdd.text.Length);
@@ -325,7 +327,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             }
             else
             {
-
+                if (DialogManager.instance.log != null)
+                {
+                    StopCoroutine(DialogManager.instance.log);
+                }
+                DialogManager.instance.log = StartCoroutine(DialogManager.instance.Print_Dialog(nameLog, "2~6글자의 이름을 입력해주세요."));
             }
 
         }
@@ -341,28 +347,17 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         _isImageSelect = true;
     }
 
-    // Error_log 출력 Coroutine
-    private IEnumerator PrintLog_co(GameObject errorlog)
-    {
-        errorlog.SetActive(true);
-
-        yield return new WaitForSeconds(3f);
-
-        errorlog.SetActive(false);
-        log = null;
-    }
-
     // Profile 영어, 숫자 입력 못하도록 설정
     private char ValidateInput(string text, int charIndex, char addedChar)
     {
         // 입력된 문자가 영어 알파벳, 숫자인 경우 입력을 막음
         if ((addedChar >= 'a' && addedChar <= 'z') || (addedChar >= 'A' && addedChar <= 'Z') || (addedChar >= '0' && addedChar <= '9'))
         {
-            if (log != null)
+            if (DialogManager.instance.log != null)
             {
-                StopCoroutine(log);
+                StopCoroutine(DialogManager.instance.log);
             }
-            log = StartCoroutine(PrintLog_co(nameLog));
+            DialogManager.instance.log = StartCoroutine(DialogManager.instance.Print_Dialog(nameLog, "한글로 입력 해주세요."));
             return '\0'; // 입력 막음
         }
 
