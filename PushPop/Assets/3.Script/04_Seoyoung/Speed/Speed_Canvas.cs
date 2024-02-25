@@ -21,6 +21,7 @@ public class Speed_Canvas : MonoBehaviour
     [SerializeField] private GameObject selectCategory_Panel;
     [SerializeField] private GameObject ready_Panel;
     [SerializeField] private GameObject speedGame_Panel;
+    [SerializeField] private GameObject resultPanel;
 
     [Header("캔버스")]
     [SerializeField] private Canvas main_Canvas;
@@ -39,6 +40,9 @@ public class Speed_Canvas : MonoBehaviour
 
     [Header("버튼")]
     [SerializeField] private List<Button> Difficulty_Btn;
+    [SerializeField] private Button previous_Btn;
+    [SerializeField] private Button next_Btn;
+
 
     [Header("Ready패널 관련")]
     [SerializeField] private Image selected_Image;
@@ -51,6 +55,7 @@ public class Speed_Canvas : MonoBehaviour
 
     [SerializeField] private List<Button> iconButton_List;
 
+    [SerializeField] private Speed_Timer speedTimer;
 
    
     //스피드게임에 넘겨줄 변수
@@ -61,11 +66,14 @@ public class Speed_Canvas : MonoBehaviour
     //카테고리 선택창이 떠잇으면 카테고리를 끄고, 꺼져있으면 메인캔버스로 돌아감
     public bool bSelectCategoryPanel_On = false;
 
+    public int currentIcon;
+
 
     #region Unity Callback
 
     private void OnEnable()
     {
+        AudioManager.instance.SetAudioClip_BGM(1);
         selectDifficulty_Panel.SetActive(true);
         help_Canvas.gameObject.SetActive(true);
         help_Canvas.transform.SetParent(gameObject.transform);
@@ -102,6 +110,7 @@ public class Speed_Canvas : MonoBehaviour
     {
         if (!help_Canvas.bisHelpPanelOn)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
             selectCategory_Panel.SetActive(true);
             bSelectCategoryPanel_On = true;
 
@@ -182,21 +191,80 @@ public class Speed_Canvas : MonoBehaviour
             for (int i = 0; i < iconButton_List.Count; i++)
             {
                 int temp = i;
-                iconButton_List[temp].onClick.AddListener(delegate { IconBtn_Clicked(iconButton_List[temp].gameObject); });
+                //currentIcon = temp;
+                iconButton_List[temp].onClick.AddListener(delegate { IconBtn_Clicked(iconButton_List[temp].gameObject, temp); });
             }
         }
 
 
     }
+    public void NextBtn_Clicked()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        if (currentIcon >= iconButton_List.Count - 1)
+        {
+            next_Btn.interactable = false;
+        }
+        else
+        {
+            previous_Btn.interactable = true;
+            currentIcon += 1;
+            selected_Image.sprite = iconButton_List[currentIcon].GetComponent<Image>().sprite;
+            selected_Text.text = iconButton_List[currentIcon].transform.GetChild(0).GetComponent<TMP_Text>().text;
+            moldIcon = selected_Image.sprite;
+        }
+
+     
+    }
+
+
+    public void PreviousBtn_Clicked()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        if (currentIcon <= 0)
+        {
+            previous_Btn.interactable = false;
+        }
+        else
+        {
+            next_Btn.interactable = true;
+            currentIcon -= 1;
+            selected_Image.sprite = iconButton_List[currentIcon].GetComponent<Image>().sprite;
+            selected_Text.text = iconButton_List[currentIcon].transform.GetChild(0).GetComponent<TMP_Text>().text;
+            moldIcon = selected_Image.sprite;
+        }
+       
+    }
 
 
     //몰드 아이콘 눌렀을 때 호출되는 함수
-    public void IconBtn_Clicked(GameObject button)
+    public void IconBtn_Clicked(GameObject button, int _temp)
     {
+       
         if (!help_Canvas.bisHelpPanelOn)
         {
-            ready_Panel.SetActive(true);
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
+            currentIcon = _temp;
+            if (currentIcon <= 0)
+            {
+                previous_Btn.interactable = false;
+            }
+            else
+            {
+                previous_Btn.interactable = true;
+            }
 
+            if(currentIcon >= iconButton_List.Count - 1)
+            {
+                next_Btn.interactable = false;
+            }
+            else
+            {
+                next_Btn.interactable = true;
+            }
+
+    
+            ready_Panel.SetActive(true);
 
             help_Canvas.Back_Btn.interactable = false;
             help_Canvas.Help_Btn.interactable = false;
@@ -216,6 +284,7 @@ public class Speed_Canvas : MonoBehaviour
     {
         if (!help_Canvas.bisHelpPanelOn)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
             ready_Panel.SetActive(false);
             help_Canvas.Back_Btn.interactable = true;
             help_Canvas.Help_Btn.interactable = true;
@@ -226,6 +295,9 @@ public class Speed_Canvas : MonoBehaviour
     //준비창의 게임시작 버튼 눌렀을 때 호출되는 함수
     public void GameStartBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(0);
+        AudioManager.instance.SetAudioClip_BGM(3);
+
         speedGame_Panel.SetActive(true);
         selectCategory_Panel.SetActive(false);
         selectDifficulty_Panel.SetActive(false);
@@ -243,6 +315,8 @@ public class Speed_Canvas : MonoBehaviour
     {
         //난이도 선택창이 켜져있고 카테고리 선택창이 꺼져있으면 메인화면으로가기
         //카테고리 선택창이 켜져있으면 카테고리 선택창 끄기
+
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         if (!help_Canvas.bisHelpPanelOn)
         {
             if (bSelectCategoryPanel_On)
@@ -252,11 +326,13 @@ public class Speed_Canvas : MonoBehaviour
             }
             else
             {
+                AudioManager.instance.SetAudioClip_BGM(0);
+
                 help_Canvas.transform.SetParent(null);
                 help_Canvas.transform.SetAsLastSibling();
-
-                gameObject.SetActive(false);
                 main_Canvas.gameObject.SetActive(true);
+                gameObject.SetActive(false);
+               
             }
         }
 
@@ -300,6 +376,17 @@ public class Speed_Canvas : MonoBehaviour
         SelectCategory_ScrollView.transform.GetChild(1).GetComponent<Scrollbar>().interactable = true;
 
     }
+
+    public void RestartButton()
+    {
+        resultPanel.SetActive(false);
+        speedTimer.Init();
+        GameManager.Instance.SpeedMode(); // Speed Mode restart
+    }
+
+
+
+  
 
 
     #endregion

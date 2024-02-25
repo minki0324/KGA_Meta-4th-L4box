@@ -5,9 +5,9 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 
 
-public class AudioManager123 : MonoBehaviour
+public class AudioManager : MonoBehaviour
 {
-    public static AudioManager123 instance = null;
+    public static AudioManager instance = null;
 
 
     [Header("AudioMixer")]
@@ -71,24 +71,39 @@ public class AudioManager123 : MonoBehaviour
         audioSource_arr[1].loop = true;        
     }
 
-    public void SetAudioClip_SFX(Mode gameMode, int index)
+    public void SetAudioClip_SFX(int index, bool bLoop)
     {     
-        switch(gameMode)
+        switch(GameManager.Instance.gameMode)
         {
             case Mode.PushPush:
-                audioSource_arr[2].PlayOneShot(pushSfxClip_List[index]);
+
+                audioSource_arr[2].clip =pushSfxClip_List[index];
+                audioSource_arr[2].Play();
+                audioSource_arr[2].loop = bLoop;
                 break;
 
             case Mode.Speed:
-                audioSource_arr[2].PlayOneShot(speedSfxClip_List[index]);
+                audioSource_arr[2].clip = speedSfxClip_List[index];
+                audioSource_arr[2].Play();
+                audioSource_arr[2].loop = bLoop;
                 break;
 
             case Mode.Memory:
-                audioSource_arr[2].PlayOneShot(memorySfxClip_List[index]);
+                audioSource_arr[2].clip = memorySfxClip_List[index];
+                audioSource_arr[2].Play();
+                audioSource_arr[2].loop = bLoop;
                 break;
 
             case Mode.Bomb:
-                audioSource_arr[2].PlayOneShot(bombSfxClip_List[index]);
+                audioSource_arr[2].clip = bombSfxClip_List[index];
+                audioSource_arr[2].Play();
+                audioSource_arr[2].loop = bLoop;
+                break;
+
+            case Mode.None:   
+                audioSource_arr[2].clip = commonSfxClip_List[index];
+                audioSource_arr[2].Play();
+                audioSource_arr[2].loop = bLoop;
                 break;
         }
     }

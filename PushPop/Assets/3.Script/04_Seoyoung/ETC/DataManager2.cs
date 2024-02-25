@@ -113,7 +113,7 @@ public class DataManager2 : MonoBehaviour
         for (int i = 0; i < jsonData.Count; i++)
         {
             categoryDict.Add(int.Parse(jsonData[i]["number"].ToString()), jsonData[i]["name"].ToString()); ;
-            Debug.Log(jsonData[i]["number"] + "," + jsonData[i]["name"]);
+            
         }
 
 
@@ -135,7 +135,7 @@ public class DataManager2 : MonoBehaviour
             ca.number = item.Key;
             ca.name = item.Value;
             categoryDicts_List.Add(ca);
-            Debug.Log(ca.number + "," + ca.name);
+           
         }
 
         #region 파일/폴더 체크
@@ -176,7 +176,7 @@ public class DataManager2 : MonoBehaviour
         for (int i = 0; i < jsonData.Count; i++)
         {
             iconDict.Add(int.Parse(jsonData[i]["number"].ToString()), jsonData[i]["name"].ToString());
-            Debug.Log(jsonData[i]["number"] + "," + jsonData[i]["name"]);
+            
         }
 
     }
@@ -193,7 +193,7 @@ public class DataManager2 : MonoBehaviour
             ic.number = item.Key;
             ic.name = item.Value;
             iconDicts_List.Add(ic);
-            Debug.Log(ic.number + "," + ic.name);
+            
         }
 
         #region 파일/폴더 체크

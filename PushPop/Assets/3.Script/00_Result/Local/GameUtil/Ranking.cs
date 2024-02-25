@@ -408,18 +408,24 @@ public class Ranking : MonoBehaviour
         for (int i = 0; i < versusData.games.Length; i++)
         {
             BombVersus currentGame = versusData.games[i];
-
-            if (currentGame.Result)
-            { // 1P가 이긴 경우
-                SetGameResultText(_winText[i], _loseText[i], currentGame.Player1PName, currentGame.Player2PName);
-                SetPlayerProfileImage(_winImage[i], currentGame.Player1PIndex, true);
-                SetPlayerProfileImage(_loseImage[i], currentGame.Player2PIndex, false);
+            if(currentGame != null)
+            {
+                if (currentGame.Result)
+                { // 1P가 이긴 경우
+                    SetGameResultText(_winText[i], _loseText[i], currentGame.Player1PName, currentGame.Player2PName);
+                    SetPlayerProfileImage(_winImage[i], currentGame.Player1PIndex, true);
+                    SetPlayerProfileImage(_loseImage[i], currentGame.Player2PIndex, false);
+                }
+                else
+                { // 1P가 진 경우
+                    SetGameResultText(_loseText[i], _winText[i], currentGame.Player1PName, currentGame.Player2PName);
+                    SetPlayerProfileImage(_loseImage[i], currentGame.Player1PIndex, true);
+                    SetPlayerProfileImage(_winImage[i], currentGame.Player2PIndex, false);
+                }
             }
             else
-            { // 1P가 진 경우
-                SetGameResultText(_loseText[i], _winText[i], currentGame.Player1PName, currentGame.Player2PName);
-                SetPlayerProfileImage(_loseImage[i], currentGame.Player1PIndex, true);
-                SetPlayerProfileImage(_winImage[i], currentGame.Player2PIndex, false);
+            {
+                return;
             }
         }
     }

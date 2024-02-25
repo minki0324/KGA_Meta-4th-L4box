@@ -106,12 +106,14 @@ public class Set_Time : MonoBehaviour
 
     public void IncreaseTimeBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         time += 60;
         Calculate_Time();
     }
 
     public void DecreaseTimeBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         time -= 60;
         Calculate_Time();
     }
@@ -161,6 +163,7 @@ public class Set_Time : MonoBehaviour
 
     public void ConfirmBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         //GameManager.Instance.ShutdownTime = time;
         if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
         { // 푸시푸시 시작
@@ -178,14 +181,16 @@ public class Set_Time : MonoBehaviour
         else if (GameManager.Instance.gameMode.Equals(Mode.Bomb))
         { // 2인모드 시작
             bombMode_Canvas.SetActive(true);
-        }
-        gameObject.SetActive(false);
+            bombMode_Canvas.transform.GetComponent<Bomb>().PrintVersus();
+        }     
         main_Canvas.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
 
     public void BackBtnClicked()
-    { 
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         gameObject.SetActive(false);
     }
     #endregion

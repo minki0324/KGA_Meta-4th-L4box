@@ -37,6 +37,8 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         {
             puzzleLozic = FindObjectOfType<PuzzleLozic>();
         }
+
+        AudioManager.instance.SetAudioClip_SFX(2, false);
         //클릭했을때 오브젝트 위치 그대로 포지션을 옮기기위한 계산
         _distance = (Vector3)eventData.position - _rect.position;
 
@@ -56,6 +58,8 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         if (!isFitPuzzle)
         {//퍼즐을 맞추지 못했을때
 
+            AudioManager.instance.SetAudioClip_SFX(0, false);
+
             //퍼즐위치는 초기위치로 초기화
             _rect.position = _startPostion;
             canvasGroup.alpha = 1f;
@@ -65,6 +69,9 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         else
         {
             //퍼즐을 맞췄을때
+
+            AudioManager.instance.SetAudioClip_SFX(2, false);
+
             //프레임위치로 정확하게 보정
             _rect.position = puzzleLozic.frampPos.position;
             // 알파값 초기화
@@ -76,7 +83,9 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             if (StageClear())
             {
                 Debug.Log("스테이지를 클리어 했습니다! 잘했어요!!");
-          
+
+
+                AudioManager.instance.SetAudioClip_SFX(1, false);
                 puzzleLozic.onPuzzleClear?.Invoke();
                 puzzleLozic.successCount = 0;
             }

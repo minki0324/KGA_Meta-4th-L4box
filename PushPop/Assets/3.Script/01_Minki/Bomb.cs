@@ -94,12 +94,20 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Sprite quitPressed_Sprite; //quit 버튼 눌렷을 때 스프라이트
     [SerializeField] private Button[] quitBtn;  // 양쪽의 나가기 버튼
 
+    [Header("Versus")]
+    [SerializeField] private TMP_Text[] winText;
+    [SerializeField] private TMP_Text[] loseText;
+    [SerializeField] private Image[] winProfileImage;
+    [SerializeField] private Image[] loseProfileImage;
+
     //waterfall 회전 변수들
     private bool rotateDirection = true; // true면 회전 방향이 +, false면 회전 방향이 -
     private float rotationZ = 0f; // 현재 Z 축 회전 각도
 
     private Coroutine log;  // 에러로그 코루틴
     private Coroutine waterfall_co; // 물 차오르는 코루틴
+
+    private bool b10minleft = false;    //10초 남앗나 체크하는 변수
 
     #region Unity Callback
     private void Awake()
@@ -118,6 +126,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     private void OnEnable()
     {
+        AudioManager.instance.SetAudioClip_BGM(1);
         PlayerSet1P();
         profile2PInput.onValidateInput += ValidateInput;
 
@@ -135,15 +144,27 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void Update()
     {
         if (!isStart) return;
-        else if(bottomTimer <= 0.1f)
+        else if (bottomTimer <= 0.1f)
         { // 게임 끝
             EndGame();
-            if(waterfall_co != null)
+            if (waterfall_co != null)
             { // upperbubble 코루틴이 돌아가고 있다면 스탑
                 StopCoroutine(waterfall_co);
             }
             return;
         }
+
+        //10초미만 오디오
+        if (bottomTimer <= 10)
+        {
+            if (!b10minleft)
+            {
+                b10minleft = true;
+                AudioManager.instance.SetAudioClip_SFX(3, true);
+            }
+
+        }
+
         bottomTimer -= Time.deltaTime;
         
         timerText.text = $"남은시간\n{(int)bottomTimer}";
@@ -413,6 +434,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     { // 게임 시작 버튼 눌렀을 때 2P 설정이 되어 있는지 확인 후 GamePanel 켜주는 Btn 연동 Method
         if(isSelect2P)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(0);
+            AudioManager.instance.SetAudioClip_BGM(5);
+
             MainPanel.gameObject.SetActive(false);
             help_Canvas.gameObject.SetActive(false);
             GamePanel.SetActive(true);
@@ -518,6 +542,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     private void PosSetting()
     { // 턴 넘어갔을 때 각 포지션들 설정하는 Method
+        AudioManager.instance.SetAudioClip_SFX(2, false);
+
         if(turn.Equals(Turn.Turn1P))
         { // 1P 턴
             // 버튼 리스트 초기화 및 삭제 (추후 풀링으로 구현한다면 setactive false로 바꾸면 될듯)
@@ -615,6 +641,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     public void BottomBubbleTouch()
     { // 밑에 큰 방울을 터치할 때마다 상단 방울의 시간이 줄어듬
+        AudioManager.instance.SetCommonAudioClip_SFX(5);
         upperTimer -= 0.1f;
     }
 
@@ -657,16 +684,19 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         }
 
         // while문을 벗어났다면 upperTimer가 0보다 작아졌다는 것을 의미하기에 게임 종료
+        AudioManager.instance.SetAudioClip_SFX(0, false);
         EndGame();
     }
 
     private void EndGame()
     { // 게임이 종료됐을 때 Method
         isStart = false;
+        b10minleft = false;
 
         // 종료 애니메이션 켜주고 애니메이션 나올 위치 설정
         endAnimation.transform.gameObject.SetActive(true);
-        if(turn.Equals(Turn.Turn1P))
+        AudioManager.instance.SetAudioClip_SFX(1, false);
+        if (turn.Equals(Turn.Turn1P))
         {
             endAnimation.transform.localPosition = bottomPos[0];
         }
@@ -681,6 +711,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private IEnumerator Result_Co()
     { // 결과창 출력 코루틴
         yield return new WaitForSeconds(1.2f);
+        AudioManager.instance.SetCommonAudioClip_SFX(7);
         result.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         // 오브젝트들 삭제
@@ -695,9 +726,10 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         {
             quitBtn[i].interactable = true;
         }
-        
+       
         // 오브젝트 삭제
         ResetGame();
+        AudioManager.instance.SetAudioClip_SFX(1, false);
         help_Canvas.gameObject.SetActive(true);
     }
 
@@ -720,6 +752,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         {
             StopCoroutine(waterfall_co);
         }
+    }
+
+    public void PrintVersus()
+    {
+        Ranking.instance.LoadVersusResult(winText, loseText, winProfileImage, loseProfileImage);
     }
     #endregion
     private IEnumerator PrintLog_co(GameObject errorlog)
@@ -767,7 +804,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     //quitBtn[0]번 상태 변경 메소드
     private void Check_quitBtn_1P()
-    {        
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+
         if(!Quit1P)
         {
             Quit1P = true;          
@@ -785,6 +824,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     //quitBtn[1]번 상태 변경 메소드
     private void Check_quitBtn_2P()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+
         if (!Quit2P)
         {
             Quit2P = true;
@@ -802,6 +843,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     //프로필 이름 입력창 뒤로가기 버튼
     public void ProfileInputName_BackBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         profile2PInput.text = string.Empty;
         SelectProfile.SetActive(true);
         CreateNamePanel.SetActive(false);
@@ -812,6 +854,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     //프로필 선택/ 프로필 변경 버튼 
     public void Select2PBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         SelectProfile.SetActive(true);
         PrintProfileList();
         help_Canvas.Button_Disable();
@@ -824,6 +867,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     //나가기 전 경고패널 나가기 버튼
     public void GoOutBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         QuitGame();
         result.SetActive(false);
         GamePanel.SetActive(false);
@@ -836,6 +880,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     //나가기 전 경고패널 취소 버튼
     public void CancelBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         Time.timeScale = 1;
         WarningPanel.SetActive(false);
         ButtonSetting();
@@ -844,6 +889,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     //좌측 하단 나가기 버튼
     public void BackBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.SetAudioClip_BGM(0);
+
         main_Canvas.SetActive(true);
         selectBtn.SetActive(true);
         changeBtn.SetActive(false);

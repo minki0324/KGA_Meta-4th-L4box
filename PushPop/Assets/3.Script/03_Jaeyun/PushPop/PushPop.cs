@@ -102,6 +102,8 @@ public class PushPop : MonoBehaviour
         pushObject.GetComponent<SpriteRenderer>().sprite = boardSprite;
         // size setting
         Rect boardRect = pushPopBoard.GetComponent<RectTransform>().rect;
+        // Vector2 boardSize = GameManager.Instance.BoardSizeGameObject;
+        // float scale = Mathf.Min(boardSize.x / boardSprite.textureRect.size.x, boardSize.x / boardSprite.textureRect.size.y) * 0.95f;
         float scale = Mathf.Min(boardRect.width / boardSprite.textureRect.size.x, boardRect.width / boardSprite.textureRect.size.y) * 0.95f;
         pushObject.transform.localScale = new Vector3(scale, scale, 1f);
         if (!pushTurn)
@@ -118,6 +120,7 @@ public class PushPop : MonoBehaviour
     // pushpop button »ý¼ºÇÒ grid
     public void CreateGrid(GameObject _pushPopBoardObject)
     {
+        Debug.Log(_pushPopBoardObject.name);
         // board Size Setting
         boardSize = new Vector3(boardCollider.bounds.size.x, boardCollider.bounds.size.y, 1f); // collider size
         grid.x = (int)(boardSize.x / percentage);
@@ -195,11 +198,14 @@ public class PushPop : MonoBehaviour
         }
         pushPopBoardObject.Clear();
 
-        for (int i = 0; i < activePos.Count; i++)
+        if (!activePos.Count.Equals(0))
         {
-            activePos[i].SetActive(false);
+            for (int i = 0; i < activePos.Count; i++)
+            {
+                activePos[i].SetActive(false);
+            }
+            activePos.Clear();
         }
-        activePos.Clear();
 
         for (int i = 0; i < pushPopButton.Count; i++)
         {

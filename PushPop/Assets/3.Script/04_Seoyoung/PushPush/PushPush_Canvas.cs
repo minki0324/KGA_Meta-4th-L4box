@@ -23,22 +23,23 @@ public class PushPush_Canvas : MonoBehaviour
     [Header("ScrollView")]
     [SerializeField] private ScrollRect selectCategory_ScrollView;
     [SerializeField] private GameObject content_ScrollView;
+    [SerializeField] private GameObject categoryIcon_Prefab;
 
     [Header("Button")]
     [SerializeField] private Button next_Btn;
     [SerializeField] private Button prievious_Btn;
     [SerializeField] private Button gameStart_Btn;
     [SerializeField] private Button Back_Btn;
-    [SerializeField] private Button GameBack_Btn;   //°ÔÀÓ ½ÃÀÛ ÈÄ ¶ß´Â ÁÂÃøÇÏ´Ü µÚ·Î°¡±â
+    [SerializeField] private Button GameBack_Btn;   //ê²Œì„ ì‹œì‘ í›„ ëœ¨ëŠ” ì¢Œì¸¡í•˜ë‹¨ ë’¤ë¡œê°€ê¸°
     [SerializeField] private Button GoOut_Btn;
     [SerializeField] private Button Cancle_Btn;
 
     [Header("Selected Mold Icon Image & Text")]
-    [SerializeField] private TMP_Text selectedCategory_Text;    //¼±ÅÃµÈ Ä«Å×°í¸® ÅØ½ºÆ®
+    [SerializeField] private TMP_Text selectedCategory_Text;    //ì„ íƒëœ ì¹´í…Œê³ ë¦¬ í…ìŠ¤íŠ¸
 
-    [SerializeField] private Image selectedMoldIcon_Image;      //¼±ÅÃµÈ ¸ôµå ¾ÆÀÌÄÜ ÀÌ¹ÌÁö
-    [SerializeField] private TMP_Text selectedMoldIcon_Text;    //¼±ÅÃµÈ ¸ôµå ÅØ½ºÆ®
-    [SerializeField] private TMP_Text Page_Text;                //ÆäÀÌÁö ÅØ½ºÆ®
+    [SerializeField] private Image selectedMoldIcon_Image;      //ì„ íƒëœ ëª°ë“œ ì•„ì´ì½˜ ì´ë¯¸ì§€
+    [SerializeField] private TMP_Text selectedMoldIcon_Text;    //ì„ íƒëœ ëª°ë“œ í…ìŠ¤íŠ¸
+    [SerializeField] private TMP_Text Page_Text;                //í˜ì´ì§€ í…ìŠ¤íŠ¸
 
 
     [Header("Category Icon(Btn) List")]
@@ -48,7 +49,7 @@ public class PushPush_Canvas : MonoBehaviour
     [SerializeField] private List<Sprite> categoryIcon_List;
     [SerializeField] private List<TMP_Text> categoryText_List;
 
-    //ÀÌ¹ÌÁö¸¦ ºÒ·¯¿Í ¸®½ºÆ® ÇÏ³ª·Î µ¿ÀûÀ¸·Î ¸®½ºÆ®¸¦ º¯°æ
+    //ì´ë¯¸ì§€ë¥¼ ë¶ˆëŸ¬ì™€ ë¦¬ìŠ¤íŠ¸ í•˜ë‚˜ë¡œ ë™ì ìœ¼ë¡œ ë¦¬ìŠ¤íŠ¸ë¥¼ ë³€ê²½
     [Header("Mold Icon(Image) List")]
     [SerializeField] private List<Sprite> icon_List10;
     [SerializeField] private List<Sprite> icon_List11;
@@ -61,17 +62,17 @@ public class PushPush_Canvas : MonoBehaviour
     [SerializeField] private List<Sprite> icon_List18;
     [SerializeField] private List<Sprite> icon_List19;
 
-    [SerializeField] private List<Sprite> moldIcon_List;    //¼±ÅÃµÈ Ä«Å×°í¸® ¸ôµå ¾ÆÀÌÄÜ ¸®½ºÆ®
+    [SerializeField] private List<Sprite> moldIcon_List;    //ì„ íƒëœ ì¹´í…Œê³ ë¦¬ ëª°ë“œ ì•„ì´ì½˜ ë¦¬ìŠ¤íŠ¸
     [SerializeField] private PuzzleLozic puzzleLozic;
 
-    //Çª½¬Çª½¬ °ÔÀÓ¿¡ ³Ñ°ÜÁÙ ÀÌ¹ÌÁö
+    //í‘¸ì‰¬í‘¸ì‰¬ ê²Œì„ì— ë„˜ê²¨ì¤„ ì´ë¯¸ì§€
     public Sprite SelectedMold { get; private set; }
     //[SerializeField] private GameObject blurPanel;
     int currentPage;
     int maxPage;
 
   
-    //µµ¿ò¸»/µÚ·Î°¡±â ÆĞ³Î ¹öÆ°µé ºñÈ°¼ºÈ­ Ãß°¡ÇÏ±â
+    //ë„ì›€ë§/ë’¤ë¡œê°€ê¸° íŒ¨ë„ ë²„íŠ¼ë“¤ ë¹„í™œì„±í™” ì¶”ê°€í•˜ê¸°
 
     #region Unity Callback
 
@@ -102,6 +103,8 @@ public class PushPush_Canvas : MonoBehaviour
         currentPage = 1;
         maxPage = moldIcon_List.Count;
         Page_Text.text = $"{currentPage}/{maxPage}";
+
+        AudioManager.instance.SetAudioClip_BGM(1);
     }
 
 
@@ -122,24 +125,25 @@ public class PushPush_Canvas : MonoBehaviour
         categoryBtn_List = new List<Button>();
         moldIcon_List = new List<Sprite>();
 
-        //Catetory Icon¸®½ºÆ®ÀÇ ¿ø¼ÒÀÌ¸§±âÁØ ¿À¸§Â÷¼ø ÀçÁ¤·Ä
+        //Catetory Iconë¦¬ìŠ¤íŠ¸ì˜ ì›ì†Œì´ë¦„ê¸°ì¤€ ì˜¤ë¦„ì°¨ìˆœ ì¬ì •ë ¬
         // categoryIcon_List = categoryIcon_List.OrderBy(x => x.name).ToList();
         
         // gameObject.SetActive(false);
 
       
-        for (int i = 0; i < content_ScrollView.transform.childCount; i++)
+        for (int i = 0; i < categoryIcon_List.Count; i++)
         {
-            //¹öÆ° ¸®½ºÆ® ÃÊ±âÈ­
+            GameObject a = Instantiate(categoryIcon_Prefab, content_ScrollView.transform);
+
+            //ë²„íŠ¼ ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™”
             categoryBtn_List.Add(content_ScrollView.transform.GetChild(i).transform.GetChild(0).GetComponent<Button>());
             categoryBtn_List[i].GetComponent<Image>().sprite = categoryIcon_List[i];
 
-
-            //ÅØ½ºÆ® ¸®½ºÆ® ÃÊ±âÈ­
+            //í…ìŠ¤íŠ¸ ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™”
             categoryText_List.Add(categoryBtn_List[i].transform.GetChild(0).GetComponent<TMP_Text>());
             categoryText_List[i].text = Mold_Dictionary.instance.category_Dictionary[int.Parse(categoryIcon_List[i].name)];
 
-            //¹öÆ° ÀÌº¥Æ® ÃÊ±âÈ­     
+            //ë²„íŠ¼ ì´ë²¤íŠ¸ ì´ˆê¸°í™”     
             int temp = i;
             categoryBtn_List[i].onClick.AddListener(delegate { CategoryIcon_Clicked(int.Parse(categoryIcon_List[temp].name)); });
 
@@ -147,15 +151,16 @@ public class PushPush_Canvas : MonoBehaviour
 
     }
 
-    //Ä«Å×°í¸® ¾ÆÀÌÄÜ(¹öÆ°) Å¬¸¯ ½Ã È£ÃâµÇ´Â ¸Ş¼Òµå
+    //ì¹´í…Œê³ ë¦¬ ì•„ì´ì½˜(ë²„íŠ¼) í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
     public void CategoryIcon_Clicked(int key)
     {
         if (!help_Canvas.bisHelpPanelOn)
         {     
-            //key´Â Ä«Å×°í¸® µñ¼Å³Ê¸® key°ª
+            //keyëŠ” ì¹´í…Œê³ ë¦¬ ë”•ì…”ë„ˆë¦¬ keyê°’
             moldIcon_List.Clear();
-            
-            
+
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
+
             switch (key)
             {
                
@@ -244,7 +249,7 @@ public class PushPush_Canvas : MonoBehaviour
             Page_Text.text = $"{currentPage}/{maxPage}";
 
 
-            //¹öÆ° enable = false ÇÔ¼ö
+            //ë²„íŠ¼ enable = false í•¨ìˆ˜
             Disable_Objects();
 
             help_Canvas.Back_Btn.interactable = false;
@@ -254,9 +259,10 @@ public class PushPush_Canvas : MonoBehaviour
 
     }
 
-    //¸ôµå ¼±ÅÃ ÆĞ³Î¿¡¼­ ´ÙÀ½ ¹öÆ°À» Å¬¸¯ ½Ã È£ÃâµÇ´Â ¸Ş¼Òµå
+    //ëª°ë“œ ì„ íƒ íŒ¨ë„ì—ì„œ ë‹¤ìŒ ë²„íŠ¼ì„ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
     public void NextBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         if (currentPage < maxPage)
         {
             prievious_Btn.enabled = true;
@@ -278,9 +284,10 @@ public class PushPush_Canvas : MonoBehaviour
 
     }
 
-    //¸ôµå ¼±ÅÃ ÆĞ³Î¿¡¼­ ÀÌÀü ¹öÆ°À» Å¬¸¯ ½Ã È£ÃâµÇ´Â ¸Ş¼Òµå
+    //ëª°ë“œ ì„ íƒ íŒ¨ë„ì—ì„œ ì´ì „ ë²„íŠ¼ì„ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
     public void PreviousBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         if (currentPage > 0)
         {
             next_Btn.enabled = true;
@@ -311,30 +318,37 @@ public class PushPush_Canvas : MonoBehaviour
         help_Canvas.gameObject.SetActive(false);
     }
 
-    //¸ôµå ¼±ÅÃ ÆĞ³Î¿¡¼­ °ÔÀÓ½ÃÀÛ ¹öÆ°À» ´©¸£¸é È£ÃâµÇ´Â ¸Ş¼Òµå
+    //ëª°ë“œ ì„ íƒ íŒ¨ë„ì—ì„œ ê²Œì„ì‹œì‘ ë²„íŠ¼ì„ ëˆ„ë¥´ë©´ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
     public void GameStartBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(0);
+        AudioManager.instance.SetAudioClip_BGM(2);
+
         SelectedMold = selectedMoldIcon_Image.sprite;
 
+        GameManager.Instance.backButtonClick = false;
+        SelectedMold = selectedMoldIcon_Image.sprite;
 
         //pushpushGame_Panel.SetActive(true);
         GameBack_Btn.gameObject.SetActive(true);
         selectCategory_Panel.SetActive(false);
         selectMold_Panel.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
-        //PushPush °ÔÀÓ ÁøÀÔ
+        //PushPush ê²Œì„ ì§„ì…
         int puzzleIDIndex = int.Parse(moldIcon_List[currentPage - 1].name);
         puzzleLozic.SelectPuzzleButton(puzzleIDIndex);
         GameManager.Instance.PushPushMode();
     }
 
-    //¸ôµå ¼±ÅÃ ÆĞ³Î¿¡¼­ x¹öÆ°À» ´©¸£¸é È£ÃâµÇ´Â ¸Ş¼Òµå
+    //ëª°ë“œ ì„ íƒ íŒ¨ë„ì—ì„œ xë²„íŠ¼ì„ ëˆ„ë¥´ë©´ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
     public void SelectMold_BackBtn_Clicked()
     {
         if (!help_Canvas.bisHelpPanelOn)
         {
-            //¹öÆ° enable = true ÇÔ¼ö
+            //ë²„íŠ¼ enable = true í•¨ìˆ˜
             Enable_Objects();
+
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
 
             help_Canvas.Back_Btn.interactable = true;
             help_Canvas.Help_Btn.interactable = true;
@@ -347,28 +361,34 @@ public class PushPush_Canvas : MonoBehaviour
 
     }
 
-    //ÁÂÃø ÇÏ´Ü µÚ·Î°¡±â ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ¸Ş¼Òµå
+    //ì¢Œì¸¡ í•˜ë‹¨ ë’¤ë¡œê°€ê¸° ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
     public void BackBtn_Clicked()
     {
-        help_Canvas.transform.SetParent(null);
-        help_Canvas.transform.SetAsLastSibling();
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.SetAudioClip_BGM(0);
 
+        help_Canvas.transform.SetParent(null);
+        help_Canvas.transform.SetAsLastSibling();  
         main_Canvas.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
 
 
-    //°ÔÀÓ ½ÃÀÛ ÈÄ ÁÂÃø ÇÏ´Ü µÚ·Î°¡±â ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ¸Ş¼Òµå
+    //ê²Œì„ ì‹œì‘ í›„ ì¢Œì¸¡ í•˜ë‹¨ ë’¤ë¡œê°€ê¸° ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
     public void Game_BackBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         Time.timeScale = 0;
         Warning_Panel.SetActive(true);
         GameBack_Btn.interactable = false;
+        GameManager.Instance.backButtonClick = true;
     }
 
 
     public void GoOutBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.SetAudioClip_BGM(1);
         Time.timeScale = 1;
         GameBack_Btn.interactable = true;
         GameBack_Btn.gameObject.SetActive(false);
@@ -382,12 +402,14 @@ public class PushPush_Canvas : MonoBehaviour
 
     public void CancelBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         Time.timeScale = 1;
+        GameManager.Instance.backButtonClick = false;
         GameBack_Btn.interactable = true;
         Warning_Panel.SetActive(false);
     }
 
-    //¿ìÃø ÇÏ´Ü µµ¿ò¸» ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ÇÔ¼ö :  µµ¿ò¸» ¹öÆ° ´­¸®¸é ±× ¿Ü ¹öÆ° ºñÈ°¼ºÈ­
+    //ìš°ì¸¡ í•˜ë‹¨ ë„ì›€ë§ ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜ :  ë„ì›€ë§ ë²„íŠ¼ ëˆŒë¦¬ë©´ ê·¸ ì™¸ ë²„íŠ¼ ë¹„í™œì„±í™”
     public void Disable_Objects()
     {
         for (int i = 0; i < categoryBtn_List.Count; i++)
@@ -400,7 +422,7 @@ public class PushPush_Canvas : MonoBehaviour
     }
 
 
-    //µµ¿ò¸» Ã¢ÀÇ µÚ·Î°¡±â ¹öÆ° Å¬¸¯ ½Ã È£ÃâµÇ´Â ÇÔ¼ö :  ±× ¿Ü ¹öÆ° È°¼ºÈ­
+    //ë„ì›€ë§ ì°½ì˜ ë’¤ë¡œê°€ê¸° ë²„íŠ¼ í´ë¦­ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜ :  ê·¸ ì™¸ ë²„íŠ¼ í™œì„±í™”
     public void Enable_Objects()
     {
         for (int i = 0; i < categoryBtn_List.Count; i++)

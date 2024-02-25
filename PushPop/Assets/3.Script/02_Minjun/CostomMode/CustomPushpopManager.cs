@@ -102,6 +102,8 @@ public class CustomPushpopManager : MonoBehaviour
         newRectPush.transform.SetParent(puzzleBoard.transform);
         newRectPush.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
+        AudioManager.instance.SetAudioClip_SFX(3, false);
+
     } //마우스클릭 or 터치를 한 순간
     //private void Click()
     //{

@@ -17,12 +17,12 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     private float currentSpeed = 0f;
     private Coroutine moveCoroutine = null;
     [SerializeField] private AnimationCurve decelOverTime;
-    [SerializeField] private float decel = 250f; // move ¼Óµµ °¨¼Ò
+    [SerializeField] private float decel = 250f; // move ì†ë„ ê°ì†Œ
     [SerializeField] private float speedRate = 10f;
 
     private void OnEnable()
     {
-        gameMode = GameManager.Instance.gameMode; // game start ½Ã load
+        gameMode = GameManager.Instance.gameMode; // game start ì‹œ load
         bubbleRectTrans = GetComponent<RectTransform>();
         bubbleAnimator = GetComponent<Animator>();
     }
@@ -34,10 +34,8 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
             case Mode.PushPush:
                 currentSpeed = 0f;
                 PuzzlePiece piece = transform.parent.GetComponent<PuzzlePiece>();
-                if(piece != null && piece.gameObject.activeSelf)
-                {
-                    piece.OnBubbleDestroy();
-                }
+                if (GameManager.Instance.backButtonClick) return;
+                piece.OnBubbleDestroy();
                 break;
             case Mode.Speed:
                 Speed_Timer speedTimer = FindObjectOfType<Speed_Timer>();
@@ -57,7 +55,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     }
 
     public void OnPointerDown(PointerEventData eventData)
-    { // ÇöÀç ¿ÀºêÁ§Æ® ³»ºÎ¿¡¼­ Å¬¸¯ÇÏ´Â ¼ø°£ 1È¸ È£Ãâ
+    { // í˜„ì¬ ì˜¤ë¸Œì íŠ¸ ë‚´ë¶€ì—ì„œ í´ë¦­í•˜ëŠ” ìˆœê°„ 1íšŒ í˜¸ì¶œ
         Vector2 bubblePosition = transform.position;
         Vector2 touchPosition = eventData.position;
 
@@ -82,7 +80,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     }
 
     public void BubbleSetting(Vector2 _puzzleSize, Vector2 _puzzlePos, Transform _puzzle)
-    { // GameManager¿¡¼­ Mode ¼±ÅÃ ½Ã Position °³¼ö ¸¸Å­ È£ÃâµÇ´Â method
+    { // GameManagerì—ì„œ Mode ì„ íƒ ì‹œ Position ê°œìˆ˜ ë§Œí¼ í˜¸ì¶œë˜ëŠ” method
       // position setting
         bubbleRectTrans.anchoredPosition = _puzzlePos;
         // size setting
@@ -95,11 +93,11 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     public void PushPushMode(Vector2 _bubblePosition, Vector2 _touchPosition)
     {
         // Bubble Move
-        Vector2 dir = (_bubblePosition - _touchPosition).normalized;// Touch PositionÀÇ ¹İ´ë ¹æÇâ
+        Vector2 dir = (_bubblePosition - _touchPosition).normalized;// Touch Positionì˜ ë°˜ëŒ€ ë°©í–¥
         float speed = (_bubblePosition - _touchPosition).magnitude;
-        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, speed, Mode.PushPush)); // jaeyun todo ³ªÁß¿¡ ±âº»°ú ¾Ë¾Æ¼­ Àß ÅëÇÕÇØÁÙ °Í
+        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, speed, Mode.PushPush)); // jaeyun todo ë‚˜ì¤‘ì— ê¸°ë³¸ê³¼ ì•Œì•„ì„œ ì˜ í†µí•©í•´ì¤„ ê²ƒ
 
-        // bubble ÅÍÆ®·ÈÀ» ¶§
+        // bubble í„°íŠ¸ë ¸ì„ ë•Œ
         touchCount--;
         if (touchCount <= 0)
         {
@@ -124,61 +122,61 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     }
 
     public void BombMode(Vector2 _player1, Vector2 _player2, bool _onlyMove)
-    { // only move ½Ã »ó´Ü¿¡ ¹èÄ¡ ¹× touch ±â´É ¾øÀ½
+    { // only move ì‹œ ìƒë‹¨ì— ë°°ì¹˜ ë° touch ê¸°ëŠ¥ ì—†ìŒ
         float timer = 0;
         Vector2 dir = Vector2.zero;
-        // player1 turn -> if ·Î ¹Ù²Ù±â
+        // player1 turn -> if ë¡œ ë°”ê¾¸ê¸°
         dir = _player1 - _player2;
         // player2 turn
         dir = _player2 - _player1;
         dir.y = 0;
-        // touch´Â ÇÏµÇ ¾î¶»°Ô ÇØ¾ßÇÒ Áö »ı°¢
+        // touchëŠ” í•˜ë˜ ì–´ë–»ê²Œ í•´ì•¼í•  ì§€ ìƒê°
         if (_onlyMove)
         {
             //   StartCoroutine(BubbleMove_Co(dir, 5f, 0.4f));
         }
         else
         {
-            //StartCoroutine(BubbleMove_Co(-dir, 5f, 0.4f)); // onlymove¿Í dir¹İ´ë
+            //StartCoroutine(BubbleMove_Co(-dir, 5f, 0.4f)); // onlymoveì™€ dirë°˜ëŒ€
         }
     }
 
     public void MemoryMode()
     {
-        bool isShining = false; // ºû³µ´Â Áö ¾Æ´ÑÁö
-        bool touchable = false; // ºû³­ µÚ 2ÃÊ ÈÄ ÅÍÄ¡ °¡´É
-        // shine animation Ãß°¡ ÇÊ¿ä
+        bool isShining = false; // ë¹›ë‚¬ëŠ” ì§€ ì•„ë‹Œì§€
+        bool touchable = false; // ë¹›ë‚œ ë’¤ 2ì´ˆ í›„ í„°ì¹˜ ê°€ëŠ¥
+        // shine animation ì¶”ê°€ í•„ìš”
         StartCoroutine(BubbleTouchable_Co(bubbleAnimator, (_result) =>
         {
-            touchable = _result; // 2ÃÊ µÚ true
+            touchable = _result; // 2ì´ˆ ë’¤ true
         }));
         if (!touchable) return;
         if (isShining)
         {
-            // animation -> ÅÍÁü
+            // animation -> í„°ì§
             // score += 100
         }
         else
         {
-            // life °¨¼Ò
-            // animation -> ±î¸¸ ºû
+            // life ê°ì†Œ
+            // animation -> ê¹Œë§Œ ë¹›
         }
     }
 
     private IEnumerator BubbleTouchable_Co(Animator _bubbleAnimation, Action<bool> callback)
-    { // Bombmode¿¡¼­ random shining touchable ºÎ¿©, Memory modeµµ ÇÊ¿ä
+    { // Bombmodeì—ì„œ random shining touchable ë¶€ì—¬, Memory modeë„ í•„ìš”
         // shine animation Setbool
         yield return new WaitForSeconds(2f);
         callback(true);
     }
 
-    // Bubble lerp Translate moving, pushpush, speed mode¿¡¼­¸¸ »ç¿ë
+    // Bubble lerp Translate moving, pushpush, speed modeì—ì„œë§Œ ì‚¬ìš©
     private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed)
     { // speed mode bubble moving
-        currentSpeed = _maxSpeed; // maxSpeed ÃÊ±âÈ­
-        float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y °°À½
+        currentSpeed = _maxSpeed; // maxSpeed ì´ˆê¸°í™”
+        float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y ê°™ìŒ
 
-        // ¼Óµµ°¡ 0ÀÌ µÇ¾úÀ» ¶§±îÁö ÀÌµ¿
+        // ì†ë„ê°€ 0ì´ ë˜ì—ˆì„ ë•Œê¹Œì§€ ì´ë™
         while (currentSpeed >= 0)
         {
             if (0f + (bubbleSize.x * bubbleScale / 2f) > transform.position.x)
@@ -215,10 +213,10 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
     private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed, Mode _gameMode)
     { // pushpush mode bubble moving
-        currentSpeed = _maxSpeed; // maxSpeed ÃÊ±âÈ­
-        float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y °°À½
+        currentSpeed = _maxSpeed; // maxSpeed ì´ˆê¸°í™”
+        float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y ê°™ìŒ
 
-        // ¼Óµµ°¡ 0ÀÌ µÇ¾úÀ» ¶§±îÁö ÀÌµ¿
+        // ì†ë„ê°€ 0ì´ ë˜ì—ˆì„ ë•Œê¹Œì§€ ì´ë™
         while (currentSpeed >= 0)
         {
             if (0f + (bubbleSize.x * bubbleScale / 2f) > transform.position.x)

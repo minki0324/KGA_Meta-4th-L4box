@@ -21,6 +21,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     public GameObject CurrnetProfilePanel;
     public GameObject IconPanel;
     public GameObject CheckPanel;
+    public GameObject PicturePanel;
 
     [Header("Button")]
     [SerializeField] private Button profileCreateBtn;
@@ -368,10 +369,38 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     public void BackBtn_CreateNamePanel_Clicked()
     {
-        
-        AudioManager123.instance.SetCommonAudioClip_SFX(3);
+
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         CreateNamePanel.SetActive(false);
         PrintProfileList();
+        SelectProfilePanel.SetActive(true);
+    }
+
+    public void BackBtn_IconPanel_Clicked()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        IconPanel.SetActive(false);
+        
+        
+        PrintProfileList();
+    }
+
+    public void SelectBtn_CurrentProfilePanel_Clicked()
+    {
+         
+    }
+
+    public void ChangeBtn_CurrentProfilePanel_Clicked()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        CurrnetProfilePanel.SetActive(false);
+        CreateNamePanel.SetActive(true);
+    }
+
+    public void ReturnBtn_CurrentProfilePanel_Clicked()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        CurrnetProfilePanel.SetActive(false);
         SelectProfilePanel.SetActive(true);
     }
 

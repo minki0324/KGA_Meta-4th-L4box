@@ -18,15 +18,16 @@ public class Option : MonoBehaviour
 
     private void Awake()
     {
-        Init();
-        gameObject.SetActive(false);
+   
     }
 
 
     private void Start()
     {
+        Init();
+        gameObject.SetActive(false);
         //PlayerPrefs.DeleteAll();
-     
+
     }
     #endregion
 
@@ -76,9 +77,9 @@ public class Option : MonoBehaviour
 
 
         //오디오 믹서 기본 볼륨 조정
-        AudioManager123.instance.audioMixer.SetFloat("Master", Master_Slider.value);
-        AudioManager123.instance.audioMixer.SetFloat("BGM", BGM_Slider.value);
-        AudioManager123.instance.audioMixer.SetFloat("SFX", SFX_Slider.value);
+        AudioManager.instance.audioMixer.SetFloat("Master", Master_Slider.value);
+        AudioManager.instance.audioMixer.SetFloat("BGM", BGM_Slider.value);
+        AudioManager.instance.audioMixer.SetFloat("SFX", SFX_Slider.value);
 
 
         //볼륨값 변경 시 AddListener 추가
@@ -116,11 +117,11 @@ public class Option : MonoBehaviour
 
         if (volume == -40f)
         {
-            AudioManager123.instance.audioMixer.SetFloat(soundtype, -80f);
+            AudioManager.instance.audioMixer.SetFloat(soundtype, -80f);
         }
         else
         {
-            AudioManager123.instance.audioMixer.SetFloat(soundtype, volume);
+            AudioManager.instance.audioMixer.SetFloat(soundtype, volume);
         }
     }
     #endregion
