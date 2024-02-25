@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class Dialog_Manager : MonoBehaviour
+public class DialogManager : MonoBehaviour
 {
-    public static Dialog_Manager instance;
+    public static DialogManager instance;
+
+    public Coroutine log;
 
     #region Unity Callback
     private void Awake()
@@ -14,7 +16,6 @@ public class Dialog_Manager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -29,9 +30,16 @@ public class Dialog_Manager : MonoBehaviour
     /// Dialog 출력하는 Method.
     /// 매개 변수로 Index와 text를 입력하면 Dialog S.O의 EventID에 맞는 Log 출력
     /// </summary>
-    public void Print_Dialog(int index, TMP_Text text)
+    public IEnumerator Print_Dialog(TMP_Text text, string log)
     {
+        text.gameObject.SetActive(true);
+        text.text = log;
 
+        yield return new WaitForSeconds(3f);
+
+        text.gameObject.SetActive(false);
+
+        log = null;
     }
     #endregion
 

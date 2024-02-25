@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PuzzlePiece : MonoBehaviour
 {
-    private bool isGround = false;
+    public bool isGround = false;
     [SerializeField] private float speed = 5f;
     public PuzzleObject puzzle;
     private Sprite puzzleSprite;
@@ -14,8 +14,10 @@ public class PuzzlePiece : MonoBehaviour
 
     private void OnDisable()
     {
-        if (puzzleMove == null) return;
-        StopCoroutine(puzzleMove);
+        if (puzzleMove != null)
+        {
+            StopCoroutine(puzzleMove);
+        }
     }
 
     public IEnumerator PuzzleMove_Co()

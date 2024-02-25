@@ -8554,9 +8554,9 @@ MonoBehaviour:
   - {fileID: 1993094138}
   - {fileID: 566758599}
   - {fileID: 338692521}
-  progileImage_Personal: {fileID: 0}
-  profileName_Personal: {fileID: 0}
-  scoreText_Personal: {fileID: 0}
+  progileImage_Personal: {fileID: 330952799}
+  profileName_Personal: {fileID: 1609169708}
+  scoreText_Personal: {fileID: 1030176596}
 --- !u!224 &313697240
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17008,7 +17008,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &623149418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22831,6 +22831,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 840095687}
   m_CullTransparentMesh: 1
+--- !u!1 &840430532
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 840430534}
+  - component: {fileID: 840430533}
+  m_Layer: 0
+  m_Name: DialogManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &840430533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840430532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f26eca376c90dd4c8400bc594913228, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &840430534
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840430532}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1000.0195, y: 418.65988, z: -1.7985933}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &841442590
 GameObject:
   m_ObjectHideFlags: 0
@@ -55627,7 +55671,7 @@ GameObject:
   - component: {fileID: 1984381005}
   - component: {fileID: 1984381004}
   m_Layer: 0
-  m_Name: Error_Log
+  m_Name: ProfileLog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59331,8 +59375,8 @@ MonoBehaviour:
   CheckPanel: {fileID: 341091279}
   profileCreateBtn: {fileID: 0}
   profilePanel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
-  profileLog: {fileID: 0}
-  nameLog: {fileID: 1184928527}
+  profileLog: {fileID: 1984381004}
+  nameLog: {fileID: 1184928529}
   _profileNameAdd: {fileID: 235176344}
   panelParent: {fileID: 1962067083}
   panelList: []
