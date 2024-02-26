@@ -108,6 +108,7 @@ public class Speed_Canvas : MonoBehaviour
     //난이도 비눗방울 (쉬움/보통/어려움)버튼 눌렀을 때 호출되는 함수 : 쉬움(0), 보통(1), 어려움(2)을 매개변수로 줌
     public void DifficultyBtn_Clicked(int index)
     {
+        SelectCategory_ScrollView.normalizedPosition = new Vector2(1f, 1f);
         if (!help_Canvas.bisHelpPanelOn)
         {
             AudioManager.instance.SetCommonAudioClip_SFX(3);

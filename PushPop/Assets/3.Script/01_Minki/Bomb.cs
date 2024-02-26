@@ -854,6 +854,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         profile2PInput.text = string.Empty;
         SelectProfile.SetActive(true);
+        //CurrentProfile.SetActive(true);
         CreateNamePanel.SetActive(false);
     }
 

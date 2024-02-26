@@ -23,20 +23,32 @@ public class Help_Canvas : MonoBehaviour
 
     [SerializeField] private Button help_Btn;
 
+    [SerializeField] private Image help_Image;
+
     [SerializeField] private TMP_Text help_Description;
 
     [SerializeField] private TMP_Text page_Text;
 
-    [Header("뒤로가기&도움말 버튼")]
+    [Header("버튼")]
     public Button Back_Btn;
     public Button Help_Btn;
+    [SerializeField] private Button previous_Btn;
+    [SerializeField] private Button next_Btn;
+
+    [Header("도움말 팝업창 이미지 리스트")]
+    [SerializeField] private List<Sprite> pushpushImage_List;
+    [SerializeField] private List<Sprite> speedImage_List;
+    [SerializeField] private List<Sprite> memoryImage_List;
+    [SerializeField] private List<Sprite> bombImage_List;
+
+
 
     //도움말창이 켜져있는가 판단하는 변수, 도움말 창이 켜져있으면 그 외 모든 버튼 비활성화
     public bool bisHelpPanelOn = false;
 
     //도움말 페이지 번호
-    private int maxPage;
-    private int currentPage;
+    public int maxPage;
+    public int currentPage;
 
     #region Unity Callback
 
@@ -109,12 +121,14 @@ public class Help_Canvas : MonoBehaviour
     {     
         if(!bisHelpPanelOn)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
+
             help_Panel.SetActive(true);
             bisHelpPanelOn = true;
             help_Btn.enabled = false;
             Back_Btn.enabled = false;
             currentPage = 1;
-            Help_Scripts();
+            Help_Window();
 
             switch (GameManager.Instance.gameMode)
             {
@@ -143,6 +157,7 @@ public class Help_Canvas : MonoBehaviour
     {
         if(bisHelpPanelOn)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
             help_Btn.enabled = true;
             Back_Btn.enabled = true;
             bisHelpPanelOn = false;
@@ -178,8 +193,19 @@ public class Help_Canvas : MonoBehaviour
     {     
         if(currentPage < maxPage)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
             currentPage += 1;
-            Help_Scripts();
+            Help_Window();
+
+            previous_Btn.interactable = true;
+            if(currentPage >= maxPage)
+            {
+                next_Btn.interactable = false;
+            }
+            else
+            {
+                next_Btn.interactable = true;
+            }
         }
      
     }
@@ -190,15 +216,31 @@ public class Help_Canvas : MonoBehaviour
     {
         if (currentPage > 1)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
             currentPage -= 1;
-            Help_Scripts();
+            Help_Window();
+
+            next_Btn.interactable = true;
+            if(currentPage <= 1)
+            {
+                previous_Btn.interactable = false;
+            }
+            else
+            {
+                previous_Btn.interactable = true;
+            }
         }
     }
 
 
     //헬프 버튼 누르면 나오는 스크립트 
-    private void Help_Scripts()
+    private void Help_Window()
     {
+        //도움말 텍스트는 json 파일에
+        //도움말 이미지의 경우 리스트에 순차적으로 넣어주세요 :)
+        previous_Btn.interactable = false;
+        next_Btn.interactable = true;
+
         switch (GameManager.Instance.gameMode)
         {
 
@@ -210,7 +252,8 @@ public class Help_Canvas : MonoBehaviour
                 {
                     if(currentPage == DataManager2.instance.helpScripts_List[0].script[i].pageNum)
                     {
-                        help_Description.text = DataManager2.instance.helpScripts_List[0].script[i].content;
+                        help_Description.text = $"{currentPage}. {DataManager2.instance.helpScripts_List[0].script[i].content}";
+                        help_Image.sprite = pushpushImage_List[i];
                     }
                 }
                 break;
@@ -223,7 +266,8 @@ public class Help_Canvas : MonoBehaviour
                 {
                     if (currentPage == DataManager2.instance.helpScripts_List[1].script[i].pageNum)
                     {
-                        help_Description.text = DataManager2.instance.helpScripts_List[1].script[i].content;
+                        help_Description.text = $"{currentPage}. {DataManager2.instance.helpScripts_List[1].script[i].content}";
+                        help_Image.sprite = speedImage_List[i];
                     }
                 }
                 break;
@@ -236,7 +280,8 @@ public class Help_Canvas : MonoBehaviour
                 {
                     if (currentPage == DataManager2.instance.helpScripts_List[2].script[i].pageNum)
                     {
-                        help_Description.text = DataManager2.instance.helpScripts_List[2].script[i].content;
+                        help_Description.text = $"{currentPage}. {DataManager2.instance.helpScripts_List[2].script[i].content}";
+                        help_Image.sprite = memoryImage_List[i];
                     }
                 }
                 break;
@@ -249,7 +294,8 @@ public class Help_Canvas : MonoBehaviour
                 {
                     if (currentPage == DataManager2.instance.helpScripts_List[3].script[i].pageNum)
                     {
-                        help_Description.text = DataManager2.instance.helpScripts_List[3].script[i].content;
+                        help_Description.text = $"{currentPage}. {DataManager2.instance.helpScripts_List[3].script[i].content}";
+                        help_Image.sprite = bombImage_List[i];
                     }
                 }
                 break;
@@ -257,6 +303,9 @@ public class Help_Canvas : MonoBehaviour
 
         page_Text.text = $"{currentPage}/{maxPage}";
     }
+
+
+
 
     public void Button_Enable()
     {

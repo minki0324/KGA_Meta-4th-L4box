@@ -49,7 +49,7 @@ public class PushPush_Canvas : MonoBehaviour
     [SerializeField] private List<Sprite> categoryIcon_List;
     [SerializeField] private List<TMP_Text> categoryText_List;
 
-    //이미지를 불러와 리스트 하나로 동적으로 리스트를 변경
+   
     [Header("Mold Icon(Image) List")]
     [SerializeField] private List<Sprite> icon_List10;
     [SerializeField] private List<Sprite> icon_List11;
@@ -103,6 +103,11 @@ public class PushPush_Canvas : MonoBehaviour
         currentPage = 1;
         maxPage = moldIcon_List.Count;
         Page_Text.text = $"{currentPage}/{maxPage}";
+
+
+        selectCategory_ScrollView.normalizedPosition = new Vector2(1f, 1f);
+
+
 
         AudioManager.instance.SetAudioClip_BGM(1);
     }
