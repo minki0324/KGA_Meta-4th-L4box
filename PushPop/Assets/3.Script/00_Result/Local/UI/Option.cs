@@ -14,6 +14,11 @@ public class Option : MonoBehaviour
     [Header("Button")]
     [SerializeField] private Button Back_Btn;
 
+    //소리 음량 최대최소
+    float minSound = -20f;
+    float maxSound = -5f;
+
+
     #region Unity Callback
 
     private void Awake()
@@ -35,14 +40,14 @@ public class Option : MonoBehaviour
     private void Init()
     {
         //볼륨 최소값
-        Master_Slider.minValue = -40f;
-        BGM_Slider.minValue = -40f;
-        SFX_Slider.minValue = -40f;
+        Master_Slider.minValue = minSound;
+        BGM_Slider.minValue = minSound;
+        SFX_Slider.minValue = minSound;
 
         //볼륨 최대값 조절
-        Master_Slider.maxValue = 10f;
-        BGM_Slider.maxValue = 10f;
-        SFX_Slider.maxValue = 10f;
+        Master_Slider.maxValue = maxSound;
+        BGM_Slider.maxValue = maxSound;
+        SFX_Slider.maxValue = maxSound;
 
         //시작 볼륨값 중간으로 조정
         #region 볼륨값 불러오기
@@ -115,7 +120,7 @@ public class Option : MonoBehaviour
                 break;
         }
 
-        if (volume == -40f)
+        if (volume == minSound)
         {
             AudioManager.instance.audioMixer.SetFloat(soundtype, -80f);
         }

@@ -90,6 +90,7 @@ public class Memory_Canvas : MonoBehaviour
 
     public void BackBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         gameSet_Panel.gameObject.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
 

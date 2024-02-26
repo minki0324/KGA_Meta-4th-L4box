@@ -121,6 +121,8 @@ public class Help_Canvas : MonoBehaviour
     {     
         if(!bisHelpPanelOn)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
+
             help_Panel.SetActive(true);
             bisHelpPanelOn = true;
             help_Btn.enabled = false;
@@ -155,6 +157,7 @@ public class Help_Canvas : MonoBehaviour
     {
         if(bisHelpPanelOn)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
             help_Btn.enabled = true;
             Back_Btn.enabled = true;
             bisHelpPanelOn = false;
@@ -190,6 +193,7 @@ public class Help_Canvas : MonoBehaviour
     {     
         if(currentPage < maxPage)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
             currentPage += 1;
             Help_Window();
 
@@ -212,6 +216,7 @@ public class Help_Canvas : MonoBehaviour
     {
         if (currentPage > 1)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
             currentPage -= 1;
             Help_Window();
 
