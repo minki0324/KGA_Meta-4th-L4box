@@ -219,16 +219,7 @@ public class Ranking : MonoBehaviour
                 if (SQL_Manager.instance.Profile_list[i].index == topRanks[j].index)
                 { // Profile Index와 정렬된 List의 Index가 일치한 걸 찾아옴
                     _name[j].text = SQL_Manager.instance.Profile_list[i].name;
-                    if(SQL_Manager.instance.Profile_list[i].imageMode)
-                    { // 이미지 고르기를 선택한 플레이어
-                        _image[j].sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
-                    }
-                    else if(!SQL_Manager.instance.Profile_list[i].imageMode)
-                    { // 사진 찍기를 선택한 플레이어
-                        Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
-                        Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-                        _image[j].sprite = profileSprite;
-                    }
+                    SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, _image[j], SQL_Manager.instance.Profile_list[i].index);
                 }
             }
         }
@@ -267,16 +258,7 @@ public class Ranking : MonoBehaviour
         {
             if(SQL_Manager.instance.Profile_list[i].index == GameManager.Instance.ProfileIndex)
             { // Profile Index가 같다면
-                if (SQL_Manager.instance.Profile_list[i].imageMode)
-                { // 이미지 고르기를 선택한 플레이어
-                    _image.sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
-                }
-                else if (!SQL_Manager.instance.Profile_list[i].imageMode)
-                { // 사진 찍기를 선택한 플레이어
-                    Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
-                    Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-                    _image.sprite = profileSprite;
-                }
+                SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, _image, SQL_Manager.instance.Profile_list[i].index);
             }
         }
     }
@@ -337,16 +319,7 @@ public class Ranking : MonoBehaviour
                 if (SQL_Manager.instance.Profile_list[i].index == topRanks[j].Rank.index)
                 { // Profile Index와 정렬된 List의 Index가 일치한 걸 찾아옴
                     _name[j].text = SQL_Manager.instance.Profile_list[i].name;
-                    if (SQL_Manager.instance.Profile_list[i].imageMode)
-                    { // 이미지 고르기를 선택한 플레이어
-                        _image[j].sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
-                    }
-                    else if (!SQL_Manager.instance.Profile_list[i].imageMode)
-                    { // 사진 찍기를 선택한 플레이어
-                        Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
-                        Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-                        _image[j].sprite = profileSprite;
-                    }
+                    SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, _image[j], SQL_Manager.instance.Profile_list[i].index);
                 }
             }
         }
@@ -377,7 +350,6 @@ public class Ranking : MonoBehaviour
                     _timer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
                     break;
                 }
-               
             }
         }
         else
@@ -390,16 +362,7 @@ public class Ranking : MonoBehaviour
         {
             if (SQL_Manager.instance.Profile_list[i].index == GameManager.Instance.ProfileIndex)
             { // Profile Index가 같다면
-                if (SQL_Manager.instance.Profile_list[i].imageMode)
-                { // 이미지 고르기를 선택한 플레이어
-                    _image.sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
-                }
-                else if (!SQL_Manager.instance.Profile_list[i].imageMode)
-                { // 사진 찍기를 선택한 플레이어
-                    Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
-                    Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-                    _image.sprite = profileSprite;
-                }
+                SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, _image, SQL_Manager.instance.Profile_list[i].index);
             }
         }
     }

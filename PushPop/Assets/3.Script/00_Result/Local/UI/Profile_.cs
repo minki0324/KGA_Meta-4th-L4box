@@ -174,17 +174,12 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
         { // Panel의 Index 별로 Profile_Information 컴포넌트를 가져와서 name과 image를 Mode에 맞게 셋팅
             Profile_Information info = panelList[i].GetComponent<Profile_Information>();
+
+            // 각 infomation 프로필 이름 출력
             info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
-            if (SQL_Manager.instance.Profile_list[i].imageMode)
-            { // 이미지 선택으로 설정 했을 경우
-                info.ProfileImage.sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
-            }
-            else 
-            { // 사진 찍기로 설정 했을 경우
-                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
-                Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-                info.ProfileImage.sprite = profileSprite;
-            }
+
+            // 각 information 프로필 이미지 출력
+            SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, info.ProfileImage, SQL_Manager.instance.Profile_list[i].index);
         }
     }
 
@@ -227,11 +222,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             { // 이미지 고르기 버튼 눌렀을 때
                 if (!_isImageSelect)
                 { // 이미지 선택을 안했을 때
-                    if (DialogManager.instance.log != null)
+                    if (DialogManager.instance.log_co != null)
                     {
-                        StopCoroutine(DialogManager.instance.log);
+                        StopCoroutine(DialogManager.instance.log_co);
                     }
-                    DialogManager.instance.log = StartCoroutine(DialogManager.instance.Print_Dialog(nameLog, "이미지를 선택해주세요."));
+                    DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameLog, "이미지를 선택해주세요."));
                 }
                 else
                 { // 선택한 이미지가 있을 때
@@ -256,11 +251,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             { // 이미지 고르기 버튼 눌렀을 때
                 if (!_isImageSelect)
                 { // 선택한 이미지가 없을 때
-                    if (DialogManager.instance.log != null)
+                    if (DialogManager.instance.log_co != null)
                     {
-                        StopCoroutine(DialogManager.instance.log);
+                        StopCoroutine(DialogManager.instance.log_co);
                     }
-                    DialogManager.instance.log = StartCoroutine(DialogManager.instance.Print_Dialog(nameLog, "이미지를 선택해주세요."));
+                    DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameLog, "이미지를 선택해주세요."));
                 }
                 else
                 { // 선택한 이미지가 있을 때
@@ -305,11 +300,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         {
             if (Regex.IsMatch(_profileNameAdd.text[i].ToString(), @"[^0-9a-zA-Z가-힣]"))
             {
-                if (DialogManager.instance.log != null)
+                if (DialogManager.instance.log_co != null)
                 {
-                    StopCoroutine(DialogManager.instance.log);
+                    StopCoroutine(DialogManager.instance.log_co);
                 }
-                DialogManager.instance.log = StartCoroutine(DialogManager.instance.Print_Dialog(nameLog, "초성 입력은 불가능합니다."));
+                DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameLog, "초성 입력은 불가능합니다."));
                 //_profileNameAdd.text = Regex.Replace(_profileNameAdd.text, @"[^0-9a-zA-Z가-힣]", string.Empty); //초성만 지우는애
                 _profileNameAdd.text = String.Empty;    //다지우는애
                 bPossibleName = false;
@@ -321,24 +316,19 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             if (_profileNameAdd.text != string.Empty && _profileNameAdd.text.Length > 1)
             {
                 _profileName = _profileNameAdd.text;
-                Debug.Log(_profileNameAdd.text.Length);
                 _profileNameAdd.text = string.Empty;
                 CreateNamePanel.SetActive(false);
                 CreateImagePanel.SetActive(true);
             }
             else
             {
-                if (DialogManager.instance.log != null)
+                if (DialogManager.instance.log_co != null)
                 {
-                    StopCoroutine(DialogManager.instance.log);
+                    StopCoroutine(DialogManager.instance.log_co);
                 }
-                DialogManager.instance.log = StartCoroutine(DialogManager.instance.Print_Dialog(nameLog, "2~6글자의 이름을 입력해주세요."));
+                DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameLog, "2~6글자의 이름을 입력해주세요."));
             }
-
         }
-
-        /*SQL_Manager.instance.SQL_ProfileListSet();
-        GameManager.Instance.ProfileIndex = SQL_Manager.instance.Profile_list[SQL_Manager.instance.Profile_list.Count - 1].index+1;*/
     }
 
     // Profile Image Index를 저장하는 Method
@@ -354,11 +344,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         // 입력된 문자가 영어 알파벳, 숫자인 경우 입력을 막음
         if ((addedChar >= 'a' && addedChar <= 'z') || (addedChar >= 'A' && addedChar <= 'Z') || (addedChar >= '0' && addedChar <= '9'))
         {
-            if (DialogManager.instance.log != null)
+            if (DialogManager.instance.log_co != null)
             {
-                StopCoroutine(DialogManager.instance.log);
+                StopCoroutine(DialogManager.instance.log_co);
             }
-            DialogManager.instance.log = StartCoroutine(DialogManager.instance.Print_Dialog(nameLog, "한글로 입력 해주세요."));
+            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameLog, "한글로 입력 해주세요."));
             return '\0'; // 입력 막음
         }
 
