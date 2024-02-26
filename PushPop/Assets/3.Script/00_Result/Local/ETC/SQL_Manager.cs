@@ -314,14 +314,22 @@ public class SQL_Manager : MonoBehaviour
             }
 
             // 2. 프로필 삭제
-            string SQL_command = string.Format(@"DELETE FROM Profile WHERE UID = '{0}' AND User_name = '{1}';", UID, name);
-            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
-            cmd.ExecuteNonQuery();
+            string profile_command = string.Format(@"DELETE FROM Profile WHERE UID = '{0}' AND User_name = '{1}';", UID, name);
+            MySqlCommand profile_cmd = new MySqlCommand(profile_command, connection);
+            profile_cmd.ExecuteNonQuery();
 
             // 3. 이미지 삭제
-            string sql_cmd = string.Format(@"DELETE FROM Image WHERE UID = '{0}' AND Profile_Index = '{1}';", UID, index);
-            MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
-            cmd_.ExecuteNonQuery();
+            string image_command = string.Format(@"DELETE FROM Image WHERE UID = '{0}' AND Profile_Index = '{1}';", UID, index);
+            MySqlCommand image_cmd = new MySqlCommand(image_command, connection);
+            image_cmd.ExecuteNonQuery();
+
+            // 4. PushPush 삭제
+            string pushpush_command = string.Format(@"DELETE FROM PushPush WHERE ProfileIndex = '{0}';",  index);
+            MySqlCommand pushpush_cmd = new MySqlCommand(pushpush_command, connection);
+            pushpush_cmd.ExecuteNonQuery();
+
+            // 5. Ranking 삭제
+            Ranking.instance.DeleteRankAndVersus(index);
 
             // 삭제 성공
             Debug.Log("프로필 삭제 성공");

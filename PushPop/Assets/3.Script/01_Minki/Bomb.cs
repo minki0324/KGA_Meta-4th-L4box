@@ -460,8 +460,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    /// <summary>
+    /// Multi게임 로직 반복 Method
+    /// </summary>
     public void RepeatGameLogic()
-    { // 게임 로직 반복 Method
+    {
         switch(turn)
         {
             case Turn.Turn1P:
@@ -906,6 +909,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         AudioManager.instance.SetAudioClip_BGM(0);
 
+        GameManager.Instance.gameMode = Mode.None;
         main_Canvas.SetActive(true);
         selectBtn.SetActive(true);
         changeBtn.SetActive(false);

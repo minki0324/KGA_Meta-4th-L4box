@@ -425,7 +425,14 @@ public class Ranking : MonoBehaviour
             
             if(currentGame != null)
             {
-                if (currentGame.Result)
+                if(currentGame.Player1PIndex == 0 && currentGame.Player2PIndex == 0)
+                { // 삭제된 기록이 있을 경우
+                    _winText[i].text = "";
+                    _loseText[i].text = "";
+                    _winImage[i].sprite = GameManager.Instance.noneSprite;
+                    _loseImage[i].sprite = GameManager.Instance.noneSprite;
+                }
+                else if (currentGame.Result)
                 { // 1P가 이긴 경우
                     SetGameResultText(_winText[i], _loseText[i], currentGame.Player1PName, currentGame.Player2PName);
                     SetPlayerProfileImage(_winImage[i], currentGame.Player1PIndex, true);
@@ -498,7 +505,8 @@ public class Ranking : MonoBehaviour
             rankList = rankListWrapper.ranks;
         }
     }
-    public void SaveVersus()
+
+    private void SaveVersus()
     { // 2인 모드 결과를 저장
         string json = JsonUtility.ToJson(versusData, true);
         File.WriteAllText(versusPath, json);
@@ -511,6 +519,30 @@ public class Ranking : MonoBehaviour
             string json = File.ReadAllText(versusPath);
             versusData = JsonUtility.FromJson<VersusData>(json);
         }
+    }
+
+
+    public void DeleteRankAndVersus(int _profileIndex)
+    { // Rank 삭제
+        rankList.RemoveAll(r => r.index == _profileIndex);
+        SaveRanking();
+
+        // Versus 삭제 및 앞으로 땡기기
+        for (int i = 0; i < versusData.games.Length; i++)
+        {
+            if (versusData.games[i] != null)
+            {
+                if (versusData.games[i].Player1PIndex == _profileIndex || versusData.games[i].Player2PIndex == _profileIndex)
+                { // 1P 인덱스나 2P 인덱스가 삭제할 프로필 인덱스와 일치하면 해당 게임 결과를 삭제하고 배열을 앞으로 땡김.
+                    for (int j = i; j < versusData.games.Length - 1; j++)
+                    {
+                        versusData.games[j] = versusData.games[j + 1];
+                    }
+                    versusData.games[versusData.games.Length - 1] = null; // 마지막 요소는 삭제
+                }
+            }
+        }
+        SaveVersus();
     }
     #endregion
 
