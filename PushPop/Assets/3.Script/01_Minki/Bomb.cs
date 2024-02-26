@@ -65,9 +65,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public GameObject WarningPanel = null;
 
     [Header("ErrorLog")]
-    [SerializeField] private GameObject nameLog = null; // 한글만 입력해주세요 에러로그
-    [SerializeField] private GameObject imageLog = null;    // 이미지를 선택해주세요 에러로그
-    [SerializeField] private GameObject need2P = null;  // 2P를 선택해주세요 에러로그
+    [SerializeField] private TMP_Text nameLog = null; // 한글만 입력해주세요 에러로그
+    [SerializeField] private TMP_Text imageLog = null;    // 이미지를 선택해주세요 에러로그
+    [SerializeField] private TMP_Text need2P = null;  // 2P를 선택해주세요 에러로그
 
     [Header("BombGame")]
     [SerializeField] private bool isStart = false;  // 게임 시작 했는지 판단하는 Bool값
@@ -86,6 +86,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Sprite[] upperBubbleSprite;    // upperBubble에 들어있는 물 이미지들의 배열
     [SerializeField] private Animator endAnimation; // 게임 종료했을 때 나올 Animation
     [SerializeField] private GameObject result; // 결과창 Panel
+    [SerializeField] private GameObject readyPanel; // 처음 준비 모드 패널
+    [SerializeField] private TMP_Text readyText; // 처음 준비 모드 텍스트 
 
     [Header("Other Component")]
     [SerializeField] private Button profileBtn;
@@ -93,6 +95,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Sprite quitNormal_Sprite; //quit 버튼 안눌렸을 때 스프라이트
     [SerializeField] private Sprite quitPressed_Sprite; //quit 버튼 눌렷을 때 스프라이트
     [SerializeField] private Button[] quitBtn;  // 양쪽의 나가기 버튼
+    public Profile_Information player2PInfo = null;
 
     [Header("Versus")]
     [SerializeField] private TMP_Text[] winTexts;
@@ -110,6 +113,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     private Coroutine log;  // 에러로그 코루틴
     private Coroutine waterfall_co; // 물 차오르는 코루틴
+    private Coroutine readyGame_co; // 처음 시작 코루틴
 
     private bool b10minleft = false;    //10초 남앗나 체크하는 변수
 
@@ -166,7 +170,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
                 b10minleft = true;
                 AudioManager.instance.SetAudioClip_SFX(3, true);
             }
-
         }
 
         bottomTimer -= Time.deltaTime;
@@ -177,7 +180,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void OnDisable()
     {
         profile2PInput.onValidateInput -= ValidateInput;
-        isSelect2P = false;       
+        isSelect2P = false;
+        isStart = false;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -200,31 +204,22 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     #region Profile
     private void PlayerSet1P()
     { // 본인의 프로필을 출력하는 Method
-        if (GameManager.Instance.IsImageMode)
-        { // 이미지 고르기 선택한 플레이어일 때
-            playerImage1P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage];
-        }
-        else if(!GameManager.Instance.IsImageMode) 
-        { // 사진 찍기를 선택한 플레이어일 때
-            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
-            Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-            playerImage1P.sprite = profileSprite;
-        }
+        // 프로필 이미지 출력
+        SQL_Manager.instance.PrintProfileImage(GameManager.Instance.IsImageMode, playerImage1P, GameManager.Instance.ProfileIndex);
+      
+        // 프로필 이름 출력
         playerName1P.text = GameManager.Instance.ProfileName;
     }
 
     public void Choice2P()
     { // 2Player를 선택하는 Btn 연동 Method
-        if(GameManager.Instance.IsimageMode2P)
-        { // 이미지 고르기 선택한 플레이어일 때
-            playerImage2P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage2P];
-        }
-        else if(!GameManager.Instance.IsimageMode2P)
-        {// 사진 찍기를 선택한 플레이어일 때
-            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
-            Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-            playerImage2P.sprite = profileSprite;
-        }
+        // 기존 로직대로면 뒤로가기를 선택했을 때도 정보가 바뀌도록 로직이 설계되어있어, 프로필을 선택했을 때만 정보를 바꾸도록 수정함
+        player2PInfo.Receive_Infomation();
+
+        // 2P 프로필 이미지 출력
+        SQL_Manager.instance.PrintProfileImage(GameManager.Instance.IsimageMode2P, playerImage2P, GameManager.Instance.ProfileIndex2P);
+       
+        // 2P 프로필 이름 출력
         playerName2P.text = GameManager.Instance.ProfileName2P;
         isSelect2P = true;
     }
@@ -246,11 +241,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             { // 이미지 고르기 버튼 눌렀을 때
                 if (!isImageSelect)
                 { // 이미지 선택을 안했을 때
-                    if (log != null)
+                    if (DialogManager.instance.log_co != null)
                     {
-                        StopCoroutine(log);
+                        StopCoroutine(DialogManager.instance.log_co);
                     }
-                    log = StartCoroutine(PrintLog_co(imageLog));
+                    DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(imageLog, "이미지를 선택해주세요."));
                 }
                 else
                 { // 선택한 이미지가 있을 때
@@ -275,11 +270,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             { // 이미지 고르기 버튼 눌렀을 때
                 if (!isImageSelect)
                 { // 선택한 이미지가 없을 때
-                    if (log != null)
+                    if (DialogManager.instance.log_co != null)
                     {
-                        StopCoroutine(log);
+                        StopCoroutine(DialogManager.instance.log_co);
                     }
-                    log = StartCoroutine(PrintLog_co(imageLog));
+                    DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(imageLog, "이미지를 선택해주세요."));
                 }
                 else
                 { // 선택한 이미지가 있을 때
@@ -319,22 +314,25 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
         { // Panel의 Index 별로 Profile_Information 컴포넌트를 가져와서 name과 image를 Mode에 맞게 셋팅
             Profile_Information info = profileList[i].GetComponent<Profile_Information>();
+
+            // 각 infomation 프로필 이름 출력
             info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
-            if (SQL_Manager.instance.Profile_list[i].imageMode)
-            { // 이미지 선택으로 설정 했을 경우
-                info.ProfileImage.sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
-            }
-            else
-            { // 사진 찍기로 설정 했을 경우
-                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
-                Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-                info.ProfileImage.sprite = profileSprite;
-            }
+
+            // 각 infomation 프로필 이미지 출력
+            SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, info.ProfileImage, SQL_Manager.instance.Profile_list[i].index);
         }
 
         for(int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
         { // 세팅을 마친 후 본인의 프로필은 삭제
             if(GameManager.Instance.ProfileIndex == SQL_Manager.instance.Profile_list[i].index)
+            { // index = index로 매칭 시켜놓은 로직 중간에 예외처리로 삭제하면 index오류가 날 것을 우려하여 세팅을 다 마친 후 본인 프로필 삭제
+                Profile tempProfile = SQL_Manager.instance.Profile_list[i];
+                SQL_Manager.instance.Profile_list.Remove(tempProfile);
+                GameObject list = profileList[i];
+                profileList.Remove(list);
+                Destroy(list);
+            }
+            else if (GameManager.Instance.ProfileIndex2P == SQL_Manager.instance.Profile_list[i].index)
             { // index = index로 매칭 시켜놓은 로직 중간에 예외처리로 삭제하면 index오류가 날 것을 우려하여 세팅을 다 마친 후 본인 프로필 삭제
                 Profile tempProfile = SQL_Manager.instance.Profile_list[i];
                 SQL_Manager.instance.Profile_list.Remove(tempProfile);
@@ -352,6 +350,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     public void DeleteProfile()
     { // 프로필 삭제 Btn 연동 Method (2P)
+        player2PInfo.Receive_Infomation();
         SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileName2P, GameManager.Instance.ProfileIndex2P);
     }
 
@@ -420,11 +419,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // 입력된 문자가 영어 알파벳, 숫자인 경우 입력을 막음
         if ((addedChar >= 'a' && addedChar <= 'z') || (addedChar >= 'A' && addedChar <= 'Z') || (addedChar >= '0' && addedChar <= '9'))
         {
-            if (log != null)
+            if (DialogManager.instance.log_co != null)
             {
-                StopCoroutine(log);
+                StopCoroutine(DialogManager.instance.log_co);
             }
-            log = StartCoroutine(PrintLog_co(nameLog));
+            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameLog, "한글 입력만 가능합니다."));
             return '\0'; // 입력 막음
         }
 
@@ -451,11 +450,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         }
         else
         { // 2P 선택이 되지 않은 경우 ErrorLog를 출력하고 return
-            if(log != null)
+            if (DialogManager.instance.log_co != null)
             {
-                StopCoroutine(log);
+                StopCoroutine(DialogManager.instance.log_co);
             }
-            log = StartCoroutine(PrintLog_co(need2P));
+            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(need2P, "2P를 선택해주세요."));
             return;
         }
     }
@@ -513,38 +512,18 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         SetSpriteImage(Frame[1], popList2P);
         Frame[0].transform.GetChild(0).transform.localPosition = bottomPos[0];
         Frame[1].transform.GetChild(0).transform.localPosition = bottomPos[1];
-        isStart = true;
+        
 
         // 버튼 interactable 설정하여 누구의 턴인지 설정
         TurnSetting();
 
-        // upperBubble 코루틴 실행
-        waterfall_co = StartCoroutine(Waterfall_co());
-
         // Profile Setting
         inGameText1P.text = GameManager.Instance.ProfileName;
         inGameText2P.text = GameManager.Instance.ProfileName2P;
-        if(!GameManager.Instance.IsImageMode)
-        { // 1P 가 사진 찍기를 선택한 Player일 경우
-            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
-            Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-            inGameImage1P.sprite = profileSprite;
-        }
-        else if(GameManager.Instance.IsImageMode)
-        { // 1P 가 이미지 고르기를 선택한 Player일 경우
-            inGameImage1P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage];
-        }
+        SQL_Manager.instance.PrintProfileImage(GameManager.Instance.IsImageMode, inGameImage1P, GameManager.Instance.ProfileIndex);
+        SQL_Manager.instance.PrintProfileImage(GameManager.Instance.IsimageMode2P, inGameImage2P, GameManager.Instance.ProfileIndex2P);
 
-        if (!GameManager.Instance.IsimageMode2P)
-        { // 2P 가 사진 찍기를 선택한 Player일 경우
-            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
-            Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-            inGameImage2P.sprite = profileSprite;
-        }
-        else if (GameManager.Instance.IsimageMode2P)
-        { // 2P 가 이미지 고르기를 선택한 Player일 경우
-            inGameImage2P.sprite = GameManager.Instance.ProfileImages[GameManager.Instance.DefaultImage2P];
-        }
+        readyGame_co = StartCoroutine(ReadyGame_Co());
     }
 
     private void PosSetting()
@@ -695,6 +674,22 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         EndGame();
     }
 
+    private IEnumerator ReadyGame_Co()
+    {
+        readyPanel.SetActive(true);
+        DialogManager.instance.Print_Dialog(readyText, "준비 ~");
+        yield return new WaitForSeconds(2f);
+
+        DialogManager.instance.Print_Dialog(readyText, "시작 ~");
+        yield return new WaitForSeconds(0.8f);
+        readyPanel.SetActive(false);
+
+        // upperBubble 코루틴 실행
+        waterfall_co = StartCoroutine(Waterfall_co());
+        isStart = true;
+        readyGame_co = null;
+    }
+
     private void EndGame()
     { // 게임이 종료됐을 때 Method
         isStart = false;
@@ -765,9 +760,10 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         Quit1P = false;
         Quit2P = false;
 
-        if(waterfall_co != null)
+        if(waterfall_co != null || readyGame_co != null)
         {
             StopCoroutine(waterfall_co);
+            StopCoroutine(readyGame_co);
         }
     }
 
@@ -818,7 +814,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         quitBtn[1].interactable = true;
     }
 
-
     //quitBtn[0]번 상태 변경 메소드
     private void Check_quitBtn_1P()
     {
@@ -834,9 +829,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             Quit1P = false;       
             quitBtn[0].GetComponent<Image>().sprite = quitNormal_Sprite;
         }
-      
     }
-
 
     //quitBtn[1]번 상태 변경 메소드
     private void Check_quitBtn_2P()
@@ -855,8 +848,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         }
     }
 
-
-
     //프로필 이름 입력창 뒤로가기 버튼
     public void ProfileInputName_BackBtn_Clicked()
     {
@@ -864,9 +855,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         profile2PInput.text = string.Empty;
         SelectProfile.SetActive(true);
         CreateNamePanel.SetActive(false);
-     
     }
-
 
     //프로필 선택/ 프로필 변경 버튼 
     public void Select2PBtn_Clicked()
@@ -877,9 +866,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         help_Canvas.Button_Disable();
         gameStartBtn.interactable = false;
     }
-
-
-
 
     //나가기 전 경고패널 나가기 버튼
     public void GoOutBtn_Clicked()
@@ -892,7 +878,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         WarningPanel.SetActive(false);
         Time.timeScale = 1;
     }
-
 
     //나가기 전 경고패널 취소 버튼
     public void CancelBtn_Clicked()

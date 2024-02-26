@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 #region Other Class
 /// <summary>
@@ -330,6 +331,16 @@ public class SQL_Manager : MonoBehaviour
 
             // 5. Ranking 삭제
             Ranking.instance.DeleteRankAndVersus(index);
+
+            // 6. List 초기화
+            for(int i = 0; i < Profile_list.Count; i++)
+            {
+                if(index == Profile_list[i].index)
+                {
+                    Profile tempProfile = Profile_list[i];
+                    Profile_list.Remove(tempProfile);
+                }
+            }
 
             // 삭제 성공
             Debug.Log("프로필 삭제 성공");
@@ -819,5 +830,28 @@ public class SQL_Manager : MonoBehaviour
         }
     }
     #endregion
+
+    public void PrintProfileImage(bool _imageMode, Image _image, int _profileIndex)
+    {
+        int defaultImage = -1;
+
+        if (_imageMode)
+        { // 이미지 고르기 선택한 플레이어일 때
+            for (int i = 0; i < Profile_list.Count; i++)
+            {
+                if (_profileIndex == Profile_list[i].index)
+                {
+                    defaultImage = Profile_list[i].defaultImage;
+                    _image.sprite = GameManager.Instance.ProfileImages[defaultImage];
+                }
+            }
+        }
+        else if (!_imageMode)
+        { // 사진 찍기를 선택한 플레이어일 때
+            Texture2D profileTexture = SQL_LoadProfileImage(GameManager.Instance.UID, _profileIndex);
+            Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
+            _image.sprite = profileSprite;
+        }
+    }
     #endregion
 }
