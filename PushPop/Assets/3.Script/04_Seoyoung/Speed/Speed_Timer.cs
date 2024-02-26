@@ -28,6 +28,7 @@ public class Speed_Timer : MonoBehaviour
     [SerializeField] private Image resultImage;
     [SerializeField] private TMP_Text resultTimer;
     [SerializeField] private TMP_Text resultLog;
+    [SerializeField] private TMP_Text resultTitle;
 
     public int currentTime;
     private int sec;
@@ -103,6 +104,11 @@ public class Speed_Timer : MonoBehaviour
             if (currentTime.Equals(50))
             {
                 time_Text.color = TimerCountColorChange("#FF0000");
+            }
+            if (currentTime.Equals(60))
+            {
+                GameManager.Instance.GameClear();
+                yield break;
             }
             yield return new WaitForSeconds(cashing);
         }
@@ -181,6 +187,16 @@ public class Speed_Timer : MonoBehaviour
     {
         resultImage.sprite = speed_Canvas.moldIcon;
         resultTimer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+        if (currentTime.Equals(60))
+        {
+            resultTitle.text = "실패";
+            resultLog.text = "아쉬워요";
+        }
+        else
+        {
+            resultTitle.text = "성공";
+            resultLog.text = "점점 나아지고 있어요!"; // 기존 점수에 따라 달라짐
+        }
         // 나중에 Dialog Manager만들 예정
         // resultLog.text = 
     }
