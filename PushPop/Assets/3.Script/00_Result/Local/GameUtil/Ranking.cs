@@ -245,14 +245,17 @@ public class Ranking : MonoBehaviour
                 _name.text = userRecord.name;
                 _Score.text = userRecord.score.ToString();
             }
+            else if (userRecord.score == 0)
+            { // 사용자 기록이 없을 경우, 공백을 표시.
+                _name.text = userRecord.name;
+                _Score.text = "";
+            }
         }
-        else if(userRecord == null)
+        else
         {
-            // 사용자 기록이 없을 경우, 공백을 표시.
             _name.text = GameManager.Instance.ProfileName;
             _Score.text = "";
         }
-        
 
         for(int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
         {
@@ -301,7 +304,9 @@ public class Ranking : MonoBehaviour
                     }
                     else
                     {
+                        _image[i].sprite = GameManager.Instance.noneSprite;
                         _timer[i].text = "";
+                        _name[i].text = "";
                     }
                 }
             }
@@ -309,7 +314,9 @@ public class Ranking : MonoBehaviour
 
         for (int i = topRanks.Count; i < _timer.Length; i++)
         { // 만약 상위 3위를 채우지 못한 경우, 남은 텍스트 요소를 비움.
+            _image[i].sprite = GameManager.Instance.noneSprite;
             _timer[i].text = "";
+            _name[i].text = "";
         }
 
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
@@ -350,10 +357,17 @@ public class Ranking : MonoBehaviour
                     _timer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
                     break;
                 }
+                else
+                {
+                    _image.sprite = GameManager.Instance.noneSprite;
+                    _name.text = userRecord.name;
+                    _timer.text = "";
+                }
             }
         }
         else
         {
+            _image.sprite = GameManager.Instance.noneSprite;
             _name.text = GameManager.Instance.ProfileName;
             _timer.text = "";
         }

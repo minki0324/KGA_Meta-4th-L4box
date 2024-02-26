@@ -493,6 +493,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // Timer 선언
         upperTimer = 12f;
         bottomTimer = 60f;
+        timerText.text = $"남은시간\n{(int)bottomTimer}";
         // 상단의 Bubble의 위치를 랜덤으로 부여하여 해당 위치에 따라 어떤 플레이어가 먼저 시작할지 턴을 부여
         int randomPos = Random.Range(0, 2);
         upperBubble.transform.localPosition = upperPos[randomPos];
@@ -760,11 +761,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         Quit1P = false;
         Quit2P = false;
 
-        if(waterfall_co != null || readyGame_co != null)
-        {
-            StopCoroutine(waterfall_co);
-            StopCoroutine(readyGame_co);
-        }
+        if(readyGame_co != null) StopCoroutine(readyGame_co);
+        if(waterfall_co != null) StopCoroutine(waterfall_co);
     }
 
     public void PrintVersus()
@@ -772,16 +770,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         Ranking.instance.LoadVersusResult(winTexts, loseTexts, winProfileImages, loseProfileImages);
     }
     #endregion
-    private IEnumerator PrintLog_co(GameObject errorlog)
-    { // ErrorLog 출력 Coroutine
-        errorlog.SetActive(true);
-
-        yield return new WaitForSeconds(3f);
-
-        errorlog.SetActive(false);
-        log = null;
-    }
-
     public void QuitBtn(int _player)
     { // 매개변수 0은 1P / 1은 2P Btn연동 Method
         if(_player.Equals(0))

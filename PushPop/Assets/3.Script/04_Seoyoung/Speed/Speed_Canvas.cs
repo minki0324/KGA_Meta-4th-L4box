@@ -279,6 +279,10 @@ public class Speed_Canvas : MonoBehaviour
         }
     }
 
+    public void PrintScore()
+    {
+        GameManager.Instance.PrintSpeed(int.Parse(moldIcon.name));
+    }
 
     //준비창의 x를 눌렀을 때 호출되는 함수
     public void ReadyPanel_BackBtn_Clicked()
