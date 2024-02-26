@@ -12408,22 +12408,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1878190843}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1410643994}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1878190845}
+        m_TargetAssemblyTypeName: Profile_, Assembly-CSharp
+        m_MethodName: SelectBtn_CurrentProfilePanel_Clicked
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -12431,42 +12419,6 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 851502538}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 71060990}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1538655749}
-        m_TargetAssemblyTypeName: AudioManager123, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &990238704
 MonoBehaviour:
@@ -12541,7 +12493,7 @@ MonoBehaviour:
   helpScripts_List: []
   categoryDict_fileName: category.json
   iconDict_fileName: icon.json
-  helpScript_fileName: asdf.json
+  helpScript_fileName: help.json
 --- !u!4 &993435571
 Transform:
   m_ObjectHideFlags: 0
@@ -25042,6 +24994,8 @@ MonoBehaviour:
   IconPanel: {fileID: 1841294382}
   CheckPanel: {fileID: 232424891}
   PicturePanel: {fileID: 522610515}
+  MainButton_Panel: {fileID: 1410643994}
+  GameMode_Panel: {fileID: 851502538}
   profileCreateBtn: {fileID: 0}
   profilePanel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
   profileLog: {fileID: 256174220}
@@ -25055,6 +25009,7 @@ MonoBehaviour:
   SelectName: {fileID: 620436293}
   _isImageSelect: 0
   _isUpdate: 0
+  _isProfileSelect: 0
 --- !u!114 &1878190846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27525,7 +27480,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 8a966689a4ea88440beeee57cabbbec9, type: 3}
   - {fileID: 21300000, guid: eb7fc31d42448624ca97414c004abf86, type: 3}
   - {fileID: 21300000, guid: e6c4788010ccaa34fa993c7155ad320a, type: 3}
-  memoryImage_List: []
+  memoryImage_List:
+  - {fileID: 21300000, guid: 96f82d9de239a4e4c925c680bbe956a0, type: 3}
+  - {fileID: 21300000, guid: 7712577840e3a8c4ea221a67d993378c, type: 3}
+  - {fileID: 21300000, guid: 1c5eef8e856a25e4f817670efa97eb0e, type: 3}
+  - {fileID: 21300000, guid: 4c9adbb40b097ac49be4f99a7ed1c77a, type: 3}
   bombImage_List:
   - {fileID: 21300000, guid: 7ebb9765b8d50ef4996834543dd19890, type: 3}
   - {fileID: 21300000, guid: 71eecc311c7b27a478c39beabdc62b89, type: 3}

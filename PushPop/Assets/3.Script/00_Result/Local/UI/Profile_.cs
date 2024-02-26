@@ -23,6 +23,10 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     public GameObject CheckPanel;
     public GameObject PicturePanel;
 
+    [Header("Other Panel")]
+    [SerializeField] private GameObject MainButton_Panel;
+    [SerializeField] private GameObject GameMode_Panel;
+
     [Header("Button")]
     [SerializeField] private Button profileCreateBtn;
 
@@ -50,6 +54,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     [Header("bool")]
     public bool _isImageSelect = false;
     public bool _isUpdate = false;
+    public bool _isProfileSelect = false;   //로그인 후 최초로 프로필을 고른지 판단
     
     #region Unity Callback
     private void OnEnable()
@@ -69,6 +74,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
         Debug.Log("Device GUID: " + uniqueID);
 
+        _isProfileSelect = false;
         // 한글 입력만 가능하도록 이벤트 추가
     }
 
@@ -373,8 +379,16 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         CreateNamePanel.SetActive(false);
         PrintProfileList();
-        // SelectProfilePanel.SetActive(true);
-        CurrnetProfilePanel.SetActive(true);
+
+        if(_isProfileSelect)
+        {
+            CurrnetProfilePanel.SetActive(true);
+        }
+        else
+        {
+            SelectProfilePanel.SetActive(true);
+        }
+        
     }
 
     public void BackBtn_IconPanel_Clicked()
@@ -388,7 +402,16 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     public void SelectBtn_CurrentProfilePanel_Clicked()
     {
-         
+        if(!_isProfileSelect)
+        {
+            _isProfileSelect = true;
+        }
+
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        GameMode_Panel.SetActive(true);
+        MainButton_Panel.SetActive(true);
+        CurrnetProfilePanel.SetActive(false);
+        gameObject.SetActive(false);         
     }
 
     public void ChangeBtn_CurrentProfilePanel_Clicked()

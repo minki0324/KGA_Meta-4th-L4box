@@ -99,6 +99,16 @@ public class DataManager2 : MonoBehaviour
 
     #region Other Method
 
+    public void Encoding_file(string dataPath)
+    {
+        string data = File.ReadAllText(dataPath);
+        byte[] encodeing = Encoding.UTF8.GetBytes(data);
+        FileStream file = File.Open(dataPath, FileMode.Open);
+        file.Read(encodeing, 0, encodeing.Length);
+        file.Close();
+    }
+
+
     //category.json 읽어와서 Dictionary로 변환하는 메소드
     public void Read_Category()
     {
@@ -217,17 +227,14 @@ public class DataManager2 : MonoBehaviour
 
     public void Read_HelpScript()
     {
+
+        
         //도움말 스크립트 읽어오는 함수
 
         helpScripts_List.Clear();
-
+        
         string JsonString = File.ReadAllText(path + "/" + helpScript_fileName);
         JsonData jsonData = JsonMapper.ToObject(JsonString);
-        // byte[] encoding = Encoding.UTF8.GetBytes(File.ReadAllText(JsonString));
-
-
-
-
 
         for (int i = 0; i < jsonData.Count; i++)
         {
