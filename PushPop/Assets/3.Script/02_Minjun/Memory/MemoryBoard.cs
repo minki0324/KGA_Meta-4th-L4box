@@ -13,6 +13,7 @@ public class MemoryBoard : MonoBehaviour
     private MemoryPushpop currentOrderPushPop;
     private WaitForSeconds WaitTime = new WaitForSeconds(0.5f);
     public MemoryStageData stage { get; private set; }
+    private bool isReplay = true;
     private void Awake()
     {
         for (int i = 0; i < transform.childCount; i++)
@@ -25,14 +26,8 @@ public class MemoryBoard : MonoBehaviour
     {
         stage = MemoryManager.Instance.GetStage();
         RandCorrectDraw(stage.CorrectCount);
-        if (stage.isSpecialStage)
-        {
-            StartCoroutine(InOrder());
-        }
-        else
-        {
-            StartCoroutine(ReadyGame());
-        }
+        Blink(!isReplay); //true : 힌트를 주기위해 재실행 ( 게임시작문구 스킵 바로 깜빡) false : 최초 스테이지 시작시 
+       
 
 
     }
@@ -99,26 +94,32 @@ public class MemoryBoard : MonoBehaviour
         }
         return false;
     }
-    public IEnumerator ReadyGame()
+    public IEnumerator ReadyGame(bool isReplay)
     {//순서상관없는모드
         BtnAllStop();
-        yield return new WaitForSeconds(1f);
-        //게임시작 텍스트 띄우기
-        MemoryManager.Instance.PlayStartPanel("게임 시작!");
-       
-        yield return new WaitForSeconds(2f);
+        if (!isReplay)
+        {
+            yield return new WaitForSeconds(1f);
+            //게임시작 텍스트 띄우기
+            MemoryManager.Instance.PlayStartPanel("게임 시작!");
+
+            yield return new WaitForSeconds(2f);
+        }
         //1초 뒤 반짝이기
         CorrectBtnPlayBlink();
         yield return new WaitForSeconds(1f);
         BtnAllPlay();
     }
-    private IEnumerator InOrder()
+    private IEnumerator InOrder(bool isReplay)
     {//순서대로 누르는 모드
         BtnAllStop();
-        yield return new WaitForSeconds(1f);
-        //게임시작 텍스트 띄우기
-        MemoryManager.Instance.PlayStartPanel("게임 시작!");
-        yield return new WaitForSeconds(2f);
+        if (!isReplay)
+        {
+            yield return new WaitForSeconds(1f);
+            //게임시작 텍스트 띄우기
+            MemoryManager.Instance.PlayStartPanel("게임 시작!");
+            yield return new WaitForSeconds(2f);
+        }
         StartCoroutine(CorrectBtnPlayBlink_InOrder());
 
     }
@@ -151,5 +152,16 @@ public class MemoryBoard : MonoBehaviour
 
         return false;
     }
-
+    public void Blink(bool isReplay)
+    {
+        if (stage.isSpecialStage)
+        {
+            StartCoroutine(InOrder(isReplay));
+        }
+        else
+        {
+            StartCoroutine(ReadyGame(isReplay));
+        }
+    }
+ 
 }

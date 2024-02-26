@@ -20,6 +20,7 @@ public class PuzzleLozic : MonoBehaviour
     public Transform frampPos;
     [Header("피스들 설정 위치")] //임시
     public Transform[] piecePos;
+    public Vector2 _piecePos;
     private float puzzleJudgmentDistance = 30; // 퍼즐 판정 거리.
     public List<Puzzle> puzzles = new List<Puzzle>(); //모든 퍼즐 종류를 담아놓는 리스트
     public int ClearCount=0; //맞춰야하는 퍼즐 갯수
@@ -87,6 +88,7 @@ public class PuzzleLozic : MonoBehaviour
     {
         for(int i = 0; i < pieceList.Count; i++)
         {
+            
             pieceList[i].transform.GetComponent<Image>().raycastTarget = true;
             pieceList[i].transform.GetComponent<PieceDragAndDrop>().enabled = true;
         }
@@ -97,9 +99,15 @@ public class PuzzleLozic : MonoBehaviour
 
     public  void SettingPuzzle()
     {//정해진 퍼즐 프레임,퍼즐 생성
+      
         for (int i = 0; i < currentPuzzle.sprites.Length; i++)
         {
-            GameObject piece = PuzzleInstantiate(PieceObject, piecePos[i].position, currentPuzzle.sprites[i], true);
+            //퍼즐위치 랜덤한 위치에 생성
+            Texture2D puzzleTexture = currentPuzzle.sprites[i].texture;
+            int X = UnityEngine.Random.Range(puzzleTexture.width/2, Screen.width- puzzleTexture.width / 2);
+            int Y = UnityEngine.Random.Range(puzzleTexture.height / 2, Screen.height- puzzleTexture.height / 2);
+            _piecePos= new Vector2(X, Y);
+            GameObject piece = PuzzleInstantiate(PieceObject, _piecePos, currentPuzzle.sprites[i], true);
             pieceList.Add(piece.GetComponent<PuzzlePiece>());
         }
     }
