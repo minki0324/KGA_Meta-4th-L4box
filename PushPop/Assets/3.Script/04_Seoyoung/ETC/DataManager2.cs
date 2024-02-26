@@ -60,7 +60,7 @@ public class DataManager2 : MonoBehaviour
 
     public string categoryDict_fileName = "category.json";
     public string iconDict_fileName = "icon.json";
-    public string helpScript_fileName = "asdf.json";
+    public string helpScript_fileName = "help.json";
     //public string helpScript_fileName = "help.json";      //한글이 꺠지므로 인코딩 코드 넣고 쓰기..일단 asdf 씀
 
     private string path = string.Empty;
