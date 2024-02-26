@@ -373,7 +373,8 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         CreateNamePanel.SetActive(false);
         PrintProfileList();
-        SelectProfilePanel.SetActive(true);
+        // SelectProfilePanel.SetActive(true);
+        CurrnetProfilePanel.SetActive(true);
     }
 
     public void BackBtn_IconPanel_Clicked()
