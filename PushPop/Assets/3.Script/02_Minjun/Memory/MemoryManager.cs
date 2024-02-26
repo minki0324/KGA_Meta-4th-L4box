@@ -14,6 +14,7 @@ public class MemoryManager : MonoBehaviour
     [SerializeField] public GameObject ResultPanel; //라이프소진 , AllClear시 뜨는 결과창
     [SerializeField] public GameObject WarngingPanel;   
     [SerializeField] private GameObject[] Heart; //목숨나타내는 하트오브젝트 배열
+    [SerializeField] private Button Hintbutton;
     
     public MemoryBoard currentBoard; //현재 소환되있는 푸시팝보드판
     public int currentStage = 1; //현재스테이지
@@ -21,9 +22,11 @@ public class MemoryManager : MonoBehaviour
     public int Score = 0; //현재스코어
     public MemoryStageData[] stages; //스테이지 ScriptableObject 배열 현재스테이지에따라 설정이다름 / 보드판,정답갯수, 스페셜스테이지여부
     public Transform SapwnPos; //푸시팝보드판 소환위치
+    public int endStageIndex = 0;
     private void Awake()
     {
         Instance = this;
+        endStageIndex = stages.Length;
     }
     private void OnEnable()
     {
@@ -73,6 +76,22 @@ public class MemoryManager : MonoBehaviour
     {
         Score += 100;
         ScoreText.text = $"점수 : {Score}";
+        HintBtnActive();
+
+
+    }
+    public void HintBtnActive()
+    {//점수가 늘어나거나 줄어들때(힌트를 볼때) 버튼을 활성화 하거나 비활성화시킴.
+        if (Score >= 300)
+        {
+            //버튼활성화
+            Hintbutton.interactable = true;
+        }
+        else
+        {
+            //버튼 비활성화
+            Hintbutton.interactable = false;
+        }
     }
     public void ResetScore()
     {
@@ -141,5 +160,12 @@ public class MemoryManager : MonoBehaviour
         Debug.Log("코루틴후");
 
         GetComponent<Memory_Game>().GoOutBtn_Clicked();
+    }
+    public void BlinkRePlay()
+    {
+        Score -= 300;
+        ScoreText.text = $"점수 : {Score}";
+        HintBtnActive();
+        currentBoard.Blink(true);
     }
 }

@@ -11,6 +11,7 @@ public class MemoryPushpop : MonoBehaviour
     private Button button;
     private MemoryBoard memoryBoard;
     private Animator ani;
+    
     private void Awake()
     {
         TryGetComponent(out button);
@@ -117,14 +118,14 @@ public class MemoryPushpop : MonoBehaviour
     {//클리어 코루틴
         //훌륭해요 애니메이션
         memoryBoard.BtnAllStop(); //버튼동작정지
-
+                
         AudioManager.instance.SetAudioClip_SFX(4, false);
         MemoryManager.Instance.PlayStartPanel("훌륭 해요!");//애니메이션 멘트재생
         yield return new WaitForSeconds(2f);
         MemoryManager.Instance.currentStage++; //스테이지 Index증가
         Debug.Log(MemoryManager.Instance.currentStage);
         //준비된 스테이지 < 현재스테이지
-         if(MemoryManager.Instance.stages.Length< MemoryManager.Instance.currentStage)
+         if(MemoryManager.Instance.endStageIndex < MemoryManager.Instance.currentStage)
         {
             Debug.Log("스테이지를 모두 클리어 하셨습니다. 축하합니다!");
             //결과창호출
@@ -143,7 +144,7 @@ public class MemoryPushpop : MonoBehaviour
     #endregion
 
 
-    //시작할때 정답알려주는 깜빡깜빡 애니메이션 메소드
+    //본인이 정답인지 깜빡이는 메소드
     public void PlayBlink()
     {
         ani.SetTrigger("isBlink");
