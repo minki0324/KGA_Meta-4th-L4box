@@ -29,6 +29,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     [Header("Button")]
     [SerializeField] private Button profileCreateBtn;
+    [SerializeField] private Button profileDeleteBtn;
 
     [Header("GUID")]
     private string uniqueID;
@@ -40,6 +41,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     [SerializeField] private TMP_InputField _profileNameAdd;
     [SerializeField] private Transform panelParent;
     [SerializeField] private List<GameObject> panelList;
+    [SerializeField] private ScrollRect profile_ScrollView;
     public GameObject DeletePanel;
     public Image ProfileImage;
 
@@ -54,7 +56,9 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     [Header("bool")]
     public bool _isImageSelect = false;
     public bool _isUpdate = false;
-    public bool _isProfileSelect = false;   //로그인 후 최초로 프로필을 고른지 판단
+    public bool _isProfileSelected = false;   //로그인 후 최초로 프로필을 고른지 판단
+    public bool _isProfileChange = false;   //프로필이 수정모드인가 / 생성인가 판단
+    public bool _isDeleteBtnClikced = false;
     
     #region Unity Callback
     private void OnEnable()
@@ -62,9 +66,10 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         SelectProfilePanel.SetActive(true);
         _profileNameAdd.onValidateInput += ValidateInput;
         _profileNameAdd.characterLimit = 6;
-//        _profileNameAdd.onValueChanged.AddListener(
-//    (word) => _profileNameAdd.text = Regex.Replace(word, @"[^0-9a-zA-Z가-힣]", "")
-//);
+        profile_ScrollView.normalizedPosition = new Vector2(1f, 1f);
+        //        _profileNameAdd.onValueChanged.AddListener(
+        //    (word) => _profileNameAdd.text = Regex.Replace(word, @"[^0-9a-zA-Z가-힣]", "")
+        //);
     }
 
     private void Start()
@@ -74,7 +79,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
         Debug.Log("Device GUID: " + uniqueID);
 
-        _isProfileSelect = false;
+        _isProfileSelected = false;
         // 한글 입력만 가능하도록 이벤트 추가
     }
 
@@ -287,6 +292,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     // 삭제 버튼 List만큼 출력
     public void DeleteBtnOpen()
     {
+
         if (panelList.Count > 0)
         {
             bool active = panelList[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
@@ -300,6 +306,8 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             // 삭제할 프로필 로그 출력
             return;
         }
+
+
     }
 
     // Profile Add 하기 전 InputField에 저장된 이름을 변수에 저장해주는 Btn 연동 Method
@@ -373,22 +381,44 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     }
 
 
+    public void CreateBtn_SelectProfilePanel_Clicked()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        _isProfileChange = false;
+        CreateNamePanel.SetActive(true);
+    }
+
+
     public void BackBtn_CreateNamePanel_Clicked()
     {
 
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         CreateNamePanel.SetActive(false);
         PrintProfileList();
+       // CurrnetProfilePanel.SetActive(true);
 
-        if(_isProfileSelect)
+        if(_isProfileChange)
         {
+            //수정모드이면 뒤로가기 눌렀을 때 눌린 프로필 띄우기
             CurrnetProfilePanel.SetActive(true);
         }
         else
         {
-            SelectProfilePanel.SetActive(true);
+            if (_isProfileSelected)
+            {
+                CurrnetProfilePanel.SetActive(true);
+            }
+            else
+            {
+                profile_ScrollView.normalizedPosition = new Vector2(1f, 1f);
+                SelectProfilePanel.SetActive(true);
+                
+            }
         }
-        
+
+
+   
+
     }
 
     public void BackBtn_IconPanel_Clicked()
@@ -402,10 +432,12 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     public void SelectBtn_CurrentProfilePanel_Clicked()
     {
-        if(!_isProfileSelect)
+      
+        if(!_isProfileSelected)
         {
-            _isProfileSelect = true;
+            _isProfileSelected = true;
         }
+
 
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         GameMode_Panel.SetActive(true);
@@ -417,6 +449,9 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     public void ChangeBtn_CurrentProfilePanel_Clicked()
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
+
+        _isProfileChange = true;
+
         CurrnetProfilePanel.SetActive(false);
         CreateNamePanel.SetActive(true);
     }
@@ -424,8 +459,12 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     public void ReturnBtn_CurrentProfilePanel_Clicked()
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
+
+        profile_ScrollView.normalizedPosition = new Vector2(1f, 1f);
+
         CurrnetProfilePanel.SetActive(false);
         SelectProfilePanel.SetActive(true);
+
     }
 
     #endregion

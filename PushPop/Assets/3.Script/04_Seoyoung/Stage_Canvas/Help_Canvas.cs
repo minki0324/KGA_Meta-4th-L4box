@@ -29,9 +29,11 @@ public class Help_Canvas : MonoBehaviour
 
     [SerializeField] private TMP_Text page_Text;
 
-    [Header("뒤로가기&도움말 버튼")]
+    [Header("버튼")]
     public Button Back_Btn;
     public Button Help_Btn;
+    [SerializeField] private Button previous_Btn;
+    [SerializeField] private Button next_Btn;
 
     [Header("도움말 팝업창 이미지 리스트")]
     [SerializeField] private List<Sprite> pushpushImage_List;
@@ -45,8 +47,8 @@ public class Help_Canvas : MonoBehaviour
     public bool bisHelpPanelOn = false;
 
     //도움말 페이지 번호
-    private int maxPage;
-    private int currentPage;
+    public int maxPage;
+    public int currentPage;
 
     #region Unity Callback
 
@@ -190,6 +192,16 @@ public class Help_Canvas : MonoBehaviour
         {
             currentPage += 1;
             Help_Window();
+
+            previous_Btn.interactable = true;
+            if(currentPage >= maxPage)
+            {
+                next_Btn.interactable = false;
+            }
+            else
+            {
+                next_Btn.interactable = true;
+            }
         }
      
     }
@@ -202,6 +214,16 @@ public class Help_Canvas : MonoBehaviour
         {
             currentPage -= 1;
             Help_Window();
+
+            next_Btn.interactable = true;
+            if(currentPage <= 1)
+            {
+                previous_Btn.interactable = false;
+            }
+            else
+            {
+                previous_Btn.interactable = true;
+            }
         }
     }
 
@@ -211,6 +233,8 @@ public class Help_Canvas : MonoBehaviour
     {
         //도움말 텍스트는 json 파일에
         //도움말 이미지의 경우 리스트에 순차적으로 넣어주세요 :)
+        previous_Btn.interactable = false;
+        next_Btn.interactable = true;
 
         switch (GameManager.Instance.gameMode)
         {
@@ -246,8 +270,6 @@ public class Help_Canvas : MonoBehaviour
             //메모리 모드 도움말
             case Mode.Memory:
                 maxPage = DataManager2.instance.helpScripts_List[2].script.Count;
-
-                
 
                 for (int i = 0; i < DataManager2.instance.helpScripts_List[2].script.Count; i++)
                 {

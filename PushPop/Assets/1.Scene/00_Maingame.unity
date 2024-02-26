@@ -9869,7 +9869,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.000030517578}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &851316504
@@ -11268,29 +11268,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2022248616}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1878190845}
+        m_TargetAssemblyTypeName: Profile_, Assembly-CSharp
+        m_MethodName: CreateBtn_SelectProfilePanel_Clicked
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1538655749}
-        m_TargetAssemblyTypeName: AudioManager123, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &900693480
 MonoBehaviour:
@@ -22774,7 +22762,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -24997,19 +24985,23 @@ MonoBehaviour:
   MainButton_Panel: {fileID: 1410643994}
   GameMode_Panel: {fileID: 851502538}
   profileCreateBtn: {fileID: 0}
+  profileDeleteBtn: {fileID: 1520692303}
   profilePanel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
   profileLog: {fileID: 256174220}
   nameLog: {fileID: 681549811}
   _profileNameAdd: {fileID: 1172088461}
   panelParent: {fileID: 851316503}
   panelList: []
+  profile_ScrollView: {fileID: 468149139}
   DeletePanel: {fileID: 1679855079}
   ProfileImage: {fileID: 334612751}
   _imageIndex: -1
   SelectName: {fileID: 620436293}
   _isImageSelect: 0
   _isUpdate: 0
-  _isProfileSelect: 0
+  _isProfileSelected: 0
+  _isProfileChange: 0
+  _isDeleteBtnClikced: 0
 --- !u!114 &1878190846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27469,6 +27461,8 @@ MonoBehaviour:
   page_Text: {fileID: 886411303}
   Back_Btn: {fileID: 1686498594}
   Help_Btn: {fileID: 1545360580}
+  previous_Btn: {fileID: 387599820}
+  next_Btn: {fileID: 257341608}
   pushpushImage_List:
   - {fileID: 21300000, guid: a65c1079283563b498d919b04ef105e0, type: 3}
   - {fileID: 21300000, guid: 6e75d23e60e1c844584715268fa91a9f, type: 3}
@@ -27492,6 +27486,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 4f9b759699996ce45a84896686dd0c9b, type: 3}
   - {fileID: 21300000, guid: c6b5bc3d859bd2740bdd327680f40415, type: 3}
   bisHelpPanelOn: 0
+  maxPage: 0
+  currentPage: 0
 --- !u!114 &2100022477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38933,7 +38929,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -17, y: 0}
+  m_SizeDelta: {x: -4, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &1808198098395384184
 RectTransform:
@@ -42085,10 +42081,10 @@ RectTransform:
   m_Father: {fileID: 1808198099185604577}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: -20}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1808198098890307388
 MonoBehaviour:
@@ -44366,7 +44362,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -40, y: -40}
-  m_SizeDelta: {x: 20, y: -100}
+  m_SizeDelta: {x: 7, y: -100}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &1808198099185604580
 CanvasRenderer:
@@ -44438,7 +44434,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -46253,7 +46249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
