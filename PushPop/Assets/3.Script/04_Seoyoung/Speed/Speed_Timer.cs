@@ -185,20 +185,21 @@ public class Speed_Timer : MonoBehaviour
 
     public void Result()
     {
+        int clearTitle;
         resultImage.sprite = speed_Canvas.moldIcon;
         resultTimer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+
         if (currentTime.Equals(60))
         {
-            resultTitle.text = "실패";
-            resultLog.text = "아쉬워요";
+            clearTitle = (int)ClearTitle.Fail;
         }
         else
         {
-            resultTitle.text = "성공";
-            resultLog.text = "점점 나아지고 있어요!"; // 기존 점수에 따라 달라짐
+            clearTitle = (int)Ranking.instance.CompareRanking();
         }
-        // 나중에 Dialog Manager만들 예정
-        // resultLog.text = 
+
+        resultTitle.text = $"{Ranking.instance.ResultDialog.title[clearTitle]}";
+        resultLog.text = $"{Ranking.instance.ResultDialog.speedResult[clearTitle]}";
     }
     #endregion
 }

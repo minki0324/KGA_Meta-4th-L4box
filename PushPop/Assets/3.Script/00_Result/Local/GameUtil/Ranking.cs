@@ -1,11 +1,17 @@
-using System.Linq;
-using System.IO;
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System;
+
+public enum ClearTitle
+{
+    Clear = 0,
+    Better,
+    Fail
+}
 
 #region Other Class
 [System.Serializable]
@@ -71,6 +77,10 @@ public class Ranking : MonoBehaviour
     private List<Rank> rankList = new List<Rank>(); // Rank List
     private VersusData versusData = new VersusData();
 
+    // before game clear
+    [SerializeField] private int previousScore = 0;
+    public DialogData ResultDialog;
+
     #region Unity Callback
     private void Awake()
     {
@@ -85,8 +95,8 @@ public class Ranking : MonoBehaviour
         }
 
 
-        rankPath = Application.persistentDataPath + "/Rank";
-        versusPath = Application.persistentDataPath + "/Versus";
+        rankPath = Application.persistentDataPath + "/Rank.json";
+        versusPath = Application.persistentDataPath + "/Versus.json";
 
         LoadRanking();
         LoadVersus();
@@ -125,7 +135,7 @@ public class Ranking : MonoBehaviour
     /// <param name="_spriteName"></param>
     /// <param name="_Timer"></param>
     public void SetTimer(string _name, int _index, int _spriteName, int _Timer)
-    { 
+    {
         var existingRank = rankList.FirstOrDefault(r => r.name == _name && r.index == _index);
 
         if (existingRank != null)
@@ -163,7 +173,7 @@ public class Ranking : MonoBehaviour
     /// <param name="_result"></param>
     public void SetBombVersus(int _index1P, string _name1P, int _index2P, string _name2P, bool _result)
     { // 새로운 게임 결과 생성
-        BombVersus newGameResult = new BombVersus(_name1P, _name2P, _index1P, _index2P,  _result);
+        BombVersus newGameResult = new BombVersus(_name1P, _name2P, _index1P, _index2P, _result);
 
         // 만약 [0]에 이미 게임 결과가 존재한다면, 그 결과를 [1]으로 이동
         // [1]에 이미 결과가 있다면, [0]의 결과로 대체되고, [1]의 결과는 삭제.
@@ -201,7 +211,7 @@ public class Ranking : MonoBehaviour
         for (int i = 0; i < topRanks.Count; i++)
         { // 선택된 상위 3개의 랭크에 대해 text 배열을 업데이트.
             if (i < _Score.Length)
-            { 
+            {
                 _Score[i].text = topRanks[i].score.ToString();
             }
         }
@@ -212,9 +222,9 @@ public class Ranking : MonoBehaviour
             _name[i].text = "";
         }
 
-        for(int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
         { // SQL에 등록되어 있는 Profile
-            for(int j = 0; j < topRanks.Count; j++)
+            for (int j = 0; j < topRanks.Count; j++)
             { // 정렬된 List
                 if (SQL_Manager.instance.Profile_list[i].index == topRanks[j].index)
                 { // Profile Index와 정렬된 List의 Index가 일치한 걸 찾아옴
@@ -240,7 +250,7 @@ public class Ranking : MonoBehaviour
 
         if (userRecord != null)
         { // 사용자 기록이 있을 경우, 정보를 표시.
-            if(userRecord.score != 0)
+            if (userRecord.score != 0)
             {
                 _name.text = userRecord.name;
                 _Score.text = userRecord.score.ToString();
@@ -257,9 +267,9 @@ public class Ranking : MonoBehaviour
             _Score.text = "";
         }
 
-        for(int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
         {
-            if(SQL_Manager.instance.Profile_list[i].index == GameManager.Instance.ProfileIndex)
+            if (SQL_Manager.instance.Profile_list[i].index == GameManager.Instance.ProfileIndex)
             { // Profile Index가 같다면
                 SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, _image, SQL_Manager.instance.Profile_list[i].index);
             }
@@ -280,10 +290,11 @@ public class Ranking : MonoBehaviour
         // 특정 spriteName에 대한 모든 타이머 기록을 찾아서 정렬하고 상위 3개를 선택.
         var topRanks = rankList
             .Where(r => r.spriteName.Contains(_spriteName)) // 먼저 spriteName을 포함하는 Rank만 필터링
-            .Select(r => new {
+            .Select(r => new
+            {
                 Rank = r,
                 Timer = r.timer[r.spriteName.IndexOf(_spriteName)] // 해당 spriteName에 해당하는 타이머만 선택
-    })
+            })
             .Where(x => x.Rank.spriteName.Contains(_spriteName))
             .OrderBy(x => x.Timer)
             .Take(3)
@@ -293,9 +304,9 @@ public class Ranking : MonoBehaviour
         { // 선택된 상위 3개의 랭크에 대해 text 배열을 업데이트.
             if (i < _timer.Length)
             {
-                for(int j = 0; j < topRanks[i].Rank.spriteName.Count; j++)
+                for (int j = 0; j < topRanks[i].Rank.spriteName.Count; j++)
                 {
-                    if(topRanks[i].Rank.spriteName[j] == _spriteName)
+                    if (topRanks[i].Rank.spriteName[j] == _spriteName)
                     {
                         int sec = topRanks[i].Timer % 60;    //60으로 나눈 나머지 = 초
                         int min = topRanks[i].Timer / 60;
@@ -381,13 +392,13 @@ public class Ranking : MonoBehaviour
         }
     }
 
-   /// <summary>
-   /// Multi Lobby에서 최근 2개의 게임 결과를 출력하는 Method
-   /// </summary>
-   /// <param name="_winText"></param>
-   /// <param name="_loseText"></param>
-   /// <param name="_winImage"></param>
-   /// <param name="_loseImage"></param>
+    /// <summary>
+    /// Multi Lobby에서 최근 2개의 게임 결과를 출력하는 Method
+    /// </summary>
+    /// <param name="_winText"></param>
+    /// <param name="_loseText"></param>
+    /// <param name="_winImage"></param>
+    /// <param name="_loseImage"></param>
     public void LoadVersusResult(TMP_Text[] _winText, TMP_Text[] _loseText, Image[] _winImage, Image[] _loseImage)
     {
         // VersusList 최신화
@@ -399,10 +410,10 @@ public class Ranking : MonoBehaviour
         for (int i = 0; i < versusData.games.Length; i++)
         {
             BombVersus currentGame = versusData.games[i];
-            
-            if(currentGame != null)
+
+            if (currentGame != null)
             {
-                if(currentGame.Player1PIndex == 0 && currentGame.Player2PIndex == 0)
+                if (currentGame.Player1PIndex == 0 && currentGame.Player2PIndex == 0)
                 { // 삭제된 기록이 있을 경우
                     _winText[i].text = "";
                     _loseText[i].text = "";
@@ -462,6 +473,57 @@ public class Ranking : MonoBehaviour
             SetPlayerProfileImage(_loseImage, _currentGame.Player1PIndex, true);
             SetPlayerProfileImage(_winImage, _currentGame.Player2PIndex, false);
         }
+    }
+
+    public void SettingPreviousScore()
+    { // old score setting, game start 시 load
+
+        int index = GameManager.Instance.boardName;
+        int scoreIndex = 0;
+        Rank userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex && r.spriteName.Contains(index));
+
+        if (userRecord == null)
+        {
+            previousScore = 0;
+            return;
+        }
+
+        for (int i = 0; i < userRecord.spriteName.Count; i++)
+        {
+            if (index.Equals(userRecord.spriteName[i]))
+            {
+                scoreIndex = i;
+                break;
+            }
+        }
+
+        switch (GameManager.Instance.gameMode)
+        {
+            case Mode.Speed:
+                previousScore = userRecord.timer[scoreIndex];
+                break;
+            case Mode.Memory:
+                previousScore = userRecord.score;
+                break;
+        }
+    }
+
+    public ClearTitle CompareRanking()
+    { // speed, memory mode clear 시
+        // new score
+        ClearTitle clearTitle = ClearTitle.Clear;
+        int currentScore = GameManager.Instance.currentTime;
+
+        if (GameManager.Instance.gameMode.Equals(Mode.Speed))
+        {
+            clearTitle = previousScore > currentScore ? ClearTitle.Better : ClearTitle.Clear;
+        }
+        else if (GameManager.Instance.gameMode.Equals(Mode.Memory))
+        {
+            clearTitle = previousScore > currentScore ? ClearTitle.Better : ClearTitle.Clear;
+        }
+
+        return clearTitle;
     }
     #endregion
 

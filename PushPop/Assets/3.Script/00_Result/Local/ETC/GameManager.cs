@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine;
 using UnityEngine.U2D;
+using UnityEngine.UI;
 
 public enum Mode // GameMode
 {
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour, IGameMode
 {
     public static GameManager Instance = null;
     public Mode gameMode;
-   
+
     [Header("GameScript")]
     [SerializeField] private CustomPushpopManager pushpushScript;
     public Bomb bombScript;
@@ -115,6 +115,11 @@ public class GameManager : MonoBehaviour, IGameMode
     public Sprite noneSprite;
     public bool backButtonClick = false;
     [SerializeField] private Sprite[] btnSprites;
+
+    public int boardName = 0; // mold name
+    public int currentTime = 0;
+    Speed_Timer speedTimer = null;
+
 
     #region Unity Callback
     private void Awake()
@@ -200,12 +205,12 @@ public class GameManager : MonoBehaviour, IGameMode
                 return;
             }
         }
-        else if (buttonActive == 0)
+        else
         {
             switch (gameMode)
             {
                 case Mode.PushPush:
-                    if(PushPop.Instance.pushPopButton.Count == 0)
+                    if (PushPop.Instance.pushPopButton.Count == 0)
                     {
                         //담고
                         int[] spriteIndexs = new int[pushpushScript.puzzleBoard.transform.childCount];
@@ -225,11 +230,11 @@ public class GameManager : MonoBehaviour, IGameMode
 
                         // PushPushList 세팅
                         List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileIndex);
-                        if(pushlist == null)
+                        if (pushlist == null)
                         {
                             Debug.Log("널");
                         }
-                        
+
                         //출력
                         pushpushScript.resultText.text = Mold_Dictionary.instance.icon_Dictionry[puzzleLogic.currentPuzzle.PuzzleID];
 
@@ -239,7 +244,7 @@ public class GameManager : MonoBehaviour, IGameMode
                         // 기존 PushPush에서 사용했던 크기로 먼저 세팅
                         pushpushScript.resultImage.SetNativeSize();
                         pushpushScript.resultImage.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                        for(int i = 0; i < pushlist[0].childIndex; i++)
+                        for (int i = 0; i < pushlist[0].childIndex; i++)
                         { // PushPushObject Class에 저장되어있는 Btn의 index
                             // 저장된 만큼버튼 생성 및 부모설정
                             GameObject pop = Instantiate(PushPop.Instance.pushPopButtonPrefab, pushpushScript.resultImage.transform);
@@ -266,29 +271,37 @@ public class GameManager : MonoBehaviour, IGameMode
                     break;
 
                 case Mode.Speed:
-                    // button active false
-                    for (int i = 0; i < PushPop.Instance.buttonCanvas.childCount; i++)
+                    if (speedTimer == null)
                     {
-                        PushPop.Instance.buttonCanvas.GetChild(i).gameObject.SetActive(false);
+                        speedTimer = FindObjectOfType<Speed_Timer>();
                     }
 
-                    Speed_Timer speed_Timer = FindObjectOfType<Speed_Timer>();
-                    speed_Timer.time_Slider.value += count;
-                    if (speed_Timer.time_Slider.value.Equals(1f) || speed_Timer.currentTime.Equals(60))
+                    if (buttonActive == 0)
+                    {
+                        // button active false
+                        for (int i = 0; i < PushPop.Instance.buttonCanvas.childCount; i++)
+                        {
+                            PushPop.Instance.buttonCanvas.GetChild(i).gameObject.SetActive(false);
+                        }
+
+                        speedTimer.time_Slider.value += count;
+                    }
+                    
+                    if (buttonActive == 0 && speedTimer.time_Slider.value.Equals(1f) || speedTimer.currentTime.Equals(60))
                     {
                         // Game Clear
                         bubblePos.Clear(); // bubble transform mode에 따라 달라짐
                         PushPop.Instance.PushPopClear();
-                        speed_Timer.StopCoroutine(speed_Timer.timer);
+                        currentTime = speedTimer.currentTime;
+                        speedTimer.StopCoroutine(speedTimer.timer);
 
-                        Ranking.instance.SetTimer(ProfileName, ProfileIndex, int.Parse(PushPop.Instance.boardSprite.name), speed_Timer.currentTime);
-                        speed_Timer.resultPanel.SetActive(true);
-                        speed_Timer.Result();
-                        // Ranking.instance.UpdateTimerScore(PushPop.Instance.currentTime);
+                        Ranking.instance.SetTimer(ProfileName, ProfileIndex, int.Parse(PushPop.Instance.boardSprite.name), speedTimer.currentTime);
+                        speedTimer.resultPanel.SetActive(true);
+                        speedTimer.Result();
                     }
-                    else
+                    else if (buttonActive == 0)
                     {
-                        pushpushCreate_Co = StartCoroutine(PushPushCreate_Co());
+                        pushpushCreate_Co = StartCoroutine(SpeedCreate_Co());
                     }
                     break;
                 case Mode.Bomb:
@@ -303,7 +316,7 @@ public class GameManager : MonoBehaviour, IGameMode
         }
     }
 
-    private IEnumerator PushPushCreate_Co()
+    private IEnumerator SpeedCreate_Co()
     {
         BoardSize = new Vector2(700f, 700f);
 
@@ -347,6 +360,7 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public void SpeedMode()
     { // speed mode start
+        Ranking.instance.SettingPreviousScore();
         StartCoroutine(GameReady_Co());
         // position count 한 개, 위치 가운데, scale 조정
         bubbleSize = 300f; // speed mode bubble size setting
@@ -457,7 +471,7 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public void RankClear()
     {
-        for(int i = 0; i < printTimer.Length; i++)
+        for (int i = 0; i < printTimer.Length; i++)
         {
             printTimer[i].text = string.Empty;
             printName[i].text = string.Empty;
