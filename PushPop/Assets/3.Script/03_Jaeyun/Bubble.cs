@@ -56,6 +56,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
     public void OnPointerDown(PointerEventData eventData)
     { // 현재 오브젝트 내부에서 클릭하는 순간 1회 호출
+        AudioManager.instance.SetCommonAudioClip_SFX(5);
         Vector2 bubblePosition = transform.position;
         Vector2 touchPosition = eventData.position;
 
