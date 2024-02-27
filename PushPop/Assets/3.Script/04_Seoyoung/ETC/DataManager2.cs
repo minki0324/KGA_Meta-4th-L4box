@@ -61,7 +61,7 @@ public class DataManager2 : MonoBehaviour
 
     public string categoryDict_fileName = "category.json";
     public string iconDict_fileName = "icon.json";
-    public string helpScript_fileName = "help.json";
+    public string helpScript_fileName = "Help.json";
 
 
     private string path = Application.streamingAssetsPath;
@@ -250,7 +250,7 @@ public class DataManager2 : MonoBehaviour
         Debug.Log("Save_HelpScript 호출됨");
         string oriPath = Path.Combine(Application.streamingAssetsPath, helpScript_fileName);
 
-        //UnityWebRequest reader = new UnityWebRequest();
+        //UnityWebRequest reader = new UnityWebRequest()
 
         WWW reader = new WWW(oriPath);
         while (!reader.isDone)
@@ -260,10 +260,14 @@ public class DataManager2 : MonoBehaviour
         Debug.Log("으아아아ㅏ아아ㅏㅏ아ㅏㅏ아ㅏㅏㅏ");
 
         string realPath = Application.persistentDataPath + "/" + helpScript_fileName;
-        //string jsonData = JsonUtility.ToJson(realPath);
-        string jsonData = JsonMapper.ToJson(realPath);
-        File.WriteAllText(realPath, jsonData);
-        //File.WriteAllBytes(realPath, reader.bytes);
+       
+
+        byte[] data = reader.bytes;
+        string resultData = System.Text.Encoding.UTF8.GetString(data);
+
+        File.WriteAllBytes(realPath, reader.bytes);
+
+        File.WriteAllText(realPath, resultData);
 
         Debug.Log("Save_HelpScript 저장됨");
     }
@@ -280,7 +284,7 @@ public class DataManager2 : MonoBehaviour
             Debug.Log("Read_HelpScript 파일 존재");
             helpScripts_List.Clear();
             string JsonString = File.ReadAllText(Application.persistentDataPath + "/" + helpScript_fileName);
-            JsonData jsonData = JsonMapper.ToObject(JsonString);
+            var jsonData = JsonMapper.ToObject(JsonString);
 
             for (int i = 0; i < jsonData.Count; i++)
             {
