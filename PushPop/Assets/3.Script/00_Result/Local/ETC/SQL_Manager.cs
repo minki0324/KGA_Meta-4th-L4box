@@ -330,7 +330,7 @@ public class SQL_Manager : MonoBehaviour
             pushpush_cmd.ExecuteNonQuery();
 
             // 5. Ranking 삭제
-            Ranking.instance.DeleteRankAndVersus(index);
+            Ranking.Instance.DeleteRankAndVersus(index);
 
             // 6. List 초기화
             for(int i = 0; i < Profile_list.Count; i++)

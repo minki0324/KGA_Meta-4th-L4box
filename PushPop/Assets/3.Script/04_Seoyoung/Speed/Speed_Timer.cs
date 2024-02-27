@@ -30,6 +30,11 @@ public class Speed_Timer : MonoBehaviour
     [SerializeField] private TMP_Text resultLog;
     [SerializeField] private TMP_Text resultTitle;
 
+    [Header("Ready")]
+    public GameObject readyPanel;
+    public TMP_Text readyText;
+
+
     public int currentTime;
     private int sec;
     private int min;
@@ -37,16 +42,19 @@ public class Speed_Timer : MonoBehaviour
     public bool bNoTimePlaying = false;
 
     #region Unity Callback
-
     private void OnEnable()
     {
-        //시간 초기화
         Init();
     }
     #endregion
 
 
     #region Other Method
+    public void TimerStart()
+    {
+        timer = StartCoroutine(Timer_co());
+    }
+
     public void Init()
     {
         currentTime = 0; // 0부터 제한시간까지 +
@@ -65,7 +73,6 @@ public class Speed_Timer : MonoBehaviour
 
         //타이머 코루틴 시작
         time_Text.color = new Color(0, 0, 0, 1); // black으로 초기화
-        timer = StartCoroutine(Timer_co());
 
         if (Warning_Panel.activeSelf)
         {
@@ -94,7 +101,6 @@ public class Speed_Timer : MonoBehaviour
     private IEnumerator Timer_co()
     {
         // game ready
-        StartCoroutine(GameManager.Instance.GameReady_Co());
         int cashing = 1;
 
         while (true)
@@ -224,12 +230,12 @@ public class Speed_Timer : MonoBehaviour
         }
         else
         {
-            clearTitle = (int)Ranking.instance.CompareRanking();
+            clearTitle = (int)Ranking.Instance.CompareRanking();
             AudioManager.instance.SetCommonAudioClip_SFX(7);
         }
 
-        resultTitle.text = $"{Ranking.instance.ResultDialog.title[clearTitle]}";
-        resultLog.text = $"{Ranking.instance.ResultDialog.speedResult[clearTitle]}";
+        resultTitle.text = $"{Ranking.Instance.ResultDialog.title[clearTitle]}";
+        resultLog.text = $"{Ranking.Instance.ResultDialog.speedResult[clearTitle]}";
     }
     #endregion
 }

@@ -312,7 +312,7 @@ public class Speed_Canvas : MonoBehaviour
         help_Canvas.gameObject.SetActive(false);
 
         PushPop.Instance.boardSprite = moldIcon; // pushpop
-        GameManager.Instance.SpeedMode(); // Speed Mode start
+        GameManager.Instance.GameStart();
     }
 
 

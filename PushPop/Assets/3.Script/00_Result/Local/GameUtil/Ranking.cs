@@ -70,7 +70,7 @@ public class BombVersus
 /// </summary>
 public class Ranking : MonoBehaviour
 {
-    public static Ranking instance = null;
+    public static Ranking Instance = null;
 
     private string rankPath = string.Empty; // Rank Json Path
     private string versusPath = string.Empty; // Bomb Versus Json Path
@@ -84,9 +84,9 @@ public class Ranking : MonoBehaviour
     #region Unity Callback
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {
@@ -482,19 +482,28 @@ public class Ranking : MonoBehaviour
         int scoreIndex = 0;
         Rank userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex && r.spriteName.Contains(index));
 
+        switch (GameManager.Instance.gameMode)
+        {
+            case Mode.Speed:
+                userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex && r.spriteName.Contains(index));
+                for (int i = 0; i < userRecord.spriteName.Count; i++)
+                {
+                    if (index.Equals(userRecord.spriteName[i]))
+                    {
+                        scoreIndex = i;
+                        break;
+                    }
+                }
+                break;
+            case Mode.Memory:
+                userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex);
+                break;
+        }
+
         if (userRecord == null)
         {
             previousScore = 0;
             return;
-        }
-
-        for (int i = 0; i < userRecord.spriteName.Count; i++)
-        {
-            if (index.Equals(userRecord.spriteName[i]))
-            {
-                scoreIndex = i;
-                break;
-            }
         }
 
         switch (GameManager.Instance.gameMode)
@@ -512,15 +521,17 @@ public class Ranking : MonoBehaviour
     { // speed, memory mode clear ½Ã
         // new score
         ClearTitle clearTitle = ClearTitle.Clear;
-        int currentScore = GameManager.Instance.currentTime;
+        int currentScore = 0;
 
         if (GameManager.Instance.gameMode.Equals(Mode.Speed))
         {
+            currentScore = GameManager.Instance.currentTime;
             clearTitle = previousScore > currentScore ? ClearTitle.Better : ClearTitle.Clear;
         }
         else if (GameManager.Instance.gameMode.Equals(Mode.Memory))
         {
-            clearTitle = previousScore > currentScore ? ClearTitle.Better : ClearTitle.Clear;
+            currentScore = MemoryManager.Instance.Score;
+            clearTitle = previousScore < currentScore ? ClearTitle.Better : ClearTitle.Clear;
         }
 
         return clearTitle;

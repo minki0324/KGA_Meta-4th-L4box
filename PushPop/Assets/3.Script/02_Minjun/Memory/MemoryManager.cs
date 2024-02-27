@@ -15,6 +15,9 @@ public class MemoryManager : MonoBehaviour
     [SerializeField] public TMP_Text ScoreText; //점수텍스트
     [SerializeField] public TMP_Text StageText; //화면상 표시하는 스테이지
     [SerializeField] private TMP_Text ReadyPanel_Text;
+    [SerializeField] private TMP_Text resultMassage;
+    [SerializeField] private TMP_Text resultScore;
+
     [Header("게임플레이OB")]
     [SerializeField] private GameObject[] Heart; //목숨나타내는 하트오브젝트 배열
     [Header("버튼")]
@@ -24,6 +27,10 @@ public class MemoryManager : MonoBehaviour
     [Header("로비OB")]
     [SerializeField] private GameObject Lobby; //푸시푸시 스피드 메모리 선택창
     [SerializeField] private Animator StartAni; //게임시작 ,훌륭해요 재생해주는 판넬 Ani
+    [Header("프로필관련")]
+    [SerializeField] private TMP_Text profileName;
+    [SerializeField] private Image profileImage;
+
     public MemoryBoard currentBoard; //현재 소환되있는 푸시팝보드판
     public MemoryStageData[] stages; //스테이지 ScriptableObject 배열 현재스테이지에따라 설정이다름 / 보드판,정답갯수, 스페셜스테이지여부
     public int currentStage = 1; //현재스테이지
@@ -31,6 +38,9 @@ public class MemoryManager : MonoBehaviour
     public int Score = 0; //현재스코어
     public Transform SapwnPos; //푸시팝보드판 소환위치
     public int endStageIndex = 0;
+
+    private int clearMessage;
+
     private void Awake()
     {
         Instance = this;
@@ -122,7 +132,7 @@ public class MemoryManager : MonoBehaviour
         Life = 3;
         ResetLife();
         //점수 기록하기
-        Ranking.instance.SetScore(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, Score);
+        Ranking.Instance.SetScore(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, Score);
         //스코어초기화
         ResetScore();
 
@@ -179,6 +189,7 @@ public class MemoryManager : MonoBehaviour
     }
     private IEnumerator ReadyGame_Co()
     {
+        Ranking.Instance.SettingPreviousScore();
         ReadyPanel.SetActive(true);
         ReadyPanel_Text.text = "준비~";
         yield return new WaitForSeconds(2f);
@@ -188,5 +199,14 @@ public class MemoryManager : MonoBehaviour
         ReadyPanel.SetActive(false);
         CreatBoard();
         // upperBubble 코루틴 실행
+    }
+
+    public void OnGameEnd()
+    {
+        SQL_Manager.instance.PrintProfileImage(GameManager.Instance.IsImageMode, profileImage, GameManager.Instance.ProfileIndex);
+        profileName.text = GameManager.Instance.ProfileName;
+        resultScore.text = $"{Score}";
+        clearMessage = (int)Ranking.Instance.CompareRanking();
+        resultMassage.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
     }
 }

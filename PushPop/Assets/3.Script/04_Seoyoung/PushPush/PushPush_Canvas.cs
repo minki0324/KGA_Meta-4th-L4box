@@ -18,6 +18,7 @@ public class PushPush_Canvas : MonoBehaviour
     [SerializeField] private GameObject pushpushGame_Panel;
     [SerializeField] private GameObject Warning_Panel;
     [SerializeField] private GameObject bubblePanel;
+    [SerializeField] private GameObject readyPanel;
 
 
     [Header("ScrollView")]
@@ -40,6 +41,7 @@ public class PushPush_Canvas : MonoBehaviour
     [SerializeField] private Image selectedMoldIcon_Image;      //선택된 몰드 아이콘 이미지
     [SerializeField] private TMP_Text selectedMoldIcon_Text;    //선택된 몰드 텍스트
     [SerializeField] private TMP_Text Page_Text;                //페이지 텍스트
+    [SerializeField] private TMP_Text ready_Text;                //페이지 텍스트
 
 
     [Header("Category Icon(Btn) List")]
@@ -342,7 +344,7 @@ public class PushPush_Canvas : MonoBehaviour
         //PushPush 게임 진입
         int puzzleIDIndex = int.Parse(moldIcon_List[currentPage - 1].name);
         puzzleLozic.SelectPuzzleButton(puzzleIDIndex);
-        GameManager.Instance.PushPushMode();
+        GameManager.Instance.StartCoroutine( GameManager.Instance.GameReady_Co(readyPanel, ready_Text));
     }
 
     //몰드 선택 패널에서 x버튼을 누르면 호출되는 메소드

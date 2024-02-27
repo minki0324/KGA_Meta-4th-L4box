@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class MemoryPushpop : MonoBehaviour
 {
@@ -11,7 +12,9 @@ public class MemoryPushpop : MonoBehaviour
     private Button button;
     private MemoryBoard memoryBoard;
     private Animator ani;
-    
+    private int clearMessage;
+    [SerializeField] private TMP_Text resultText = null;
+
     private void Awake()
     {
         TryGetComponent(out button);
@@ -82,7 +85,6 @@ public class MemoryPushpop : MonoBehaviour
         MemoryManager.Instance.AddScore(); //점수 증가
         if (memoryBoard.isStageClear())
         {
-          
             onStageClear();
         }
     }
@@ -97,6 +99,8 @@ public class MemoryPushpop : MonoBehaviour
         //라이프 모두소진시 실패
         if (MemoryManager.Instance.Life == 0)
         {//결과창호출
+            //모든라이프가 소진해서 패배
+            MemoryManager.Instance.OnGameEnd();
             AudioManager.instance.SetAudioClip_SFX(5, false);
             MemoryManager.Instance.ResultPanel.SetActive(true);
         }
@@ -127,8 +131,9 @@ public class MemoryPushpop : MonoBehaviour
         //준비된 스테이지 < 현재스테이지
          if(MemoryManager.Instance.endStageIndex < MemoryManager.Instance.currentStage)
         {
-            Debug.Log("스테이지를 모두 클리어 하셨습니다. 축하합니다!");
             //결과창호출
+            //모든스테이지 클리어 했을때
+            MemoryManager.Instance.OnGameEnd();
             AudioManager.instance.SetAudioClip_SFX(5, false);
             MemoryManager.Instance.ResultPanel.SetActive(true);
             yield break;

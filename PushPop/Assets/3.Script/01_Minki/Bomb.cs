@@ -704,7 +704,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         if(turn == Turn.Turn1P) result = false;
         else if (turn == Turn.Turn2P) result = true;
 
-        Ranking.instance.SetBombVersus(GameManager.Instance.ProfileIndex, GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex2P, GameManager.Instance.ProfileName2P, result);
+        Ranking.Instance.SetBombVersus(GameManager.Instance.ProfileIndex, GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex2P, GameManager.Instance.ProfileName2P, result);
        
         // 종료 애니메이션 켜주고 애니메이션 나올 위치 설정
         endAnimation.transform.gameObject.SetActive(true);
@@ -725,7 +725,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // 결과창 출력
         AudioManager.instance.SetCommonAudioClip_SFX(7);
         result.SetActive(true);
-        Ranking.instance.LoadVersusResult_Personal(winText, loseText, winProfileImage, loseProfileImage);
+        Ranking.Instance.LoadVersusResult_Personal(winText, loseText, winProfileImage, loseProfileImage);
         
         yield return new WaitForSeconds(0.1f);
         
@@ -770,7 +770,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     public void PrintVersus()
     {
-        Ranking.instance.LoadVersusResult(winTexts, loseTexts, winProfileImages, loseProfileImages);
+        Ranking.Instance.LoadVersusResult(winTexts, loseTexts, winProfileImages, loseProfileImages);
     }
     #endregion
     public void QuitBtn(int _player)
