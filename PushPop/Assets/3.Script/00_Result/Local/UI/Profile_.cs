@@ -57,7 +57,6 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     public bool _isImageSelect = false;
     public bool _isUpdate = false;
     public bool _isProfileSelected = false;   //로그인 후 최초로 프로필을 고른지 판단
-    public bool _isProfileChange = false;   //프로필이 수정모드인가 / 생성인가 판단
     public bool _isDeleteBtnClikced = false;
     
     #region Unity Callback
@@ -374,7 +373,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     public void CreateBtn_SelectProfilePanel_Clicked()
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
-        _isProfileChange = false;
+        _isUpdate = false;
         CreateNamePanel.SetActive(true);
     }
 
@@ -387,7 +386,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         PrintProfileList();
        // CurrnetProfilePanel.SetActive(true);
 
-        if(_isProfileChange)
+        if(_isUpdate)
         {
             //수정모드이면 뒤로가기 눌렀을 때 눌린 프로필 띄우기
             CurrnetProfilePanel.SetActive(true);
@@ -440,7 +439,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
 
-        _isProfileChange = true;
+        _isUpdate = true;
 
         CurrnetProfilePanel.SetActive(false);
         CreateNamePanel.SetActive(true);
