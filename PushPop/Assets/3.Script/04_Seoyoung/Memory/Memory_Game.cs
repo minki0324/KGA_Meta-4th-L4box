@@ -14,7 +14,7 @@ public class Memory_Game : MonoBehaviour
     [SerializeField] GameObject gameSet_Panel;
     [SerializeField] GameObject Warning_Panel;
     [SerializeField] private Button back_Btn;
-
+    //
   
 
     #region Unity Callback
@@ -43,7 +43,6 @@ public class Memory_Game : MonoBehaviour
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         Warning_Panel.SetActive(true);
         back_Btn.interactable = false;
-        Time.timeScale = 0f;
     }
 
 
@@ -69,7 +68,6 @@ public class Memory_Game : MonoBehaviour
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         back_Btn.interactable = true;
         Warning_Panel.SetActive(false);
-        Time.timeScale = 1f;
 
     }
 

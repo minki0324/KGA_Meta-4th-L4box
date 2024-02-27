@@ -23,10 +23,12 @@ public class MemoryBoard : MonoBehaviour
         MemoryManager.Instance.currentBoard = this;
     }
     private void OnEnable()
-    {
-        stage = MemoryManager.Instance.GetStage();
-        RandCorrectDraw(stage.CorrectCount);
-        Blink(!isReplay); //true : 힌트를 주기위해 재실행 ( 게임시작문구 스킵 바로 깜빡) false : 최초 스테이지 시작시 
+    {//스테이지마다 새로운 보드를 생성해줌
+
+
+        stage = MemoryManager.Instance.GetStage(); //현재스테이지 가져오기
+        RandCorrectDraw(stage.CorrectCount); // 스테이지의 정답갯수만큼 정답버튼 랜덤으로 고르기
+        Blink(!isReplay); //고른 정답버튼을 깜빡여주기 true : 힌트버튼 false : 처음시작할때 
        
 
 
@@ -74,6 +76,8 @@ public class MemoryBoard : MonoBehaviour
     }
     public void BtnAllStop()
     {//버튼활성화 끄는 메소드
+        MemoryManager.Instance.Hintbutton.enabled = false;
+        MemoryManager.Instance.Backbutton.enabled = false;
         for (int i = 0; i < allButton.Count; i++)
         {
             allButton[i].GetComponent<Image>().raycastTarget = false;
@@ -81,6 +85,8 @@ public class MemoryBoard : MonoBehaviour
     }
     public void BtnAllPlay()
     {//버튼활성화 키는 메소드
+        MemoryManager.Instance.Hintbutton.enabled = true;
+        MemoryManager.Instance.Backbutton.enabled = true;
         for (int i = 0; i < allButton.Count; i++)
         {
             allButton[i].GetComponent<Image>().raycastTarget = true;
@@ -101,7 +107,20 @@ public class MemoryBoard : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
             //게임시작 텍스트 띄우기
-            MemoryManager.Instance.PlayStartPanel("게임 시작!");
+            int randindex = Random.Range(1, 4);
+            switch (randindex) {
+                case 1:
+                    MemoryManager.Instance.PlayStartPanel("집중해보세요!");
+                    break;
+                case 2:
+                    MemoryManager.Instance.PlayStartPanel($"정답을 찾아라!");
+                    break;
+                case 3:
+                    MemoryManager.Instance.PlayStartPanel("준비 됬나요?");
+                    break;
+            }
+
+          
 
             yield return new WaitForSeconds(2f);
         }
@@ -117,7 +136,17 @@ public class MemoryBoard : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
             //게임시작 텍스트 띄우기
-            MemoryManager.Instance.PlayStartPanel("게임 시작!");
+            int randindex = Random.Range(1, 3);
+            switch (randindex)
+            {
+                case 1:
+                    MemoryManager.Instance.PlayStartPanel("스페셜 스테이지!");
+                    break;
+                case 2:
+                    MemoryManager.Instance.PlayStartPanel($"순서대로 눌러라!");
+                    break;
+
+            }
             yield return new WaitForSeconds(2f);
         }
         StartCoroutine(CorrectBtnPlayBlink_InOrder());

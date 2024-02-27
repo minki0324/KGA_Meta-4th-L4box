@@ -17,7 +17,7 @@ public class Memory_Canvas : MonoBehaviour
 
     //    public int score;
     //}
-
+   
 
     [Header("패널")]
     [SerializeField] private Canvas main_Canvas;
@@ -54,7 +54,6 @@ public class Memory_Canvas : MonoBehaviour
         {
             gameSet_Panel.SetActive(true);
         }
-
         if (memoryGame_Canvas.gameObject.activeSelf)
         {
             memoryGame_Canvas.gameObject.SetActive(false);

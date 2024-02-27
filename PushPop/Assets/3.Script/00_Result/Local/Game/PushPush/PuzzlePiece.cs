@@ -11,7 +11,7 @@ public class PuzzlePiece : MonoBehaviour
     private Sprite puzzleSprite;
     private float centerPos;
     public Coroutine puzzleMove;
-
+    
     private void OnDisable()
     {
         if (puzzleMove != null)
