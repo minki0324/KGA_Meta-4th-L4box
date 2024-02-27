@@ -42706,18 +42706,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1271441079}
-        m_TargetAssemblyTypeName: PuzzleLozic, Assembly-CSharp
-        m_MethodName: ClearPieceList
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 2145023260}
         m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
         m_MethodName: BtnAllClear
@@ -42733,6 +42721,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1077097834}
         m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
         m_MethodName: GoOutBtn_Clicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1271441079}
+        m_TargetAssemblyTypeName: PuzzleLozic, Assembly-CSharp
+        m_MethodName: ClearPieceList
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

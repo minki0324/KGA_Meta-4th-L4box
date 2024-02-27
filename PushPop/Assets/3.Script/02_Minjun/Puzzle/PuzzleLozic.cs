@@ -27,7 +27,7 @@ public class PuzzleLozic : MonoBehaviour
     public int successCount= 0; //맞춘 갯수
     public Puzzle currentPuzzle; //Player가 고른 퍼즐 종류
     [SerializeField] CustomPushpopManager costom;
-    public Action onPuzzleClear;
+    public Action onPuzzleClear; //퍼즐을 모두 맞췄을때 부르는 콜백이벤트
     public List<PuzzlePiece> pieceList = new List<PuzzlePiece>();
     public SpriteAtlas atlas;
     [SerializeField] private GameObject DecorationPanel;
@@ -99,7 +99,6 @@ public class PuzzleLozic : MonoBehaviour
 
     public  void SettingPuzzle()
     {//정해진 퍼즐 프레임,퍼즐 생성
-      
         for (int i = 0; i < currentPuzzle.sprites.Length; i++)
         {
             //퍼즐위치 랜덤한 위치에 생성
