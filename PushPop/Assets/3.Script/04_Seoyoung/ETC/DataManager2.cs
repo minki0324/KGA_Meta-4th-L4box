@@ -86,13 +86,11 @@ public class DataManager2 : MonoBehaviour
         path = Application.streamingAssetsPath;
         Read_HelpScript();
 
-        Save_Category();
-        Save_Icon();
 
 
 
-        //Read_Category();
-        //Read_Icon();
+        Read_Category();
+        Read_Icon();
     }
 
     #endregion
@@ -116,14 +114,26 @@ public class DataManager2 : MonoBehaviour
         //2. List를 Dictinory로 변환
         //categoryDict.Clear();
 
-        string JsonString = File.ReadAllText(path + "/" + categoryDict_fileName);
+        string oriPath = Path.Combine(path, categoryDict_fileName);
+
+        WWW reader = new WWW(oriPath);
+        while (!reader.isDone)
+        {
+
+        }
+
+        string realPath = Application.persistentDataPath + "/category.json";
+        File.WriteAllBytes(realPath, reader.bytes);
+
+        string JsonString = File.ReadAllText(realPath);
+
 
         JsonData jsonData = JsonMapper.ToObject(JsonString);
 
         for (int i = 0; i < jsonData.Count; i++)
         {
             categoryDict.Add(int.Parse(jsonData[i]["number"].ToString()), jsonData[i]["name"].ToString()); ;
-            
+
         }
 
 
@@ -179,6 +189,18 @@ public class DataManager2 : MonoBehaviour
     {
         //iconDict.Clear();
 
+        string oriPath = Path.Combine(path, iconDict_fileName);
+
+        WWW reader = new WWW(oriPath);
+        while (!reader.isDone)
+        {
+
+        }
+
+        string realPath = Application.persistentDataPath + "/" + iconDict_fileName;
+        File.WriteAllBytes(realPath, reader.bytes);
+
+
         string JsonString = File.ReadAllText(path + "/" + iconDict_fileName);
 
         JsonData jsonData = JsonMapper.ToObject(JsonString);
@@ -232,7 +254,19 @@ public class DataManager2 : MonoBehaviour
         //도움말 스크립트 읽어오는 함수
 
         helpScripts_List.Clear();
-        
+
+
+        string oriPath = Path.Combine(path, helpScript_fileName);
+
+        WWW reader = new WWW(oriPath);
+        while (!reader.isDone)
+        {
+
+        }
+
+        string realPath = Application.persistentDataPath + "/" + helpScript_fileName;
+        File.WriteAllBytes(realPath, reader.bytes);
+
         string JsonString = File.ReadAllText(path + "/" + helpScript_fileName);
         JsonData jsonData = JsonMapper.ToObject(JsonString);
 

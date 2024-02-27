@@ -143,7 +143,7 @@ public class Speed_Canvas : MonoBehaviour
                         a.transform.GetChild(0).GetComponent<Image>().sprite = easyIcon_List[i];
 
                         //텍스트 변경 : 스프라이트 이름을 키값으로 value가져오기
-                        a.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = Mold_Dictionary.instance.icon_Dictionry[int.Parse(easyIcon_List[i].name)];
+                        a.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = DataManager2.instance.iconDict[int.Parse(easyIcon_List[i].name)];
                     }
 
                     break;
@@ -164,7 +164,7 @@ public class Speed_Canvas : MonoBehaviour
                         a.transform.GetChild(0).GetComponent<Image>().sprite = normalIcon_List[i];
 
                         //텍스트 변경
-                        a.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = Mold_Dictionary.instance.icon_Dictionry[int.Parse(normalIcon_List[i].name)];
+                        a.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = DataManager2.instance.iconDict[int.Parse(normalIcon_List[i].name)];
                     }
                     break;
 
@@ -184,7 +184,7 @@ public class Speed_Canvas : MonoBehaviour
                         a.transform.GetChild(0).GetComponent<Image>().sprite = hardIcon_List[i];
 
                         //텍스트 변경
-                        a.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = Mold_Dictionary.instance.icon_Dictionry[int.Parse(hardIcon_List[i].name)];
+                        a.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = DataManager2.instance.iconDict[int.Parse(hardIcon_List[i].name)];
                     }
                     break;
             }

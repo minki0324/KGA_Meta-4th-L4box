@@ -93,25 +93,27 @@ public class PushPush_Canvas : MonoBehaviour
         //pushpushGame_Panel.SetActive(false);
         GameBack_Btn.gameObject.SetActive(false);
 
-        if(Warning_Panel.activeSelf)
+
+
+        if (Warning_Panel.activeSelf)
         {
             Warning_Panel.SetActive(false);
         }
 
 
-        help_Canvas.transform.SetParent(gameObject.transform);
-        help_Canvas.transform.SetSiblingIndex(3);
 
         currentPage = 1;
         maxPage = moldIcon_List.Count;
         Page_Text.text = $"{currentPage}/{maxPage}";
 
-
         selectCategory_ScrollView.normalizedPosition = new Vector2(1f, 1f);
 
-
-
         AudioManager.instance.SetAudioClip_BGM(1);
+
+
+        help_Canvas.transform.SetParent(gameObject.transform);
+        help_Canvas.transform.SetSiblingIndex(3);
+        //help_Canvas.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0.5f);
     }
 
 
@@ -148,7 +150,7 @@ public class PushPush_Canvas : MonoBehaviour
 
             //텍스트 리스트 초기화
             categoryText_List.Add(categoryBtn_List[i].transform.GetChild(0).GetComponent<TMP_Text>());
-            categoryText_List[i].text = Mold_Dictionary.instance.category_Dictionary[int.Parse(categoryIcon_List[i].name)];
+            categoryText_List[i].text = DataManager2.instance.categoryDict[int.Parse(categoryIcon_List[i].name)];
 
             //버튼 이벤트 초기화     
             int temp = i;
@@ -249,10 +251,10 @@ public class PushPush_Canvas : MonoBehaviour
             currentPage = 1;
 
             maxPage = moldIcon_List.Count;
-            selectedCategory_Text.text = Mold_Dictionary.instance.category_Dictionary[key];
+            selectedCategory_Text.text = DataManager2.instance.categoryDict[key];
             //blurPanel.SetActive(true);
             selectedMoldIcon_Image.sprite = moldIcon_List[currentPage - 1];
-            selectedMoldIcon_Text.text = Mold_Dictionary.instance.icon_Dictionry[int.Parse(moldIcon_List[currentPage - 1].name)];
+            selectedMoldIcon_Text.text = DataManager2.instance.iconDict[int.Parse(moldIcon_List[currentPage - 1].name)];
             Page_Text.text = $"{currentPage}/{maxPage}";
 
 
@@ -276,7 +278,7 @@ public class PushPush_Canvas : MonoBehaviour
             currentPage += 1;
 
             selectedMoldIcon_Image.sprite = moldIcon_List[currentPage - 1];
-            selectedMoldIcon_Text.text = Mold_Dictionary.instance.icon_Dictionry[int.Parse(moldIcon_List[currentPage - 1].name)];
+            selectedMoldIcon_Text.text = DataManager2.instance.iconDict[int.Parse(moldIcon_List[currentPage - 1].name)];
             Page_Text.text = $"{currentPage}/{maxPage}";
         }
 
@@ -301,7 +303,7 @@ public class PushPush_Canvas : MonoBehaviour
             currentPage -= 1;
 
             selectedMoldIcon_Image.sprite = moldIcon_List[currentPage - 1];
-            selectedMoldIcon_Text.text = Mold_Dictionary.instance.icon_Dictionry[int.Parse(moldIcon_List[currentPage - 1].name)];
+            selectedMoldIcon_Text.text = DataManager2.instance.iconDict[int.Parse(moldIcon_List[currentPage - 1].name)];
             Page_Text.text = $"{currentPage}/{maxPage}";
         }
 
