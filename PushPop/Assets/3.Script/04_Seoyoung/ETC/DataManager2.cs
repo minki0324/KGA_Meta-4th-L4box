@@ -86,10 +86,6 @@ public class DataManager2 : MonoBehaviour
         Read_HelpScript();
 
 
-
-
-        Read_Category();
-        Read_Icon();
     }
 
     #endregion
@@ -259,8 +255,14 @@ public class DataManager2 : MonoBehaviour
 
         }
 
+        byte[] result = reader.bytes;
+        System.Text.Encoding euc = System.Text.Encoding.GetEncoding("euc-kr");
+        System.Text.Encoding defaultEncodeing = System.Text.Encoding.Default;
+
+        string connvertedBytes = System.Text.Encoding.Convert(euc, System.Text.Encoding.UTF8, result).ToString();
+
         string realPath = Application.persistentDataPath + "/" + helpScript_fileName;
-        File.WriteAllBytes(realPath, reader.bytes);
+        File.WriteAllBytes(realPath, result);
 
         string JsonString = File.ReadAllText(path + "/" + helpScript_fileName);
         JsonData jsonData = JsonMapper.ToObject(JsonString);
