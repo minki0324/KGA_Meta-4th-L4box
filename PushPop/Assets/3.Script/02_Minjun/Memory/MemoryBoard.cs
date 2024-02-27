@@ -116,7 +116,7 @@ public class MemoryBoard : MonoBehaviour
                     MemoryManager.Instance.PlayStartPanel($"정답을 찾아라!");
                     break;
                 case 3:
-                    MemoryManager.Instance.PlayStartPanel("준비 됬나요?");
+                    MemoryManager.Instance.PlayStartPanel("준비 됐나요?");
                     break;
             }
 

@@ -214,14 +214,18 @@ public class Speed_Timer : MonoBehaviour
         int clearTitle;
         resultImage.sprite = speed_Canvas.moldIcon;
         resultTimer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+        bNoTimePlaying = false;
+        AudioManager.instance.Stop_SFX();
 
         if (currentTime.Equals(60))
         {
             clearTitle = (int)ClearTitle.Fail;
+            AudioManager.instance.SetCommonAudioClip_SFX(8);
         }
         else
         {
             clearTitle = (int)Ranking.instance.CompareRanking();
+            AudioManager.instance.SetCommonAudioClip_SFX(7);
         }
 
         resultTitle.text = $"{Ranking.instance.ResultDialog.title[clearTitle]}";
