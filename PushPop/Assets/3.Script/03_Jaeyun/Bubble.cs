@@ -86,6 +86,10 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         // size setting
         float bigger = _puzzleSize.x > _puzzleSize.y ? _puzzleSize.x : _puzzleSize.y;
 
+        if (gameMode.Equals(Mode.PushPush))
+        {
+            bigger *= 1.3f;
+        }
         bubbleRectTrans.sizeDelta = new Vector2(bigger, bigger);
         bubbleSize = bubbleRectTrans.sizeDelta;
     }
@@ -193,7 +197,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
                 _dir = Vector2.Reflect(_dir, Vector2.up).normalized;
                 transform.parent.position = new Vector2(transform.position.x, (bubbleSize.y * bubbleScale / 2f) + 10f);
             }
-            else if (transform.position.y > Screen.height - (bubbleSize.y * bubbleScale / 2f))
+            else if (transform.position.y         > Screen.height - (bubbleSize.y * bubbleScale / 2f))
             { // boundary up
                 _dir = Vector2.Reflect(_dir, Vector2.down).normalized;
                 transform.parent.position = new Vector2(transform.position.x, Screen.height - ((bubbleSize.y * bubbleScale / 2f) + 10f));
@@ -212,6 +216,9 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
     private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed, Mode _gameMode)
     { // pushpush mode bubble moving
+        RectTransform puzzleTrans = transform.parent.GetComponent<RectTransform>();
+        Transform parentTrans = transform.parent;
+
         currentSpeed = _maxSpeed; // maxSpeed 초기화
         float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y 같음
 
