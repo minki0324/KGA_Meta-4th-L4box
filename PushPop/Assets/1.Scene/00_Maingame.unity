@@ -53687,21 +53687,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e33e94498b950a448f1444383835a02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartPanel: {fileID: 3565502320511968237}
-  StageIndex: {fileID: 3565502321627129254}
-  ScoreText: {fileID: 783815728742500188}
-  Lobby: {fileID: 2084374408}
   ResultPanel: {fileID: 8041474949982438039}
   WarngingPanel: {fileID: 731321255}
+  ReadyPanel: {fileID: 0}
+  ScoreText: {fileID: 783815728742500188}
+  StageText: {fileID: 0}
+  ReadyPanel_Text: {fileID: 0}
   Heart:
   - {fileID: 1830779366338199601}
   - {fileID: 8248641538498966595}
   - {fileID: 3136015947957823006}
   Hintbutton: {fileID: 862368413}
+  Backbutton: {fileID: 0}
+  Lobby: {fileID: 2084374408}
+  StartAni: {fileID: 0}
   currentBoard: {fileID: 0}
-  currentStage: 1
-  Life: 3
-  Score: 0
   stages:
   - {fileID: 11400000, guid: 93b78b3ee6f6f95468aca84ab36d2b04, type: 2}
   - {fileID: 11400000, guid: e43b3ea322e5dbe488e86a3c9e3d8526, type: 2}
@@ -53725,6 +53725,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 74038f743912f3049af7b830faec36af, type: 2}
   - {fileID: 11400000, guid: b7f478d675bd3534ea4a17a13d07a98a, type: 2}
   - {fileID: 11400000, guid: e3500a54fc82b85428cfb21a5457ae4c, type: 2}
+  currentStage: 1
+  Life: 3
+  Score: 0
   SapwnPos: {fileID: 3565502319576665987}
   endStageIndex: 0
 --- !u!114 &3565502321581829616

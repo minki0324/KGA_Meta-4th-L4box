@@ -15,7 +15,7 @@ public class BlurPanel : MonoBehaviour
     }
     public void BlurParent(Transform parent)
     {
-        transform.parent.SetParent(parent);
+        transform.SetParent(parent.parent);
         gameObject.SetActive(true);
         transform.SetAsFirstSibling();
     }
