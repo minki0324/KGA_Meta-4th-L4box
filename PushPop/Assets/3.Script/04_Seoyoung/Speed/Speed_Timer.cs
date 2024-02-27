@@ -34,6 +34,7 @@ public class Speed_Timer : MonoBehaviour
     private int sec;
     private int min;
     public Coroutine timer = null;
+    public bool bNoTimePlaying = false;
 
     #region Unity Callback
 
@@ -50,6 +51,7 @@ public class Speed_Timer : MonoBehaviour
     {
         currentTime = 0; // 0부터 제한시간까지 +
                          // currentTime = 10 +1;
+        bNoTimePlaying = false;
         SetText();
 
         //슬라이더 초기화
@@ -104,6 +106,11 @@ public class Speed_Timer : MonoBehaviour
             if (currentTime.Equals(50))
             {
                 time_Text.color = TimerCountColorChange("#FF0000");
+                if(!bNoTimePlaying)
+                {
+                    bNoTimePlaying = true;
+                    AudioManager.instance.SetAudioClip_SFX(1, true);
+                }
             }
             if (currentTime.Equals(60))
             {
@@ -136,6 +143,11 @@ public class Speed_Timer : MonoBehaviour
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
 
+        if(bNoTimePlaying)
+        {
+            AudioManager.instance.Pause_SFX(true);
+        }
+
         Time.timeScale = 0;
         Warning_Panel.SetActive(true);
     }
@@ -146,6 +158,7 @@ public class Speed_Timer : MonoBehaviour
         AudioManager.instance.SetAudioClip_BGM(1);
 
         Time.timeScale = 1;
+        AudioManager.instance.Stop_SFX();
 
         // Back Method
         if (PushPop.Instance.pushPopBoardObject.Count > 0)
@@ -180,6 +193,12 @@ public class Speed_Timer : MonoBehaviour
     public void CancelBtn_Clicked()
     {
         Time.timeScale = 1;
+
+        if(bNoTimePlaying)
+        {
+            AudioManager.instance.Pause_SFX(false);
+        }
+
         Warning_Panel.SetActive(false);
     }
 

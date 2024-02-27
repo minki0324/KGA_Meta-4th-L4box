@@ -115,7 +115,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private Coroutine waterfall_co; // 물 차오르는 코루틴
     private Coroutine readyGame_co; // 처음 시작 코루틴
 
-    private bool b10minleft = false;    //10초 남앗나 체크하는 변수
+    public bool bNoTimePlaying = false;//10초 남앗나 체크하는 변수
+   
 
     #region Unity Callback
     private void Awake()
@@ -133,7 +134,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     private void OnEnable()
-    {
+    {       
         AudioManager.instance.SetAudioClip_BGM(1);
         PlayerSet1P();
         profile2PInput.onValidateInput += ValidateInput;
@@ -165,9 +166,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         //10초미만 오디오
         if (bottomTimer <= 10)
         {
-            if (!b10minleft)
+            if (!bNoTimePlaying)
             {
-                b10minleft = true;
+                bNoTimePlaying = true;
                 AudioManager.instance.SetAudioClip_SFX(3, true);
             }
         }
@@ -694,7 +695,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void EndGame()
     { // 게임이 종료됐을 때 Method
         isStart = false;
-        b10minleft = false;
+        bNoTimePlaying = false;
 
         bool result = false;
 
@@ -735,6 +736,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void QuitGame()
     { // 중간에 게임 나갔을 때 Method
         isStart = false;
+
         for(int i = 0; i < quitBtn.Length; i++)
         {
             quitBtn[i].interactable = true;
@@ -784,6 +786,12 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         if(Quit1P && Quit2P)
         { // 두 버튼 모두 나가기를 눌렀을 때
             Time.timeScale = 0;
+     
+            if(bNoTimePlaying)
+            {
+                AudioManager.instance.Pause_SFX(true);
+            }
+
             quitBtn[0].interactable = false;
             quitBtn[1].interactable = false;
             WarningPanel.SetActive(true);
@@ -860,7 +868,12 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public void GoOutBtn_Clicked()
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.Stop_SFX();
+
+        bNoTimePlaying = false;
+
         QuitGame();
+
         result.SetActive(false);
         GamePanel.SetActive(false);
         MainPanel.SetActive(true);
@@ -872,7 +885,13 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public void CancelBtn_Clicked()
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
+        if (bNoTimePlaying)
+        {
+            AudioManager.instance.Pause_SFX(false);
+        }
+        bNoTimePlaying = false;
         Time.timeScale = 1;
+
         WarningPanel.SetActive(false);
         ButtonSetting();
     }

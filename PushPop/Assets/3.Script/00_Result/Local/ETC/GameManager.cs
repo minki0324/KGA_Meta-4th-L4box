@@ -207,6 +207,8 @@ public class GameManager : MonoBehaviour, IGameMode
                 case Mode.PushPush:
                     if(PushPop.Instance.pushPopButton.Count == 0)
                     {
+                        AudioManager.instance.SetAudioClip_SFX(4, false);
+                        
                         //담고
                         int[] spriteIndexs = new int[pushpushScript.puzzleBoard.transform.childCount];
                         Vector2[] childPos = new Vector2[pushpushScript.puzzleBoard.transform.childCount];
@@ -310,8 +312,11 @@ public class GameManager : MonoBehaviour, IGameMode
         // animation
         Animator pushAni = PushPop.Instance.pushPopAni.GetComponent<Animator>();
         pushAni.SetTrigger("Turning");
+        
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.5f);
+        AudioManager.instance.SetAudioClip_SFX(0, false);
+        yield return new WaitForSeconds(1f);
 
         PushPop.Instance.pushTurn = !PushPop.Instance.pushTurn;
         bubblePos.Clear();
