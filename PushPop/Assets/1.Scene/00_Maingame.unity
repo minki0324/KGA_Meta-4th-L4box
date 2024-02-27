@@ -21183,6 +21183,8 @@ MonoBehaviour:
   btn_List: []
   startVolume: 0
   fadeTime: 5
+  bBgmChanging: 0
+  playingBgm: 0
 --- !u!1 &1540790343
 GameObject:
   m_ObjectHideFlags: 0
@@ -48520,6 +48522,7 @@ MonoBehaviour:
   - {fileID: 1808198098900116870}
   - {fileID: 1808198099690722052}
   loseProfileImage: {fileID: 1808198099740499717}
+  bNoTimePlaying: 0
 --- !u!223 &1808198099618146642
 Canvas:
   m_ObjectHideFlags: 0

@@ -40,7 +40,12 @@ public class AudioManager : MonoBehaviour
     private List<Button> btn_List;
 
     public float startVolume;
-    public float fadeTime = 50f;
+    public float fadeTime = 5000f;
+
+    public bool bBgmChanging = false;
+    public int playingBgm;
+    private Coroutine stopMusic = null;
+  
 
     #region Unity Callback
     private void Awake()
@@ -59,8 +64,10 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
+       
         audioSource_arr = GetComponents<AudioSource>();
-        audioSource_arr[2].clip = bgmClip_List[0];
+        audioSource_arr[1].clip = bgmClip_List[0];
+        playingBgm = 0;
     }
 
     #endregion
@@ -68,7 +75,26 @@ public class AudioManager : MonoBehaviour
 
     public void SetAudioClip_BGM(int index)
     {
-        StartCoroutine(BGM_Fade(index));
+        
+
+        if (bBgmChanging)
+        {
+            Debug.Log("변경중 호출 : ");
+            StopCoroutine(stopMusic);
+
+            playingBgm = index;
+            stopMusic = StartCoroutine(BGM_Fade(playingBgm));
+        }
+        else
+        {
+            //bgm 코루틴이 실행중이 아니면
+            playingBgm = index;
+            stopMusic = StartCoroutine(BGM_Fade(playingBgm));
+        }
+
+
+
+
 
         //audioSource_arr[1].clip = bgmClip_List[index];
         //audioSource_arr[1].Play();
@@ -133,29 +159,42 @@ public class AudioManager : MonoBehaviour
 
     public IEnumerator BGM_Fade(int index)
     {
-        float startVolume = audioSource_arr[1].volume;
-
-        while (audioSource_arr[1].volume > 0)
+        bBgmChanging = true;
+        while (true)
         {
-            audioSource_arr[1].volume -= startVolume + Time.deltaTime / fadeTime;
+            if(audioSource_arr[1].volume <= 0.5f)
+            {
+                audioSource_arr[1].Stop();
+                audioSource_arr[1].volume = 0.5f;
 
+                audioSource_arr[1].clip = bgmClip_List[index];
+                audioSource_arr[1].Play();
+                audioSource_arr[1].loop = true;
+                break;
+            }
+
+            audioSource_arr[1].volume -= (Time.deltaTime / fadeTime);
             yield return null;
         }
-        audioSource_arr[1].Stop();
-        audioSource_arr[1].volume = 0;
 
-        yield return null;
+    
 
-        audioSource_arr[1].clip = bgmClip_List[index];
-        audioSource_arr[1].Play();
-        audioSource_arr[1].loop = true;
-
-        while (audioSource_arr[1].volume >= startVolume)
+        while (true)
         {
+            if(audioSource_arr[1].volume >= 1f)
+            {
+                audioSource_arr[1].volume = 1;
+                bBgmChanging = false;
+                break;
+            }
+
             audioSource_arr[1].volume += Time.deltaTime / fadeTime;
-
             yield return null;
         }
+
+  
+        yield break;
+
     }
 
 }
