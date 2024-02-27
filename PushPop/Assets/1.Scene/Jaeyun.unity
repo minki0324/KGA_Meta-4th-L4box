@@ -2377,7 +2377,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1977798203}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -12290,7 +12290,7 @@ RectTransform:
   - {fileID: 406684930}
   - {fileID: 1959961634}
   m_Father: {fileID: 1977798203}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -15255,12 +15255,12 @@ RectTransform:
   - {fileID: 22289471}
   - {fileID: 1072767490}
   m_Father: {fileID: 587940297}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &504136937
 GameObject:
@@ -17701,6 +17701,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1956290527}
   - {fileID: 503285857}
   m_Father: {fileID: 1977798203}
   m_RootOrder: 4
@@ -41622,7 +41623,7 @@ RectTransform:
   - {fileID: 685651798}
   - {fileID: 1607219940}
   m_Father: {fileID: 1977798203}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -54443,8 +54444,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1977798203}
-  m_RootOrder: 5
+  m_Father: {fileID: 587940297}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -55605,7 +55606,6 @@ RectTransform:
   - {fileID: 518320291}
   - {fileID: 160988848}
   - {fileID: 587940297}
-  - {fileID: 1956290527}
   - {fileID: 1534333253}
   - {fileID: 88410741}
   - {fileID: 401230901}

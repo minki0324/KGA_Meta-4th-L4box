@@ -48,7 +48,8 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
             case Mode.Bomb:
                 break;
         }
-        if( moveCoroutine != null )
+
+        if(moveCoroutine != null)
         {
             StopCoroutine(moveCoroutine);
         }

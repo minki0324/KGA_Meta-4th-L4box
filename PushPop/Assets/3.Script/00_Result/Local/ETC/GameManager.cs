@@ -119,6 +119,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public int boardName = 0; // mold name
     public int currentTime = 0;
     Speed_Timer speedTimer = null;
+    public Coroutine speedCreate = null;
 
 
     #region Unity Callback
@@ -382,7 +383,7 @@ public class GameManager : MonoBehaviour, IGameMode
         }
         PushPop.Instance.pushPopBoardObject.Clear();
 
-        StartCoroutine(SpeedBoardStartCreate_Co());
+        speedCreate = StartCoroutine(SpeedBoardStartCreate_Co());
     }
 
     private IEnumerator SpeedBoardStartCreate_Co()
@@ -391,8 +392,6 @@ public class GameManager : MonoBehaviour, IGameMode
         BoardSize = new Vector2(700f, 700f);
         BoardSizeGameObject = new Vector2(700f, 700f);
         PushPop.Instance.CreatePushPopBoard(PushPop.Instance.pushPopCanvas);
-        Animator pushAni = PushPop.Instance.pushPopAni.GetComponent<Animator>();
-        // pushAni.SetTrigger("Growing");
 
         yield return new WaitForSeconds(1.5f);
 

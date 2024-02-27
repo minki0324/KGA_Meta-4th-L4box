@@ -142,12 +142,19 @@ public class Speed_Timer : MonoBehaviour
 
     public void GoOutBtn_Clicked()
     {
+        GameManager.Instance.StopCoroutine(GameManager.Instance.speedCreate);
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         AudioManager.instance.SetAudioClip_BGM(1);
 
         Time.timeScale = 1;
 
         // Back Method
+        if (PushPop.Instance.pushPopBoardUIObject.Count > 0)
+        {
+            Destroy(PushPop.Instance.pushPopBoardUIObject[0]);
+            PushPop.Instance.pushPopBoardUIObject.Clear();
+        }
+
         if (PushPop.Instance.pushPopBoardObject.Count > 0)
         {
             Destroy(PushPop.Instance.pushPopBoardObject[0]);
