@@ -119,7 +119,6 @@ public class PushPop : MonoBehaviour
     // pushpop button »ý¼ºÇÒ grid
     public void CreateGrid(GameObject _pushPopBoardObject)
     {
-        Debug.Log(_pushPopBoardObject.name);
         // board Size Setting
         boardSize = new Vector3(boardCollider.bounds.size.x, boardCollider.bounds.size.y, 1f); // collider size
         grid.x = (int)(boardSize.x / percentage);
