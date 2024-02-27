@@ -103,38 +103,58 @@ public class AudioManager : MonoBehaviour
 
     public void SetAudioClip_SFX(int index, bool bLoop)
     {
-        switch (GameManager.Instance.gameMode)
+        if (!bLoop)
         {
-            case Mode.PushPush:
+            switch (GameManager.Instance.gameMode)
+            {
+                case Mode.PushPush:
 
-                audioSource_arr[2].clip = pushSfxClip_List[index];
-                audioSource_arr[2].Play();
-                audioSource_arr[2].loop = bLoop;
-                break;
+                    audioSource_arr[2].PlayOneShot(pushSfxClip_List[index]);
+                    break;
 
-            case Mode.Speed:
-                audioSource_arr[2].clip = speedSfxClip_List[index];
-                audioSource_arr[2].Play();
-                audioSource_arr[2].loop = bLoop;
-                break;
+                case Mode.Speed:
+                    audioSource_arr[2].PlayOneShot(speedSfxClip_List[index]);
+                    break;
 
-            case Mode.Memory:
-                audioSource_arr[2].clip = memorySfxClip_List[index];
-                audioSource_arr[2].Play();
-                audioSource_arr[2].loop = bLoop;
-                break;
+                case Mode.Memory:
+                    audioSource_arr[2].PlayOneShot(memorySfxClip_List[index]);
+                    break;
 
-            case Mode.Bomb:
-                audioSource_arr[2].clip = bombSfxClip_List[index];
-                audioSource_arr[2].Play();
-                audioSource_arr[2].loop = bLoop;
-                break;
+                case Mode.Bomb:
+                    audioSource_arr[2].PlayOneShot(bombSfxClip_List[index]);
+                    break;
 
-            case Mode.None:
-                audioSource_arr[2].clip = commonSfxClip_List[index];
-                audioSource_arr[2].Play();
-                audioSource_arr[2].loop = bLoop;
-                break;
+
+            }
+        }
+        else
+        {
+            switch (GameManager.Instance.gameMode)
+            {
+                case Mode.PushPush:
+                    audioSource_arr[2].clip = pushSfxClip_List[index];
+                    audioSource_arr[2].Play();
+                    audioSource_arr[2].loop = bLoop;
+                    break;
+
+                case Mode.Speed:
+                    audioSource_arr[2].clip = speedSfxClip_List[index];
+                    audioSource_arr[2].Play();
+                    audioSource_arr[2].loop = bLoop;
+                    break;
+
+                case Mode.Memory:
+                    audioSource_arr[2].clip = memorySfxClip_List[index];
+                    audioSource_arr[2].Play();
+                    audioSource_arr[2].loop = bLoop;
+                    break;
+
+                case Mode.Bomb:
+                    audioSource_arr[2].clip = bombSfxClip_List[index];
+                    audioSource_arr[2].Play();
+                    audioSource_arr[2].loop = bLoop;
+                    break;
+            }
         }
     }
 

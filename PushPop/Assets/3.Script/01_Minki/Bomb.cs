@@ -531,6 +531,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void PosSetting()
     { // 턴 넘어갔을 때 각 포지션들 설정하는 Method
         AudioManager.instance.SetAudioClip_SFX(2, false);
+        bNoTimePlaying = false;
 
         if(turn.Equals(Turn.Turn1P))
         { // 1P 턴
