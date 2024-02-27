@@ -86,7 +86,6 @@ public class PushPush_Canvas : MonoBehaviour
 
     private void OnEnable()
     {
-        help_Canvas.gameObject.SetActive(true);
         selectCategory_Panel.SetActive(true);
         //background_Canvas.gameObject.SetActive(true);
         selectMold_Panel.SetActive(false);
@@ -111,8 +110,7 @@ public class PushPush_Canvas : MonoBehaviour
         AudioManager.instance.SetAudioClip_BGM(1);
 
 
-        help_Canvas.transform.SetParent(gameObject.transform);
-        help_Canvas.transform.SetSiblingIndex(3);
+        
         //help_Canvas.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0.5f);
     }
 

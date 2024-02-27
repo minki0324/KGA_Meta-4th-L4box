@@ -19918,6 +19918,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network_Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 1584231244926160344, guid: 35f0e7ca23966b7408a5d99e206dd904, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1584231244926160345, guid: 35f0e7ca23966b7408a5d99e206dd904, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -24364,6 +24368,7 @@ MonoBehaviour:
   TimeText: {fileID: 722538537}
   Confirm_Btn: {fileID: 1603034163}
   Back_Btn: {fileID: 1314553324}
+  help_Canvas: {fileID: 2100022475}
   time: 300
 --- !u!114 &1690834106
 MonoBehaviour:

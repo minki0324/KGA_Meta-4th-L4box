@@ -31,6 +31,8 @@ public class Set_Time : MonoBehaviour
     [SerializeField] Button Confirm_Btn;
     [SerializeField] Button Back_Btn;
 
+    public GameObject help_Canvas;
+
     [SerializeField] private int time = 300;
     int min;
     int sec;
@@ -168,6 +170,9 @@ public class Set_Time : MonoBehaviour
         if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
         { // 푸시푸시 시작
             pushpushMode_Canvas.SetActive(true);
+            help_Canvas.SetActive(true);
+            help_Canvas.transform.SetParent(pushpushMode_Canvas.transform);
+            help_Canvas.transform.SetSiblingIndex(3);
         }
         else if (GameManager.Instance.gameMode.Equals(Mode.Speed))
         { // 스피드 시작

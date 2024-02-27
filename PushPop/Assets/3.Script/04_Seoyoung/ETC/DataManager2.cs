@@ -63,7 +63,7 @@ public class DataManager2 : MonoBehaviour
     public string helpScript_fileName = "help.json";
     //public string helpScript_fileName = "help.json";      //한글이 꺠지므로 인코딩 코드 넣고 쓰기..일단 asdf 씀
 
-    private string path = string.Empty;
+    private string path = Application.streamingAssetsPath;
 
 
     #region Unity Callback
@@ -83,7 +83,6 @@ public class DataManager2 : MonoBehaviour
 
     void Start()
     {
-        path = Application.streamingAssetsPath;
         Read_HelpScript();
 
 
@@ -249,12 +248,8 @@ public class DataManager2 : MonoBehaviour
 
     public void Read_HelpScript()
     {
-
-        
         //도움말 스크립트 읽어오는 함수
-
         helpScripts_List.Clear();
-
 
         string oriPath = Path.Combine(path, helpScript_fileName);
 
@@ -278,8 +273,6 @@ public class DataManager2 : MonoBehaviour
 
             //Debug.Log(jsonData[i]["script"]); //Json Data Array로 나옴 -> 안풀림..
 
-
-
             for (int j = 0; j < jsonData[i]["script"].Count; j++)
             {
                 JsonData item = JsonMapper.ToObject<JsonData>(jsonData[i]["script"].ToJson());
@@ -287,16 +280,12 @@ public class DataManager2 : MonoBehaviour
                 script.pageNum = int.Parse(item[j]["page"].ToString());
                 script.content = item[j]["content"].ToString();
 
-
                 helpScript.script.Add(script);
                 //Debug.Log(script.pageNum + "," + script.content);
-
             }
 
             helpScripts_List.Add(helpScript);
-
         }
-
     }
 
     //유니코드 -> 한글 변환 메소드
