@@ -180,7 +180,6 @@ public class GameManager : MonoBehaviour, IGameMode
         Score = 0;
         TimeScore = 0;
         buttonActive = 0;
-        count = 0.25f;
 
         
 
@@ -203,12 +202,23 @@ public class GameManager : MonoBehaviour, IGameMode
     public IEnumerator GameReady_Co(GameObject _panel, TMP_Text text)
     {
         // game start 문구 띄워주기, panel 다 막아버리면 될듯?
-
+        for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
+        {
+            Destroy(PushPop.Instance.pushPopBoardObject[i]);
+        }
+        PushPop.Instance.pushPopBoardObject.Clear();
         AudioManager.instance.SetCommonAudioClip_SFX(1);
         _panel.SetActive(true);
         DialogManager.instance.Print_Dialog(text, "준비 ~");
         yield return new WaitForSeconds(2f);
 
+        if(gameMode == Mode.Speed)
+        {
+            SpeedModePushPopCreate();
+            speedTimer.TimerObj.SetActive(true);
+            speedTimer.TimerStart();
+            speedTimer.time_Slider.gameObject.SetActive(true);
+        }
         AudioManager.instance.SetCommonAudioClip_SFX(2);
         DialogManager.instance.Print_Dialog(text, "시작 ~");
 
@@ -222,17 +232,6 @@ public class GameManager : MonoBehaviour, IGameMode
                 PushPushMode();
                 break;
             case Mode.Speed:
-                // position count 한 개, 위치 가운데, scale 조정
-                bubbleSize = 300f; // speed mode bubble size setting
-                BoardSize = new Vector2(300f, 300f); // scale
-
-                // bubble position
-                GameObject board = Instantiate(PushPop.Instance.boardPrefabUI, PushPop.Instance.pushPopCanvas); // image
-                board.GetComponent<Image>().sprite = PushPop.Instance.boardSprite;
-                board.GetComponent<RectTransform>().sizeDelta = BoardSize;
-                PushPop.Instance.pushPopBoardObject.Add(board);
-                CreateBubble(BoardSize, board.transform.localPosition, board);
-                speedTimer.TimerStart();
                 break;
             case Mode.Memory:
                 break;
@@ -339,13 +338,14 @@ public class GameManager : MonoBehaviour, IGameMode
                         speedTimer.time_Slider.value += count;
                     }
                     
-                    if (buttonActive == 0 && speedTimer.time_Slider.value.Equals(1f) || speedTimer.currentTime.Equals(60))
+                    if (buttonActive == 0 && speedTimer.time_Slider.value.Equals(1f) || speedTimer.currentTime.Equals((int)speedTimer.difficult))
                     {
                         // Game Clear
                         bubblePos.Clear(); // bubble transform mode에 따라 달라짐
                         PushPop.Instance.PushPopClear();
                         currentTime = speedTimer.currentTime;
                         speedTimer.StopCoroutine(speedTimer.timer);
+                        speedTimer.TimerObj.SetActive(false);
 
                         Ranking.Instance.SetTimer(ProfileName, ProfileIndex, int.Parse(PushPop.Instance.boardSprite.name), speedTimer.currentTime);
                         speedTimer.resultPanel.SetActive(true);
@@ -418,17 +418,20 @@ public class GameManager : MonoBehaviour, IGameMode
     public void SpeedMode()
     { // speed mode start
         Ranking.Instance.SettingPreviousScore();
-        StartCoroutine(GameReady_Co(speedTimer.readyPanel, speedTimer.readyText));
+        // position count 한 개, 위치 가운데, scale 조정
+        bubbleSize = 300f; // speed mode bubble size setting
+        BoardSize = new Vector2(300f, 300f); // scale
+
+        // bubble position
+        GameObject board = Instantiate(PushPop.Instance.boardPrefabUI, PushPop.Instance.pushPopCanvas); // image
+        board.GetComponent<Image>().sprite = PushPop.Instance.boardSprite;
+        board.GetComponent<RectTransform>().sizeDelta = BoardSize;
+        PushPop.Instance.pushPopBoardObject.Add(board);
+        CreateBubble(BoardSize, board.transform.localPosition, board);
     }
 
     public void SpeedModePushPopCreate()
     {
-        for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
-        {
-            Destroy(PushPop.Instance.pushPopBoardObject[i]);
-        }
-        PushPop.Instance.pushPopBoardObject.Clear();
-
         speedCreate = StartCoroutine(SpeedBoardStartCreate_Co());
     }
 
@@ -445,6 +448,11 @@ public class GameManager : MonoBehaviour, IGameMode
         PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
         PushPop.Instance.PushPopButtonSetting(PushPop.Instance.buttonCanvas);
         buttonActive = PushPop.Instance.activePos.Count;
+    }
+
+    public void SpeedOnBubbleDestroy()
+    {
+        StartCoroutine(GameReady_Co(speedTimer.readyPanel, speedTimer.readyText));
     }
 
     public void MemoryMode()
