@@ -315,9 +315,18 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
         for (int i = 0; i < DataManager2.instance.badWord_Arr.Length; i++)
         {
-
-            Debug.Log(_profileNameAdd.text.Contains(DataManager2.instance.badWord_Arr[i].badword));
+            
             if (_profileNameAdd.text.Contains(DataManager2.instance.badWord_Arr[i].badword))
+            {
+                DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameLog, "비속어는 포함시킬 수 없습니다."));
+                _profileNameAdd.text = String.Empty;    //다지우는애
+                bPossibleName = false;
+            }
+        }
+
+        for( int i = 0; i<DataManager2.instance.vulgarism_Arr.Length; i++)
+        {
+            if (_profileNameAdd.text.Contains(DataManager2.instance.vulgarism_Arr[i]))
             {
                 DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameLog, "비속어는 포함시킬 수 없습니다."));
                 _profileNameAdd.text = String.Empty;    //다지우는애

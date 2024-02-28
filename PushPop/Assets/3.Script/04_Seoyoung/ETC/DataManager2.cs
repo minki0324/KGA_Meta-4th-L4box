@@ -52,6 +52,14 @@ public class BadWord
     public int index;
     public string badword;
 }
+
+
+[System.Serializable]
+public class Vulgarism
+{
+    public int index;
+    public string vulgarism;
+}
 #endregion
 
 
@@ -77,12 +85,16 @@ public class DataManager2 : MonoBehaviour
 
     //욕설방지용
     public BadWord[] badWord_Arr;
+    public string[] vulgarism_Arr;
+
+
 
     //파일 이름
     public string categoryDict_fileName = "category.json";
     public string iconDict_fileName = "icon.json";
     public string helpScript_fileName = "help.json";
     public string badWord_fileName = "badword.json";
+    public string vulgarism_fileName = "vulgarism.json";
 
     public string Datapath = string.Empty;
 
@@ -120,7 +132,7 @@ public class DataManager2 : MonoBehaviour
         Read_Category();
         Read_Icon();
         Read_BadWord();
-
+        Read_Vulgarism();
 
     }
 
@@ -356,8 +368,6 @@ public class DataManager2 : MonoBehaviour
 
     public void Read_BadWord()
     {
-        
-
         string oriPath = Path.Combine(path, badWord_fileName);
 
         WWW reader = new WWW(oriPath);
@@ -394,6 +404,36 @@ public class DataManager2 : MonoBehaviour
 
     }
 
+
+    public void Read_Vulgarism()
+    {
+        string oriPath = Path.Combine(path, vulgarism_fileName);
+
+        WWW reader = new WWW(oriPath);
+        while (!reader.isDone)
+        {
+
+        }
+
+        string realPath = Datapath + "/" + vulgarism_fileName;
+
+        byte[] data = reader.bytes;
+        string resultData = System.Text.Encoding.UTF8.GetString(data);
+
+        File.WriteAllText(realPath, resultData);
+
+        string JsonString = File.ReadAllText(realPath);
+
+        JsonData jsonData = JsonMapper.ToObject(JsonString);
+
+        //vulgarisms_List
+
+
+        string oneData = jsonData[0]["vulgarism"].ToString();
+
+        vulgarism_Arr = oneData.Split(",");
+
+    }
 
 
 
