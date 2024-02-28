@@ -115,9 +115,9 @@ public class ProfileManager : MonoBehaviour
         }
     }
 
-    public void DeleteProfile(string _name, int _index)
+    public void DeleteProfile(int _index)
     {
-        SQL_Manager.instance.SQL_DeleteProfile(_name, _index);
+        SQL_Manager.instance.SQL_DeleteProfile(_index);
     }
 
     public void PrintProfileList(Transform parent, int? _profileIndex1P, int? _profileIndex2P)

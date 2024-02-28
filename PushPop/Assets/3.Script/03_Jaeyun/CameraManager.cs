@@ -75,9 +75,7 @@ public class CameraManager : MonoBehaviour
 				Texture2D readableTexture = GetReadableTexture(texture); // Texture º¯È¯
 				byte[] texturePNGByte = readableTexture.EncodeToPNG(); // texture to pngByte encode
 				string fileName = $"{_filePath}/{GameManager.Instance.UID}_{GameManager.Instance.ProfileIndex}.png";
-				Debug.Log(fileName);
 				File.WriteAllBytes(fileName, texturePNGByte); // file save
-				Debug.Log("File Save");
 				Destroy(quad, 5f);
 			}
 		}, 2048, true, NativeCamera.PreferredCamera.Front);

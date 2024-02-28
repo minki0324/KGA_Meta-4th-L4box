@@ -80,7 +80,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void DeleteProfile()
     { // DeletePanel ¼Ó Btn ¿¬µ¿ Method
-        ProfileManager.Instance.DeleteProfile(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P);
+        ProfileManager.Instance.DeleteProfile(ProfileManager.Instance.ProfileIndex1P);
         ProfileManager.Instance.PrintProfileList(profileParent, null, null);
         DeletePanel.SetActive(false);
     }

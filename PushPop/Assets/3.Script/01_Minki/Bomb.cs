@@ -352,7 +352,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public void DeleteProfile()
     { // 프로필 삭제 Btn 연동 Method (2P)
         player2PInfo.Receive_Infomation();
-        SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileName2P, GameManager.Instance.ProfileIndex2P);
+        SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileIndex2P);
     }
 
     public void AddProfile()

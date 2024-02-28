@@ -199,7 +199,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     // 프로필 삭제 Btn 연동 Method
     public void DeleteProfile()
     {
-        SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex);
+        SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileIndex);
     }
 
     // Update Mode Bool값 설정 Btn 연동 Method
@@ -220,7 +220,6 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     public void ImageSet()
     { // Profile에 넣을 Image 셋팅하는 Btn 연동 Method
-        Debug.Log("확인");
         if (!_isUpdate)
         { // 첫 등록일 때
             if (_isImageMode)
@@ -467,7 +466,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     public void TakeAgainPicture()
     {
-        SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex);
+        SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileIndex);
         cameraManager.CameraOpen();
     }
     #endregion

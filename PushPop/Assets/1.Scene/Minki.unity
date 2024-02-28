@@ -5834,7 +5834,7 @@ MonoBehaviour:
   _isProfileSelected: 0
   _isDeleteBtnClikced: 0
   _isImageMode: 0
-  cameraManager: {fileID: 0}
+  cameraManager: {fileID: 126516701}
 --- !u!224 &190446418
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16328,7 +16328,6 @@ Transform:
   m_Children:
   - {fileID: 1973291621}
   - {fileID: 565110545}
-  - {fileID: 1562658703}
   - {fileID: 1817596193}
   m_Father: {fileID: 0}
   m_RootOrder: 7
@@ -23829,6 +23828,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameMode: 0
+  shutdownTimer: 0
+  isShutdown: 0
   pushpushScript: {fileID: 1496611320}
   bombScript: {fileID: 36743865}
   speedTimer: {fileID: 310149785}
@@ -26563,12 +26564,7 @@ MonoBehaviour:
   PuzzleParent: {fileID: 897054101}
   FrameParent: {fileID: 1074325244}
   frampPos: {fileID: 811682979}
-  piecePos:
-  - {fileID: 675730148}
-  - {fileID: 735064467}
-  - {fileID: 300837714}
-  - {fileID: 512917519}
-  - {fileID: 1384788985}
+  failPiecePos: {fileID: 0}
   _piecePos: {x: 0, y: 0}
   puzzles:
   - {fileID: 11400000, guid: 88468152508da5c4887c1a57a2a96d35, type: 2}
@@ -45198,8 +45194,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 568122954}
-  m_RootOrder: 2
+  m_Father: {fileID: 0}
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1562658704
 MonoBehaviour:
@@ -45220,6 +45216,7 @@ MonoBehaviour:
   categoryDict_fileName: category.json
   iconDict_fileName: icon.json
   helpScript_fileName: help.json
+  Datapath: 
 --- !u!1 &1563903301
 GameObject:
   m_ObjectHideFlags: 0
@@ -52827,7 +52824,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 568122954}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1817596194
 MonoBehaviour:

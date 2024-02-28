@@ -304,7 +304,7 @@ public class SQL_Manager : MonoBehaviour
     /// 프로필 삭제 Method, UID와 name을 확인해서 삭제
     /// </summary>
     /// <param name="name"></param>
-    public void SQL_DeleteProfile(string name, int index)
+    public void SQL_DeleteProfile(int index)
     {
         try
         {
@@ -315,7 +315,7 @@ public class SQL_Manager : MonoBehaviour
             }
 
             // 2. 프로필 삭제
-            string profile_command = string.Format(@"DELETE FROM Profile WHERE UID = '{0}' AND User_name = '{1}';", UID, name);
+            string profile_command = string.Format(@"DELETE FROM Profile WHERE UID = '{0}' AND Profile_Index = '{1}';", UID, index);
             MySqlCommand profile_cmd = new MySqlCommand(profile_command, connection);
             profile_cmd.ExecuteNonQuery();
 
