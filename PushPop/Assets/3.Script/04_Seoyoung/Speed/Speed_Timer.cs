@@ -160,7 +160,10 @@ public class Speed_Timer : MonoBehaviour
 
     public void GoOutBtn_Clicked()
     {
-        GameManager.Instance.StopCoroutine(GameManager.Instance.speedCreate);
+        if (GameManager.Instance.speedCreate != null)
+        {
+            GameManager.Instance.StopCoroutine(GameManager.Instance.speedCreate);
+        }
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         AudioManager.instance.SetAudioClip_BGM(1);
 
