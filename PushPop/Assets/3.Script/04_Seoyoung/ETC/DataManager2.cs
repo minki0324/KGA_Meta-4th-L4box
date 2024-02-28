@@ -6,6 +6,8 @@ using System.Text;   // 인코딩
 using System.Text.RegularExpressions;
 using System.Globalization;
 using LitJson;
+using UnityEngine.Networking;
+using Unity.VisualScripting.Antlr3.Runtime.Collections;
 
 #region ObjectClass
 [System.Serializable]
@@ -61,7 +63,7 @@ public class DataManager2 : MonoBehaviour
     public string categoryDict_fileName = "category.json";
     public string iconDict_fileName = "icon.json";
     public string helpScript_fileName = "help.json";
-    //public string helpScript_fileName = "help.json";      //한글이 꺠지므로 인코딩 코드 넣고 쓰기..일단 asdf 씀
+    public string Datapath = string.Empty;
 
     private string path = Application.streamingAssetsPath;
 
@@ -79,20 +81,30 @@ public class DataManager2 : MonoBehaviour
         {
             Destroy(instance);
         }
-    }
 
-    void Start()
-    {
+
+
+        Datapath = Application.persistentDataPath + "/gameData";
+        if (!File.Exists(Datapath)) // 경로 탐색
+        {
+            Directory.CreateDirectory(Datapath);
+        }
+
+        Save_HelpScript();
         Read_HelpScript();
-
-
-
 
         Read_Category();
         Read_Icon();
+ 
+
     }
 
+    private void Start()
+    {
+       
+    }
     #endregion
+
 
     #region Other Method
 
@@ -121,12 +133,16 @@ public class DataManager2 : MonoBehaviour
 
         }
 
-        string realPath = Application.persistentDataPath + "/category.json";
-        File.WriteAllBytes(realPath, reader.bytes);
+        string realPath = Datapath + "/category.json";
+
+
+        byte[] data = reader.bytes;
+        string resultData = System.Text.Encoding.UTF8.GetString(data);
+
+        //File.WriteAllBytes(realPath, reader.bytes);
+        File.WriteAllText(realPath, resultData);
 
         string JsonString = File.ReadAllText(realPath);
-
-
         JsonData jsonData = JsonMapper.ToObject(JsonString);
 
         for (int i = 0; i < jsonData.Count; i++)
@@ -196,11 +212,17 @@ public class DataManager2 : MonoBehaviour
 
         }
 
-        string realPath = Application.persistentDataPath + "/" + iconDict_fileName;
-        File.WriteAllBytes(realPath, reader.bytes);
+        string realPath = Datapath + "/" + iconDict_fileName;
+
+        byte[] data = reader.bytes;
+        string resultData = System.Text.Encoding.UTF8.GetString(data);
 
 
-        string JsonString = File.ReadAllText(path + "/" + iconDict_fileName);
+        //File.WriteAllBytes(realPath, reader.bytes);
+        File.WriteAllText(realPath, resultData);
+
+
+        string JsonString = File.ReadAllText(realPath);
 
         JsonData jsonData = JsonMapper.ToObject(JsonString);
 
@@ -246,46 +268,77 @@ public class DataManager2 : MonoBehaviour
         File.WriteAllText(path + "/" + iconDict_fileName, Decode_EncodedNonASCIICharacters(jsonData.ToString()));
     }
 
-    public void Read_HelpScript()
-    {
-        //도움말 스크립트 읽어오는 함수
-        helpScripts_List.Clear();
 
-        string oriPath = Path.Combine(path, helpScript_fileName);
+
+    public void Save_HelpScript()
+    {
+        Debug.Log("Save_HelpScript 호출됨");
+        string oriPath = Path.Combine(Application.streamingAssetsPath, helpScript_fileName);
+
+        //UnityWebRequest reader = new UnityWebRequest()
 
         WWW reader = new WWW(oriPath);
         while (!reader.isDone)
         {
-
+            ;
         }
+        Debug.Log("으아아아ㅏ아아ㅏㅏ아ㅏㅏ아ㅏㅏㅏ");
 
-        string realPath = Application.persistentDataPath + "/" + helpScript_fileName;
-        File.WriteAllBytes(realPath, reader.bytes);
+        string realPath = Datapath + "/help.json";
+        Debug.Log("여기?");
 
-        string JsonString = File.ReadAllText(path + "/" + helpScript_fileName);
-        JsonData jsonData = JsonMapper.ToObject(JsonString);
+        byte[] data = reader.bytes;
+        string resultData = System.Text.Encoding.UTF8.GetString(data);
 
-        for (int i = 0; i < jsonData.Count; i++)
+        Debug.Log(resultData);
+        //File.WriteAllBytes(realPath, reader.bytes);
+
+        File.WriteAllText(realPath, resultData);
+
+        Debug.Log("Save_HelpScript 저장됨");
+    }
+
+    public void Read_HelpScript()
+    {
+        Debug.Log("Read_HelpScript호출됨");
+
+        //도움말 스크립트 읽어오는 함수
+
+
+        if(File.Exists(Datapath + "/help.json"))
         {
-            HelpScript helpScript = new HelpScript();
+            Debug.Log("Read_HelpScript 파일 존재");
+            helpScripts_List.Clear();
+            string JsonString = File.ReadAllText(Datapath + "/help.json");
+            var jsonData = JsonMapper.ToObject(JsonString);
 
-            helpScript.type = (string)jsonData[i]["type"];
-
-            //Debug.Log(jsonData[i]["script"]); //Json Data Array로 나옴 -> 안풀림..
-
-            for (int j = 0; j < jsonData[i]["script"].Count; j++)
+            for (int i = 0; i < jsonData.Count; i++)
             {
-                JsonData item = JsonMapper.ToObject<JsonData>(jsonData[i]["script"].ToJson());
-                Scripts script = new Scripts();
-                script.pageNum = int.Parse(item[j]["page"].ToString());
-                script.content = item[j]["content"].ToString();
+                HelpScript helpScript = new HelpScript();
 
-                helpScript.script.Add(script);
-                //Debug.Log(script.pageNum + "," + script.content);
+                helpScript.type = (string)jsonData[i]["type"];
+
+                //Debug.Log(jsonData[i]["script"]); //Json Data Array로 나옴 -> 안풀림..
+
+                for (int j = 0; j < jsonData[i]["script"].Count; j++)
+                {
+                    JsonData item = JsonMapper.ToObject<JsonData>(jsonData[i]["script"].ToJson());
+                    Scripts script = new Scripts();
+                    script.pageNum = int.Parse(item[j]["page"].ToString());
+                    script.content = item[j]["content"].ToString();
+
+                    helpScript.script.Add(script);
+                    //Debug.Log(script.pageNum + "," + script.content);
+                }
+
+                helpScripts_List.Add(helpScript);
+
+                Debug.Log("Read_HelpScript 파일 불러오기 끝");
             }
-
-            helpScripts_List.Add(helpScript);
         }
+     
+
+        
     }
 
     //유니코드 -> 한글 변환 메소드

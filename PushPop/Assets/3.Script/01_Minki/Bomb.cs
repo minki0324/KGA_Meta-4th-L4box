@@ -493,7 +493,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     { // 게임 초기 시작시 셋팅하는 Method
         // Timer 선언
         upperTimer = 12f;
-        bottomTimer = 60f;
+        bottomTimer = 15f;
         timerText.text = $"남은시간\n{(int)bottomTimer}";
         // 상단의 Bubble의 위치를 랜덤으로 부여하여 해당 위치에 따라 어떤 플레이어가 먼저 시작할지 턴을 부여
         int randomPos = Random.Range(0, 2);
@@ -723,7 +723,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         yield return new WaitForSeconds(1.2f);
 
         // 결과창 출력
+        AudioManager.instance.Stop_SFX();
         AudioManager.instance.SetCommonAudioClip_SFX(7);
+        bottomTimer = 10000f;
+        bNoTimePlaying = false;
+        
         result.SetActive(true);
         Ranking.Instance.LoadVersusResult_Personal(winText, loseText, winProfileImage, loseProfileImage);
         
@@ -914,6 +918,18 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         CurrentProfile.SetActive(false);
         SelectProfile.SetActive(false);
         gameObject.SetActive(false);
+    }
+
+
+    //게임 끝나고 나가기 버튼
+    public void ReturnBtn_ResultPanel_Clicked()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.SetAudioClip_BGM(0);
+        result.SetActive(false);
+        GamePanel.SetActive(false);
+        MainPanel.SetActive(true);
+        help_Canvas.gameObject.SetActive(true);
     }
 
     public void Enable_Objects()
