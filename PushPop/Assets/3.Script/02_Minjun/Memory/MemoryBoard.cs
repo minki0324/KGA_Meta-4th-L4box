@@ -76,7 +76,7 @@ public class MemoryBoard : MonoBehaviour
     }
     public void BtnAllStop()
     {//버튼활성화 끄는 메소드
-        MemoryManager.Instance.Hintbutton.enabled = false;
+        MemoryManager.Instance.hintbuttonIamge.raycastTarget = false;
         MemoryManager.Instance.Backbutton.enabled = false;
         for (int i = 0; i < allButton.Count; i++)
         {
@@ -85,7 +85,7 @@ public class MemoryBoard : MonoBehaviour
     }
     public void BtnAllPlay()
     {//버튼활성화 키는 메소드
-        MemoryManager.Instance.Hintbutton.enabled = true;
+        MemoryManager.Instance.hintbuttonIamge.raycastTarget = true;
         MemoryManager.Instance.Backbutton.enabled = true;
         for (int i = 0; i < allButton.Count; i++)
         {

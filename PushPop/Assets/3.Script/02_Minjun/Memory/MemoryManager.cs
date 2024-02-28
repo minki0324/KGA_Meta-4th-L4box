@@ -23,6 +23,7 @@ public class MemoryManager : MonoBehaviour
     [Header("버튼")]
     [SerializeField] public Button Hintbutton;//힌트버튼
     [SerializeField] public Button Backbutton;//뒤로가기버튼
+    [SerializeField] public Image hintbuttonIamge;//힌트버튼
 
     [Header("로비OB")]
     [SerializeField] private GameObject Lobby; //푸시푸시 스피드 메모리 선택창
