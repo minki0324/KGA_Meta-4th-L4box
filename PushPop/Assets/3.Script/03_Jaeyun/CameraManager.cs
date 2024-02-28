@@ -44,6 +44,7 @@ public class CameraManager : MonoBehaviour
 
 				// Camera load
 				GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+				quad.AddComponent<MeshCollider>();
 				quad.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 2.5f;
 				quad.transform.forward = Camera.main.transform.forward;
 				quad.transform.localScale = new Vector3(1f, texture.height / (float)texture.width, 1f);

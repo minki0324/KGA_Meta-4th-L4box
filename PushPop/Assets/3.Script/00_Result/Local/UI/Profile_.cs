@@ -58,7 +58,10 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     public bool _isUpdate = false;
     public bool _isProfileSelected = false;   //로그인 후 최초로 프로필을 고른지 판단
     public bool _isDeleteBtnClikced = false;
-    
+    public bool _isImageMode = false;
+
+    [SerializeField] private CameraManager cameraManager;
+
     #region Unity Callback
     private void OnEnable()
     {
@@ -215,11 +218,12 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         gameObject.SetActive(false);
     }
 
-    public void ImageSet(int index)
+    public void ImageSet()
     { // Profile에 넣을 Image 셋팅하는 Btn 연동 Method
+        Debug.Log("확인");
         if (!_isUpdate)
         { // 첫 등록일 때
-            if (index.Equals(0))
+            if (_isImageMode)
             { // 사진 찍기 버튼 눌렀을 때
                 _imagePath = $"{Application.persistentDataPath}/Profile/{GameManager.Instance.UID}_{GameManager.Instance.ProfileIndex}.png";
                 SQL_Manager.instance.SQL_AddProfileImage($"{_imagePath}", GameManager.Instance.UID, GameManager.Instance.ProfileIndex);
@@ -228,7 +232,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
                 CheckPanel.SetActive(false);
                 CreateImagePanel.SetActive(false);
             }
-            else if (index.Equals(1))
+            else if (!_isImageMode)
             { // 이미지 고르기 버튼 눌렀을 때
                 if (!_isImageSelect)
                 { // 이미지 선택을 안했을 때
@@ -253,11 +257,11 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         }
         else if (_isUpdate)
         { // 수정모드일 때
-            if(index.Equals(0))
+            if(_isImageMode)
             { // 사진찍기 모드 눌렀을 때
 
             }
-            else if(index.Equals(1))
+            else if(!_isImageMode)
             { // 이미지 고르기 버튼 눌렀을 때
                 if (!_isImageSelect)
                 { // 선택한 이미지가 없을 때
@@ -456,5 +460,15 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
     }
 
+    public void ImageModeSet(bool _mode)
+    {
+        _isImageMode = _mode;
+    }
+
+    public void TakeAgainPicture()
+    {
+        SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex);
+        cameraManager.CameraOpen();
+    }
     #endregion
 }
