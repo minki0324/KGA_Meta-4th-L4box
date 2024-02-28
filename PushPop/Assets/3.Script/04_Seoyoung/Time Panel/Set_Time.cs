@@ -33,14 +33,14 @@ public class Set_Time : MonoBehaviour
 
     public GameObject help_Canvas;
 
-    [SerializeField] private int time = 300;
+    [SerializeField] private int time = 180;
     int min;
     int sec;
 
     #region Unity Callback
     private void OnEnable()
     {
-        time = 300;
+        time = 180;
         Calculate_Time();
         main_Button.Disable_Button();
     }
@@ -58,7 +58,7 @@ public class Set_Time : MonoBehaviour
 
     private void Update()
     {
-        if (time <= 300)
+        if (time <= 60)
         {
             DecreaseTime_Btn.enabled = false;
         }
@@ -147,10 +147,10 @@ public class Set_Time : MonoBehaviour
             }
 
 
-            if (TimeText.text == string.Empty || time < 300)
+            if (TimeText.text == string.Empty || time < 60)
             {
                 Debug.Log("시간 미입력 시");
-                time = 300;
+                time = 60;
                 Calculate_Time();
             }
 
@@ -166,7 +166,7 @@ public class Set_Time : MonoBehaviour
     public void ConfirmBtn_Clicked()
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
-        //GameManager.Instance.ShutdownTime = time;
+        GameManager.Instance.shutdownTimer = time;
         if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
         { // 푸시푸시 시작
             pushpushMode_Canvas.SetActive(true);
@@ -197,6 +197,12 @@ public class Set_Time : MonoBehaviour
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         gameObject.SetActive(false);
+    }
+
+    public void SetShutdownTime(int time)
+    {
+        this.time = time;
+        Calculate_Time();
     }
     #endregion
 

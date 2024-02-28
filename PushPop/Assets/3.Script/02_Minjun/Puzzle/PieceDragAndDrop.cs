@@ -61,7 +61,8 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             AudioManager.instance.SetAudioClip_SFX(0, false);
 
             //퍼즐위치는 초기위치로 초기화
-            _rect.position = _startPostion;
+            FailToSolvePuzzle();
+            //_rect.position = _startPostion;
             canvasGroup.alpha = 1f;
             canvasGroup.blocksRaycasts = true;
 
@@ -82,7 +83,7 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             puzzleLozic.successCount++;
             if (StageClear())
             {
-                Debug.Log("스테이지를 클리어 했습니다! 잘했어요!!");
+                Debug.Log("퍼즐을 모두 맞췄어요! 잘했어요!!");
 
 
                 AudioManager.instance.SetAudioClip_SFX(1, false);
@@ -91,6 +92,16 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             }
         }
     }
+
+    private void FailToSolvePuzzle()
+    {
+        float X = UnityEngine.Random.Range(puzzleLozic.failPiecePos.position.x - 100f, puzzleLozic.failPiecePos.position.x + 100f);
+        float Y = UnityEngine.Random.Range(Screen.height / 5, Screen.height - Screen.height / 5);
+        //Vector2 movePos = new Vector2(X, Y);
+        _rect.position = new Vector2(X, Y);
+        //_rect.position =Vector2.MoveTowards(_rect.position, movePos, 10 * Time.deltaTime);
+    }
+
     private bool StageClear()
     {// 성공카운트 == 퍼즐 갯수 (ClearCount) 일때 클리어 bool반환
 
