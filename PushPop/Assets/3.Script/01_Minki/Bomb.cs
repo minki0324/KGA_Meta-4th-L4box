@@ -493,7 +493,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     { // 게임 초기 시작시 셋팅하는 Method
         // Timer 선언
         upperTimer = 12f;
-        bottomTimer = 15f;
+        bottomTimer = 60f;
         timerText.text = $"남은시간\n{(int)bottomTimer}";
         // 상단의 Bubble의 위치를 랜덤으로 부여하여 해당 위치에 따라 어떤 플레이어가 먼저 시작할지 턴을 부여
         int randomPos = Random.Range(0, 2);

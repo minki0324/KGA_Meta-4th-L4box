@@ -95,13 +95,13 @@ public class DataManager2 : MonoBehaviour
 
         Read_Category();
         Read_Icon();
- 
+
 
     }
 
     private void Start()
     {
-       
+
     }
     #endregion
 
@@ -170,7 +170,7 @@ public class DataManager2 : MonoBehaviour
             ca.number = item.Key;
             ca.name = item.Value;
             categoryDicts_List.Add(ca);
-           
+
         }
 
         #region 파일/폴더 체크
@@ -229,7 +229,7 @@ public class DataManager2 : MonoBehaviour
         for (int i = 0; i < jsonData.Count; i++)
         {
             iconDict.Add(int.Parse(jsonData[i]["number"].ToString()), jsonData[i]["name"].ToString());
-            
+
         }
 
     }
@@ -246,7 +246,7 @@ public class DataManager2 : MonoBehaviour
             ic.number = item.Key;
             ic.name = item.Value;
             iconDicts_List.Add(ic);
-            
+
         }
 
         #region 파일/폴더 체크
@@ -279,7 +279,7 @@ public class DataManager2 : MonoBehaviour
         WWW reader = new WWW(oriPath);
         while (!reader.isDone)
         {
-            
+            ;
         }
 
         string realPath = Datapath + "/help.json";
@@ -290,14 +290,16 @@ public class DataManager2 : MonoBehaviour
         //File.WriteAllBytes(realPath, reader.bytes);
 
         File.WriteAllText(realPath, resultData);
-
     }
 
     public void Read_HelpScript()
     {
         //도움말 스크립트 읽어오는 함수
-        if(File.Exists(Datapath + "/help.json"))
+
+
+        if (File.Exists(Datapath + "/help.json"))
         {
+            Debug.Log("Read_HelpScript 파일 존재");
             helpScripts_List.Clear();
             string JsonString = File.ReadAllText(Datapath + "/help.json");
             var jsonData = JsonMapper.ToObject(JsonString);
@@ -324,9 +326,9 @@ public class DataManager2 : MonoBehaviour
                 helpScripts_List.Add(helpScript);
             }
         }
-     
 
-        
+
+
     }
 
     //유니코드 -> 한글 변환 메소드
