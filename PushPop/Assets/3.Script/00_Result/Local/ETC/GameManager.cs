@@ -50,6 +50,9 @@ public class GameManager : MonoBehaviour, IGameMode
 {
     public static GameManager Instance = null;
     public Mode gameMode;
+    [Header("ShutDown")]
+    public float shutdownTimer;
+    public bool isShutdown = false;
 
     [Header("GameScript")]
     [SerializeField] private CustomPushpopManager pushpushScript;
@@ -134,6 +137,19 @@ public class GameManager : MonoBehaviour, IGameMode
         {
             Destroy(gameObject);
             return;
+        }
+    }
+    private void Update()
+    {
+        if (shutdownTimer > 0)
+        {
+            if (isShutdown) { isShutdown = false; }
+            shutdownTimer -= Time.deltaTime;
+        }
+        else
+        {
+            shutdownTimer = 0f;
+            isShutdown = true;
         }
     }
     #endregion
