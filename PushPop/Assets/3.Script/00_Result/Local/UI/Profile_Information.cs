@@ -53,10 +53,11 @@ public class Profile_Information : MonoBehaviour
         }
         else
         { // 그 외에 모든 경우 본인의 프로필을 선택했을 때
+            GameManager.Instance.UID = SQL_Manager.instance.UID;
             GameManager.Instance.ProfileName = SQL_Manager.instance.Profile_list[Receive_Index()].name;
             GameManager.Instance.ProfileIndex = SQL_Manager.instance.Profile_list[Receive_Index()].index;
-            GameManager.Instance.UID = SQL_Manager.instance.UID;
             GameManager.Instance.IsImageMode = SQL_Manager.instance.Profile_list[Receive_Index()].imageMode;
+            GameManager.Instance.DefaultImage = SQL_Manager.instance.Profile_list[Receive_Index()].defaultImage;
 
             Profile_ profile = FindObjectOfType<Profile_>();
             profile.SelectProfilePanel.SetActive(false);

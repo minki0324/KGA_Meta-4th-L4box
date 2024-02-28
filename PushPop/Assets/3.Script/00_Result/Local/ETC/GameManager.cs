@@ -124,6 +124,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public int currentTime = 0;
     public Coroutine speedCreate = null;
 
+    public Sprite CacheProfileImage1P;
 
     #region Unity Callback
     private void Awake()
@@ -484,13 +485,15 @@ public class GameManager : MonoBehaviour, IGameMode
 
         if (IsImageMode) // 이미지 선택모드
         {   // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
-            image.sprite = ProfileImages[DefaultImage];
+            CacheProfileImage1P = ProfileImages[DefaultImage];
+            image.sprite = CacheProfileImage1P;
         }
         else if (!IsImageMode) // 사진찍기 모드
         {
             Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, ProfileIndex);
             Sprite profileSprite = TextureToSprite(profileTexture);
-            image.sprite = profileSprite;
+            CacheProfileImage1P = profileSprite;
+            image.sprite = CacheProfileImage1P;
         }
     }
 

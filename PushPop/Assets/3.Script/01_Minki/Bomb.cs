@@ -206,7 +206,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void PlayerSet1P()
     { // 본인의 프로필을 출력하는 Method
         // 프로필 이미지 출력
-        SQL_Manager.instance.PrintProfileImage(GameManager.Instance.IsImageMode, playerImage1P, GameManager.Instance.ProfileIndex);
+        playerImage1P.sprite = GameManager.Instance.CacheProfileImage1P;
       
         // 프로필 이름 출력
         playerName1P.text = GameManager.Instance.ProfileName;

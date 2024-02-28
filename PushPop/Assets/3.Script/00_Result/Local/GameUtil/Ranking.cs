@@ -267,13 +267,7 @@ public class Ranking : MonoBehaviour
             _Score.text = "";
         }
 
-        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        {
-            if (SQL_Manager.instance.Profile_list[i].index == GameManager.Instance.ProfileIndex)
-            { // Profile Index가 같다면
-                SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, _image, SQL_Manager.instance.Profile_list[i].index);
-            }
-        }
+        _image.sprite = GameManager.Instance.CacheProfileImage1P;
     }
 
     /// <summary>
@@ -382,14 +376,7 @@ public class Ranking : MonoBehaviour
             _name.text = GameManager.Instance.ProfileName;
             _timer.text = "";
         }
-
-        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        {
-            if (SQL_Manager.instance.Profile_list[i].index == GameManager.Instance.ProfileIndex)
-            { // Profile Index가 같다면
-                SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, _image, SQL_Manager.instance.Profile_list[i].index);
-            }
-        }
+        _image.sprite = GameManager.Instance.CacheProfileImage1P;
     }
 
     /// <summary>
@@ -482,6 +469,11 @@ public class Ranking : MonoBehaviour
         int scoreIndex = 0;
         Rank userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex && r.spriteName.Contains(index));
 
+        if (userRecord == null)
+        {
+            previousScore = 0;
+            return;
+        }
         switch (GameManager.Instance.gameMode)
         {
             case Mode.Speed:
@@ -500,11 +492,6 @@ public class Ranking : MonoBehaviour
                 break;
         }
 
-        if (userRecord == null)
-        {
-            previousScore = 0;
-            return;
-        }
 
         switch (GameManager.Instance.gameMode)
         {
