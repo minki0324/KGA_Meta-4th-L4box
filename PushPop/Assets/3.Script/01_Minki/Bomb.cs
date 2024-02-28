@@ -725,8 +725,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // 결과창 출력
         AudioManager.instance.Stop_SFX();
         AudioManager.instance.SetCommonAudioClip_SFX(7);
-        bottomTimer = 10000f;
-        bNoTimePlaying = false;
         
         result.SetActive(true);
         Ranking.Instance.LoadVersusResult_Personal(winText, loseText, winProfileImage, loseProfileImage);

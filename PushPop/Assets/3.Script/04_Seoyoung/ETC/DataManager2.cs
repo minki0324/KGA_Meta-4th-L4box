@@ -272,7 +272,6 @@ public class DataManager2 : MonoBehaviour
 
     public void Save_HelpScript()
     {
-        Debug.Log("Save_HelpScript 호출됨");
         string oriPath = Path.Combine(Application.streamingAssetsPath, helpScript_fileName);
 
         //UnityWebRequest reader = new UnityWebRequest()
@@ -280,34 +279,25 @@ public class DataManager2 : MonoBehaviour
         WWW reader = new WWW(oriPath);
         while (!reader.isDone)
         {
-            ;
+            
         }
-        Debug.Log("으아아아ㅏ아아ㅏㅏ아ㅏㅏ아ㅏㅏㅏ");
 
         string realPath = Datapath + "/help.json";
-        Debug.Log("여기?");
 
         byte[] data = reader.bytes;
         string resultData = System.Text.Encoding.UTF8.GetString(data);
 
-        Debug.Log(resultData);
         //File.WriteAllBytes(realPath, reader.bytes);
 
         File.WriteAllText(realPath, resultData);
 
-        Debug.Log("Save_HelpScript 저장됨");
     }
 
     public void Read_HelpScript()
     {
-        Debug.Log("Read_HelpScript호출됨");
-
         //도움말 스크립트 읽어오는 함수
-
-
         if(File.Exists(Datapath + "/help.json"))
         {
-            Debug.Log("Read_HelpScript 파일 존재");
             helpScripts_List.Clear();
             string JsonString = File.ReadAllText(Datapath + "/help.json");
             var jsonData = JsonMapper.ToObject(JsonString);
@@ -332,8 +322,6 @@ public class DataManager2 : MonoBehaviour
                 }
 
                 helpScripts_List.Add(helpScript);
-
-                Debug.Log("Read_HelpScript 파일 불러오기 끝");
             }
         }
      

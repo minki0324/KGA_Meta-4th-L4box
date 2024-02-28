@@ -79,7 +79,6 @@ public class AudioManager : MonoBehaviour
 
         if (bBgmChanging)
         {
-            Debug.Log("변경중 호출 : ");
             StopCoroutine(stopMusic);
 
             playingBgm = index;

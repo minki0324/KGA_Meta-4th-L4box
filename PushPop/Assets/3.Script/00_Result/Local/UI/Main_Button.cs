@@ -35,6 +35,7 @@ public class Main_Button : MonoBehaviour
     {
         Enable_Button();
         help_Cavas.gameObject.SetActive(false);
+        GameManager.Instance.shutdownTimer = 0;
     }
     #endregion
 

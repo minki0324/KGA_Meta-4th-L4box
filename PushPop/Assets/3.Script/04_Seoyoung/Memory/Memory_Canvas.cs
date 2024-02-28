@@ -22,7 +22,7 @@ public class Memory_Canvas : MonoBehaviour
     [Header("패널")]
     [SerializeField] private Canvas main_Canvas;
     [SerializeField] private GameObject gameSet_Panel; 
-    [SerializeField] private Canvas memoryGame_Canvas;
+    [SerializeField] private GameObject memoryGame_Canvas;
     [SerializeField] private Help_Canvas help_Canvas;
 
     [Header("개인 기록")] 
