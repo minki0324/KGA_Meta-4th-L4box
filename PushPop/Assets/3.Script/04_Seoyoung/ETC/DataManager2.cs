@@ -10,6 +10,8 @@ using UnityEngine.Networking;
 using Unity.VisualScripting.Antlr3.Runtime.Collections;
 
 #region ObjectClass
+
+//카테고리용
 [System.Serializable]
 public class CategoryDict
 {
@@ -17,6 +19,7 @@ public class CategoryDict
     public string name;
 }
 
+//몰드 아이콘용
 [System.Serializable]
 public class IconDict
 {
@@ -24,6 +27,7 @@ public class IconDict
     public string name;
 }
 
+//도움말용
 
 [System.Serializable]
 public class Scripts
@@ -38,6 +42,15 @@ public class HelpScript
 {
     public string type;
     public List<Scripts> script = new List<Scripts>();
+}
+
+
+//욕설방지 용
+[System.Serializable]
+public class BadWord
+{
+    public int index;
+    public string badword;
 }
 #endregion
 
@@ -60,10 +73,21 @@ public class DataManager2 : MonoBehaviour
     //도움말 스크립트용
     public List<HelpScript> helpScripts_List = new List<HelpScript>();
 
+
+
+    //욕설방지용
+    public BadWord[] badWord_Arr;
+
+    //파일 이름
     public string categoryDict_fileName = "category.json";
     public string iconDict_fileName = "icon.json";
     public string helpScript_fileName = "help.json";
+    public string badWord_fileName = "badword.json";
+
     public string Datapath = string.Empty;
+
+
+
 
     private string path = Application.streamingAssetsPath;
 
@@ -95,6 +119,7 @@ public class DataManager2 : MonoBehaviour
 
         Read_Category();
         Read_Icon();
+        Read_BadWord();
 
 
     }
@@ -204,6 +229,7 @@ public class DataManager2 : MonoBehaviour
     {
         //iconDict.Clear();
 
+        #region 이부분을 처음 깔때만 실행하면 참 좋을텐데
         string oriPath = Path.Combine(path, iconDict_fileName);
 
         WWW reader = new WWW(oriPath);
@@ -221,6 +247,7 @@ public class DataManager2 : MonoBehaviour
         //File.WriteAllBytes(realPath, reader.bytes);
         File.WriteAllText(realPath, resultData);
 
+        #endregion
 
         string JsonString = File.ReadAllText(realPath);
 
@@ -267,8 +294,6 @@ public class DataManager2 : MonoBehaviour
         JsonData jsonData = JsonMapper.ToJson(iconDicts_List);
         File.WriteAllText(path + "/" + iconDict_fileName, Decode_EncodedNonASCIICharacters(jsonData.ToString()));
     }
-
-
 
     public void Save_HelpScript()
     {
@@ -327,9 +352,50 @@ public class DataManager2 : MonoBehaviour
             }
         }
 
+    }
 
+    public void Read_BadWord()
+    {
+        
+
+        string oriPath = Path.Combine(path, badWord_fileName);
+
+        WWW reader = new WWW(oriPath);
+        while (!reader.isDone)
+        {
+
+        }
+
+        string realPath = Datapath + "/" + badWord_fileName;
+
+        byte[] data = reader.bytes;
+        string resultData = System.Text.Encoding.UTF8.GetString(data);
+
+
+        File.WriteAllText(realPath, resultData);
+
+
+        string JsonString = File.ReadAllText(realPath);
+
+        JsonData jsonData = JsonMapper.ToObject(JsonString);
+
+        badWord_Arr = new BadWord[jsonData.Count];
+
+        for (int i = 0; i < jsonData.Count; i++)
+        {
+            BadWord badword = new BadWord();
+
+            badword.index = i;
+            badword.badword = jsonData[i]["badword"].ToString();
+
+           
+            badWord_Arr[i] = badword;
+        }
 
     }
+
+
+
 
     //유니코드 -> 한글 변환 메소드
     public string Decode_EncodedNonASCIICharacters(string value)
