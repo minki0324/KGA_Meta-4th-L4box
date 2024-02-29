@@ -160,21 +160,19 @@ public class MemoryPushpop : MonoBehaviour
         {
             AudioManager.instance.SetAudioClip_SFX(1, false);
         }
-        
+
     }
     private void PlayShakePush()
     {//버튼이 틀렸을때 흔들리는 애니메이션
         ani.SetTrigger("isShake");
+        //흔들리는 동안 터치 안되게
         _myImage.raycastTarget = false;
     }
-    public void ChangeColor()
+    public void ShakeEndAfter()
     {//애니메이션 Event로 추가되있음
-        // 흔들림이 끝나고 어둡게 색을 변경함
-        Color darkColor = new Color(0.77f, 0.77f, 0.77f);
-        ColorBlock buttonColors = button.colors;
-        buttonColors.normalColor = darkColor;
-        buttonColors.selectedColor = darkColor;
-        button.colors = buttonColors;
+        // 흔들림이 끝나고 다시 터치 가능하게 만듬
+        _myImage.raycastTarget = true;
+        Debug.Log("11");
     }
     #region
     #endregion
