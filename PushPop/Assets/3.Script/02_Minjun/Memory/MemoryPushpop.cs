@@ -34,11 +34,6 @@ public class MemoryPushpop : MonoBehaviour
         //Sprite에서 Alpha 값이 0.1 이하 일시 인식하지 않게함
         _myImage.alphaHitTestMinimumThreshold = 0.1f;
     }
-
-    void Update()
-    {
-        
-    }
     #region onButton에 넣어주는메소드
     public void onBtnClick()
     {
@@ -91,7 +86,7 @@ public class MemoryPushpop : MonoBehaviour
     private void Incorrect()
     {//오답메소드
         AudioManager.instance.SetAudioClip_SFX(0, false);
-        FailToSolvePuzzle();
+        PlayShakePush();
         //라이프 깎기(MemoryManager)
         MemoryManager.Instance.Life--;
         MemoryManager.Instance.LifeRemove();
@@ -107,16 +102,7 @@ public class MemoryPushpop : MonoBehaviour
 
     }
 
-    private void FailToSolvePuzzle()
-    {
-        Color darkColor = new Color(0.77f, 0.77f, 0.77f);
-        ColorBlock buttonColors = button.colors;
-        buttonColors.normalColor = darkColor;
-        buttonColors.selectedColor = darkColor;
-        button.colors = buttonColors;
-        ani.SetTrigger("isShake");
-        _myImage.raycastTarget = false;
-    }
+    
     #endregion
     #region 스테이지 승리콜백메소드
 
@@ -156,18 +142,33 @@ public class MemoryPushpop : MonoBehaviour
         MemoryManager.Instance.CreatBoard();
     }
 
-   
+
     #endregion
 
-
+    #region 버튼클릭애니메이션
+    #endregion
     //본인이 정답인지 깜빡이는 메소드
     public void PlayBlink()
-    {
+    { //게임시작, 혹은 힌트버튼누를때 정답 버튼을 알려주는 메소드
         ani.SetTrigger("isBlink");
         AudioManager.instance.SetAudioClip_SFX(2, false);
     }
+    private void PlayShakePush()
+    {//버튼이 틀렸을때 흔들리는 애니메이션
+        ani.SetTrigger("isShake");
+        _myImage.raycastTarget = false;
+    }
+    public void ChangeColor()
+    {//애니메이션 Event로 추가되있음
+        // 흔들림이 끝나고 어둡게 색을 변경함
+        Color darkColor = new Color(0.77f, 0.77f, 0.77f);
+        ColorBlock buttonColors = button.colors;
+        buttonColors.normalColor = darkColor;
+        buttonColors.selectedColor = darkColor;
+        button.colors = buttonColors;
+    }
     #region
     #endregion
-    
-   
+
+
 }
