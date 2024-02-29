@@ -759,8 +759,14 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // 리스트 초기화 및 Sprite 삭제
         popList1P.Clear();
         popList2P.Clear();
-        Destroy(Frame[0].transform.GetChild(0).gameObject);
-        Destroy(Frame[1].transform.GetChild(0).gameObject);
+        if(Frame[0].transform.GetChild(0).gameObject != null)
+        {
+            Destroy(Frame[0].transform.GetChild(0).gameObject);
+        }
+        if(Frame[1].transform.GetChild(0).gameObject != null)
+        {
+            Destroy(Frame[1].transform.GetChild(0).gameObject);
+        }
 
         // Bool값 초기화
         Quit1P = false;
@@ -924,6 +930,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         AudioManager.instance.SetAudioClip_BGM(0);
+        QuitGame();
         result.SetActive(false);
         GamePanel.SetActive(false);
         MainPanel.SetActive(true);
