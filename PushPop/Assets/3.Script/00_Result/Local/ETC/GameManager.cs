@@ -426,6 +426,8 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public void SpeedMode()
     { // speed mode start
+        PushPop.Instance.buttonSize = new Vector2(80f, 80f);
+        PushPop.Instance.percentage = 0.67f;
         Ranking.Instance.SettingPreviousScore();
         // position count 한 개, 위치 가운데, scale 조정
         bubbleSize = 300f; // speed mode bubble size setting
