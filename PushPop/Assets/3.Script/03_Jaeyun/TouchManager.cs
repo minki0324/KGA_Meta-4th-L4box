@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -6,56 +7,75 @@ public class TouchManager : MonoBehaviour
     //This is a simple script that does a raycast and plays the VFX on a prefab
     public GameObject VFXPrefab;
     VisualEffect[] visualEffects;
+    public Camera effectCamera;
+    Coroutine touchTimer;
+    public Transform particleCanvas;
+
     void Start()
     {
         visualEffects = VFXPrefab.GetComponentsInChildren<VisualEffect>();
     }
+
     void Update()
     {
         ClickEffect();
-        /*if (Input.anyKeyDown)
-        {
-            Ray ray;
-            RaycastHit hit;
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit))
-            {
-                VFXPrefab.transform.position = hit.point;
-                for (int i = 0; i < visualEffects.Length; i++)
-                {
-                    visualEffects[i].SendEvent("Click");
-                }
-            }
-        }*/
     }
+
     private void ClickEffect()
     {
         if (Input.anyKeyDown)
         {
+            if (touchTimer != null)
+            {
+                StopCoroutine(touchTimer);
+            }
+            touchTimer = StartCoroutine(ClickStartTimer_Co());
+
+            GameObject vfxEffect = Instantiate(VFXPrefab, particleCanvas);
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos.z = 0;
-            VFXPrefab.transform.position = pos;
+            vfxEffect.transform.position = pos;
+            visualEffects = vfxEffect.GetComponentsInChildren<VisualEffect>();
+
             for (int i = 0; i < visualEffects.Length; i++)
             {
                 visualEffects[i].SendEvent("Click");
             }
+            Destroy(vfxEffect, 1.5f);
         }
-
-        // android
-        if (Input.touchCount > 0)
+        /*if (Input.touchCount > 0)
         {
+            if (touchTimer != null)
+            {
+                StopCoroutine(touchTimer);
+            }
+            touchTimer = StartCoroutine(ClickStartTimer_Co());
+
             for (int i = 0; i < Input.touchCount; i++)
             {
                 Touch touch = Input.GetTouch(i);
                 if (touch.phase.Equals(TouchPhase.Began))
                 {
-                    VFXPrefab.transform.position = touch.position;
+                    GameObject vfxEffect = Instantiate(VFXPrefab, particleCanvas);
+                    vfxEffect.transform.position = touch.position;
+                    visualEffects = vfxEffect.GetComponentsInChildren<VisualEffect>();
+
                     for (int j = 0; j < visualEffects.Length; i++)
                     {
                         visualEffects[i].SendEvent("Click");
                     }
+                    Destroy(vfxEffect, 1.5f);
                 }
             }
-        }
+        }*/
+    }
+    
+    private IEnumerator ClickStartTimer_Co()
+    {
+        effectCamera.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(1.5f);
+
+        effectCamera.gameObject.SetActive(false);
     }
 }
