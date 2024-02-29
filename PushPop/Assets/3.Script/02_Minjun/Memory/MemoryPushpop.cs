@@ -151,7 +151,16 @@ public class MemoryPushpop : MonoBehaviour
     public void PlayBlink()
     { //게임시작, 혹은 힌트버튼누를때 정답 버튼을 알려주는 메소드
         ani.SetTrigger("isBlink");
-        AudioManager.instance.SetAudioClip_SFX(2, false);
+
+        if (MemoryManager.Instance.currentStage % 5 != 0)
+        {
+            AudioManager.instance.SetAudioClip_SFX(2, false);
+        }
+        else
+        {
+            AudioManager.instance.SetAudioClip_SFX(1, false);
+        }
+        
     }
     private void PlayShakePush()
     {//버튼이 틀렸을때 흔들리는 애니메이션

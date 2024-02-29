@@ -679,10 +679,15 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     private IEnumerator ReadyGame_Co()
     {
-        readyPanel.SetActive(true);
         DialogManager.instance.Print_Dialog(readyText, "준비 ~");
+        readyPanel.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+
+        AudioManager.instance.SetCommonAudioClip_SFX(1);
+      
         yield return new WaitForSeconds(2f);
 
+        AudioManager.instance.SetCommonAudioClip_SFX(2);
         DialogManager.instance.Print_Dialog(readyText, "시작 ~");
         yield return new WaitForSeconds(0.8f);
         readyPanel.SetActive(false);
@@ -748,6 +753,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // 오브젝트 삭제
         ResetGame();
         AudioManager.instance.SetAudioClip_SFX(1, false);
+        AudioManager.instance.SetAudioClip_BGM(1);
         help_Canvas.gameObject.SetActive(true);
     }
 
