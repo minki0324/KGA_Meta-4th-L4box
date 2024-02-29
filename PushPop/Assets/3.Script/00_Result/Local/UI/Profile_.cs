@@ -313,7 +313,42 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     {
         bool bPossibleName = true;
 
-        for(int i = 0; i < _profileNameAdd.text.Length; i++)
+
+
+        for (int i = 0; i < DataManager2.instance.vulgarism_Arr.Length; i++)
+        {
+            //Debug.Log(DataManager2.instance.vulgarism_Arr[i]);
+            if (_profileNameAdd.text.Contains(DataManager2.instance.vulgarism_Arr[i]))
+            {
+                if (DataManager2.instance.vulgarism_Arr[i] != string.Empty)
+                {
+                    Debug.Log(i);
+                    Debug.Log(_profileNameAdd.text);
+                    Debug.Log(DataManager2.instance.vulgarism_Arr[i]);      //이친구가 왜 공백인가에 대하여..
+                    DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameLog, "비속어는 포함시킬 수 없습니다."));
+                    _profileNameAdd.text = String.Empty;    //다지우는애
+                    bPossibleName = false;
+                    break;
+                }
+            }
+             
+
+        }
+
+        for (int i = 0; i < DataManager2.instance.badWord_Arr.Length; i++)
+        {
+            if (_profileNameAdd.text.Contains(DataManager2.instance.badWord_Arr[i].badword))
+            {
+                DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameLog, "비속어는 포함시킬 수 없습니다."));
+                _profileNameAdd.text = String.Empty;    //다지우는애
+                bPossibleName = false;
+                break;
+            }
+        }
+
+
+
+        for (int i = 0; i < _profileNameAdd.text.Length; i++)
         {
             if (Regex.IsMatch(_profileNameAdd.text[i].ToString(), @"[^0-9a-zA-Z가-힣]"))
             {
@@ -346,6 +381,9 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
                 DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameLog, "2~6글자의 이름을 입력해주세요."));
             }
         }
+
+
+
     }
 
     // Profile Image Index를 저장하는 Method
