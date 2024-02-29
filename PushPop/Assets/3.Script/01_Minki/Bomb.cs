@@ -125,16 +125,16 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         Sprite[] tempSprites = new Sprite[atlas.spriteCount];
         sprites = tempSprites;
         atlas.GetSprites(sprites);
-
-        // 버튼 사이즈 설정
-        PushPop.Instance.buttonSize = new Vector2(80f, 80f);
-        PushPop.Instance.percentage = 0.67f;
-
-        GameManager.Instance.GameStart();
     }
 
     private void OnEnable()
-    {       
+    {
+        // 버튼 사이즈 설정
+        PushPop.Instance.buttonSize = new Vector2(57.136f, 57.136f);
+        PushPop.Instance.percentage = 0.478f;
+
+        GameManager.Instance.GameStart();
+
         AudioManager.instance.SetAudioClip_BGM(1);
         PlayerSet1P();
         profile2PInput.onValidateInput += ValidateInput;
@@ -168,6 +168,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         {
             if (!bNoTimePlaying)
             {
+                timerText.color = TimerCountColorChange("#FF0000");
                 bNoTimePlaying = true;
                 AudioManager.instance.SetAudioClip_SFX(3, true);
             }
@@ -760,6 +761,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void ResetGame()
     { // 오브젝트들 삭제하는 메소드
         // 종료 애니메이션 비활성화
+        timerText.color = new Color(0, 0, 0, 1); // black으로 초기화
         endAnimation.transform.gameObject.SetActive(false);
         
         // 리스트 초기화 및 Sprite 삭제
@@ -953,6 +955,16 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     {
         gameStartBtn.interactable = false;
         profileBtn.interactable = false;
+    }
+
+    private Color TimerCountColorChange(string _colorCode)
+    { // timertext color change
+        Color newColor = new Color(0, 0, 0, 1);
+        if (ColorUtility.TryParseHtmlString(_colorCode, out newColor))
+        {
+            return newColor;
+        }
+        return newColor;
     }
     #endregion
 }
