@@ -202,6 +202,13 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public IEnumerator GameReady_Co(GameObject _panel, TMP_Text text)
     {
+
+        if(gameMode == Mode.PushPush)
+        {
+            //게임 시작 버튼 소리가 안들려서 잠깐 시간 좀 띄울게..
+            yield return new WaitForSeconds(0.5f);
+        }
+        
         // game start 문구 띄워주기, panel 다 막아버리면 될듯?
         for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
         {

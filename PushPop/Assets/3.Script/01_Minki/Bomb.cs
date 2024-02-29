@@ -679,10 +679,10 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     private IEnumerator ReadyGame_Co()
     {
+        
+        yield return new WaitForSeconds(0.5f);
         DialogManager.instance.Print_Dialog(readyText, "준비 ~");
         readyPanel.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
-
         AudioManager.instance.SetCommonAudioClip_SFX(1);
       
         yield return new WaitForSeconds(2f);
