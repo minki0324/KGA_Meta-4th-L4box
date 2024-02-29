@@ -65,6 +65,7 @@ public class Profile_Information : MonoBehaviour
             SQL_Manager.instance.PrintProfileImage(GameManager.Instance.IsImageMode, profile.ProfileImage, GameManager.Instance.ProfileIndex);
            
             profile.SelectName.text = GameManager.Instance.ProfileName;
+            profile.exitBtn.gameObject.SetActive(false);
             profile.CurrnetProfilePanel.SetActive(true);
         }
     }
@@ -83,6 +84,7 @@ public class Profile_Information : MonoBehaviour
             if (profile != null)
             {
                 profile.DeletePanel.SetActive(true);
+                profile.Enable_ExitBtn(false);
             }
         }
         else if(GameManager.Instance.gameMode == Mode.Bomb)
@@ -92,5 +94,8 @@ public class Profile_Information : MonoBehaviour
             bomb.deletePanel.SetActive(true);
         }
     }
+
+
+
     #endregion
 }

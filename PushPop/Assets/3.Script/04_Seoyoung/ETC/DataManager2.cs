@@ -326,7 +326,7 @@ public class DataManager2 : MonoBehaviour
 
 
         helpScripts_List.Clear();
-        string JsonString = File.ReadAllText(Datapath + "/help.json");
+        string JsonString = File.ReadAllText(realPath);
         var jsonData = JsonMapper.ToObject(JsonString);
 
         for (int i = 0; i < jsonData.Count; i++)

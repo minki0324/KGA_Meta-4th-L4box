@@ -89,6 +89,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     private void OnDisable()
     {
         _profileNameAdd.onValidateInput -= ValidateInput;
+        exitBtn.gameObject.SetActive(true);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -416,6 +417,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         _isUpdate = false;
+        exitBtn.gameObject.SetActive(false);
         CreateNamePanel.SetActive(true);
     }
 
@@ -487,10 +489,20 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
         AudioManager.instance.SetCommonAudioClip_SFX(3);
 
         profile_ScrollView.normalizedPosition = new Vector2(1f, 1f);
-
+        exitBtn.gameObject.SetActive(true);
         CurrnetProfilePanel.SetActive(false);
         SelectProfilePanel.SetActive(true);
     }
+
+    public void Btn_DeletePanel_Clicked()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+
+        DeletePanel.SetActive(false);
+        Enable_ExitBtn(true);
+
+    }
+
 
     public void ImageModeSet(bool _mode)
     {
@@ -501,6 +513,19 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     {
         SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileIndex);
         cameraManager.CameraOpen();
+    }
+
+    public void Enable_ExitBtn(bool _enable)
+    {
+        if(_enable)
+        {
+            exitBtn.interactable = true;
+        }
+        else
+        {
+            exitBtn.interactable = false;
+        }
+     
     }
 
     public void ExitBtn()

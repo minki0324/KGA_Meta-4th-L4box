@@ -5258,8 +5258,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 678101359}
-  m_Father: {fileID: 2084374412}
-  m_RootOrder: 8
+  m_Father: {fileID: 1878190844}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -15580,26 +15580,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1679855079}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1878190845}
+        m_TargetAssemblyTypeName: Profile_, Assembly-CSharp
+        m_MethodName: Btn_DeletePanel_Clicked
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1538655749}
-        m_TargetAssemblyTypeName: AudioManager123, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -22679,7 +22667,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c9ee11329916f194191f929ebe394ac1, type: 3}
   - {fileID: 8300000, guid: c7d95589e412a33428e2ed7fbe4a295e, type: 3}
   speedSfxClip_List:
-  - {fileID: 8300000, guid: 4f2b0974469b61845b8053bf3b528209, type: 3}
+  - {fileID: 8300000, guid: dc9229c27889d1c44abb8b5b7341b0aa, type: 3}
   - {fileID: 8300000, guid: a7eb86b5b821c6546a58a7cf27ffe118, type: 3}
   memorySfxClip_List:
   - {fileID: 8300000, guid: cbbdee514455ac645a0473f3592e0edb, type: 3}
@@ -22699,7 +22687,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3ba85258cc9ec044395cabd16030ca21, type: 3}
   - {fileID: 8300000, guid: ae64eab1449f3c543b16ad37faf49c6e, type: 3}
   - {fileID: 8300000, guid: 071ed3800de47234b8a72770cace8cdf, type: 3}
-  - {fileID: 8300000, guid: 0d7658c24ab63c14aa6ba33e35985727, type: 3}
+  - {fileID: 8300000, guid: a40ba95965c693a43a955d3ee45b0ef9, type: 3}
   - {fileID: 8300000, guid: c40e651ccea19db4a9ff728b51ee52d2, type: 3}
   - {fileID: 8300000, guid: 6703200494911f74998dca47ca90da53, type: 3}
   - {fileID: 8300000, guid: f6d2aeed526e5f94dbe6b042ed8fb15e, type: 3}
@@ -28500,6 +28488,7 @@ RectTransform:
   - {fileID: 1253195989}
   - {fileID: 71060993}
   - {fileID: 1679855080}
+  - {fileID: 340158725}
   m_Father: {fileID: 2084374412}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -28531,7 +28520,7 @@ MonoBehaviour:
   GameMode_Panel: {fileID: 851502538}
   profileCreateBtn: {fileID: 0}
   profileDeleteBtn: {fileID: 1520692303}
-  exitBtn: {fileID: 0}
+  exitBtn: {fileID: 340158726}
   profilePanel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
   profileLog: {fileID: 256174220}
   nameLog: {fileID: 681549811}
@@ -29332,26 +29321,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1679855079}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1878190845}
+        m_TargetAssemblyTypeName: Profile_, Assembly-CSharp
+        m_MethodName: Btn_DeletePanel_Clicked
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1538655749}
-        m_TargetAssemblyTypeName: AudioManager123, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -29786,6 +29763,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 340158724}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &1955310912
 MonoBehaviour:
@@ -31044,7 +31033,6 @@ RectTransform:
   - {fileID: 1878190844}
   - {fileID: 1023259304}
   - {fileID: 1786169417}
-  - {fileID: 340158725}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
