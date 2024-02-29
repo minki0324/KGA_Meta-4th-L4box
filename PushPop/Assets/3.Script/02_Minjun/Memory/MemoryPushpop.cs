@@ -91,7 +91,7 @@ public class MemoryPushpop : MonoBehaviour
     private void Incorrect()
     {//오답메소드
         AudioManager.instance.SetAudioClip_SFX(0, false);
-
+        FailToSolvePuzzle();
         //라이프 깎기(MemoryManager)
         MemoryManager.Instance.Life--;
         MemoryManager.Instance.LifeRemove();
@@ -106,9 +106,20 @@ public class MemoryPushpop : MonoBehaviour
         }
 
     }
+
+    private void FailToSolvePuzzle()
+    {
+        Color darkColor = new Color(0.77f, 0.77f, 0.77f);
+        ColorBlock buttonColors = button.colors;
+        buttonColors.normalColor = darkColor;
+        buttonColors.selectedColor = darkColor;
+        button.colors = buttonColors;
+        ani.SetTrigger("isShake");
+        _myImage.raycastTarget = false;
+    }
     #endregion
     #region 스테이지 승리콜백메소드
- 
+
 
     private void onStageClear()
     {//스테이지  클리어시 불리는 메소드
