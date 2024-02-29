@@ -242,6 +242,7 @@ public class GameManager : MonoBehaviour, IGameMode
             case Mode.Speed:
                 break;
             case Mode.Memory:
+                MemoryManager.Instance.CreatBoard();
                 break;
             case Mode.Bomb:
                 break;

@@ -50,8 +50,7 @@ public class MemoryManager : MonoBehaviour
     private void OnEnable()
     {
         //처음 Gameplay판넬 시작시 보드판소환(게임시작) 
-     
-        StartCoroutine(ReadyGame_Co());
+        GameManager.Instance.StartCoroutine(GameManager.Instance.GameReady_Co(ReadyPanel, ReadyPanel_Text));
     }
     public void CreatBoard()
     {//현재 스테이지에 맞는 보드판 소환
@@ -141,7 +140,7 @@ public class MemoryManager : MonoBehaviour
 
         if (isRetry)
         {//다시하기 버튼
-            StartCoroutine(ReadyGame_Co());
+            GameManager.Instance.StartCoroutine(GameManager.Instance.GameReady_Co(ReadyPanel, ReadyPanel_Text));
         }
         else
         {//나가기 버튼
@@ -188,20 +187,6 @@ public class MemoryManager : MonoBehaviour
         HintBtnActive();
         currentBoard.Blink(true);
     }
-    private IEnumerator ReadyGame_Co()
-    {
-        Ranking.Instance.SettingPreviousScore();
-        ReadyPanel.SetActive(true);
-        ReadyPanel_Text.text = "준비~";
-        yield return new WaitForSeconds(2f);
-
-        ReadyPanel_Text.text = "시작!";
-        yield return new WaitForSeconds(0.8f);
-        ReadyPanel.SetActive(false);
-        CreatBoard();
-        // upperBubble 코루틴 실행
-    }
-
     public void OnGameEnd()
     {
         profileImage.sprite = GameManager.Instance.CacheProfileImage1P;
