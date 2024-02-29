@@ -3,6 +3,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum Difficult
+{
+    Easy = 60,
+    Normal = 50,
+    Hard = 40
+}
+
 public class Speed_Timer : MonoBehaviour
 {
     [Header("캔버스")]
@@ -15,8 +22,10 @@ public class Speed_Timer : MonoBehaviour
     public GameObject resultPanel;
 
     [Header("타이머")]
+    public GameObject TimerObj;
     [SerializeField] private TMP_Text time_Text;
     public Slider time_Slider;
+    public Difficult difficult;
 
     [Header("아이콘 이미지")]
     [SerializeField] private Image Mold_Image;
@@ -100,6 +109,7 @@ public class Speed_Timer : MonoBehaviour
     //타이머 코루틴
     private IEnumerator Timer_co()
     {
+        yield return new WaitForSeconds(2f);
         // game ready
         int cashing = 1;
 
@@ -109,7 +119,7 @@ public class Speed_Timer : MonoBehaviour
             GameManager.Instance.TimeScore = currentTime; // score 저장
             SetText();
 
-            if (currentTime.Equals(50))
+            if (currentTime.Equals((int)difficult-10))
             {
                 time_Text.color = TimerCountColorChange("#FF0000");
                 if(!bNoTimePlaying)
@@ -118,7 +128,7 @@ public class Speed_Timer : MonoBehaviour
                     AudioManager.instance.SetAudioClip_SFX(1, true);
                 }
             }
-            if (currentTime.Equals(60))
+            if (currentTime.Equals((int)difficult))
             {
                 GameManager.Instance.GameClear();
                 yield break;
@@ -160,6 +170,7 @@ public class Speed_Timer : MonoBehaviour
 
     public void GoOutBtn_Clicked()
     {
+        GameManager.Instance.isStart = false;
         if (GameManager.Instance.speedCreate != null)
         {
             GameManager.Instance.StopCoroutine(GameManager.Instance.speedCreate);
@@ -191,7 +202,10 @@ public class Speed_Timer : MonoBehaviour
 
         GameManager.Instance.bubblePos.Clear(); // bubble transform mode에 따라 달라짐
         PushPop.Instance.PushPopClear();
-        StopCoroutine(timer);
+        if(timer != null)
+        {
+            StopCoroutine(timer);
+        }
         if (GameManager.Instance.pushpushCreate_Co != null)
         {
             GameManager.Instance.StopCoroutine(GameManager.Instance.pushpushCreate_Co); // speed pushpop create 초기화
@@ -204,6 +218,7 @@ public class Speed_Timer : MonoBehaviour
         Warning_Panel.SetActive(false);
         resultPanel.SetActive(false);
         gameObject.SetActive(false);
+        TimerObj.SetActive(false);
     }
 
     public void CancelBtn_Clicked()
@@ -226,7 +241,7 @@ public class Speed_Timer : MonoBehaviour
         bNoTimePlaying = false;
         AudioManager.instance.Stop_SFX();
 
-        if (currentTime.Equals(60))
+        if (currentTime.Equals((int)difficult))
         {
             clearTitle = (int)ClearTitle.Fail;
             AudioManager.instance.SetCommonAudioClip_SFX(8);

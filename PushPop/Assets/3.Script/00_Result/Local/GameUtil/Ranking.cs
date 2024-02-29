@@ -200,6 +200,7 @@ public class Ranking : MonoBehaviour
     public void LoadScore(TMP_Text[] _Score, Image[] _image, TMP_Text[] _name)
     {
         SQL_Manager.instance.SQL_ProfileListSet();
+        LoadRanking();
 
         // 스코어가 높은 순으로 랭크 리스트를 정렬하고, 상위 3개의 랭크만 선택.
         var topRanks = rankList
@@ -220,6 +221,7 @@ public class Ranking : MonoBehaviour
         { // 만약 상위 3위를 채우지 못한 경우, 남은 텍스트 요소를 비움.
             _Score[i].text = "";
             _name[i].text = "";
+            _image[i].sprite = GameManager.Instance.noneSprite;
         }
 
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
@@ -244,6 +246,7 @@ public class Ranking : MonoBehaviour
     public void LoadScore_Personal(TMP_Text _name, TMP_Text _Score, Image _image)
     {
         SQL_Manager.instance.SQL_ProfileListSet();
+        LoadRanking();
 
         // 게임매니저에 저장된 프로필 Infomation을 이용하여 rankList에 본인의 기록이 있는지 조회
         var userRecord = rankList.FirstOrDefault(r => r.name == GameManager.Instance.ProfileName && r.index == GameManager.Instance.ProfileIndex);
@@ -280,6 +283,7 @@ public class Ranking : MonoBehaviour
     public void LoadTimer(TMP_Text[] _timer, Image[] _image, TMP_Text[] _name, int _spriteName)
     {
         SQL_Manager.instance.SQL_ProfileListSet();
+        LoadRanking();
 
         // 특정 spriteName에 대한 모든 타이머 기록을 찾아서 정렬하고 상위 3개를 선택.
         var topRanks = rankList
@@ -347,6 +351,7 @@ public class Ranking : MonoBehaviour
     public void LoadTimer_Personal(TMP_Text _name, TMP_Text _timer, Image _image, int _spriteName)
     {
         SQL_Manager.instance.SQL_ProfileListSet();
+        LoadRanking();
 
         var userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex && r.spriteName.Contains(_spriteName));
 

@@ -109,6 +109,7 @@ public class Speed_Canvas : MonoBehaviour
     public void DifficultyBtn_Clicked(int index)
     {
         SelectCategory_ScrollView.normalizedPosition = new Vector2(1f, 1f);
+        GameManager.Instance.isStart = true;
         if (!help_Canvas.bisHelpPanelOn)
         {
             AudioManager.instance.SetCommonAudioClip_SFX(3);
@@ -128,7 +129,8 @@ public class Speed_Canvas : MonoBehaviour
             {
                 case 0:
                     difficulty = Difficulty.Easy;
-
+                    speedTimer.difficult = Difficult.Easy;
+                    GameManager.Instance.count = 1 / 3f;
                     Difficulty_Text.text = "쉬움";
                     SelectMold_Text.text = "쉬움";
                     for (int i = 0; i < easyIcon_List.Count; i++)
@@ -150,7 +152,8 @@ public class Speed_Canvas : MonoBehaviour
 
                 case 1:
                     difficulty = Difficulty.Normal;
-
+                    speedTimer.difficult = Difficult.Normal;
+                    GameManager.Instance.count = 1 / 4f;
                     Difficulty_Text.text = "보통";
                     SelectMold_Text.text = "보통";
                     for (int i = 0; i < normalIcon_List.Count; i++)
@@ -170,7 +173,8 @@ public class Speed_Canvas : MonoBehaviour
 
                 case 2:
                     difficulty = Difficulty.Hard;
-
+                    speedTimer.difficult = Difficult.Hard;
+                    GameManager.Instance.count = 1 / 5f;
                     Difficulty_Text.text = "어려움";
                     SelectMold_Text.text = "어려움";
                     for (int i = 0; i < hardIcon_List.Count; i++)

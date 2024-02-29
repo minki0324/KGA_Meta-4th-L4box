@@ -10,7 +10,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     private Animator bubbleAnimator;
     private Vector2 bubbleSize = Vector2.zero;
     public int touchCount = 0;
-
+    private Vector2 localPos;
 
     [Header("Move Parameter")]
     // Bubble moving
@@ -22,6 +22,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
     private void OnEnable()
     {
+        StartCoroutine(CenterSave());
         gameMode = GameManager.Instance.gameMode; // game start 시 load
         bubbleRectTrans = GetComponent<RectTransform>();
         bubbleAnimator = GetComponent<Animator>();
@@ -38,10 +39,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
                 piece.OnBubbleDestroy();
                 break;
             case Mode.Speed:
-                Speed_Timer speedTimer = FindObjectOfType<Speed_Timer>();
-                if (speedTimer == null || speedTimer.currentTime.Equals(60)) return;
-                speedTimer.time_Slider.gameObject.SetActive(true);
-                GameManager.Instance.SpeedModePushPopCreate();
+                GameManager.Instance.SpeedOnBubbleDestroy(); 
                 break;
             case Mode.Memory:
                 break;
@@ -247,7 +245,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
                 _dir = Vector2.Reflect(_dir, Vector2.down).normalized;
                 transform.position = new Vector2(transform.position.x, Screen.height - ((bubbleSize.y * bubbleScale / 2f) + 10f));
             }
-
+            transform.localPosition = localPos;
             transform.parent.Translate(_dir * (Time.deltaTime * currentSpeed * speedRate)); // bubble move
 
             // moving lerp
@@ -256,5 +254,11 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
             yield return null;
         }
+    }
+
+    private IEnumerator CenterSave()
+    {
+        yield return null;
+        localPos = GetComponent<RectTransform>().localPosition;
     }
 }
