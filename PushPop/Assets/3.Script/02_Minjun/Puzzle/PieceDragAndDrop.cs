@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-    [SerializeField] private PuzzleLozic puzzleLozic;
+    [SerializeField] public PuzzleLozic puzzleLozic;
 
     private Image _myImage;
     private RectTransform _rect; //드래그할때 움직일 오브젝트 위치
@@ -93,8 +93,9 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         }
     }
 
-    private void FailToSolvePuzzle()
-    {
+    public void FailToSolvePuzzle()
+    {//버블을 모두 터트린 다음 한번 호출해줘서 오른쪽으로 퍼즐이 모이게하며
+        //퍼즐이 틀렸을 경우에도 호출되고 오른쪽 특정기준 랜덤값으로 이동시킵니다.
         float X = UnityEngine.Random.Range(puzzleLozic.failPiecePos.position.x - 100f, puzzleLozic.failPiecePos.position.x + 100f);
         float Y = UnityEngine.Random.Range(Screen.height / 5, Screen.height - Screen.height / 5);
         //Vector2 movePos = new Vector2(X, Y);

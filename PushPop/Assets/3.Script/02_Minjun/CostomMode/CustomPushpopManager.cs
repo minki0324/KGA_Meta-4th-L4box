@@ -104,24 +104,7 @@ public class CustomPushpopManager : MonoBehaviour
 
         AudioManager.instance.SetAudioClip_SFX(3, false);
 
-    } //마우스클릭 or 터치를 한 순간
-    //private void Click()
-    //{
-    //    if (!isOnArea)
-    //    {
-    //        DestroyNewPush();
-    //        return;
-    //    }
-    //    //드래그하는동안 마우스위치에 동기화
-    //    SelectPositon = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //    RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, null, out localPosition);
-
-    //    newRectPush.transform.position = localPosition + new Vector2(960, 540);
-    //    if (newPush != null)
-    //    {
-    //        newPush.transform.position = SelectPositon;
-    //    }
-    //} // 마우스드래그 or 터치중일때
+    } 
     public void ClickUp()
     {
         if (newPush == null) return;
@@ -162,12 +145,12 @@ public class CustomPushpopManager : MonoBehaviour
         }
     }
 
-    public void GetSpriteIndex(int index)
-    {
-        ColorButton[spriteIndex].interactable = true;
-        spriteIndex = index;
-        ColorButton[spriteIndex].interactable = false;
-    }
+    //public void GetSpriteIndex(int index)
+    //{
+    //    ColorButton[spriteIndex].interactable = true;
+    //    spriteIndex = index;
+    //    ColorButton[spriteIndex].interactable = false;
+    //}
     public void onCustomEndmethod()
     {
         if (StackPops.Count == 0) return;

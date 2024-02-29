@@ -21,7 +21,7 @@ public class PuzzleLozic : MonoBehaviour
     [Header("피스들 설정 위치")] //임시
     public Transform failPiecePos;
     public Vector2 _piecePos;
-    private float puzzleJudgmentDistance = 30; // 퍼즐 판정 거리.
+    private float puzzleJudgmentDistance = 60; // 퍼즐 판정 거리.
     public List<Puzzle> puzzles = new List<Puzzle>(); //모든 퍼즐 종류를 담아놓는 리스트
     public int ClearCount=0; //맞춰야하는 퍼즐 갯수
     public int successCount= 0; //맞춘 갯수
@@ -90,8 +90,13 @@ public class PuzzleLozic : MonoBehaviour
         {
             
             pieceList[i].transform.GetComponent<Image>().raycastTarget = true;
-            pieceList[i].transform.GetComponent<PieceDragAndDrop>().enabled = true;
+            PieceDragAndDrop dragAndDrop = pieceList[i].transform.GetComponent<PieceDragAndDrop>();
+            dragAndDrop.enabled = true;
+            dragAndDrop.puzzleLozic = this;
+            dragAndDrop.FailToSolvePuzzle();
         }
+
+
 
         if (shadow != null) return;
         shadow = PuzzleInstantiate(FrameObject, frampPos.position, currentPuzzle.shadow, false);
@@ -101,10 +106,11 @@ public class PuzzleLozic : MonoBehaviour
     {//정해진 퍼즐 프레임,퍼즐 생성
         for (int i = 0; i < currentPuzzle.sprites.Length; i++)
         {
-            //퍼즐위치 랜덤한 위치에 생성
             Texture2D puzzleTexture = currentPuzzle.sprites[i].texture;
-            int X = UnityEngine.Random.Range(puzzleTexture.width/2, Screen.width- puzzleTexture.width / 2);
-            int Y = UnityEngine.Random.Range(puzzleTexture.height / 2, Screen.height- puzzleTexture.height / 2);
+            float bigger = puzzleTexture.width > puzzleTexture.height ? puzzleTexture.width : puzzleTexture.height;
+            //퍼즐위치 랜덤한 위치에 생성
+            float X = UnityEngine.Random.Range(bigger*1.2f, Screen.width- bigger * 1.2f);
+            float Y = UnityEngine.Random.Range(bigger * 1.2f, Screen.height- bigger * 1.2f);
             _piecePos= new Vector2(X, Y);
             GameObject piece = PuzzleInstantiate(PieceObject, _piecePos, currentPuzzle.sprites[i], true);
             pieceList.Add(piece.GetComponent<PuzzlePiece>());

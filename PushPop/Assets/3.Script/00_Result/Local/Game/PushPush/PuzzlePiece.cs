@@ -46,7 +46,7 @@ public class PuzzlePiece : MonoBehaviour
         }
 
         if (GameManager.Instance.bubbleObject.Count == 0 && isGround)
-        {
+        {//모두 방울에서 터진 퍼즐들이 모두 땅에 떨어졌을때
             PuzzleLozic puzzle = FindObjectOfType<PuzzleLozic>();
             puzzle.SettingGame();
         }
