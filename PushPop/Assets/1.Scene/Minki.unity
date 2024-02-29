@@ -5628,7 +5628,6 @@ RectTransform:
   - {fileID: 1089231459}
   - {fileID: 1474631796}
   - {fileID: 990608101}
-  - {fileID: 2026191758}
   m_Father: {fileID: 209500415}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6896,6 +6895,7 @@ RectTransform:
   - {fileID: 165059418}
   - {fileID: 1621331501}
   - {fileID: 2108204733}
+  - {fileID: 2026191758}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -42673,6 +42673,7 @@ MonoBehaviour:
   - {fileID: 326879423}
   Hintbutton: {fileID: 1133065190}
   Backbutton: {fileID: 927775738}
+  hintbuttonIamge: {fileID: 0}
   Lobby: {fileID: 209500414}
   StartAni: {fileID: 98966145}
   profileName: {fileID: 726396747}
@@ -48034,10 +48035,15 @@ MonoBehaviour:
   scipts_List: []
   iconDicts_List: []
   helpScripts_List: []
+  badWord_Arr: []
+  vulgarism_Arr: []
   categoryDict_fileName: category.json
   iconDict_fileName: icon.json
   helpScript_fileName: help.json
+  badWord_fileName: badword.json
+  vulgarism_fileName: vulgarism.json
   Datapath: 
+  path: 
 --- !u!4 &1636998334
 Transform:
   m_ObjectHideFlags: 0
@@ -59999,8 +60005,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 222098245}
-  m_Father: {fileID: 165059418}
-  m_RootOrder: 7
+  m_Father: {fileID: 209500415}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

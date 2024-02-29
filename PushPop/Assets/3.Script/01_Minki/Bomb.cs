@@ -759,11 +759,11 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // 리스트 초기화 및 Sprite 삭제
         popList1P.Clear();
         popList2P.Clear();
-        if(Frame[0].transform.GetChild(0).gameObject != null)
+        if(Frame[0].transform.childCount > 0)
         {
             Destroy(Frame[0].transform.GetChild(0).gameObject);
         }
-        if(Frame[1].transform.GetChild(0).gameObject != null)
+        if(Frame[1].transform.childCount > 0)
         {
             Destroy(Frame[1].transform.GetChild(0).gameObject);
         }

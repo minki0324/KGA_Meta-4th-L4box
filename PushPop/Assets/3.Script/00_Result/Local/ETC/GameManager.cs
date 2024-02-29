@@ -466,7 +466,7 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public void BombMode()
     {
-        BoardSize = new Vector2(600f, 600f);
+        BoardSize = new Vector2(500f, 500f);
         // 상단 배치
 
         // 게임 보드에 배치
