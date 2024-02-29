@@ -170,6 +170,7 @@ public class Speed_Timer : MonoBehaviour
 
     public void GoOutBtn_Clicked()
     {
+        GameManager.Instance.isStart = false;
         if (GameManager.Instance.speedCreate != null)
         {
             GameManager.Instance.StopCoroutine(GameManager.Instance.speedCreate);
@@ -201,7 +202,10 @@ public class Speed_Timer : MonoBehaviour
 
         GameManager.Instance.bubblePos.Clear(); // bubble transform mode에 따라 달라짐
         PushPop.Instance.PushPopClear();
-        StopCoroutine(timer);
+        if(timer != null)
+        {
+            StopCoroutine(timer);
+        }
         if (GameManager.Instance.pushpushCreate_Co != null)
         {
             GameManager.Instance.StopCoroutine(GameManager.Instance.pushpushCreate_Co); // speed pushpop create 초기화
@@ -214,6 +218,7 @@ public class Speed_Timer : MonoBehaviour
         Warning_Panel.SetActive(false);
         resultPanel.SetActive(false);
         gameObject.SetActive(false);
+        TimerObj.SetActive(false);
     }
 
     public void CancelBtn_Clicked()
@@ -236,7 +241,7 @@ public class Speed_Timer : MonoBehaviour
         bNoTimePlaying = false;
         AudioManager.instance.Stop_SFX();
 
-        if (currentTime.Equals(60))
+        if (currentTime.Equals((int)difficult))
         {
             clearTitle = (int)ClearTitle.Fail;
             AudioManager.instance.SetCommonAudioClip_SFX(8);

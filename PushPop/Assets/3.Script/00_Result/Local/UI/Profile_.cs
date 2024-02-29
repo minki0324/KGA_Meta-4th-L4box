@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
-
+using UnityEditor;
 
 /// <summary>
 /// Profile 관련 행동 처리 Class
@@ -30,6 +30,7 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     [Header("Button")]
     [SerializeField] private Button profileCreateBtn;
     [SerializeField] private Button profileDeleteBtn;
+    public Button exitBtn;
 
     [Header("GUID")]
     private string uniqueID;
@@ -404,13 +405,8 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
             {
                 profile_ScrollView.normalizedPosition = new Vector2(1f, 1f);
                 SelectProfilePanel.SetActive(true);
-                
             }
         }
-
-
-   
-
     }
 
     public void BackBtn_IconPanel_Clicked()
@@ -456,7 +452,6 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
 
         CurrnetProfilePanel.SetActive(false);
         SelectProfilePanel.SetActive(true);
-
     }
 
     public void ImageModeSet(bool _mode)
@@ -468,6 +463,17 @@ public class Profile_ : MonoBehaviour, IPointerClickHandler
     {
         SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileIndex);
         cameraManager.CameraOpen();
+    }
+
+    public void ExitBtn()
+    {
+        // 에디터에서 실행 중이라면 에디터 플레이 모드 종료
+#if UNITY_EDITOR
+        EditorApplication.isPlaying = false;
+#endif
+
+        // 실제 빌드된 어플리케이션에서는 Application.Quit() 호출
+        Application.Quit();
     }
     #endregion
 }

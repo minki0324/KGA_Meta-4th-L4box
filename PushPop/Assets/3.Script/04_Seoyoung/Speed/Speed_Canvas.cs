@@ -109,6 +109,7 @@ public class Speed_Canvas : MonoBehaviour
     public void DifficultyBtn_Clicked(int index)
     {
         SelectCategory_ScrollView.normalizedPosition = new Vector2(1f, 1f);
+        GameManager.Instance.isStart = true;
         if (!help_Canvas.bisHelpPanelOn)
         {
             AudioManager.instance.SetCommonAudioClip_SFX(3);

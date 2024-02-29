@@ -119,6 +119,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public Sprite noneSprite;
     public bool backButtonClick = false;
     [SerializeField] private Sprite[] btnSprites;
+    public bool isStart = false;
   
     public int boardName = 0; // mold name
     public int currentTime = 0;
@@ -452,7 +453,10 @@ public class GameManager : MonoBehaviour, IGameMode
 
     public void SpeedOnBubbleDestroy()
     {
-        StartCoroutine(GameReady_Co(speedTimer.readyPanel, speedTimer.readyText));
+        if(isStart)
+        {
+            StartCoroutine(GameReady_Co(speedTimer.readyPanel, speedTimer.readyText));
+        }
     }
 
     public void MemoryMode()
