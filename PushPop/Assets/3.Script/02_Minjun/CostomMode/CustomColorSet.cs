@@ -12,6 +12,7 @@ public class CustomColorSet : MonoBehaviour
             ring[i].SetActive(false);
         }
         ring[index].SetActive(true);
+        CustomPushpopManager.Instance.spriteIndex = index;
     }
     
 }

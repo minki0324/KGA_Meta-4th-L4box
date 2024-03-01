@@ -26,7 +26,7 @@ public class CustomPushpopManager : MonoBehaviour
     public Stack<GameObject> StackPops = new Stack<GameObject>();
     public Stack<GameObject> StackFakePops = new Stack<GameObject>();
     [SerializeField] private Sprite[] btnSprites;
-    private int spriteIndex = 0;
+    public int spriteIndex = 0;
     public GameObject result;
     public TMP_Text resultText;
     public Image resultImage;

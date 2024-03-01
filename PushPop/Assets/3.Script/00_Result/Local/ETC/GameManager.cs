@@ -13,7 +13,7 @@ public enum Mode // GameMode
     Bomb,
     None
 }
-
+#region Other Class
 public class PushPushObject
 {
     public int spriteName;
@@ -45,6 +45,7 @@ public class PuzzleObject
         this.puzzleCenter = puzzleCenter;
     }
 }
+#endregion
 
 public class GameManager : MonoBehaviour, IGameMode
 {
@@ -99,6 +100,7 @@ public class GameManager : MonoBehaviour, IGameMode
     [Header("Speed Mode")]
     public float count = 0.25f;
     public Coroutine pushpushCreate_Co = null;
+    public Coroutine slider_Co = null;
 
     [Header("2P Player")]
     public string ProfileName2P = string.Empty;
@@ -344,10 +346,9 @@ public class GameManager : MonoBehaviour, IGameMode
                             PushPop.Instance.buttonCanvas.GetChild(i).gameObject.SetActive(false);
                         }
 
-                        speedTimer.time_Slider.value += count;
+                        slider_Co = StartCoroutine(SpeedSlider_Co(speedTimer.time_Slider, count, 1.4f));
                     }
-                    
-                    if (buttonActive == 0 && speedTimer.time_Slider.value.Equals(1f) || speedTimer.currentTime.Equals((int)speedTimer.difficult))
+                    if (buttonActive == 0 && speedTimer.time_Slider.value + count >= 0.9f || speedTimer.currentTime.Equals((int)speedTimer.difficult))
                     {
                         // Game Clear
                         bubblePos.Clear(); // bubble transform mode에 따라 달라짐
@@ -546,5 +547,33 @@ public class GameManager : MonoBehaviour, IGameMode
             printName[i].text = string.Empty;
             printImage[i].sprite = noneSprite;
         }
+    }
+
+    private IEnumerator SpeedSlider_Co(Slider slider, float amount, float duration)
+    {
+        // 시작 값과 목표 값 계산
+        float startValue = slider.value;
+        float endValue = startValue + amount;
+
+        // 경과 시간 추적
+        float elapsedTime = 0;
+
+        // 지정된 시간 동안 반복
+        while (elapsedTime < duration)
+        {
+            // 경과 시간에 따라 슬라이더 값을 변경
+            slider.value = Mathf.Lerp(startValue, endValue, elapsedTime / duration);
+
+            // 경과 시간 업데이트
+            elapsedTime += Time.deltaTime;
+
+            // 다음 프레임까지 대기
+            yield return null;
+        }
+
+        // 최종 값 설정 (목표 값에 정확히 맞추기 위함)
+        slider.value = endValue;
+
+        slider_Co = null;
     }
 }

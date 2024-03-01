@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 { // bubble prefab's script
@@ -11,6 +12,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     private Vector2 bubbleSize = Vector2.zero;
     public int touchCount = 0;
     private Vector2 localPos;
+    private Vector2 puzzleSize = Vector2.zero;
 
     [Header("Move Parameter")]
     // Bubble moving
@@ -85,7 +87,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         bubbleRectTrans.anchoredPosition = _puzzlePos;
         // size setting
         float bigger = _puzzleSize.x > _puzzleSize.y ? _puzzleSize.x : _puzzleSize.y;
-
+        puzzleSize = _puzzleSize;
         if (gameMode.Equals(Mode.PushPush))
         {
             bigger *= 1.3f;
@@ -223,38 +225,41 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
  
         currentSpeed = _maxSpeed; // maxSpeed 초기화
         float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y 같음
-        Debug.Log("버블사이즈 x : " + bubbleSize.x);
-        Debug.Log("버블스케일 : " + bubbleScale);
+        float BubbleRadius = (bubbleSize.x * bubbleScale / 2f);
+        float boundaryX = Screen.width / 2;
+        float boundaryY = Screen.height / 2;
+        float correctionX = bubbleSize.x - puzzleSize.x;
+        float correctionY = bubbleSize.y - puzzleSize.y;
 
-        Debug.Log("왼쪽 : " + 0f + (bubbleSize.x * bubbleScale / 2f));
-        Debug.Log("오른쪽 : " + (Screen.width - (bubbleSize.x * bubbleScale / 2f)));
-        Debug.Log("아래 : " + (0f + (bubbleSize.y * bubbleScale / 2f)));
-        Debug.Log("위 : " + (Screen.height - (bubbleSize.y * bubbleScale / 2f)));
+        Debug.Log("보정값 X : " + correctionX + " 버블 크기 X : " + bubbleSize.x + " 퍼즐 크기 : " + puzzleSize.x);
+        Debug.Log("보정값 Y : " + correctionY + " 버블 크기 Y : " + bubbleSize.y + " 퍼즐 크기 : " + puzzleSize.y);
 
         // 속도가 0이 되었을 때까지 이동
         while (currentSpeed >= 0)
         {
-            if (0f + (bubbleSize.x * bubbleScale / 2f) > parentTrans.position.x)
+            float posX = puzzleTrans.localPosition.x;
+            float posY = puzzleTrans.localPosition.y;
+            if ((-boundaryX + BubbleRadius) > posX)
             { // boundary left
                 _dir = Vector2.Reflect(_dir, Vector2.right).normalized;
-                parentTrans.position = new Vector2((bubbleSize.x * bubbleScale / 2f) + 10f, parentTrans.position.y);
+                puzzleTrans.localPosition = new Vector2((-boundaryX + BubbleRadius + 10f), posY);
             }
-            else if (parentTrans.position.x > Screen.width - (bubbleSize.x * bubbleScale / 2f))
+            else if (posX > boundaryX - BubbleRadius)
             { // boundary right
                 _dir = Vector2.Reflect(_dir, Vector2.left).normalized;
-                parentTrans.position = new Vector2(Screen.width - ((bubbleSize.x * bubbleScale / 2f) + 10f), parentTrans.position.y);
+                puzzleTrans.localPosition = new Vector2(boundaryX - (BubbleRadius + 10f), posY);
             }
-            else if (0f + (bubbleSize.y * bubbleScale / 2f) > parentTrans.position.y)
+            else if ((-boundaryY + BubbleRadius) > posY)
             { // boundary bottom
                 _dir = Vector2.Reflect(_dir, Vector2.up).normalized;
-                parentTrans.position = new Vector2(parentTrans.position.x, (bubbleSize.y * bubbleScale / 2f) + 10f);
+                puzzleTrans.localPosition = new Vector2(posX, (-boundaryY + BubbleRadius + 10f));
             }
-            else if (parentTrans.position.y > Screen.height - (bubbleSize.y * bubbleScale / 2f))
+            else if (posY > boundaryY - BubbleRadius)
             { // boundary up
                 _dir = Vector2.Reflect(_dir, Vector2.down).normalized;
-                parentTrans.position = new Vector2(parentTrans.position.x, Screen.height - ((bubbleSize.y * bubbleScale / 2f) + 10f));
+                puzzleTrans.localPosition = new Vector2(posX, boundaryY - (BubbleRadius + 10f));
             }
-            transform.localPosition = localPos;
+
             transform.parent.Translate(_dir * (Time.deltaTime * currentSpeed * speedRate)); // bubble move
 
             // moving lerp
