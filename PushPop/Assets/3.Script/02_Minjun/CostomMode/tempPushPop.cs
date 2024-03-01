@@ -16,7 +16,7 @@ public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHa
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("PushPop"))
+       if (collision.CompareTag("PushPop"))
         {
             if (!isSet && !isTrigger)
             {
@@ -28,7 +28,7 @@ public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHa
 
     public void CheckOverlap()
     {// °ãÄ¥ ½Ã
-        Debug.Log("»èÁ¦¸Þ¼Òµå");
+        
         CustomPushpopManager stack = FindObjectOfType<CustomPushpopManager>(); // gameobject
         GameObject lastFakeStack = stack.StackFakePops.Pop();
         Destroy(lastFakeStack);

@@ -32,6 +32,8 @@ public class CustomPushpopManager : MonoBehaviour
     public Image resultImage;
     public bool isCustomMode;
     public Action onCustomEnd;
+    public bool isCool = false;
+    Coroutine cool;
 
     public GameObject decoPanel;
 
@@ -44,6 +46,7 @@ public class CustomPushpopManager : MonoBehaviour
         onCustomEnd += DisableThisComponent;//커스텀모드 종료시 컴포넌트 끄기
         onCustomEnd += SetActiveCount;
     }
+    
     private void OnDisable()
     {
         onCustomEnd -= DisableThisComponent; //커스텀모드 종료시 컴포넌트 끄기
@@ -79,6 +82,12 @@ public class CustomPushpopManager : MonoBehaviour
     // 클릭 or 터치시 메소드들
     public void ClickDown()
     {
+        if (isCool) return;
+        if (cool != null)
+        {
+            return;
+        }
+        cool = StartCoroutine(Cooltime());
         SelectPositon = Camera.main.ScreenToWorldPoint(Input.mousePosition); //카메라상의 좌표를 월드포지션으로구하기
                                                                              //판넬안에서 마우스혹은 터치위치의 RectTransform 구하기
         //UI에선 collider검사가 안되서 gameObject를 동시에 소환해서 안보이는 곳에서 겹침검사
@@ -119,6 +128,7 @@ public class CustomPushpopManager : MonoBehaviour
         //StartCoroutine(CheckDelay(push));
         newRectPush = null;
         newPush = null;
+      
     } // 마우스클릭을 뗏을때 or 터치를 뗏을때  
 
     public void ReturnBtn()
@@ -163,6 +173,14 @@ public class CustomPushpopManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+    }
+
+    private IEnumerator Cooltime()
+    {
+        isCool = true;
+        yield return new WaitForSeconds(0.2f);
+        isCool = false;
+        cool = null;
     }
 
     public void SetMoaMoaList()
