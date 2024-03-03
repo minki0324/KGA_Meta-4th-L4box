@@ -506,14 +506,14 @@ public class GameManager : MonoBehaviour, IGameMode
     {
         Image image = printobj.GetComponent<Image>();
 
-        if (IsImageMode) // 이미지 선택모드
+        if (ProfileManager.Instance.IsImageMode1P) // 이미지 선택모드
         {   // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
-            CacheProfileImage1P = ProfileImages[DefaultImage];
+            CacheProfileImage1P = ProfileManager.Instance.ProfileImages[ProfileManager.Instance.DefaultImage1P];
             image.sprite = CacheProfileImage1P;
         }
-        else if (!IsImageMode) // 사진찍기 모드
+        else if (!ProfileManager.Instance.IsImageMode1P) // 사진찍기 모드
         {
-            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, ProfileIndex);
+            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, ProfileManager.Instance.ProfileIndex1P);
             Sprite profileSprite = TextureToSprite(profileTexture);
             CacheProfileImage1P = profileSprite;
             image.sprite = CacheProfileImage1P;
