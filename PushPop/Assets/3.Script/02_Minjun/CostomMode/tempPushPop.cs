@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHandler*/
 {
-    private bool isSet = false;
+    public bool isSet = false;
     public bool isTrigger = false;
     public int creatIndex = 0;
     public GameObject RectPush;

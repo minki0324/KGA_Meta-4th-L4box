@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using TMPro;
 
 public class CustomPushpopManager : MonoBehaviour
 {
@@ -33,10 +31,9 @@ public class CustomPushpopManager : MonoBehaviour
     public bool isCustomMode;
     public Action onCustomEnd;
     public bool isCool = false;
-    private int currentCreatIndex =0;
-    Coroutine cool;
-
+    public int currentCreatIndex = 0;
     public GameObject decoPanel;
+    [SerializeField] private PuzzleLozic puzzleLozic;
 
     private void Awake()
     {
@@ -46,15 +43,15 @@ public class CustomPushpopManager : MonoBehaviour
     {
         onCustomEnd += DisableThisComponent;//커스텀모드 종료시 컴포넌트 끄기
         onCustomEnd += SetActiveCount;
-        currentCreatIndex =0;
+
     }
-    
+
     private void OnDisable()
     {
         onCustomEnd -= DisableThisComponent; //커스텀모드 종료시 컴포넌트 끄기
         onCustomEnd -= SetActiveCount;
     }
-  
+
     public void DestroyNewPush()
     {
         if (newPush != null && newRectPush != null)
@@ -84,17 +81,10 @@ public class CustomPushpopManager : MonoBehaviour
     // 클릭 or 터치시 메소드들
     public void ClickDown()
     {
-        if (isCool) return;
-        if (cool != null)
-        {
-            return;
-        }
-        cool = StartCoroutine(Cooltime());
         SelectPositon = Camera.main.ScreenToWorldPoint(Input.mousePosition); //카메라상의 좌표를 월드포지션으로구하기
-                                                                             //판넬안에서 마우스혹은 터치위치의 RectTransform 구하기
-        //UI에선 collider검사가 안되서 gameObject를 동시에 소환해서 안보이는 곳에서 겹침검사
         //월드포지션에 push소환하기(Collider 검사해서 push버튼 겹치는지 확인하기위해)
         newPush = Instantiate(pushPop, SelectPositon, Quaternion.identity);
+        newPush.transform.localScale = new Vector3(0.52f, 0.52f, 0.52f); // newRectPush비율에 맞게 설정해주세요 아래명시.
         // StackFakePops.Push(newPush);
         //UI상 위치에 push소환(실제로 보이는 push)
         newRectPush = Instantiate(RectPushPop, Input.mousePosition, Quaternion.identity);
@@ -112,18 +102,18 @@ public class CustomPushpopManager : MonoBehaviour
         // StackPops.Push(newRectPush);
         // pushpop Btn Parent 설정
         newRectPush.transform.SetParent(puzzleBoard.transform);
-        newRectPush.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        newRectPush.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f); // 스케일 변경시 프리팹 Circle(콜라이더검사) 스케일도 바꾼 스케일의 1.3배로 바꿔주세요 
 
         AudioManager.instance.SetAudioClip_SFX(3, false);
 
-    } 
+    }
     public void ClickUp()
     {
         if (newPush == null) return;
-        
-            newRectPush = null;
+
+        newRectPush = null;
         newPush = null;
-      
+
     } // 마우스클릭을 뗏을때 or 터치를 뗏을때  
 
     public void ReturnBtn()
@@ -149,18 +139,6 @@ public class CustomPushpopManager : MonoBehaviour
             Destroy(objs);
         }
     }
-
-    //public void GetSpriteIndex(int index)
-    //{
-    //    ColorButton[spriteIndex].interactable = true;
-    //    spriteIndex = index;
-    //    ColorButton[spriteIndex].interactable = false;
-    //}
-    public void onCustomEndmethod()
-    {
-        decoPanel.SetActive(false);
-        onCustomEnd?.Invoke();
-    }
     public void DestroyChildren()
     {//퍼즐을 완료했을때 생성되있던 퍼즐 삭제하기위한 메소드
         foreach (Transform child in puzzleBoard.transform)
@@ -169,16 +147,32 @@ public class CustomPushpopManager : MonoBehaviour
         }
     }
 
-    private IEnumerator Cooltime()
+    public void RetryCustom()
     {
-        isCool = true;
-        yield return new WaitForSeconds(0.2f);
-        isCool = false;
-        cool = null;
-    }
+        decoPanel.SetActive(true);
+        enabled = true;
+        isCustomMode = true;
 
-    public void SetMoaMoaList()
-    { // MoaMoa 메인화면에 출력할 6개의 컬렉션을 출력하는 Btn 연동 Method
-        
+        foreach (var btn in StackPops)
+        {
+            btn.GetComponent<Button>().interactable = true;
+            btn.GetComponent<Image>().raycastTarget = false;
+
+        }
+    }
+    public void OnPuzzleSolved()
+    {
+        AudioManager.instance.SetAudioClip_SFX(1, false);
+        puzzleLozic.onPuzzleClear?.Invoke();
+        puzzleLozic.successCount = 0;
+    }
+    public void onCustomEndmethod()
+    {
+        GameManager.Instance.GameClear();
+        decoPanel.SetActive(false);
+        onCustomEnd?.Invoke();
+    }
+    public void OnAllBubblesPopped()
+    {
     }
 }
