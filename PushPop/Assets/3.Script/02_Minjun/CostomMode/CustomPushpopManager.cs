@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class CustomPushpopManager : MonoBehaviour
 {
-    public static CustomPushpopManager Instance = null;
-
 
     [SerializeField] private RectTransform CustomArea;
     private Vector3 SelectPositon; //카메라에서보이는 world 포지션 저장할 Vector
@@ -30,26 +28,23 @@ public class CustomPushpopManager : MonoBehaviour
     public Image resultImage;
     public bool isCustomMode;
     public Action onCustomEnd;
-    public bool isCool = false;
     public int currentCreatIndex = 0;
     public GameObject decoPanel;
-    [SerializeField] private PuzzleLozic puzzleLozic;
+    [SerializeField] private FramePuzzle framePuzzle;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+    //private void Awake()
+    //{
+    //    Instance = this;
+    //}
     private void OnEnable()
     {
-        onCustomEnd += DisableThisComponent;//커스텀모드 종료시 컴포넌트 끄기
-        onCustomEnd += SetActiveCount;
+        onCustomEnd += EndCustom;//커스텀모드 종료시 컴포넌트 끄기
 
     }
 
     private void OnDisable()
     {
-        onCustomEnd -= DisableThisComponent; //커스텀모드 종료시 컴포넌트 끄기
-        onCustomEnd -= SetActiveCount;
+        onCustomEnd -= EndCustom;
     }
 
     public void DestroyNewPush()
@@ -152,27 +147,24 @@ public class CustomPushpopManager : MonoBehaviour
         decoPanel.SetActive(true);
         enabled = true;
         isCustomMode = true;
-
+        framePuzzle.ImageAlphaHitSet(0.1f);
+        GameManager.Instance.pushPush.pushCount = 0;
         foreach (var btn in StackPops)
         {
             btn.GetComponent<Button>().interactable = true;
             btn.GetComponent<Image>().raycastTarget = false;
-
         }
     }
-    public void OnPuzzleSolved()
+    public void EndCustom()
     {
-        AudioManager.instance.SetAudioClip_SFX(1, false);
-        puzzleLozic.onPuzzleClear?.Invoke();
-        puzzleLozic.successCount = 0;
-    }
-    public void onCustomEndmethod()
-    {
-        GameManager.Instance.GameClear();
         decoPanel.SetActive(false);
-        onCustomEnd?.Invoke();
+        enabled = false;
+        isCustomMode = false;
+        framePuzzle.ImageAlphaHitSet(0f);
+        foreach (var btn in StackPops)
+        {
+            btn.GetComponent<Image>().raycastTarget = true;
+        }
     }
-    public void OnAllBubblesPopped()
-    {
-    }
+  
 }

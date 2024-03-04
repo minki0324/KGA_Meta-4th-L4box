@@ -50,6 +50,7 @@ public class PuzzlePiece : MonoBehaviour
 
             PuzzleLozic puzzle = FindObjectOfType<PuzzleLozic>();
             puzzle.SettingGame();
+            GameManager.Instance.pushPush.OnAllBubblesPopped();
         }
     }
 

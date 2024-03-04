@@ -92,7 +92,6 @@ public class PuzzleLozic : MonoBehaviour
             pieceList[i].transform.GetComponent<Image>().raycastTarget = true;
             PieceDragAndDrop dragAndDrop = pieceList[i].transform.GetComponent<PieceDragAndDrop>();
             dragAndDrop.enabled = true;
-            dragAndDrop.puzzleLozic = this;
             dragAndDrop.FailToSolvePuzzle();
         }
 

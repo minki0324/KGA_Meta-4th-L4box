@@ -9,7 +9,7 @@ public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHa
 
     private void OnEnable()
     {
-        CustomPushpopManager.Instance.StackFakePops.Push(gameObject);
+        GameManager.Instance.pushPush.custom.StackFakePops.Push(gameObject);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -31,7 +31,7 @@ public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHa
     public void CheckOverlap()
     {// °ãÄ¥ ½Ã
 
-        CustomPushpopManager stack = CustomPushpopManager.Instance;
+        CustomPushpopManager stack = GameManager.Instance.pushPush.custom;
         GameObject lastFakeStack = stack.StackFakePops.Pop();
         
         Destroy(lastFakeStack);
