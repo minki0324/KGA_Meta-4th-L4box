@@ -84,10 +84,13 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Image waterfall;   // upperBubble안에 들어있는 물 이미지
     [SerializeField] private TMP_Text timerText;    // 전체 제한시간 출력 text
     [SerializeField] private Sprite[] upperBubbleSprite;    // upperBubble에 들어있는 물 이미지들의 배열
-    [SerializeField] private Animator endAnimation; // 게임 종료했을 때 나올 Animation
+    //[SerializeField] private Animator endAnimation; // 게임 종료했을 때 나올 Animation
     [SerializeField] private GameObject result; // 결과창 Panel
     [SerializeField] private GameObject readyPanel; // 처음 준비 모드 패널
     [SerializeField] private TMP_Text readyText; // 처음 준비 모드 텍스트 
+    [SerializeField] private GameObject upperBubble_Bomb;
+    [SerializeField] private GameObject bottomBubble_Bomb;
+
 
     [Header("Other Component")]
     [SerializeField] private Button profileBtn;
@@ -458,6 +461,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public void InitSetting()
     { // 게임 초기 시작시 셋팅하는 Method
         // Timer 선언
+        upperBubble_Bomb.gameObject.SetActive(false);
+        bottomBubble_Bomb.gameObject.SetActive(false);
         upperTimer = 12f;
         bottomTimer = 60f;
         timerText.text = $"남은시간\n{(int)bottomTimer}";
@@ -678,20 +683,31 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         Ranking.Instance.SetBombVersus(ProfileManager.Instance.ProfileIndex1P, ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex2P, ProfileManager.Instance.ProfileName2P, result);
        
         // 종료 애니메이션 켜주고 애니메이션 나올 위치 설정
-        endAnimation.transform.gameObject.SetActive(true);
+        upperBubble_Bomb.gameObject.SetActive(true);
+        bottomBubble_Bomb.gameObject.SetActive(true);
+        upperBubble_Bomb.transform.GetChild(0).GetComponent<Animator>().speed = 1f;
+        upperBubble_Bomb.transform.GetChild(1).GetComponent<Animator>().speed = 1f;
+        bottomBubble_Bomb.transform.GetChild(0).GetComponent<Animator>().speed = 1f;
+        bottomBubble_Bomb.transform.GetChild(1).GetComponent<Animator>().speed = 1f;
+        bottomBubble_Bomb.transform.GetChild(2).GetComponent<Animator>().speed = 1f;
         AudioManager.instance.SetAudioClip_SFX(1, false);
 
-        if (turn.Equals(Turn.Turn1P)) endAnimation.transform.localPosition = bottomPos[0];
-        else if (turn.Equals(Turn.Turn2P)) endAnimation.transform.localPosition = bottomPos[1];
+        //if (turn.Equals(Turn.Turn1P)) endAnimation.transform.localPosition = bottomPos[0];
+        //else if (turn.Equals(Turn.Turn2P)) endAnimation.transform.localPosition = bottomPos[1];
 
-        endAnimation.SetTrigger("EndGame");
+        //endAnimation.SetTrigger("EndGame");
         StartCoroutine(Result_Co());
     }
 
     private IEnumerator Result_Co()
     { // 결과창 출력 코루틴
         // 애니메이션 출력 기다림
-        yield return new WaitForSeconds(1.2f);
+        yield return new WaitForSeconds(2f);
+        upperBubble_Bomb.transform.GetChild(0).GetComponent<Animator>().speed = 0f;
+        upperBubble_Bomb.transform.GetChild(1).GetComponent<Animator>().speed = 0f;
+        bottomBubble_Bomb.transform.GetChild(0).GetComponent<Animator>().speed = 0f;
+        bottomBubble_Bomb.transform.GetChild(1).GetComponent<Animator>().speed = 0f;
+        bottomBubble_Bomb.transform.GetChild(2).GetComponent<Animator>().speed = 0f;
 
         // 결과창 출력
         AudioManager.instance.Stop_SFX();
@@ -727,7 +743,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     { // 오브젝트들 삭제하는 메소드
         // 종료 애니메이션 비활성화
         timerText.color = new Color(0, 0, 0, 1); // black으로 초기화
-        endAnimation.transform.gameObject.SetActive(false);
+       // endAnimation.transform.gameObject.SetActive(false);
         
         // 리스트 초기화 및 Sprite 삭제
         popList1P.Clear();
@@ -747,6 +763,14 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
         if(readyGame_co != null) StopCoroutine(readyGame_co);
         if(waterfall_co != null) StopCoroutine(waterfall_co);
+
+        upperBubble_Bomb.transform.GetChild(0).GetComponent<Animator>().speed = 1f;
+        upperBubble_Bomb.transform.GetChild(1).GetComponent<Animator>().speed = 1f;
+        bottomBubble_Bomb.transform.GetChild(0).GetComponent<Animator>().speed = 1f;
+        bottomBubble_Bomb.transform.GetChild(1).GetComponent<Animator>().speed = 1f;
+        bottomBubble_Bomb.transform.GetChild(2).GetComponent<Animator>().speed = 1f;
+        upperBubble_Bomb.gameObject.SetActive(false);
+        bottomBubble_Bomb.gameObject.SetActive(false);
     }
 
     public void PrintVersus()

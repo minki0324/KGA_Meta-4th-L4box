@@ -11,6 +11,7 @@ public class TouchManager : MonoBehaviour
     Coroutine touchTimer;
     public Transform particleCanvas;
 
+
     void Start()
     {
         visualEffects = VFXPrefab.GetComponentsInChildren<VisualEffect>();
@@ -22,7 +23,8 @@ public class TouchManager : MonoBehaviour
     }
 
     private void ClickEffect()
-    {
+    {       
+        //ui상 클릭한 좌표를 world로 바꿔서 그 위치에 생성
         if (Input.anyKeyDown)
         {
             if (touchTimer != null)
@@ -31,10 +33,12 @@ public class TouchManager : MonoBehaviour
             }
             touchTimer = StartCoroutine(ClickStartTimer_Co());
 
-            GameObject vfxEffect = Instantiate(VFXPrefab, particleCanvas);
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos.z = 0;
-            vfxEffect.transform.position = pos;
+
+            GameObject vfxEffect = Instantiate(VFXPrefab, pos, VFXPrefab.transform.rotation);
+
+         
             visualEffects = vfxEffect.GetComponentsInChildren<VisualEffect>();
 
             for (int i = 0; i < visualEffects.Length; i++)
