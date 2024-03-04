@@ -368,8 +368,9 @@ public class SQL_Manager : MonoBehaviour
             Profile_list.Clear();
             // UID에 연결된 프로필 조회 쿼리 실행
             string SQL_command = string.Format(@"SELECT DISTINCT Profile.User_name, Profile.Profile_Index, Profile.ImageMode, Image.DefaultIndex 
-                                                FROM Profile INNER JOIN Image
-                                                ON Profile.Profile_Index = Image.Profile_Index AND Profile.UID = '{0}';", UID);
+                                                                                          FROM Profile 
+                                                                                          INNER JOIN Image ON Profile.Profile_Index = Image.Profile_Index 
+                                                                                          WHERE Profile.UID = '{0}';", UID);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             reader = cmd.ExecuteReader();
             if (reader.HasRows)
@@ -436,7 +437,7 @@ public class SQL_Manager : MonoBehaviour
             // 파라미터 추가
             cmd.Parameters.AddWithValue("@UID", uid);
             cmd.Parameters.AddWithValue("@Index", index);
-            cmd.Parameters.AddWithValue("@ImageData", ImageData);
+            cmd.Parameters.Add("@ImageData", MySqlDbType.MediumBlob).Value = ImageData; // 이미지 데이터를 Blob 타입으로 명시적으로 추가
 
             cmd.ExecuteNonQuery();
         }
@@ -521,9 +522,9 @@ public class SQL_Manager : MonoBehaviour
             {
                 return;
             }
-
+            Debug.Log(filename);
             // 2. 기존 name찾아서 name 변경
-            string name_command = string.Format(@"UPDATE Profile SET UID = '{0}', User_name = '{1}' WHERE UID = '{2}', Profile_Index = '{3}'", uid, newName, uid, profileIndex);
+            string name_command = string.Format(@"UPDATE Profile SET UID = '{0}', User_name = '{1}' WHERE UID = '{2}' AND Profile_Index = '{3}'", uid, newName, uid, profileIndex);
             MySqlCommand cmd = new MySqlCommand(name_command, connection);
             cmd.ExecuteNonQuery();
 
@@ -543,18 +544,18 @@ public class SQL_Manager : MonoBehaviour
             fileStream.Close();
             binaryReader.Close();
 
-            string update_command = @$"UPDATE Image SET ImageData = '{ImageData}' WHERE UID = '{uid}' AND Profile_Index = '{profileIndex}';";
+            string update_command = @"UPDATE Image SET ImageData = @ImageData WHERE UID = @UID AND Profile_Index = @Index;";
             MySqlCommand cmd__ = new MySqlCommand(update_command, connection);
 
             // 파라미터 추가
             cmd__.Parameters.AddWithValue("@UID", uid);
             cmd__.Parameters.AddWithValue("@Index", profileIndex);
-            cmd__.Parameters.AddWithValue("@ImageData", ImageData);
+            cmd__.Parameters.Add("@ImageData", MySqlDbType.MediumBlob).Value = ImageData; // 이미지 데이터를 Blob 타입으로 명시적으로 추가
 
             cmd__.ExecuteNonQuery();
 
             return; // 업데이트 성공
-        }
+    }
         catch (Exception e)
         {
             Debug.Log(e.Message);
@@ -567,17 +568,17 @@ public class SQL_Manager : MonoBehaviour
     /// </summary>
     public void SQL_UpdateProfile(int profileIndex, string newName, int uid, int imageIndex)
     {
-        /*try
-        {*/
+        try
+        {
             // 1. SQL 서버에 접속 되어 있는지 확인
             if (!ConnectionCheck(connection))
             {
                 return;
             }
 
-        // 2. 기존 name찾아서 name 변경
-        string name_command = string.Format(@"UPDATE Profile SET UID = '{0}', User_name = '{1}' WHERE UID = '{2}' AND Profile_Index = '{3}'", uid, newName, uid, profileIndex);
-        MySqlCommand cmd = new MySqlCommand(name_command, connection);
+            // 2. 기존 name찾아서 name 변경
+            string name_command = string.Format(@"UPDATE Profile SET UID = '{0}', User_name = '{1}' WHERE UID = '{2}' AND Profile_Index = '{3}'", uid, newName, uid, profileIndex);
+            MySqlCommand cmd = new MySqlCommand(name_command, connection);
             cmd.ExecuteNonQuery();
 
             // 3. 기존 imageData들을 Null로 초기화 (사진 > 이미지 / 이미지 > 사진의 경우 고려)
@@ -597,12 +598,12 @@ public class SQL_Manager : MonoBehaviour
             cmd__.ExecuteNonQuery();
 
             return; // 업데이트 성공
-       /* }
+        }
         catch (Exception e)
         {
             Debug.Log(e.Message);
             return;
-        }*/
+        }
     }
     #endregion
 
@@ -709,14 +710,14 @@ public class SQL_Manager : MonoBehaviour
                 if (_profileIndex == Profile_list[i].index)
                 {
                     defaultImage = Profile_list[i].defaultImage;
-                    _image.sprite = GameManager.Instance.ProfileImages[defaultImage];
+                    _image.sprite = ProfileManager.Instance.ProfileImages[defaultImage];
                 }
             }
         }
         else if (!_imageMode)
         { // 사진 찍기를 선택한 플레이어일 때
-            Texture2D profileTexture = SQL_LoadProfileImage(GameManager.Instance.UID, _profileIndex);
-            Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
+            Texture2D profileTexture = SQL_LoadProfileImage(ProfileManager.Instance.UID, _profileIndex);
+            Sprite profileSprite = ProfileManager.Instance.TextureToSprite(profileTexture);
             _image.sprite = profileSprite;
         }
     }

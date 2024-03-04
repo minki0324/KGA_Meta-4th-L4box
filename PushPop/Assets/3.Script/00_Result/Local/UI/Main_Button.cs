@@ -74,7 +74,7 @@ public class Main_Button : MonoBehaviour
         NewProfileCanvas profile = profilePanel.GetComponent<NewProfileCanvas>();
         profilePanel.SetActive(true);
         profileReturnBtn.gameObject.SetActive(true);
-        ProfileManager.Instance.PrintProfileList(profile.profileParent, ProfileManager.Instance.ProfileIndex1P, null);
+        ProfileManager.Instance.PrintProfileList(profile.profileParent, ProfileManager.Instance.ProfileIndex1P);
         AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 

@@ -40,17 +40,18 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Image inGameImage2P = null;    // 게임 화면에서 보이는 2P Image
     [SerializeField] private TMP_Text inGameText2P = null;  // 게임 화면에서 보이는 2P Name
     private bool Quit2P = false;    // 게임 화면에서 뒤로가기 버튼 2P
+    private bool isUpdate = false;
 
     [Header("Profile Obj")]
     [SerializeField] private GameObject profilePanel = null;    // Profile Panel
-    [SerializeField] private Transform profileParent = null;    // Profile Panel Parent
-    [SerializeField] private List<GameObject> profileList = new List<GameObject>(); // Profile Panel List
+    [SerializeField] private Transform profileParent = null;    // Profile Panel Parent    
     [SerializeField] private string profile2PName = null;   // Profile Add시 게임매니저나 SQL매니저에게 보내줄 string 값
     [SerializeField] private TMP_InputField profile2PInput = null;  // Profile Add하는 Inputfield
     [SerializeField] private GameObject iconPanel = null;   // 이미지 고르기 했을 때 나오는 아이콘 판넬
     [SerializeField] private GameObject checkPanel = null;  // 사진 찍기 했을 때 체크 판넬
-    private int imageIndex = 0; // 이미지 고르기의 Icon Index
+    public int imageIndex = 0; // 이미지 고르기의 Icon Index
     private string imagePath = string.Empty;   // Camera Image Save Path
+    public Image CaptureImage;
 
     [Header("Panel")]
     public GameObject MainPanel = null; // 게임 로비
@@ -90,6 +91,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private TMP_Text readyText; // 처음 준비 모드 텍스트 
 
     [Header("Other Component")]
+    [SerializeField] private CameraManager cameraManager;
     [SerializeField] private Button profileBtn;
     [SerializeField] private Button gameStartBtn;
     [SerializeField] private Sprite quitNormal_Sprite; //quit 버튼 안눌렸을 때 스프라이트
@@ -111,7 +113,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private bool rotateDirection = true; // true면 회전 방향이 +, false면 회전 방향이 -
     private float rotationZ = 0f; // 현재 Z 축 회전 각도
 
-    private Coroutine log;  // 에러로그 코루틴
     private Coroutine waterfall_co; // 물 차오르는 코루틴
     private Coroutine readyGame_co; // 처음 시작 코루틴
 
@@ -130,8 +131,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void OnEnable()
     {
         // 버튼 사이즈 설정
-        PushPop.Instance.buttonSize = new Vector2(57.136f, 57.136f);
-        PushPop.Instance.percentage = 0.478f;
+        PushPop.Instance.buttonSize = new Vector2(57f, 57f);
+        PushPop.Instance.percentage = 0.477f;
 
         GameManager.Instance.GameStart();
 
@@ -207,7 +208,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void PlayerSet1P()
     { // 본인의 프로필을 출력하는 Method
         // 프로필 이미지 출력
-        playerImage1P.sprite = GameManager.Instance.CacheProfileImage1P;
+        playerImage1P.sprite = ProfileManager.Instance.CacheProfileImage;
       
         // 프로필 이름 출력
         playerName1P.text = ProfileManager.Instance.ProfileName1P;
@@ -216,24 +217,36 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public void Choice2P()
     { // 2Player를 선택하는 Btn 연동 Method
         // 기존 로직대로면 뒤로가기를 선택했을 때도 정보가 바뀌도록 로직이 설계되어있어, 프로필을 선택했을 때만 정보를 바꾸도록 수정함
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         player2PInfo.Receive_Infomation();
 
         // 2P 프로필 이미지 출력
-        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsimageMode2P, playerImage2P, ProfileManager.Instance.ProfileIndex2P);
-       
+        PrintProfileList();
+
         // 2P 프로필 이름 출력
+        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsimageMode2P, playerImage2P, ProfileManager.Instance.ProfileIndex2P);
         playerName2P.text = ProfileManager.Instance.ProfileName2P;
         isSelect2P = true;
+
+        // Active
+        CurrentProfile.SetActive(false);
+        selectBtn.SetActive(false);
+        playerImage2P.gameObject.SetActive(true);
+        playerName2P.gameObject.SetActive(true);
+        changeBtn.SetActive(true);
+        gameStartBtn.interactable = true;
+
+        PrintVersus();
     }
 
     public void PrintProfileList()
     {
-        ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P, ProfileManager.Instance.ProfileIndex2P);
+        ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P);
     }
 
     public void ImageSetting(bool _mode)
     { // 사진찍기인지, 이미지 고르기인지 확인하고, 1P의 Image를 세팅하는 Btn 연동 Method
-        if (ProfileManager.Instance.ImageSet(_mode, false, nameErrorLog, ProfileManager.Instance.tempName, imageIndex))
+        if (ProfileManager.Instance.ImageSet(_mode, false, ProfileManager.Instance.tempName, imageIndex, nameErrorLog))
         { // 프로필 세팅 완료 했을 때
             // Panel들 Active
             if (_mode)
@@ -241,15 +254,16 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
                 iconPanel.SetActive(false);
                 CreateImagePanel.SetActive(false);
                 SelectProfile.SetActive(true);
-                if (ProfileManager.Instance.isUpdate)
-                {
-                    ProfileManager.Instance.isUpdate = false;
-                }
             }
             else
             { // 사진 찍기 버튼 눌렀을 때
-                checkPanel.SetActive(false);
+                checkPanel.SetActive(true);
                 CreateImagePanel.SetActive(false);
+            }
+            if (ProfileManager.Instance.isUpdate)
+            {
+                isUpdate = true;
+                ProfileManager.Instance.isUpdate = false;
             }
             // 로비에서는 본인의 Profile List를 제외하고 출력해야함
             PrintProfileList();
@@ -263,7 +277,10 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     
     public void Update_Profile()
     { // Update Mode Bool값 설정 Btn 연동 Method
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.isUpdate = true;
+        CurrentProfile.SetActive(false);
+        CreateNamePanel.SetActive(true);
     }
 
     public void DeleteProfile()
@@ -367,12 +384,12 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     public void DeleteBtnOpen()
     { // 삭제 버튼 List만큼 출력 Btn 연동 Method
-        if (profileList.Count > 0)
-        { // 프로필 리스트에 담긴 ProfilePanel의 삭제 버튼을 껐다 켜줌
-            bool active = profileList[0].GetComponent<Profile_Information>().DelBtn.activeSelf;
-            for (int i = 0; i < profileList.Count; i++)
+        if (ProfileManager.Instance.ProfilePanelList.Count > 0)
+        {
+            bool active = ProfileManager.Instance.ProfilePanelList[0].GetComponent<NewProfile_Infomation>().DelBtn.activeSelf;
+            for (int i = 0; i < ProfileManager.Instance.ProfilePanelList.Count; i++)
             {
-                profileList[i].GetComponent<Profile_Information>().DelBtn.SetActive(!active);
+                ProfileManager.Instance.ProfilePanelList[i].GetComponent<NewProfile_Infomation>().DelBtn.SetActive(!active);
             }
         }
         else
@@ -396,6 +413,12 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
         // 다른 문자는 허용
         return addedChar;
+    }
+
+    public void TakeAgainPicture()
+    { // 사진 찍고난 뒤 다시 찍기 Btn 연동 Method
+        SQL_Manager.instance.SQL_DeleteProfile(ProfileManager.Instance.tempIndex);
+        cameraManager.CameraOpen(CaptureImage);
     }
     #endregion
 
@@ -843,7 +866,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         SelectProfile.SetActive(true);
-        ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P, ProfileManager.Instance.ProfileIndex2P);
+        PrintProfileList();
         help_Canvas.Button_Disable();
         gameStartBtn.interactable = false;
     }
@@ -898,7 +921,27 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         SelectProfile.SetActive(false);
         gameObject.SetActive(false);
     }
+    public void CreateImagePanelPictureConfirmBtn()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        CaptureImage.sprite = null;
+        checkPanel.SetActive(false);
+        CreateImagePanel.SetActive(false);
+        if(isUpdate)
+        {
+            SelectProfile.SetActive(true);
+        }
+        PrintProfileList();
+    }
 
+    public void CurrentProfilePanelReturnBtn()
+    { // Current Profile Panel 속 ReturnBtn 연동 Method
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+
+        gameStartBtn.interactable = true;
+        CurrentProfile.SetActive(false);
+        SelectProfile.SetActive(true);
+    }
 
     //게임 끝나고 나가기 버튼
     public void ReturnBtn_ResultPanel_Clicked()

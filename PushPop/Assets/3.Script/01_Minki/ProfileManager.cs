@@ -24,6 +24,7 @@ public class ProfileManager : MonoBehaviour
     public int ProfileIndex1P = 0; // 1P Profile Index
     public int DefaultImage1P = 0; // 1P Profile DefaultImage Index
     public bool IsImageMode1P = false; // false = 사진찍기, true = 이미지 선택
+    public Sprite CacheProfileImage = null;
 
     [Header("2P Player")] [Space(5)]
     public string ProfileName2P = string.Empty; // 2P Profile Name
@@ -33,6 +34,7 @@ public class ProfileManager : MonoBehaviour
 
     [Header("Profile Component")] [Space(5)]
     public Sprite[] ProfileImages = null; // ProfileImage Sprites
+    public Sprite NoneBackground = null; // Profile None Sprite
     public GameObject ProfilePanel = null; // Profile Panel
     public List<GameObject> ProfilePanelList = new List<GameObject>(); // Profile Panel List
 
@@ -59,11 +61,6 @@ public class ProfileManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-    }
-
-    private void Start()
-    {
-        LoadOrCreateGUID();
     }
     #endregion
 
@@ -94,7 +91,6 @@ public class ProfileManager : MonoBehaviour
     /// <param name="_profileIndex"></param>
     public void AddProfile(string _profileName, int _profileIndex, bool _imageMode)
     {
-        NewProfileCanvas profile = ProfilePanel.GetComponent<NewProfileCanvas>();
         int imageMode = -1;
         switch (_imageMode)
         {
@@ -113,11 +109,13 @@ public class ProfileManager : MonoBehaviour
             }
             else if (string.IsNullOrWhiteSpace(_profileName))
             {
-                Debug.Log("일로들어감 ?");
+
             }
         }
         else if (isUpdate)
         { // 수정 중일 때
+            Debug.Log("일로들어감 ?");
+            Debug.Log("프로필 인덱스 : " + _profileIndex + " 이미지 모드 : " + imageMode);
             SQL_Manager.instance.SQL_UpdateMode(imageMode, UID, _profileIndex);
         }
     }
@@ -127,7 +125,7 @@ public class ProfileManager : MonoBehaviour
         SQL_Manager.instance.SQL_DeleteProfile(_index);
     }
 
-    public void PrintProfileList(Transform parent, int? _profileIndex1P, int? _profileIndex2P)
+    public void PrintProfileList(Transform parent, int? _profileIndex1P)
     {
         // DB에 UID별로 저장되어있는 Profile들을 SQL_Manager에 List Up 해놓음
         SQL_Manager.instance.SQL_ProfileListSet();
@@ -145,21 +143,9 @@ public class ProfileManager : MonoBehaviour
             ProfilePanelList.Add(panel);
         }
 
-        // 프로필 리스트에 본인 중복 삭제
-        if (GameManager.Instance.gameMode == Mode.Bomb)
-        { // 2인 모드일 경우
-            if (_profileIndex1P != null && _profileIndex2P != null)
-            {
-                DuplicateProfileDelete((int)_profileIndex1P);
-                DuplicateProfileDelete((int)_profileIndex2P);
-            }
-        }
-        else
-        { // 로비에서 프로필 아이콘을 누른 경우
-            if (_profileIndex1P != null)
-            {
-                DuplicateProfileDelete((int)_profileIndex1P);
-            }
+        if (_profileIndex1P != null)
+        {
+            DuplicateProfileDelete((int)_profileIndex1P);
         }
 
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
@@ -190,11 +176,10 @@ public class ProfileManager : MonoBehaviour
         }
     }
 
-    public bool ImageSet(bool _mode,  bool _player, TMP_Text _nameLog, string _profileName, int _defaultImageIndex)
+    public bool ImageSet(bool _mode, bool _player, string _profileName, int _defaultImageIndex, TMP_Text _nameLog = null)
     { // Profile에 넣을 Image 셋팅하는 Btn 연동 Method
         // _player bool값에 따라 1P를 설정하는지 2P를 설정하는지 결정
         int index = 0;
-
         if (!isUpdate)
         { // 첫 등록일 때
             if (!_mode)
@@ -236,6 +221,12 @@ public class ProfileManager : MonoBehaviour
                 if (_player.Equals(true)) IsImageMode1P = false;
                 else if (_player.Equals(false)) IsimageMode2P = false;
 
+                // 1P인지 2P인지 체크 후 Profile Image에 전달
+                if (_player.Equals(true)) index = ProfileIndex1P;
+                else if (_player.Equals(false)) index = ProfileIndex2P;
+
+                TakePicture(isUpdate, index);
+
                 return true;
             }
             else if (_mode)
@@ -261,8 +252,6 @@ public class ProfileManager : MonoBehaviour
 
                     // 전달받은 profile Index로 Profile Image 수정
                     SQL_Manager.instance.SQL_UpdateProfile(index, _profileName, UID, _defaultImageIndex);
-                    
-                    isUpdate = false;
                     return true;
                 }
             }
@@ -272,17 +261,51 @@ public class ProfileManager : MonoBehaviour
 
     private void TakePicture(bool _update, int _profileIndex)
     {
+        imagePath = $"{Application.persistentDataPath}/Profile/{UID}_{_profileIndex}.png";
         if(!_update)
         { // 첫 등록일 때
           // 이미지 저장 위치와 이미지 파일의 이름
-            imagePath = $"{Application.persistentDataPath}/Profile/{UID}_{_profileIndex}.png";
             SQL_Manager.instance.SQL_AddProfileImage($"{imagePath}", UID, _profileIndex);
         }
         else
         { // 수정모드 일 때
-
+            SQL_Manager.instance.SQL_UpdateProfile(_profileIndex, tempName, UID, imagePath);
         }
-    }    
+    }
+
+    /// <summary>
+    /// 변경할 gameobject를 매개변수로 받아서 그 안의 Image Component를 통해 프로필 이미지를 출력
+    /// </summary>
+    /// <param name="printobj"></param>
+    public void ProfileImagePrint(GameObject printobj)
+    {
+        Image image = printobj.GetComponent<Image>();
+
+        if (ProfileManager.Instance.IsImageMode1P) // 이미지 선택모드
+        {   // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
+            CacheProfileImage = ProfileImages[DefaultImage1P];
+            image.sprite = CacheProfileImage;
+        }
+        else if (!ProfileManager.Instance.IsImageMode1P) // 사진찍기 모드
+        {
+            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, ProfileIndex1P);
+            Sprite profileSprite = TextureToSprite(profileTexture);
+            CacheProfileImage = profileSprite;
+            image.sprite = CacheProfileImage;
+        }
+    }
+
+    /// <summary>
+    /// SQL_Manager에서 Texture2D로 변환한 이미지파일을 Sprite로 한번 더 변환하는 Method
+    /// </summary>
+    /// <param name="texture"></param>
+    /// <returns></returns>
+    public Sprite TextureToSprite(Texture2D texture)
+    {
+        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
+
+        return sprite;
+    }
     #endregion
 
 }

@@ -14,6 +14,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
 {
     [Header("Other Component")] [Space(5)]
     [SerializeField] private CameraManager cameraManager; // 외부 Camera 연동 Script
+    [SerializeField] private Image CaptureImage;
 
     [Header("Game Lobby")] [Space(5)]
     [SerializeField] private GameObject MainButtonPanel; // Main Game Lobby의 버튼들 Panel
@@ -36,7 +37,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
     [SerializeField] private GameObject createImagePanel; // Create Image Panel
     [SerializeField] private GameObject iconPanel; // 이미지 Icon Panel
     [SerializeField] private GameObject checkPanel; // 사진 촬영 Panel
-    private int imageIndex; // Icon의 Index
+    public int imageIndex; // Icon의 Index
 
     [Header("Current Profile Panel")] [Space(5)]
     public GameObject CurrentProfilePanel; // Current Profile panel
@@ -56,7 +57,8 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     void Start()
     {
-        ProfileManager.Instance.PrintProfileList(profileParent, null, null);
+        ProfileManager.Instance.LoadOrCreateGUID();
+        ProfileManager.Instance.PrintProfileList(profileParent, null);
     }
 
     private void OnDisable()
@@ -85,7 +87,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
     { // DeletePanel 속 Btn 연동 Method
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.DeleteProfile(ProfileManager.Instance.tempIndex);
-        ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P, null);
+        ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P);
         DeletePanel.SetActive(false);
         Enable_ExitBtn(true);
     }
@@ -161,11 +163,11 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void ImageSetting(bool _mode)
     { // 사진찍기인지, 이미지 고르기인지 확인하고, 1P의 Image를 세팅하는 Btn 연동 Method
-        if(ProfileManager.Instance.ImageSet(_mode, true, nameErrorLog, ProfileManager.Instance.tempName, imageIndex))
+        if(ProfileManager.Instance.ImageSet(_mode, true, ProfileManager.Instance.tempName, imageIndex, nameErrorLog))
         { // 프로필 세팅 완료 했을 때
           // 로비에서는 본인의 Profile List를 제외하고 출력해야함
-            if (isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P, null);
-            else ProfileManager.Instance.PrintProfileList(profileParent, null, null);
+            if (isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P);
+            else ProfileManager.Instance.PrintProfileList(profileParent, null);
 
             // Panel들 Active
             if (_mode)
@@ -184,7 +186,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
             }
             else
             { // 사진 찍기 버튼 눌렀을 때
-                checkPanel.SetActive(false);
+                checkPanel.SetActive(true);
                 createImagePanel.SetActive(false);
             }
         }
@@ -216,7 +218,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
     public void TakeAgainPicture()
     { // 사진 찍고난 뒤 다시 찍기 Btn 연동 Method
         SQL_Manager.instance.SQL_DeleteProfile(ProfileManager.Instance.tempIndex);
-        cameraManager.CameraOpen();
+        cameraManager.CameraOpen(CaptureImage);
     }
 
     #region Active
@@ -254,8 +256,8 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
         CreateNamePanel.SetActive(false);
 
         // 로비에서는 본인의 Profile List를 제외하고 출력해야함
-        if(isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P, null);
-        else ProfileManager.Instance.PrintProfileList(profileParent, null, null);
+        if(isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P);
+        else ProfileManager.Instance.PrintProfileList(profileParent, null);
         
         if (ProfileManager.Instance.isUpdate)
         { //수정모드이면 뒤로가기 눌렀을 때 눌린 프로필 띄우기
@@ -285,8 +287,18 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
         iconPanel.SetActive(false);
 
         // 로비에서는 본인의 Profile List를 제외하고 출력해야함
-        if (isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P, null);
-        else ProfileManager.Instance.PrintProfileList(profileParent, null, null);
+        if (isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P);
+        else ProfileManager.Instance.PrintProfileList(profileParent, null);
+    }
+
+    public void CreateImagePanelPictureConfirmBtn()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        CaptureImage.sprite = null;
+        checkPanel.SetActive(false);
+        createImagePanel.SetActive(false);
+        if (isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P);
+        else ProfileManager.Instance.PrintProfileList(profileParent, null);
     }
 
     public void CurrentProfilePanelSelectBtn()
