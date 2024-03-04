@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 #region Other Class
 /// <summary>
@@ -223,7 +224,7 @@ public class SQL_Manager : MonoBehaviour
                 // 4. UID를 클래스의 멤버 변수에 할당
                 reader.Read();
                 UID = reader.GetInt32("UID");
-                GameManager.Instance.UID = UID;
+                ProfileManager.Instance.UID = UID;
             }
             if (!reader.IsClosed) reader.Close();
             return; // 회원가입 성공
@@ -303,7 +304,7 @@ public class SQL_Manager : MonoBehaviour
     /// 프로필 삭제 Method, UID와 name을 확인해서 삭제
     /// </summary>
     /// <param name="name"></param>
-    public void SQL_DeleteProfile(string name, int index)
+    public void SQL_DeleteProfile(int index)
     {
         try
         {
@@ -314,14 +315,32 @@ public class SQL_Manager : MonoBehaviour
             }
 
             // 2. 프로필 삭제
-            string SQL_command = string.Format(@"DELETE FROM Profile WHERE UID = '{0}' AND User_name = '{1}';", UID, name);
-            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
-            cmd.ExecuteNonQuery();
+            string profile_command = string.Format(@"DELETE FROM Profile WHERE UID = '{0}' AND Profile_Index = '{1}';", UID, index);
+            MySqlCommand profile_cmd = new MySqlCommand(profile_command, connection);
+            profile_cmd.ExecuteNonQuery();
 
             // 3. 이미지 삭제
-            string sql_cmd = string.Format(@"DELETE FROM Image WHERE UID = '{0}' AND Profile_Index = '{1}';", UID, index);
-            MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
-            cmd_.ExecuteNonQuery();
+            string image_command = string.Format(@"DELETE FROM Image WHERE UID = '{0}' AND Profile_Index = '{1}';", UID, index);
+            MySqlCommand image_cmd = new MySqlCommand(image_command, connection);
+            image_cmd.ExecuteNonQuery();
+
+            // 4. PushPush 삭제
+            string pushpush_command = string.Format(@"DELETE FROM PushPush WHERE ProfileIndex = '{0}';",  index);
+            MySqlCommand pushpush_cmd = new MySqlCommand(pushpush_command, connection);
+            pushpush_cmd.ExecuteNonQuery();
+
+            // 5. Ranking 삭제
+            Ranking.Instance.DeleteRankAndVersus(index);
+
+            // 6. List 초기화
+            for(int i = 0; i < Profile_list.Count; i++)
+            {
+                if(index == Profile_list[i].index)
+                {
+                    Profile tempProfile = Profile_list[i];
+                    Profile_list.Remove(tempProfile);
+                }
+            }
 
             // 삭제 성공
             Debug.Log("프로필 삭제 성공");
@@ -447,6 +466,7 @@ public class SQL_Manager : MonoBehaviour
             }
             string SQL_command = "INSERT INTO Image (UID, Profile_Index, DefaultIndex) VALUES (@UID, @Index, @DefaultIndex)";
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
+            Debug.Log(index);
 
             // 파라미터 추가
             cmd.Parameters.AddWithValue("@UID", uid);
@@ -584,142 +604,8 @@ public class SQL_Manager : MonoBehaviour
             return;
         }*/
     }
-
     #endregion
-/*
-    #region Rank
-    /// <summary>
-    /// Ranking Table에 Score, Timer를 넘겨주는 Method.
-    /// score를 보내줘야 할때는 Timer를 null로 설정하고, timer를 보내줘야 할때는 score를 null로 설정해서 사용
-    /// </summary>
-    public void SQL_SetScore(string profile_name, int profile_index, int? newScore, float? newTimer, int UID)
-    {
-        try
-        {
-            // 1. SQL 서버에 접속 되어 있는지 확인
-            if (!ConnectionCheck(connection))
-            {
-                return;
-            }
 
-            // 2. 기존 기록 조회
-            string selectCommand = string.Format(@"SELECT Score, Timer FROM Ranking WHERE Profile_Name = '{0}' AND Profile_Index = {1} AND UID = {2};", profile_name, profile_index, UID);
-            MySqlCommand selectCmd = new MySqlCommand(selectCommand, connection);
-
-            bool hasExistingRecord = false;
-            int existingScore = 0;
-            float existingTimer = 0;
-
-            using (reader = selectCmd.ExecuteReader())
-            {
-                if (reader.HasRows)
-                {
-                    reader.Read();
-                    hasExistingRecord = true;
-                    existingScore = reader.IsDBNull(reader.GetOrdinal("Score")) ? 0 : reader.GetInt32("Score");
-                    existingTimer = reader.IsDBNull(reader.GetOrdinal("Timer")) ? 0 : reader.GetFloat("Timer");
-                    if (!reader.IsClosed) reader.Close();
-                }
-            }
-
-            // 3. 기록 갱신 또는 삽입
-            if (hasExistingRecord)
-            {
-                // 업데이트 조건 검사: 새로운 점수가 기존 점수보다 크거나, 새로운 타이머 값이 기존 값보다 작은 경우에만 업데이트
-                if (!reader.IsClosed) reader.Close();
-                bool shouldUpdateScore = newScore.HasValue && newScore.Value > existingScore;
-                bool shouldUpdateTime = newTimer.HasValue && (newTimer.Value < existingTimer || existingTimer == 0); // 기존 타이머가 0이면 항상 업데이트
-
-                if (shouldUpdateScore || shouldUpdateTime)
-                {
-                    // 업데이트 대상 점수와 타이머 결정
-                    int scoreToUpdate = shouldUpdateScore ? newScore.Value : existingScore;
-                    float timerToUpdate = shouldUpdateTime ? newTimer.Value : existingTimer;
-
-                    string updateCommand = string.Format(
-                        @"UPDATE Ranking SET Score = {0}, Timer = {1} WHERE Profile_Name = '{2}' AND Profile_Index = {3} AND UID = {4};",
-                        scoreToUpdate, // 업데이트할 새로운 Score 또는 기존 Score 유지
-                        string.Format(CultureInfo.InvariantCulture, "{0:0.###}", timerToUpdate), // 업데이트할 새로운 Timer 또는 기존 Timer 유지
-                        profile_name, profile_index, UID);
-
-                    new MySqlCommand(updateCommand, connection).ExecuteNonQuery();
-                }
-            }
-            // 4. 기존 기록이 없으면, 새로운 기록 삽입
-            else
-            {
-                if (!reader.IsClosed) reader.Close();
-                string insertCommand = string.Format(
-                    @"INSERT INTO Ranking (Profile_Name, Profile_Index, UID, Score, Timer) VALUES('{0}', {1}, {2}, {3}, {4});",
-                    profile_name, profile_index, UID,
-                    newScore.HasValue ? newScore.Value.ToString() : "0", // newScore가 null이면 0을 기본값으로 사용
-                    newTimer.HasValue ? string.Format(CultureInfo.InvariantCulture, "{0:0.###}", newTimer.Value) : "0"); // newTimer가 null이면 0을 기본값으로 사용
-
-                new MySqlCommand(insertCommand, connection).ExecuteNonQuery();
-            }
-            if (!reader.IsClosed) reader.Close();
-            return;
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-            if (!reader.IsClosed) reader.Close();
-            return;
-        }
-    }
-
-    /// <summary>
-    /// 호출시 같은 UID상에 존재하는 Profile들의 랭킹을 List에 담는 Method
-    /// </summary>
-    /// <param name="Mode"></param>
-    public void SQL_PrintRanking()
-    {
-        try
-        {
-            // 1. SQL 서버에 접속 되어 있는지 확인
-            if (!ConnectionCheck(connection))
-            {
-                return;
-            }
-
-            string SQL_command = string.Format(@"SELECT Profile_Name, Profile_Index, Score, Timer FROM Ranking WHERE UID = '{0}';", UID);
-            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
-            reader = cmd.ExecuteReader();
-
-            if (reader.HasRows)
-            {
-                // 2. 랭킹 리스트 담기 전 초기화
-                Rank_List.Clear();
-
-                // 3. 읽어온 정보에서 같은 UID에 속해 있는 Profile들의 랭킹 정보를 불러서 List에 담기
-                while (reader.Read())
-                {
-                    string profile_name = reader.GetString("Profile_Name");
-                    int profile_index = reader.GetInt32("Profile_Index");
-                    int score = reader.GetInt32("Score");
-                    float timer = reader.GetFloat("Timer");
-
-                    Rank_List.Add(new Rank(profile_name, profile_index, score, timer));
-                }
-                if (!reader.IsClosed) reader.Close();
-                return;
-            }
-            else
-            {
-                Debug.Log("프로필에 등록된 Rank가 없습니다.");
-                if (!reader.IsClosed) reader.Close();
-                return;
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-            if (!reader.IsClosed) reader.Close();
-            return;
-        }
-    }
-    #endregion
-*/
     #region PushPush
     /// <summary>
     /// PushPush게임 진행 후 Custom한 Object와 Btn들의 정보를 DB에 전달하는 Method
@@ -730,6 +616,7 @@ public class SQL_Manager : MonoBehaviour
     {
         try
         {
+            if (!reader.IsClosed) reader.Close();
             // 1. SQL 서버에 접속 되어 있는지 확인
             if (!ConnectionCheck(connection))
             {
@@ -772,6 +659,7 @@ public class SQL_Manager : MonoBehaviour
     {
         try
         {
+            if (!reader.IsClosed) reader.Close();
             // 1. SQL 서버에 접속 되어 있는지 확인
             if (!ConnectionCheck(connection))
             {
@@ -782,17 +670,23 @@ public class SQL_Manager : MonoBehaviour
             // 최근 순서대로 데이터를 정렬하여 조회
             string selectCommand = $"SELECT ObjInfo FROM PushPush WHERE ProfileIndex = '{_profileIndex}' ORDER BY CreatedAt DESC;";
             MySqlCommand selectCmd = new MySqlCommand(selectCommand, connection);
+            reader = selectCmd.ExecuteReader();
 
             List<PushPushObject> push = new List<PushPushObject>();
 
-            while (reader.Read())
+            if (reader.HasRows)
             {
-                string jsonData = reader.GetString("ObjInfo");
-                PushPushObject pushObject = JsonUtility.FromJson<PushPushObject>(jsonData);
-                push.Add(pushObject);
+                while (reader.Read())
+                {
+                    string jsonData = reader.GetString("ObjInfo");
+                    PushPushObject pushObject = JsonUtility.FromJson<PushPushObject>(jsonData);
+                    push.Add(pushObject);
+                }
+                if (!reader.IsClosed) reader.Close();
             }
 
-            if (!reader.IsClosed) reader.Close();
+            Debug.Log(push.Count);
+
             return push;
         }
         catch (Exception e)
@@ -803,5 +697,28 @@ public class SQL_Manager : MonoBehaviour
         }
     }
     #endregion
+
+    public void PrintProfileImage(bool _imageMode, Image _image, int _profileIndex)
+    {
+        int defaultImage = -1;
+
+        if (_imageMode)
+        { // 이미지 고르기 선택한 플레이어일 때
+            for (int i = 0; i < Profile_list.Count; i++)
+            {
+                if (_profileIndex == Profile_list[i].index)
+                {
+                    defaultImage = Profile_list[i].defaultImage;
+                    _image.sprite = GameManager.Instance.ProfileImages[defaultImage];
+                }
+            }
+        }
+        else if (!_imageMode)
+        { // 사진 찍기를 선택한 플레이어일 때
+            Texture2D profileTexture = SQL_LoadProfileImage(GameManager.Instance.UID, _profileIndex);
+            Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
+            _image.sprite = profileSprite;
+        }
+    }
     #endregion
 }

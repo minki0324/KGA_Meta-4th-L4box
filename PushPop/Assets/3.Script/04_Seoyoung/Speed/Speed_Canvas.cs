@@ -21,6 +21,7 @@ public class Speed_Canvas : MonoBehaviour
     [SerializeField] private GameObject selectCategory_Panel;
     [SerializeField] private GameObject ready_Panel;
     [SerializeField] private GameObject speedGame_Panel;
+    [SerializeField] private GameObject resultPanel;
 
     [Header("캔버스")]
     [SerializeField] private Canvas main_Canvas;
@@ -39,6 +40,9 @@ public class Speed_Canvas : MonoBehaviour
 
     [Header("버튼")]
     [SerializeField] private List<Button> Difficulty_Btn;
+    [SerializeField] private Button previous_Btn;
+    [SerializeField] private Button next_Btn;
+
 
     [Header("Ready패널 관련")]
     [SerializeField] private Image selected_Image;
@@ -51,6 +55,7 @@ public class Speed_Canvas : MonoBehaviour
 
     [SerializeField] private List<Button> iconButton_List;
 
+    [SerializeField] private Speed_Timer speedTimer;
 
    
     //스피드게임에 넘겨줄 변수
@@ -61,11 +66,14 @@ public class Speed_Canvas : MonoBehaviour
     //카테고리 선택창이 떠잇으면 카테고리를 끄고, 꺼져있으면 메인캔버스로 돌아감
     public bool bSelectCategoryPanel_On = false;
 
+    public int currentIcon;
+
 
     #region Unity Callback
 
     private void OnEnable()
     {
+        AudioManager.instance.SetAudioClip_BGM(1);
         selectDifficulty_Panel.SetActive(true);
         help_Canvas.gameObject.SetActive(true);
         help_Canvas.transform.SetParent(gameObject.transform);
@@ -100,8 +108,11 @@ public class Speed_Canvas : MonoBehaviour
     //난이도 비눗방울 (쉬움/보통/어려움)버튼 눌렀을 때 호출되는 함수 : 쉬움(0), 보통(1), 어려움(2)을 매개변수로 줌
     public void DifficultyBtn_Clicked(int index)
     {
+        SelectCategory_ScrollView.normalizedPosition = new Vector2(1f, 1f);
+        GameManager.Instance.isStart = true;
         if (!help_Canvas.bisHelpPanelOn)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
             selectCategory_Panel.SetActive(true);
             bSelectCategoryPanel_On = true;
 
@@ -118,7 +129,8 @@ public class Speed_Canvas : MonoBehaviour
             {
                 case 0:
                     difficulty = Difficulty.Easy;
-
+                    speedTimer.difficult = Difficult.Easy;
+                    GameManager.Instance.count = 1 / 3f;
                     Difficulty_Text.text = "쉬움";
                     SelectMold_Text.text = "쉬움";
                     for (int i = 0; i < easyIcon_List.Count; i++)
@@ -133,14 +145,15 @@ public class Speed_Canvas : MonoBehaviour
                         a.transform.GetChild(0).GetComponent<Image>().sprite = easyIcon_List[i];
 
                         //텍스트 변경 : 스프라이트 이름을 키값으로 value가져오기
-                        a.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = Mold_Dictionary.instance.icon_Dictionry[int.Parse(easyIcon_List[i].name)];
+                        a.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = DataManager2.instance.iconDict[int.Parse(easyIcon_List[i].name)];
                     }
 
                     break;
 
                 case 1:
                     difficulty = Difficulty.Normal;
-
+                    speedTimer.difficult = Difficult.Normal;
+                    GameManager.Instance.count = 1 / 4f;
                     Difficulty_Text.text = "보통";
                     SelectMold_Text.text = "보통";
                     for (int i = 0; i < normalIcon_List.Count; i++)
@@ -154,13 +167,14 @@ public class Speed_Canvas : MonoBehaviour
                         a.transform.GetChild(0).GetComponent<Image>().sprite = normalIcon_List[i];
 
                         //텍스트 변경
-                        a.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = Mold_Dictionary.instance.icon_Dictionry[int.Parse(normalIcon_List[i].name)];
+                        a.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = DataManager2.instance.iconDict[int.Parse(normalIcon_List[i].name)];
                     }
                     break;
 
                 case 2:
                     difficulty = Difficulty.Hard;
-
+                    speedTimer.difficult = Difficult.Hard;
+                    GameManager.Instance.count = 1 / 5f;
                     Difficulty_Text.text = "어려움";
                     SelectMold_Text.text = "어려움";
                     for (int i = 0; i < hardIcon_List.Count; i++)
@@ -174,7 +188,7 @@ public class Speed_Canvas : MonoBehaviour
                         a.transform.GetChild(0).GetComponent<Image>().sprite = hardIcon_List[i];
 
                         //텍스트 변경
-                        a.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = Mold_Dictionary.instance.icon_Dictionry[int.Parse(hardIcon_List[i].name)];
+                        a.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = DataManager2.instance.iconDict[int.Parse(hardIcon_List[i].name)];
                     }
                     break;
             }
@@ -182,21 +196,80 @@ public class Speed_Canvas : MonoBehaviour
             for (int i = 0; i < iconButton_List.Count; i++)
             {
                 int temp = i;
-                iconButton_List[temp].onClick.AddListener(delegate { IconBtn_Clicked(iconButton_List[temp].gameObject); });
+                //currentIcon = temp;
+                iconButton_List[temp].onClick.AddListener(delegate { IconBtn_Clicked(iconButton_List[temp].gameObject, temp); });
             }
         }
 
 
     }
+    public void NextBtn_Clicked()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        if (currentIcon >= iconButton_List.Count - 1)
+        {
+            next_Btn.interactable = false;
+        }
+        else
+        {
+            previous_Btn.interactable = true;
+            currentIcon += 1;
+            selected_Image.sprite = iconButton_List[currentIcon].GetComponent<Image>().sprite;
+            selected_Text.text = iconButton_List[currentIcon].transform.GetChild(0).GetComponent<TMP_Text>().text;
+            moldIcon = selected_Image.sprite;
+        }
+
+     
+    }
+
+
+    public void PreviousBtn_Clicked()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        if (currentIcon <= 0)
+        {
+            previous_Btn.interactable = false;
+        }
+        else
+        {
+            next_Btn.interactable = true;
+            currentIcon -= 1;
+            selected_Image.sprite = iconButton_List[currentIcon].GetComponent<Image>().sprite;
+            selected_Text.text = iconButton_List[currentIcon].transform.GetChild(0).GetComponent<TMP_Text>().text;
+            moldIcon = selected_Image.sprite;
+        }
+       
+    }
 
 
     //몰드 아이콘 눌렀을 때 호출되는 함수
-    public void IconBtn_Clicked(GameObject button)
+    public void IconBtn_Clicked(GameObject button, int _temp)
     {
+       
         if (!help_Canvas.bisHelpPanelOn)
         {
-            ready_Panel.SetActive(true);
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
+            currentIcon = _temp;
+            if (currentIcon <= 0)
+            {
+                previous_Btn.interactable = false;
+            }
+            else
+            {
+                previous_Btn.interactable = true;
+            }
 
+            if(currentIcon >= iconButton_List.Count - 1)
+            {
+                next_Btn.interactable = false;
+            }
+            else
+            {
+                next_Btn.interactable = true;
+            }
+
+    
+            ready_Panel.SetActive(true);
 
             help_Canvas.Back_Btn.interactable = false;
             help_Canvas.Help_Btn.interactable = false;
@@ -206,16 +279,22 @@ public class Speed_Canvas : MonoBehaviour
             selected_Text.text = button.transform.GetChild(0).GetComponent<TMP_Text>().text;
 
             moldIcon = selected_Image.sprite;
+            GameManager.Instance.boardName = int.Parse(moldIcon.name);
             GameManager.Instance.PrintSpeed(int.Parse(moldIcon.name));
         }
     }
 
+    public void PrintScore()
+    {
+        GameManager.Instance.PrintSpeed(int.Parse(moldIcon.name));
+    }
 
     //준비창의 x를 눌렀을 때 호출되는 함수
     public void ReadyPanel_BackBtn_Clicked()
     {
         if (!help_Canvas.bisHelpPanelOn)
         {
+            AudioManager.instance.SetCommonAudioClip_SFX(3);
             ready_Panel.SetActive(false);
             help_Canvas.Back_Btn.interactable = true;
             help_Canvas.Help_Btn.interactable = true;
@@ -226,7 +305,9 @@ public class Speed_Canvas : MonoBehaviour
     //준비창의 게임시작 버튼 눌렀을 때 호출되는 함수
     public void GameStartBtn_Clicked()
     {
-        Debug.Log("먼데");
+        AudioManager.instance.SetCommonAudioClip_SFX(0);
+        AudioManager.instance.SetAudioClip_BGM(3);
+
         speedGame_Panel.SetActive(true);
         selectCategory_Panel.SetActive(false);
         selectDifficulty_Panel.SetActive(false);
@@ -235,7 +316,7 @@ public class Speed_Canvas : MonoBehaviour
         help_Canvas.gameObject.SetActive(false);
 
         PushPop.Instance.boardSprite = moldIcon; // pushpop
-        GameManager.Instance.SpeedMode(); // Speed Mode start
+        GameManager.Instance.GameStart();
     }
 
 
@@ -244,6 +325,8 @@ public class Speed_Canvas : MonoBehaviour
     {
         //난이도 선택창이 켜져있고 카테고리 선택창이 꺼져있으면 메인화면으로가기
         //카테고리 선택창이 켜져있으면 카테고리 선택창 끄기
+
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         if (!help_Canvas.bisHelpPanelOn)
         {
             if (bSelectCategoryPanel_On)
@@ -253,11 +336,13 @@ public class Speed_Canvas : MonoBehaviour
             }
             else
             {
+                AudioManager.instance.SetAudioClip_BGM(0);
+
                 help_Canvas.transform.SetParent(null);
                 help_Canvas.transform.SetAsLastSibling();
-
-                gameObject.SetActive(false);
                 main_Canvas.gameObject.SetActive(true);
+                gameObject.SetActive(false);
+               
             }
         }
 
@@ -301,6 +386,17 @@ public class Speed_Canvas : MonoBehaviour
         SelectCategory_ScrollView.transform.GetChild(1).GetComponent<Scrollbar>().interactable = true;
 
     }
+
+    public void RestartButton()
+    {
+        resultPanel.SetActive(false);
+        speedTimer.Init();
+        GameManager.Instance.SpeedMode(); // Speed Mode restart
+    }
+
+
+
+  
 
 
     #endregion

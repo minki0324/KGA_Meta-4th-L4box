@@ -8,22 +8,23 @@ using UnityEngine.SceneManagement;
 public class Main_Button : MonoBehaviour
 {
     [Header("Button")]
-    [SerializeField] private Button _optionBtn;
-    [SerializeField] private Button _profileBtn;
-    [SerializeField] private Button _homeBtn;        
-    [SerializeField] private Button _collectionBtn;
-    [SerializeField] private Button _mode2PBtn;
-    [SerializeField] private Button _pushModeBtn;
-    [SerializeField] private Button _speedModeBtn;
-    [SerializeField] private Button _memoryModeBtn;
+    [SerializeField] private Button optionBtn;
+    [SerializeField] private Button profileBtn;
+    [SerializeField] private Button profileReturnBtn;
+    [SerializeField] private Button homeBtn;        
+    [SerializeField] private Button networkBtn;
+    [SerializeField] private Button multiModeBtn;
+    [SerializeField] private Button pushModeBtn;
+    [SerializeField] private Button speedModeBtn;
+    [SerializeField] private Button memoryModeBtn;
 
     [Header("Panel")]
-    [SerializeField] private GameObject _profilePanel;
-    [SerializeField] private GameObject _optionPanel;
-    [SerializeField] private GameObject _collectionPanel;
-    [SerializeField] private GameObject _timesetPanel;
-    [SerializeField] private GameObject _buttonPanel;
-    [SerializeField] private GameObject _gameModePanel;
+    [SerializeField] private GameObject profilePanel;
+    [SerializeField] private GameObject optionPanel;
+    [SerializeField] private GameObject networkPanel;
+    [SerializeField] private GameObject timesetPanel;
+    [SerializeField] private GameObject buttonPanel;
+    [SerializeField] private GameObject gameModePanel;
   
 
     [Header("모드별 캔버스")]
@@ -35,117 +36,98 @@ public class Main_Button : MonoBehaviour
     {
         Enable_Button();
         help_Cavas.gameObject.SetActive(false);
+        GameManager.Instance.shutdownTimer = 0;
     }
     #endregion
 
     #region Other Method
-
-    //푸시푸시 모드 패널(버튼) 클릭 시 호출될 함수
     public void PushPushBtn_Clicked()
-    {
-        _timesetPanel.SetActive(true);
-        Disable_Button();
+    { // GameMode PushPushBtn 연동 Method
+        timesetPanel.SetActive(true);
+        GameManager.Instance.GameModeSetting(0);
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 
-
-    //스피드 모드 패널(버튼) 클릭 시 호출될 함수
     public void SpeedBtn_Clicked()
-    {
-        _timesetPanel.SetActive(true);
-        Disable_Button();
+    { // GameMOde SpeedBtn 연동 Method
+        timesetPanel.SetActive(true);
+        GameManager.Instance.GameModeSetting(1);
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 
-
-    //메모리 모드 패널(버튼) 클릭 시 호출될 함수
     public void MemoryBtn_Clicked()
-    {
-        _timesetPanel.SetActive(true);
-        Disable_Button();
+    { // GameMode Memory 연동 Method
+        timesetPanel.SetActive(true);
+        GameManager.Instance.GameModeSetting(2);
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 
+    public void BombBtn_Clicked()
+    { // GameMode MultiBtn 연동 Method
+        timesetPanel.SetActive(true);
+        GameManager.Instance.GameModeSetting((int)Mode.Bomb);
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+    }
 
-    //프로필 아이콘 클릭 시 호출
     public void Profile_Btn_Clicked()
-    {
-        _profilePanel.SetActive(true);
-        _gameModePanel.SetActive(false);
-        _buttonPanel.SetActive(false);
-        /*AudioManager123.instance.SetAudioClip_SFX(0);*/
+    { // MainLobby ProfileIconBtn 연동 Method
+        NewProfileCanvas profile = profilePanel.GetComponent<NewProfileCanvas>();
+        profilePanel.SetActive(true);
+        profileReturnBtn.gameObject.SetActive(true);
+        ProfileManager.Instance.PrintProfileList(profile.profileParent, ProfileManager.Instance.ProfileIndex1P, null);
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 
-    //환경설정 버튼 클릭 시 호출
+    public void ProfileReturnBtn_Clicked()
+    { // Profile Return Btn
+        profilePanel.SetActive(false);
+        profileReturnBtn.gameObject.SetActive(false);
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+    }
+
     public void OptionBtn_Clicked()
-    {
-        _optionPanel.SetActive(true);
-        AudioManager123.instance.SetAudioClip_SFX(0);
+    { // MainLobby OptionBtn 연동 Method
+        optionPanel.SetActive(true);
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 
-
-    //소통방(네트워크) 버튼 클릭 시 호출
     public void CollectionBtn_Clicked()
-    {
+    { // MainLobby NetworkBtn 연동 Method
         //네트워크 씬으로 이동 + 필요한 함수 호출해주세요 :)
         
         Debug.Log("네트워크 씬으로 넘어가기");
-        AudioManager123.instance.SetAudioClip_SFX(0);
-    }
-
-    //2인모드 버튼 클릭 시 호출
-    public void Mode2PBtn_Clicked()
-    {
-        AudioManager123.instance.SetAudioClip_SFX(0);
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
     
-    //홈 아이콘 클릭 시 호출 - L4Box 홈페이지로 켜기
     public void HomeBtn_Clicked()
-    {
+    { // MainLobby HomeBtn 연동 Method
         Application.OpenURL("https://www.l4box.com/");
-        AudioManager123.instance.SetAudioClip_SFX(0);
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 
 
     public void Enable_Button()
     {
-        //_optionBtn.enabled = true;
-        //_profileBtn.enabled = true;
-        //_homeBtn.enabled = true;
-        //_collectionBtn.enabled = true;
-        //_mode2PBtn.enabled = true;
-        //_pushModeBtn.enabled = true;
-        //_speedModeBtn.enabled = true;
-        //_memoryModeBtn.enabled = true;
-
-        _optionBtn.interactable = true;
-        _profileBtn.interactable = true;
-        _homeBtn.interactable = true;
-        _collectionBtn.interactable = true;
-        _mode2PBtn.interactable = true;
-        _pushModeBtn.interactable = true;
-        _speedModeBtn.interactable = true;
-        _memoryModeBtn.interactable = true;
-
+        optionBtn.interactable = true;
+        profileBtn.interactable = true;
+        homeBtn.interactable = true;
+        networkBtn.interactable = true;
+        multiModeBtn.interactable = true;
+        pushModeBtn.interactable = true;
+        speedModeBtn.interactable = true;
+        memoryModeBtn.interactable = true;
     }
 
     public void Disable_Button()
     {
-        //_optionBtn.enabled = false;
-        //_profileBtn.enabled = false;
-        //_homeBtn.enabled = false;
-        //_collectionBtn.enabled = false;
-        //_mode2PBtn.enabled = false;
-        //_pushModeBtn.enabled = false;
-        //_speedModeBtn.enabled = false;
-        //_memoryModeBtn.enabled = false;
-
-
-        _optionBtn.interactable = false;
-        _profileBtn.interactable = false;
-        _homeBtn.interactable = false;
-        _collectionBtn.interactable = false;
-        _mode2PBtn.interactable = false;
-        _pushModeBtn.interactable = false;
-        _speedModeBtn.interactable = false;
-        _memoryModeBtn.interactable = false;
+        optionBtn.interactable = false;
+        profileBtn.interactable = false;
+        homeBtn.interactable = false;
+        networkBtn.interactable = false;
+        multiModeBtn.interactable = false;
+        pushModeBtn.interactable = false;
+        speedModeBtn.interactable = false;
+        memoryModeBtn.interactable = false;
     }
     #endregion
 }

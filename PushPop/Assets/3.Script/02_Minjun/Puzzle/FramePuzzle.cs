@@ -44,6 +44,7 @@ public class FramePuzzle : MonoBehaviour,  IPointerDownHandler , IPointerUpHandl
     public void OnPointerDown(PointerEventData eventData)
     {
         if (!CustomPushpopManager.Instance.isCustomMode) return;
+        if (CustomPushpopManager.Instance.isCool) return;
         CustomPushpopManager.Instance.ClickDown();
     }
 

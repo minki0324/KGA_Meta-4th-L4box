@@ -5,17 +5,19 @@ using UnityEngine.UI;
 
 public class PuzzlePiece : MonoBehaviour
 {
-    private bool isGround = false;
+    public bool isGround = false;
     [SerializeField] private float speed = 5f;
     public PuzzleObject puzzle;
     private Sprite puzzleSprite;
     private float centerPos;
     public Coroutine puzzleMove;
-
+    
     private void OnDisable()
     {
-        if (puzzleMove == null) return;
-        StopCoroutine(puzzleMove);
+        if (puzzleMove != null)
+        {
+            StopCoroutine(puzzleMove);
+        }
     }
 
     public IEnumerator PuzzleMove_Co()
@@ -44,7 +46,7 @@ public class PuzzlePiece : MonoBehaviour
         }
 
         if (GameManager.Instance.bubbleObject.Count == 0 && isGround)
-        {
+        {//모두 방울에서 터진 퍼즐들이 모두 땅에 떨어졌을때
             PuzzleLozic puzzle = FindObjectOfType<PuzzleLozic>();
             puzzle.SettingGame();
         }
@@ -52,11 +54,6 @@ public class PuzzlePiece : MonoBehaviour
 
     public void OnBubbleDestroy()
     {
-        // AlphaCalculate(puzzleSprite);
-        // pointY = transform.position.y + puzzle.puzzleCenter.y;
-        
-        Debug.Log($"puzzle position: {transform.position.y}, puzzle center: {puzzle.puzzleCenter.y}");
-        
         puzzleMove = StartCoroutine(PuzzleMove_Co());
     }
 

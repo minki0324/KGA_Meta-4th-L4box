@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 { // bubble prefab's script
@@ -10,19 +11,21 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     private Animator bubbleAnimator;
     private Vector2 bubbleSize = Vector2.zero;
     public int touchCount = 0;
-
+    private Vector2 localPos;
+    private Vector2 puzzleSize = Vector2.zero;
 
     [Header("Move Parameter")]
     // Bubble moving
-    private float currentSpeed = 0f;
+    public float currentSpeed = 0f;
     private Coroutine moveCoroutine = null;
     [SerializeField] private AnimationCurve decelOverTime;
-    [SerializeField] private float decel = 250f; // move º”µµ ∞®º“
+    [SerializeField] private float decel = 250f; // move ÏÜçÎèÑ Í∞êÏÜå
     [SerializeField] private float speedRate = 10f;
 
     private void OnEnable()
     {
-        gameMode = GameManager.Instance.gameMode; // game start Ω√ load
+        StartCoroutine(CenterSave());
+        gameMode = GameManager.Instance.gameMode; // game start Ïãú load
         bubbleRectTrans = GetComponent<RectTransform>();
         bubbleAnimator = GetComponent<Animator>();
     }
@@ -34,23 +37,27 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
             case Mode.PushPush:
                 currentSpeed = 0f;
                 PuzzlePiece piece = transform.parent.GetComponent<PuzzlePiece>();
+                if (GameManager.Instance.backButtonClick) return;
                 piece.OnBubbleDestroy();
                 break;
             case Mode.Speed:
-                Speed_Timer speedTimer = FindObjectOfType<Speed_Timer>();
-                if (speedTimer == null) return;
-                speedTimer.time_Slider.gameObject.SetActive(true);
-                GameManager.Instance.SpeedModePushPopCreate();
+                GameManager.Instance.SpeedOnBubbleDestroy(); 
                 break;
             case Mode.Memory:
                 break;
             case Mode.Bomb:
                 break;
         }
+
+        if(moveCoroutine != null)
+        {
+            StopCoroutine(moveCoroutine);
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
-    { // «ˆ¿Á ø¿∫Í¡ß∆Æ ≥ª∫Œø°º≠ ≈¨∏Ø«œ¥¬ º¯∞£ 1»∏ »£√‚
+    { // ÌòÑÏû¨ Ïò§Î∏åÏ†ùÌä∏ ÎÇ¥Î∂ÄÏóêÏÑú ÌÅ¥Î¶≠ÌïòÎäî ÏàúÍ∞Ñ 1Ìöå Ìò∏Ï∂ú
+        AudioManager.instance.SetCommonAudioClip_SFX(5);
         Vector2 bubblePosition = transform.position;
         Vector2 touchPosition = eventData.position;
 
@@ -75,12 +82,16 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     }
 
     public void BubbleSetting(Vector2 _puzzleSize, Vector2 _puzzlePos, Transform _puzzle)
-    { // GameManagerø°º≠ Mode º±≈√ Ω√ Position ∞≥ºˆ ∏∏≈≠ »£√‚µ«¥¬ method
+    { // GameManagerÏóêÏÑú Mode ÏÑ†ÌÉù Ïãú Position Í∞úÏàò ÎßåÌÅº Ìò∏Ï∂úÎêòÎäî method
       // position setting
         bubbleRectTrans.anchoredPosition = _puzzlePos;
         // size setting
         float bigger = _puzzleSize.x > _puzzleSize.y ? _puzzleSize.x : _puzzleSize.y;
-
+        puzzleSize = _puzzleSize;
+        if (gameMode.Equals(Mode.PushPush))
+        {
+            bigger *= 1.3f;
+        }
         bubbleRectTrans.sizeDelta = new Vector2(bigger, bigger);
         bubbleSize = bubbleRectTrans.sizeDelta;
     }
@@ -88,19 +99,17 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     public void PushPushMode(Vector2 _bubblePosition, Vector2 _touchPosition)
     {
         // Bubble Move
-        Vector2 dir = (_bubblePosition - _touchPosition).normalized;// Touch Position¿« π›¥Î πÊ«‚
+        Vector2 dir = (_bubblePosition - _touchPosition).normalized;// Touch PositionÏùò Î∞òÎåÄ Î∞©Ìñ•
         float speed = (_bubblePosition - _touchPosition).magnitude;
-        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, speed));
+        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, speed, Mode.PushPush)); // jaeyun todo ÎÇòÏ§ëÏóê Í∏∞Î≥∏Í≥º ÏïåÏïÑÏÑú Ïûò ÌÜµÌï©Ìï¥Ï§Ñ Í≤É
 
-        // bubble ≈Õ∆Æ∑»¿ª ∂ß
+        // bubble ÌÑ∞Ìä∏Î†∏ÏùÑ Îïå
         touchCount--;
         if (touchCount <= 0)
         {
             GameManager.Instance.bubbleObject.Remove(gameObject);
-            // puzzle move
-           
+            AudioManager.instance.SetAudioClip_SFX(4, false);
             Destroy(gameObject);
-
         }
     }
 
@@ -109,11 +118,9 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         // Bubble move
         Vector2 dir = (_bubblePosition - _touchPosition).normalized;
         float speed = (_bubblePosition - _touchPosition).magnitude;
-        // dir.y = 0f; //¡¬øÏ∑Œ∏∏ ¿Ãµø
-
         moveCoroutine = StartCoroutine(BubbleMove_Co(dir, speed));
-        touchCount--;
 
+        touchCount--;
         if (touchCount <= 0)
         {
             GameManager.Instance.bubbleObject.Remove(gameObject);
@@ -122,61 +129,61 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     }
 
     public void BombMode(Vector2 _player1, Vector2 _player2, bool _onlyMove)
-    { // only move Ω√ ªÛ¥‹ø° πËƒ° π◊ touch ±‚¥… æ¯¿Ω
-        float timer = 0;
+    { // only move Ïãú ÏÉÅÎã®Ïóê Î∞∞Ïπò Î∞è touch Í∏∞Îä• ÏóÜÏùå
         Vector2 dir = Vector2.zero;
-        // player1 turn -> if ∑Œ πŸ≤Ÿ±‚
+        // player1 turn -> if Î°ú Î∞îÍæ∏Í∏∞
         dir = _player1 - _player2;
         // player2 turn
         dir = _player2 - _player1;
         dir.y = 0;
-        // touch¥¬ «œµ« æÓ∂ª∞‘ «ÿæﬂ«“ ¡ˆ ª˝∞¢
+        // touchÎäî ÌïòÎêò Ïñ¥ÎñªÍ≤å Ìï¥ÏïºÌï† ÏßÄ ÏÉùÍ∞Å
         if (_onlyMove)
         {
             //   StartCoroutine(BubbleMove_Co(dir, 5f, 0.4f));
         }
         else
         {
-            //StartCoroutine(BubbleMove_Co(-dir, 5f, 0.4f)); // onlymoveøÕ dirπ›¥Î
+            //StartCoroutine(BubbleMove_Co(-dir, 5f, 0.4f)); // onlymoveÏôÄ dirÎ∞òÎåÄ
         }
     }
 
     public void MemoryMode()
     {
-        bool isShining = false; // ∫˚≥µ¥¬ ¡ˆ æ∆¥—¡ˆ
-        bool touchable = false; // ∫˚≥≠ µ⁄ 2√  »ƒ ≈Õƒ° ∞°¥…
-        // shine animation √ﬂ∞° « ø‰
+        bool isShining = false; // ÎπõÎÇ¨Îäî ÏßÄ ÏïÑÎãåÏßÄ
+        bool touchable = false; // ÎπõÎÇú Îí§ 2Ï¥à ÌõÑ ÌÑ∞Ïπò Í∞ÄÎä•
+        // shine animation Ï∂îÍ∞Ä ÌïÑÏöî
         StartCoroutine(BubbleTouchable_Co(bubbleAnimator, (_result) =>
         {
-            touchable = _result; // 2√  µ⁄ true
+            touchable = _result; // 2Ï¥à Îí§ true
         }));
         if (!touchable) return;
         if (isShining)
         {
-            // animation -> ≈Õ¡¸
+            // animation -> ÌÑ∞Ïßê
             // score += 100
         }
         else
         {
-            // life ∞®º“
-            // animation -> ±Ó∏∏ ∫˚
+            // life Í∞êÏÜå
+            // animation -> ÍπåÎßå Îπõ
         }
     }
 
     private IEnumerator BubbleTouchable_Co(Animator _bubbleAnimation, Action<bool> callback)
-    { // Bombmodeø°º≠ random shining touchable ∫Œø©, Memory modeµµ « ø‰
+    { // BombmodeÏóêÏÑú random shining touchable Î∂ÄÏó¨, Memory modeÎèÑ ÌïÑÏöî
         // shine animation Setbool
         yield return new WaitForSeconds(2f);
         callback(true);
     }
 
-    // Bubble lerp Translate moving, pushpush, speed modeø°º≠∏∏ ªÁøÎ
+    // Bubble lerp Translate moving, pushpush, speed modeÏóêÏÑúÎßå ÏÇ¨Ïö©
     private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed)
-    {
-        currentSpeed = _maxSpeed; // maxSpeed √ ±‚»≠
-        float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y ∞∞¿Ω
+    { // speed mode bubble moving
+        currentSpeed = _maxSpeed; // maxSpeed Ï¥àÍ∏∞Ìôî
+        float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y Í∞ôÏùå
+     
 
-        // º”µµ∞° 0¿Ã µ«æ˙¿ª ∂ß±Ó¡ˆ ¿Ãµø
+        // ÏÜçÎèÑÍ∞Ä 0Ïù¥ ÎêòÏóàÏùÑ ÎïåÍπåÏßÄ Ïù¥Îèô
         while (currentSpeed >= 0)
         {
             if (0f + (bubbleSize.x * bubbleScale / 2f) > transform.position.x)
@@ -194,7 +201,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
                 _dir = Vector2.Reflect(_dir, Vector2.up).normalized;
                 transform.parent.position = new Vector2(transform.position.x, (bubbleSize.y * bubbleScale / 2f) + 10f);
             }
-            else if (transform.position.y > Screen.height - (bubbleSize.y * bubbleScale / 2f))
+            else if (transform.position.y         > Screen.height - (bubbleSize.y * bubbleScale / 2f))
             { // boundary up
                 _dir = Vector2.Reflect(_dir, Vector2.down).normalized;
                 transform.parent.position = new Vector2(transform.position.x, Screen.height - ((bubbleSize.y * bubbleScale / 2f) + 10f));
@@ -208,5 +215,63 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
             yield return null;
         }
+    }
+
+
+    private IEnumerator BubbleMove_Co(Vector2 _dir, float _maxSpeed, Mode _gameMode)
+    { // pushpush mode bubble moving
+        RectTransform puzzleTrans = transform.parent.GetComponent<RectTransform>();
+        Transform parentTrans = transform.parent;
+ 
+        currentSpeed = _maxSpeed; // maxSpeed Ï¥àÍ∏∞Ìôî
+        float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y Í∞ôÏùå
+        float BubbleRadius = (bubbleSize.x * bubbleScale / 2f);
+        float boundaryX = Screen.width / 2;
+        float boundaryY = Screen.height / 2;
+        float correctionX = bubbleSize.x - puzzleSize.x;
+        float correctionY = bubbleSize.y - puzzleSize.y;
+
+        Debug.Log("Î≥¥Ï†ïÍ∞í X : " + correctionX + " Î≤ÑÎ∏î ÌÅ¨Í∏∞ X : " + bubbleSize.x + " ÌçºÏ¶ê ÌÅ¨Í∏∞ : " + puzzleSize.x);
+        Debug.Log("Î≥¥Ï†ïÍ∞í Y : " + correctionY + " Î≤ÑÎ∏î ÌÅ¨Í∏∞ Y : " + bubbleSize.y + " ÌçºÏ¶ê ÌÅ¨Í∏∞ : " + puzzleSize.y);
+
+        // ÏÜçÎèÑÍ∞Ä 0Ïù¥ ÎêòÏóàÏùÑ ÎïåÍπåÏßÄ Ïù¥Îèô
+        while (currentSpeed >= 0)
+        {
+            float posX = puzzleTrans.localPosition.x;
+            float posY = puzzleTrans.localPosition.y;
+            if ((-boundaryX + BubbleRadius) > posX)
+            { // boundary left
+                _dir = Vector2.Reflect(_dir, Vector2.right).normalized;
+                puzzleTrans.localPosition = new Vector2((-boundaryX + BubbleRadius + 10f), posY);
+            }
+            else if (posX > boundaryX - BubbleRadius)
+            { // boundary right
+                _dir = Vector2.Reflect(_dir, Vector2.left).normalized;
+                puzzleTrans.localPosition = new Vector2(boundaryX - (BubbleRadius + 10f), posY);
+            }
+            else if ((-boundaryY + BubbleRadius) > posY)
+            { // boundary bottom
+                _dir = Vector2.Reflect(_dir, Vector2.up).normalized;
+                puzzleTrans.localPosition = new Vector2(posX, (-boundaryY + BubbleRadius + 10f));
+            }
+            else if (posY > boundaryY - BubbleRadius)
+            { // boundary up
+                _dir = Vector2.Reflect(_dir, Vector2.down).normalized;
+                puzzleTrans.localPosition = new Vector2(posX, boundaryY - (BubbleRadius + 10f));
+            }
+
+            transform.parent.Translate(_dir * (Time.deltaTime * currentSpeed * speedRate)); // bubble move
+
+            // moving lerp
+            float lerpDecel = decelOverTime.Evaluate(1 - currentSpeed / _maxSpeed) * decel;
+            currentSpeed = Mathf.Max(0f, currentSpeed - lerpDecel * Time.deltaTime);
+            yield return null;
+        }
+    }
+
+    private IEnumerator CenterSave()
+    {
+        yield return null;
+        localPos = GetComponent<RectTransform>().localPosition;
     }
 }

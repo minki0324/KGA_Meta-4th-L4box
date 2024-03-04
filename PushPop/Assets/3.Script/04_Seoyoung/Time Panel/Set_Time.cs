@@ -31,14 +31,16 @@ public class Set_Time : MonoBehaviour
     [SerializeField] Button Confirm_Btn;
     [SerializeField] Button Back_Btn;
 
-    [SerializeField] private int time = 300;
+    public GameObject help_Canvas;
+
+    [SerializeField] private int time = 180;
     int min;
     int sec;
 
     #region Unity Callback
     private void OnEnable()
     {
-        time = 300;
+        time = 180;
         Calculate_Time();
         main_Button.Disable_Button();
     }
@@ -56,7 +58,7 @@ public class Set_Time : MonoBehaviour
 
     private void Update()
     {
-        if (time <= 300)
+        if (time <= 60)
         {
             DecreaseTime_Btn.enabled = false;
         }
@@ -106,12 +108,14 @@ public class Set_Time : MonoBehaviour
 
     public void IncreaseTimeBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         time += 60;
         Calculate_Time();
     }
 
     public void DecreaseTimeBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         time -= 60;
         Calculate_Time();
     }
@@ -143,10 +147,10 @@ public class Set_Time : MonoBehaviour
             }
 
 
-            if (TimeText.text == string.Empty || time < 300)
+            if (TimeText.text == string.Empty || time < 60)
             {
                 Debug.Log("시간 미입력 시");
-                time = 300;
+                time = 60;
                 Calculate_Time();
             }
 
@@ -161,10 +165,13 @@ public class Set_Time : MonoBehaviour
 
     public void ConfirmBtn_Clicked()
     {
-        //GameManager.Instance.ShutdownTime = time;
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        GameManager.Instance.shutdownTimer = time;
         if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
         { // 푸시푸시 시작
             pushpushMode_Canvas.SetActive(true);
+            help_Canvas.transform.SetParent(pushpushMode_Canvas.transform);
+            help_Canvas.transform.SetSiblingIndex(3);
         }
         else if (GameManager.Instance.gameMode.Equals(Mode.Speed))
         { // 스피드 시작
@@ -178,15 +185,24 @@ public class Set_Time : MonoBehaviour
         else if (GameManager.Instance.gameMode.Equals(Mode.Bomb))
         { // 2인모드 시작
             bombMode_Canvas.SetActive(true);
-        }
-        gameObject.SetActive(false);
+            bombMode_Canvas.transform.GetComponent<Bomb>().PrintVersus();
+        }     
+        help_Canvas.SetActive(true);
         main_Canvas.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
 
     public void BackBtnClicked()
-    { 
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         gameObject.SetActive(false);
+    }
+
+    public void SetShutdownTime(int time)
+    {
+        this.time = time;
+        Calculate_Time();
     }
     #endregion
 

@@ -26,12 +26,14 @@ public class CustomPushpopManager : MonoBehaviour
     public Stack<GameObject> StackPops = new Stack<GameObject>();
     public Stack<GameObject> StackFakePops = new Stack<GameObject>();
     [SerializeField] private Sprite[] btnSprites;
-    private int spriteIndex = 0;
+    public int spriteIndex = 0;
     public GameObject result;
     public TMP_Text resultText;
     public Image resultImage;
     public bool isCustomMode;
     public Action onCustomEnd;
+    public bool isCool = false;
+    Coroutine cool;
 
     public GameObject decoPanel;
 
@@ -44,6 +46,7 @@ public class CustomPushpopManager : MonoBehaviour
         onCustomEnd += DisableThisComponent;//커스텀모드 종료시 컴포넌트 끄기
         onCustomEnd += SetActiveCount;
     }
+    
     private void OnDisable()
     {
         onCustomEnd -= DisableThisComponent; //커스텀모드 종료시 컴포넌트 끄기
@@ -79,6 +82,12 @@ public class CustomPushpopManager : MonoBehaviour
     // 클릭 or 터치시 메소드들
     public void ClickDown()
     {
+        if (isCool) return;
+        if (cool != null)
+        {
+            return;
+        }
+        cool = StartCoroutine(Cooltime());
         SelectPositon = Camera.main.ScreenToWorldPoint(Input.mousePosition); //카메라상의 좌표를 월드포지션으로구하기
                                                                              //판넬안에서 마우스혹은 터치위치의 RectTransform 구하기
         //UI에선 collider검사가 안되서 gameObject를 동시에 소환해서 안보이는 곳에서 겹침검사
@@ -102,24 +111,9 @@ public class CustomPushpopManager : MonoBehaviour
         newRectPush.transform.SetParent(puzzleBoard.transform);
         newRectPush.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
-    } //마우스클릭 or 터치를 한 순간
-    //private void Click()
-    //{
-    //    if (!isOnArea)
-    //    {
-    //        DestroyNewPush();
-    //        return;
-    //    }
-    //    //드래그하는동안 마우스위치에 동기화
-    //    SelectPositon = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //    RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, null, out localPosition);
+        AudioManager.instance.SetAudioClip_SFX(3, false);
 
-    //    newRectPush.transform.position = localPosition + new Vector2(960, 540);
-    //    if (newPush != null)
-    //    {
-    //        newPush.transform.position = SelectPositon;
-    //    }
-    //} // 마우스드래그 or 터치중일때
+    } 
     public void ClickUp()
     {
         if (newPush == null) return;
@@ -134,6 +128,7 @@ public class CustomPushpopManager : MonoBehaviour
         //StartCoroutine(CheckDelay(push));
         newRectPush = null;
         newPush = null;
+      
     } // 마우스클릭을 뗏을때 or 터치를 뗏을때  
 
     public void ReturnBtn()
@@ -149,20 +144,23 @@ public class CustomPushpopManager : MonoBehaviour
     {
         while (StackPops.Count > 0)
         {
-            GameObject objs = StackFakePops.Pop();
-            Destroy(objs);
             GameObject obj = StackPops.Pop(); // Queue에서 오브젝트를 하나씩 제거
             Destroy(obj); // 해당 오브젝트를 파괴
             PushPop.Instance.pushPopButton.Remove(obj);
         }
+        while (StackFakePops.Count > 0)
+        {
+            GameObject objs = StackFakePops.Pop();
+            Destroy(objs);
+        }
     }
 
-    public void GetSpriteIndex(int index)
-    {
-        ColorButton[spriteIndex].interactable = true;
-        spriteIndex = index;
-        ColorButton[spriteIndex].interactable = false;
-    }
+    //public void GetSpriteIndex(int index)
+    //{
+    //    ColorButton[spriteIndex].interactable = true;
+    //    spriteIndex = index;
+    //    ColorButton[spriteIndex].interactable = false;
+    //}
     public void onCustomEndmethod()
     {
         if (StackPops.Count == 0) return;
@@ -177,4 +175,16 @@ public class CustomPushpopManager : MonoBehaviour
         }
     }
 
+    private IEnumerator Cooltime()
+    {
+        isCool = true;
+        yield return new WaitForSeconds(0.2f);
+        isCool = false;
+        cool = null;
+    }
+
+    public void SetMoaMoaList()
+    { // MoaMoa 메인화면에 출력할 6개의 컬렉션을 출력하는 Btn 연동 Method
+        
+    }
 }

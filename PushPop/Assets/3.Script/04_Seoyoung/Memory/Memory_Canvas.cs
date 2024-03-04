@@ -17,12 +17,12 @@ public class Memory_Canvas : MonoBehaviour
 
     //    public int score;
     //}
-
+   
 
     [Header("패널")]
     [SerializeField] private Canvas main_Canvas;
     [SerializeField] private GameObject gameSet_Panel; 
-    [SerializeField] private Canvas memoryGame_Canvas;
+    [SerializeField] private GameObject memoryGame_Canvas;
     [SerializeField] private Help_Canvas help_Canvas;
 
     [Header("개인 기록")] 
@@ -41,16 +41,19 @@ public class Memory_Canvas : MonoBehaviour
     [SerializeField] private Image[] profileImage_Array;
     [SerializeField] private TMP_Text[] profileName_Array;
     [SerializeField] private TMP_Text[] scoreText_Array;
+    [SerializeField] private Image progileImage_Personal;
+    [SerializeField] private TMP_Text profileName_Personal;
+    [SerializeField] private TMP_Text scoreText_Personal;
 
 
     #region Unity Callback
     private void OnEnable()
     {
-        if(!gameSet_Panel.activeSelf)
+        AudioManager.instance.SetAudioClip_BGM(1);
+        if (!gameSet_Panel.activeSelf)
         {
             gameSet_Panel.SetActive(true);
         }
-
         if (memoryGame_Canvas.gameObject.activeSelf)
         {
             memoryGame_Canvas.gameObject.SetActive(false);
@@ -77,17 +80,20 @@ public class Memory_Canvas : MonoBehaviour
     //게임 시작 버튼 클릭 시 호출되는 함수
     public void GameStartBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(0);
         gameSet_Panel.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
-
         memoryGame_Canvas.gameObject.SetActive(true);    
     }
 
 
     public void BackBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
         gameSet_Panel.gameObject.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
+
+        AudioManager.instance.SetAudioClip_BGM(0);
         main_Canvas.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
@@ -104,7 +110,8 @@ public class Memory_Canvas : MonoBehaviour
 
     public void RankingLoad()
     {
-        Ranking.instance.LoadScore(scoreText_Array, profileImage_Array, profileName_Array);
+        Ranking.Instance.LoadScore(scoreText_Array, profileImage_Array, profileName_Array);
+        Ranking.Instance.LoadScore_Personal(profileName_Personal, scoreText_Personal, progileImage_Personal);
     }
 
     #endregion

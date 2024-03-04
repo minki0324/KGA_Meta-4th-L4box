@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class MemoryPushpop : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class MemoryPushpop : MonoBehaviour
     private Button button;
     private MemoryBoard memoryBoard;
     private Animator ani;
+    private int clearMessage;
+    [SerializeField] private TMP_Text resultText = null;
+
     private void Awake()
     {
         TryGetComponent(out button);
@@ -29,11 +33,6 @@ public class MemoryPushpop : MonoBehaviour
         _myImage = GetComponent<Image>();
         //Sprite에서 Alpha 값이 0.1 이하 일시 인식하지 않게함
         _myImage.alphaHitTestMinimumThreshold = 0.1f;
-    }
-
-    void Update()
-    {
-        
     }
     #region onButton에 넣어주는메소드
     public void onBtnClick()
@@ -73,18 +72,21 @@ public class MemoryPushpop : MonoBehaviour
     #region 정답,오답판정메소드
     private void Correct()
     {//정답메소드
+        AudioManager.instance.SetAudioClip_SFX(3,false);
+
         //todo 점수주기
         button.interactable = false; //누른버튼은 비활성화
         memoryBoard.CurrentCorrectCount++; //정답카운트 증가
         MemoryManager.Instance.AddScore(); //점수 증가
         if (memoryBoard.isStageClear())
         {
-          
             onStageClear();
         }
     }
     private void Incorrect()
     {//오답메소드
+        AudioManager.instance.SetAudioClip_SFX(0, false);
+        PlayShakePush();
         //라이프 깎기(MemoryManager)
         MemoryManager.Instance.Life--;
         MemoryManager.Instance.LifeRemove();
@@ -92,13 +94,18 @@ public class MemoryPushpop : MonoBehaviour
         //라이프 모두소진시 실패
         if (MemoryManager.Instance.Life == 0)
         {//결과창호출
+            //모든라이프가 소진해서 패배
+            MemoryManager.Instance.OnGameEnd();
+            AudioManager.instance.SetAudioClip_SFX(5, false);
             MemoryManager.Instance.ResultPanel.SetActive(true);
         }
 
     }
+
+    
     #endregion
     #region 스테이지 승리콜백메소드
- 
+
 
     private void onStageClear()
     {//스테이지  클리어시 불리는 메소드
@@ -112,15 +119,19 @@ public class MemoryPushpop : MonoBehaviour
     {//클리어 코루틴
         //훌륭해요 애니메이션
         memoryBoard.BtnAllStop(); //버튼동작정지
+                
+        AudioManager.instance.SetAudioClip_SFX(4, false);
         MemoryManager.Instance.PlayStartPanel("훌륭 해요!");//애니메이션 멘트재생
         yield return new WaitForSeconds(2f);
         MemoryManager.Instance.currentStage++; //스테이지 Index증가
         Debug.Log(MemoryManager.Instance.currentStage);
         //준비된 스테이지 < 현재스테이지
-         if(MemoryManager.Instance.stages.Length< MemoryManager.Instance.currentStage)
+         if(MemoryManager.Instance.endStageIndex < MemoryManager.Instance.currentStage)
         {
-            Debug.Log("스테이지를 모두 클리어 하셨습니다. 축하합니다!");
             //결과창호출
+            //모든스테이지 클리어 했을때
+            MemoryManager.Instance.OnGameEnd();
+            AudioManager.instance.SetAudioClip_SFX(5, false);
             MemoryManager.Instance.ResultPanel.SetActive(true);
             yield break;
         }
@@ -131,17 +142,40 @@ public class MemoryPushpop : MonoBehaviour
         MemoryManager.Instance.CreatBoard();
     }
 
-   
+
     #endregion
 
-
-    //시작할때 정답알려주는 깜빡깜빡 애니메이션 메소드
+    #region 버튼클릭애니메이션
+    #endregion
+    //본인이 정답인지 깜빡이는 메소드
     public void PlayBlink()
-    {
+    { //게임시작, 혹은 힌트버튼누를때 정답 버튼을 알려주는 메소드
         ani.SetTrigger("isBlink");
+
+        if (MemoryManager.Instance.currentStage % 5 != 0)
+        {
+            AudioManager.instance.SetAudioClip_SFX(2, false);
+        }
+        else
+        {
+            AudioManager.instance.SetAudioClip_SFX(1, false);
+        }
+
+    }
+    private void PlayShakePush()
+    {//버튼이 틀렸을때 흔들리는 애니메이션
+        ani.SetTrigger("isShake");
+        //흔들리는 동안 터치 안되게
+        _myImage.raycastTarget = false;
+    }
+    public void ShakeEndAfter()
+    {//애니메이션 Event로 추가되있음
+        // 흔들림이 끝나고 다시 터치 가능하게 만듬
+        _myImage.raycastTarget = true;
+        Debug.Log("11");
     }
     #region
     #endregion
-    
-   
+
+
 }

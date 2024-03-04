@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public class CameraManager : MonoBehaviour
 {
 	[SerializeField] private Image captureImage;
-	[SerializeField] private Profile_ profile;
+	[SerializeField] private ProfileManager profile;
 	private Texture2D captureTexture; // Create Image
 
 	public void CameraOpen() // Camera Open method
@@ -44,6 +44,7 @@ public class CameraManager : MonoBehaviour
 
 				// Camera load
 				GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+				quad.AddComponent<MeshCollider>();
 				quad.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 2.5f;
 				quad.transform.forward = Camera.main.transform.forward;
 				quad.transform.localScale = new Vector3(1f, texture.height / (float)texture.width, 1f);
@@ -60,23 +61,22 @@ public class CameraManager : MonoBehaviour
 				captureImage.sprite = Sprite.Create(captureTexture, rect, new Vector2(0.5f, 0.5f));
 
 				// Profile_index 설정
-				if(GameManager.Instance.gameMode == Mode.Bomb)
+				if (GameManager.Instance.gameMode == Mode.Bomb)
 				{
-					GameManager.Instance.IsimageMode2P = false;
+					ProfileManager.Instance.IsimageMode2P = false;
+					ProfileManager.Instance.AddProfile(ProfileManager.Instance.tempName, ProfileManager.Instance.tempIndex, ProfileManager.Instance.IsimageMode2P);
 				}
 				else
 				{
-					GameManager.Instance.IsImageMode = false;
+					ProfileManager.Instance.IsImageMode1P = false;
+					ProfileManager.Instance.AddProfile(ProfileManager.Instance.tempName, ProfileManager.Instance.tempIndex, ProfileManager.Instance.IsImageMode1P);
 				}
-				profile.AddProfile();
 
 				// capture texture save
 				Texture2D readableTexture = GetReadableTexture(texture); // Texture 변환
 				byte[] texturePNGByte = readableTexture.EncodeToPNG(); // texture to pngByte encode
 				string fileName = $"{_filePath}/{GameManager.Instance.UID}_{GameManager.Instance.ProfileIndex}.png";
-				Debug.Log(fileName);
 				File.WriteAllBytes(fileName, texturePNGByte); // file save
-				Debug.Log("File Save");
 				Destroy(quad, 5f);
 			}
 		}, 2048, true, NativeCamera.PreferredCamera.Front);

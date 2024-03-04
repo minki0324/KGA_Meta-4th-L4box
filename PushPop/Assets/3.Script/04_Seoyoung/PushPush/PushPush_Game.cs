@@ -10,6 +10,8 @@ public class PushPush_Game : MonoBehaviour
     [SerializeField] private PushPush_Canvas pushpush_Canvas;
     [SerializeField] private Help_Canvas help_Canvas;
     [SerializeField] private GameObject selectCategory_Panel;
+    [SerializeField] private PuzzleLozic puzzleLozic_Panel;
+    [SerializeField] private GameObject success_Panel;
 
 
     [Header("꾸미기 패널")]
@@ -38,6 +40,8 @@ public class PushPush_Game : MonoBehaviour
 
     public void BackBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+
         help_Canvas.gameObject.SetActive(true);
         selectCategory_Panel.SetActive(true);
 
@@ -53,21 +57,14 @@ public class PushPush_Game : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    //꾸미기 패널의 뒤로가기 버튼 
-    public void UndoBtn_Clicked()
-    {
+    public void Success_BackBtn_Clicked()
+    {   
+        GameManager.Instance.puzzleClass.Clear();
 
-    }
-
-    //꾸미기 패널의 리셋 버튼
-    public void ResetBtn_Clicked()
-    {
-
-    }
-
-    //꾸미기 패널의 다음 버튼
-    public void NextBtn_Clicked()
-    {
+        pushpush_Canvas.Enable_Objects();
+        success_Panel.SetActive(false);
+        selectCategory_Panel.SetActive(true);
+        gameObject.SetActive(false);
 
     }
 

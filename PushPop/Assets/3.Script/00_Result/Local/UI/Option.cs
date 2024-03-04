@@ -14,15 +14,25 @@ public class Option : MonoBehaviour
     [Header("Button")]
     [SerializeField] private Button Back_Btn;
 
+    //소리 음량 최대최소
+    float minSound = -20f;
+    float maxSound = -5f;
+
+
     #region Unity Callback
 
+    private void Awake()
+    {
+   
+    }
 
 
     private void Start()
     {
-        //PlayerPrefs.DeleteAll();
         Init();
         gameObject.SetActive(false);
+        //PlayerPrefs.DeleteAll();
+
     }
     #endregion
 
@@ -30,14 +40,14 @@ public class Option : MonoBehaviour
     private void Init()
     {
         //볼륨 최소값
-        Master_Slider.minValue = -40f;
-        BGM_Slider.minValue = -40f;
-        SFX_Slider.minValue = -40f;
+        Master_Slider.minValue = minSound;
+        BGM_Slider.minValue = minSound;
+        SFX_Slider.minValue = minSound;
 
         //볼륨 최대값 조절
-        Master_Slider.maxValue = 10f;
-        BGM_Slider.maxValue = 10f;
-        SFX_Slider.maxValue = 10f;
+        Master_Slider.maxValue = maxSound;
+        BGM_Slider.maxValue = maxSound;
+        SFX_Slider.maxValue = maxSound;
 
         //시작 볼륨값 중간으로 조정
         #region 볼륨값 불러오기
@@ -72,9 +82,9 @@ public class Option : MonoBehaviour
 
 
         //오디오 믹서 기본 볼륨 조정
-        AudioManager123.instance.audioMixer.SetFloat("Master", Master_Slider.value);
-        AudioManager123.instance.audioMixer.SetFloat("BGM", BGM_Slider.value);
-        AudioManager123.instance.audioMixer.SetFloat("SFX", SFX_Slider.value);
+        AudioManager.instance.audioMixer.SetFloat("Master", Master_Slider.value);
+        AudioManager.instance.audioMixer.SetFloat("BGM", BGM_Slider.value);
+        AudioManager.instance.audioMixer.SetFloat("SFX", SFX_Slider.value);
 
 
         //볼륨값 변경 시 AddListener 추가
@@ -92,7 +102,7 @@ public class Option : MonoBehaviour
             case "Master":
                 volume = Master_Slider.value;
                 PlayerPrefs.DeleteKey("MasterVolume");
-                    PlayerPrefs.SetFloat("MasterVolume", volume);
+                PlayerPrefs.SetFloat("MasterVolume", volume);
                 break;
 
 
@@ -110,13 +120,13 @@ public class Option : MonoBehaviour
                 break;
         }
 
-        if (volume == -40f)
+        if (volume == minSound)
         {
-            AudioManager123.instance.audioMixer.SetFloat(soundtype, -80f);
+            AudioManager.instance.audioMixer.SetFloat(soundtype, -80f);
         }
         else
         {
-            AudioManager123.instance.audioMixer.SetFloat(soundtype, volume);
+            AudioManager.instance.audioMixer.SetFloat(soundtype, volume);
         }
     }
     #endregion

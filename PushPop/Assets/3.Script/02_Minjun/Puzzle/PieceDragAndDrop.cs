@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-    [SerializeField] private PuzzleLozic puzzleLozic;
+    [SerializeField] public PuzzleLozic puzzleLozic;
 
     private Image _myImage;
     private RectTransform _rect; //드래그할때 움직일 오브젝트 위치
@@ -37,6 +37,8 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         {
             puzzleLozic = FindObjectOfType<PuzzleLozic>();
         }
+
+        AudioManager.instance.SetAudioClip_SFX(2, false);
         //클릭했을때 오브젝트 위치 그대로 포지션을 옮기기위한 계산
         _distance = (Vector3)eventData.position - _rect.position;
 
@@ -56,8 +58,11 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         if (!isFitPuzzle)
         {//퍼즐을 맞추지 못했을때
 
+            AudioManager.instance.SetAudioClip_SFX(0, false);
+
             //퍼즐위치는 초기위치로 초기화
-            _rect.position = _startPostion;
+            FailToSolvePuzzle();
+            //_rect.position = _startPostion;
             canvasGroup.alpha = 1f;
             canvasGroup.blocksRaycasts = true;
 
@@ -65,6 +70,9 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         else
         {
             //퍼즐을 맞췄을때
+
+            AudioManager.instance.SetAudioClip_SFX(2, false);
+
             //프레임위치로 정확하게 보정
             _rect.position = puzzleLozic.frampPos.position;
             // 알파값 초기화
@@ -75,13 +83,26 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             puzzleLozic.successCount++;
             if (StageClear())
             {
-                Debug.Log("스테이지를 클리어 했습니다! 잘했어요!!");
-          
+                Debug.Log("퍼즐을 모두 맞췄어요! 잘했어요!!");
+
+
+                AudioManager.instance.SetAudioClip_SFX(1, false);
                 puzzleLozic.onPuzzleClear?.Invoke();
                 puzzleLozic.successCount = 0;
             }
         }
     }
+
+    public void FailToSolvePuzzle()
+    {//버블을 모두 터트린 다음 한번 호출해줘서 오른쪽으로 퍼즐이 모이게하며
+        //퍼즐이 틀렸을 경우에도 호출되고 오른쪽 특정기준 랜덤값으로 이동시킵니다.
+        float X = UnityEngine.Random.Range(puzzleLozic.failPiecePos.position.x - 100f, puzzleLozic.failPiecePos.position.x + 100f);
+        float Y = UnityEngine.Random.Range(Screen.height / 5, Screen.height - Screen.height / 5);
+        //Vector2 movePos = new Vector2(X, Y);
+        _rect.position = new Vector2(X, Y);
+        //_rect.position =Vector2.MoveTowards(_rect.position, movePos, 10 * Time.deltaTime);
+    }
+
     private bool StageClear()
     {// 성공카운트 == 퍼즐 갯수 (ClearCount) 일때 클리어 bool반환
 

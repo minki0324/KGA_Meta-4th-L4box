@@ -1,11 +1,17 @@
-using System.Linq;
-using System.IO;
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System;
+
+public enum ClearTitle
+{
+    Clear = 0,
+    Better,
+    Fail
+}
 
 #region Other Class
 [System.Serializable]
@@ -32,6 +38,31 @@ public class Rank
         this.timer = timer;
     }
 }
+
+[System.Serializable]
+public class VersusData
+{
+    public BombVersus[] games = new BombVersus[2];
+}
+[System.Serializable]
+public class BombVersus
+{
+    public string Player1PName;
+    public string Player2PName;
+    public int Player1PIndex;
+    public int Player2PIndex;
+    // true면 1P가 이긴 게임 false면 2P가 이긴 게임
+    public bool Result = false;
+
+    public BombVersus(string player1PName, string player2PName, int player1PIndex, int player2PIndex, bool result)
+    {
+        Player1PName = player1PName;
+        Player2PName = player2PName;
+        Player1PIndex = player1PIndex;
+        Player2PIndex = player2PIndex;
+        Result = result;
+    }
+}
 #endregion
 
 /// <summary>
@@ -39,17 +70,23 @@ public class Rank
 /// </summary>
 public class Ranking : MonoBehaviour
 {
-    public static Ranking instance = null;
+    public static Ranking Instance = null;
 
     private string rankPath = string.Empty; // Rank Json Path
+    private string versusPath = string.Empty; // Bomb Versus Json Path
     private List<Rank> rankList = new List<Rank>(); // Rank List
+    private VersusData versusData = new VersusData();
+
+    // before game clear
+    [SerializeField] private int previousScore = 0;
+    public DialogData ResultDialog;
 
     #region Unity Callback
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {
@@ -58,8 +95,11 @@ public class Ranking : MonoBehaviour
         }
 
 
-        rankPath = Application.persistentDataPath + "/Rank";
+        rankPath = Application.persistentDataPath + "/Rank.json";
+        versusPath = Application.persistentDataPath + "/Versus.json";
+
         LoadRanking();
+        LoadVersus();
     }
     #endregion
 
@@ -95,7 +135,7 @@ public class Ranking : MonoBehaviour
     /// <param name="_spriteName"></param>
     /// <param name="_Timer"></param>
     public void SetTimer(string _name, int _index, int _spriteName, int _Timer)
-    { 
+    {
         var existingRank = rankList.FirstOrDefault(r => r.name == _name && r.index == _index);
 
         if (existingRank != null)
@@ -122,6 +162,32 @@ public class Ranking : MonoBehaviour
 
         SaveRanking();
     }
+
+    /// <summary>
+    /// Multi Mode의 결과를 저장하는 Method / Bool값 True일 경우 1P의 승리, False일 경우 2P의 승리
+    /// </summary>
+    /// <param name="_index1P"></param>
+    /// <param name="_name1P"></param>
+    /// <param name="_index2P"></param>
+    /// <param name="_name2P"></param>
+    /// <param name="_result"></param>
+    public void SetBombVersus(int _index1P, string _name1P, int _index2P, string _name2P, bool _result)
+    { // 새로운 게임 결과 생성
+        BombVersus newGameResult = new BombVersus(_name1P, _name2P, _index1P, _index2P, _result);
+
+        // 만약 [0]에 이미 게임 결과가 존재한다면, 그 결과를 [1]으로 이동
+        // [1]에 이미 결과가 있다면, [0]의 결과로 대체되고, [1]의 결과는 삭제.
+        if (versusData.games[0] != null)
+        {
+            versusData.games[1] = versusData.games[0];
+        }
+
+        // 새로운 게임 결과를 [0]에 저장
+        versusData.games[0] = newGameResult;
+
+        // 변경사항을 파일에 저장하는 메소드 호출
+        SaveVersus();
+    }
     #endregion
 
     #region Rank Load
@@ -134,6 +200,7 @@ public class Ranking : MonoBehaviour
     public void LoadScore(TMP_Text[] _Score, Image[] _image, TMP_Text[] _name)
     {
         SQL_Manager.instance.SQL_ProfileListSet();
+        LoadRanking();
 
         // 스코어가 높은 순으로 랭크 리스트를 정렬하고, 상위 3개의 랭크만 선택.
         var topRanks = rankList
@@ -145,7 +212,7 @@ public class Ranking : MonoBehaviour
         for (int i = 0; i < topRanks.Count; i++)
         { // 선택된 상위 3개의 랭크에 대해 text 배열을 업데이트.
             if (i < _Score.Length)
-            { 
+            {
                 _Score[i].text = topRanks[i].score.ToString();
             }
         }
@@ -154,28 +221,56 @@ public class Ranking : MonoBehaviour
         { // 만약 상위 3위를 채우지 못한 경우, 남은 텍스트 요소를 비움.
             _Score[i].text = "";
             _name[i].text = "";
+            _image[i].sprite = GameManager.Instance.noneSprite;
         }
 
-        for(int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
         { // SQL에 등록되어 있는 Profile
-            for(int j = 0; j < topRanks.Count; j++)
+            for (int j = 0; j < topRanks.Count; j++)
             { // 정렬된 List
                 if (SQL_Manager.instance.Profile_list[i].index == topRanks[j].index)
                 { // Profile Index와 정렬된 List의 Index가 일치한 걸 찾아옴
                     _name[j].text = SQL_Manager.instance.Profile_list[i].name;
-                    if(SQL_Manager.instance.Profile_list[i].imageMode)
-                    { // 이미지 고르기를 선택한 플레이어
-                        _image[j].sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
-                    }
-                    else if(!SQL_Manager.instance.Profile_list[i].imageMode)
-                    { // 사진 찍기를 선택한 플레이어
-                        Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
-                        Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-                        _image[j].sprite = profileSprite;
-                    }
+                    SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, _image[j], SQL_Manager.instance.Profile_list[i].index);
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// RankList에 담겨 있는 본인의 기록을 조회하고, 기록이 있다면 rankList에 담긴 본인의 기록을 출력, 없다면 공백으로 출력
+    /// </summary>
+    /// <param name="_name"></param>
+    /// <param name="_Score"></param>
+    /// <param name="_image"></param>
+    public void LoadScore_Personal(TMP_Text _name, TMP_Text _Score, Image _image)
+    {
+        SQL_Manager.instance.SQL_ProfileListSet();
+        LoadRanking();
+
+        // 게임매니저에 저장된 프로필 Infomation을 이용하여 rankList에 본인의 기록이 있는지 조회
+        var userRecord = rankList.FirstOrDefault(r => r.name == GameManager.Instance.ProfileName && r.index == GameManager.Instance.ProfileIndex);
+
+        if (userRecord != null)
+        { // 사용자 기록이 있을 경우, 정보를 표시.
+            if (userRecord.score != 0)
+            {
+                _name.text = userRecord.name;
+                _Score.text = userRecord.score.ToString();
+            }
+            else if (userRecord.score == 0)
+            { // 사용자 기록이 없을 경우, 공백을 표시.
+                _name.text = userRecord.name;
+                _Score.text = "";
+            }
+        }
+        else
+        {
+            _name.text = GameManager.Instance.ProfileName;
+            _Score.text = "";
+        }
+
+        _image.sprite = GameManager.Instance.CacheProfileImage1P;
     }
 
     /// <summary>
@@ -188,29 +283,49 @@ public class Ranking : MonoBehaviour
     public void LoadTimer(TMP_Text[] _timer, Image[] _image, TMP_Text[] _name, int _spriteName)
     {
         SQL_Manager.instance.SQL_ProfileListSet();
+        LoadRanking();
 
-        // 특정 spriteName에 대한 모든 타이머 기록을 찾아서 정렬하고 상위 3개를 선택합니다.
+        // 특정 spriteName에 대한 모든 타이머 기록을 찾아서 정렬하고 상위 3개를 선택.
         var topRanks = rankList
-         .Where(r => r.spriteName.Contains(_spriteName))
-         .SelectMany(r => r.timer.Select((timer, index) => new { Rank = r, Timer = timer }))
-         .Where(x => x.Rank.spriteName.Contains(_spriteName))
-         .OrderBy(x => x.Timer)
-         .Take(3)
-         .ToList();
+            .Where(r => r.spriteName.Contains(_spriteName)) // 먼저 spriteName을 포함하는 Rank만 필터링
+            .Select(r => new
+            {
+                Rank = r,
+                Timer = r.timer[r.spriteName.IndexOf(_spriteName)] // 해당 spriteName에 해당하는 타이머만 선택
+            })
+            .Where(x => x.Rank.spriteName.Contains(_spriteName))
+            .OrderBy(x => x.Timer)
+            .Take(3)
+            .ToList();
 
-        for(int i = 0; i < topRanks.Count; i++)
-        {// 선택된 상위 3개의 랭크에 대해 text 배열을 업데이트.
+        for (int i = 0; i < topRanks.Count; i++)
+        { // 선택된 상위 3개의 랭크에 대해 text 배열을 업데이트.
             if (i < _timer.Length)
             {
-                int sec = topRanks[i].Timer % 60;    //60으로 나눈 나머지 = 초
-                int min = topRanks[i].Timer / 60;
-                 _timer[i].text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+                for (int j = 0; j < topRanks[i].Rank.spriteName.Count; j++)
+                {
+                    if (topRanks[i].Rank.spriteName[j] == _spriteName)
+                    {
+                        int sec = topRanks[i].Timer % 60;    //60으로 나눈 나머지 = 초
+                        int min = topRanks[i].Timer / 60;
+                        _timer[i].text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+                        break;
+                    }
+                    else
+                    {
+                        _image[i].sprite = GameManager.Instance.noneSprite;
+                        _timer[i].text = "";
+                        _name[i].text = "";
+                    }
+                }
             }
         }
 
         for (int i = topRanks.Count; i < _timer.Length; i++)
         { // 만약 상위 3위를 채우지 못한 경우, 남은 텍스트 요소를 비움.
+            _image[i].sprite = GameManager.Instance.noneSprite;
             _timer[i].text = "";
+            _name[i].text = "";
         }
 
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
@@ -220,29 +335,209 @@ public class Ranking : MonoBehaviour
                 if (SQL_Manager.instance.Profile_list[i].index == topRanks[j].Rank.index)
                 { // Profile Index와 정렬된 List의 Index가 일치한 걸 찾아옴
                     _name[j].text = SQL_Manager.instance.Profile_list[i].name;
-                    if (SQL_Manager.instance.Profile_list[i].imageMode)
-                    { // 이미지 고르기를 선택한 플레이어
-                        _image[j].sprite = GameManager.Instance.ProfileImages[SQL_Manager.instance.Profile_list[i].defaultImage];
-                    }
-                    else if (!SQL_Manager.instance.Profile_list[i].imageMode)
-                    { // 사진 찍기를 선택한 플레이어
-                        Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, SQL_Manager.instance.Profile_list[i].index);
-                        Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
-                        _image[j].sprite = profileSprite;
-                    }
+                    SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, _image[j], SQL_Manager.instance.Profile_list[i].index);
                 }
             }
         }
     }
+
+    /// <summary>
+    /// RankList에 담겨 있는 본인의 기록을 조회하고, 기록이 있다면 rankList에 담긴 본인의 기록을 출력, 없다면 공백으로 출력
+    /// </summary>
+    /// <param name="_name"></param>
+    /// <param name="_timer"></param>
+    /// <param name="_image"></param>
+    /// <param name="_spriteName"></param>
+    public void LoadTimer_Personal(TMP_Text _name, TMP_Text _timer, Image _image, int _spriteName)
+    {
+        SQL_Manager.instance.SQL_ProfileListSet();
+        LoadRanking();
+
+        var userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex && r.spriteName.Contains(_spriteName));
+
+        if (userRecord != null)
+        {
+            for (int i = 0; i < userRecord.spriteName.Count; i++)
+            {
+                if (userRecord.spriteName[i] == _spriteName)
+                {
+                    int sec = userRecord.timer[i] % 60;    //60으로 나눈 나머지 = 초
+                    int min = userRecord.timer[i] / 60;
+                    _name.text = GameManager.Instance.ProfileName;
+                    _timer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+                    break;
+                }
+                else
+                {
+                    _image.sprite = GameManager.Instance.noneSprite;
+                    _name.text = userRecord.name;
+                    _timer.text = "";
+                }
+            }
+        }
+        else
+        {
+            _image.sprite = GameManager.Instance.noneSprite;
+            _name.text = GameManager.Instance.ProfileName;
+            _timer.text = "";
+        }
+        _image.sprite = GameManager.Instance.CacheProfileImage1P;
+    }
+
+    /// <summary>
+    /// Multi Lobby에서 최근 2개의 게임 결과를 출력하는 Method
+    /// </summary>
+    /// <param name="_winText"></param>
+    /// <param name="_loseText"></param>
+    /// <param name="_winImage"></param>
+    /// <param name="_loseImage"></param>
+    public void LoadVersusResult(TMP_Text[] _winText, TMP_Text[] _loseText, Image[] _winImage, Image[] _loseImage)
+    {
+        // VersusList 최신화
+        LoadVersus();
+
+        // Profile Image 최신화
+        SQL_Manager.instance.SQL_ProfileListSet();
+
+        for (int i = 0; i < versusData.games.Length; i++)
+        {
+            BombVersus currentGame = versusData.games[i];
+
+            if (currentGame != null)
+            {
+                if (currentGame.Player1PIndex == 0 && currentGame.Player2PIndex == 0)
+                { // 삭제된 기록이 있을 경우
+                    _winText[i].text = "";
+                    _loseText[i].text = "";
+                    _winImage[i].sprite = GameManager.Instance.noneSprite;
+                    _loseImage[i].sprite = GameManager.Instance.noneSprite;
+                }
+                else if (currentGame.Result)
+                { // 1P가 이긴 경우
+                    SetGameResultText(_winText[i], _loseText[i], currentGame.Player1PName, currentGame.Player2PName);
+                    SetPlayerProfileImage(_winImage[i], currentGame.Player1PIndex, true);
+                    SetPlayerProfileImage(_loseImage[i], currentGame.Player2PIndex, false);
+                }
+                else
+                { // 1P가 진 경우
+                    SetGameResultText(_loseText[i], _winText[i], currentGame.Player1PName, currentGame.Player2PName);
+                    SetPlayerProfileImage(_loseImage[i], currentGame.Player1PIndex, true);
+                    SetPlayerProfileImage(_winImage[i], currentGame.Player2PIndex, false);
+                }
+            }
+            else
+            {
+                _winText[i].text = "";
+                _loseText[i].text = "";
+                _winImage[i].sprite = GameManager.Instance.noneSprite;
+                _loseImage[i].sprite = GameManager.Instance.noneSprite;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 게임이 끝나고 해당 한판에 대한 결과만 출력하는 Method
+    /// </summary>
+    /// <param name="_winText"></param>
+    /// <param name="_loseText"></param>
+    /// <param name="_winImage"></param>
+    /// <param name="_loseImage"></param>
+    public void LoadVersusResult_Personal(TMP_Text _winText, TMP_Text _loseText, Image _winImage, Image _loseImage)
+    {
+        // VersusList 최신화
+        LoadVersus();
+
+        // Profile Image 최신화
+        SQL_Manager.instance.SQL_ProfileListSet();
+
+        // 최근 게임을 가져옴
+        BombVersus _currentGame = versusData.games[0];
+
+        if (_currentGame.Result)
+        { // 1P가 이긴 경우
+            SetGameResultText(_winText, _loseText, _currentGame.Player1PName, _currentGame.Player2PName);
+            SetPlayerProfileImage(_winImage, _currentGame.Player1PIndex, true);
+            SetPlayerProfileImage(_loseImage, _currentGame.Player2PIndex, false);
+        }
+        else
+        { // 1P가 진 경우
+            SetGameResultText(_loseText, _winText, _currentGame.Player1PName, _currentGame.Player2PName);
+            SetPlayerProfileImage(_loseImage, _currentGame.Player1PIndex, true);
+            SetPlayerProfileImage(_winImage, _currentGame.Player2PIndex, false);
+        }
+    }
+
+    public void SettingPreviousScore()
+    { // old score setting, game start 시 load
+
+        int index = GameManager.Instance.boardName;
+        int scoreIndex = 0;
+        Rank userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex && r.spriteName.Contains(index));
+
+        if (userRecord == null)
+        {
+            previousScore = 0;
+            return;
+        }
+        switch (GameManager.Instance.gameMode)
+        {
+            case Mode.Speed:
+                userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex && r.spriteName.Contains(index));
+                for (int i = 0; i < userRecord.spriteName.Count; i++)
+                {
+                    if (index.Equals(userRecord.spriteName[i]))
+                    {
+                        scoreIndex = i;
+                        break;
+                    }
+                }
+                break;
+            case Mode.Memory:
+                userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex);
+                break;
+        }
+
+
+        switch (GameManager.Instance.gameMode)
+        {
+            case Mode.Speed:
+                previousScore = userRecord.timer[scoreIndex];
+                break;
+            case Mode.Memory:
+                previousScore = userRecord.score;
+                break;
+        }
+    }
+
+    public ClearTitle CompareRanking()
+    { // speed, memory mode clear 시
+        // new score
+        ClearTitle clearTitle = ClearTitle.Clear;
+        int currentScore = 0;
+
+        if (GameManager.Instance.gameMode.Equals(Mode.Speed))
+        {
+            currentScore = GameManager.Instance.currentTime;
+            clearTitle = previousScore > currentScore ? ClearTitle.Better : ClearTitle.Clear;
+        }
+        else if (GameManager.Instance.gameMode.Equals(Mode.Memory))
+        {
+            currentScore = MemoryManager.Instance.Score;
+            clearTitle = previousScore < currentScore ? ClearTitle.Better : ClearTitle.Clear;
+        }
+
+        return clearTitle;
+    }
     #endregion
 
+    #region Json
     private void SaveRanking()
     { // 랭킹 데이터 JSON으로 저장
         RankList rankListWrapper = new RankList { ranks = rankList };
         string json = JsonUtility.ToJson(rankListWrapper, true);
         File.WriteAllText(rankPath, json);
     }
-    
+
     private void LoadRanking()
     { // JSON에서 랭킹 데이터 불러오기
         if (File.Exists(rankPath))
@@ -252,5 +547,83 @@ public class Ranking : MonoBehaviour
             rankList = rankListWrapper.ranks;
         }
     }
+
+    private void SaveVersus()
+    { // 2인 모드 결과를 저장
+        string json = JsonUtility.ToJson(versusData, true);
+        File.WriteAllText(versusPath, json);
+    }
+
+    public void LoadVersus()
+    { // 2인 모드 결과 불러오기
+        if (File.Exists(versusPath))
+        {
+            string json = File.ReadAllText(versusPath);
+            versusData = JsonUtility.FromJson<VersusData>(json);
+        }
+    }
+
+
+    public void DeleteRankAndVersus(int _profileIndex)
+    { // Rank 삭제
+        rankList.RemoveAll(r => r.index == _profileIndex);
+        SaveRanking();
+
+        // Versus 삭제 및 앞으로 땡기기
+        for (int i = 0; i < versusData.games.Length; i++)
+        {
+            if (versusData.games[i] != null)
+            {
+                if (versusData.games[i].Player1PIndex == _profileIndex || versusData.games[i].Player2PIndex == _profileIndex)
+                { // 1P 인덱스나 2P 인덱스가 삭제할 프로필 인덱스와 일치하면 해당 게임 결과를 삭제하고 배열을 앞으로 땡김.
+                    for (int j = i; j < versusData.games.Length - 1; j++)
+                    {
+                        versusData.games[j] = versusData.games[j + 1];
+                    }
+                    versusData.games[versusData.games.Length - 1] = null; // 마지막 요소는 삭제
+                }
+            }
+        }
+        SaveVersus();
+    }
+    #endregion
+
+    private void SetPlayerProfileImage(Image image, int playerIndex, bool isWinner)
+    {
+        Profile profile = GetPlayerProfile(playerIndex);
+
+        if (profile != null)
+        {
+            if (profile.imageMode)
+            {
+                image.sprite = GameManager.Instance.ProfileImages[profile.defaultImage];
+            }
+            else
+            {
+                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, profile.index);
+                Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
+                image.sprite = profileSprite;
+            }
+        }
+    }
+
+    private Profile GetPlayerProfile(int playerIndex)
+    {
+        foreach (Profile profile in SQL_Manager.instance.Profile_list)
+        {
+            if (profile.index == playerIndex)
+            {
+                return profile;
+            }
+        }
+        return null;
+    }
+
+    private void SetGameResultText(TMP_Text winText, TMP_Text loseText, string winPlayerName, string losePlayerName)
+    {
+        winText.text = winPlayerName;
+        loseText.text = losePlayerName;
+    }
+
     #endregion
 }

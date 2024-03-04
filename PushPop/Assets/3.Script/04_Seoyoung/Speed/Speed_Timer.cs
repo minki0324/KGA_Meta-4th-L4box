@@ -3,6 +3,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum Difficult
+{
+    Easy = 60,
+    Normal = 50,
+    Hard = 40
+}
+
 public class Speed_Timer : MonoBehaviour
 {
     [Header("캔버스")]
@@ -15,8 +22,10 @@ public class Speed_Timer : MonoBehaviour
     public GameObject resultPanel;
 
     [Header("타이머")]
+    public GameObject TimerObj;
     [SerializeField] private TMP_Text time_Text;
     public Slider time_Slider;
+    public Difficult difficult;
 
     [Header("아이콘 이미지")]
     [SerializeField] private Image Mold_Image;
@@ -24,19 +33,42 @@ public class Speed_Timer : MonoBehaviour
     [Header("뒤로가기 버튼")]
     [SerializeField] private Button Back_Btn;
 
+    [Header("Result")]
+    [SerializeField] private Image resultImage;
+    [SerializeField] private TMP_Text resultTimer;
+    [SerializeField] private TMP_Text resultLog;
+    [SerializeField] private TMP_Text resultTitle;
+
+    [Header("Ready")]
+    public GameObject readyPanel;
+    public TMP_Text readyText;
+
+
     public int currentTime;
     private int sec;
     private int min;
     public Coroutine timer = null;
+    public bool bNoTimePlaying = false;
 
     #region Unity Callback
-
     private void OnEnable()
     {
-        //시간 초기화
-        // currentTime = GameManager.Instance.ShutdownTime + 1;
+        Init();
+    }
+    #endregion
+
+
+    #region Other Method
+    public void TimerStart()
+    {
+        timer = StartCoroutine(Timer_co());
+    }
+
+    public void Init()
+    {
         currentTime = 0; // 0부터 제한시간까지 +
                          // currentTime = 10 +1;
+        bNoTimePlaying = false;
         SetText();
 
         //슬라이더 초기화
@@ -49,14 +81,12 @@ public class Speed_Timer : MonoBehaviour
         // Mold_Image.sprite = speed_Canvas.moldIcon;
 
         //타이머 코루틴 시작
-        timer = StartCoroutine(Timer_co());
-        // StartCoroutine(SliderLerp_co());
+        time_Text.color = new Color(0, 0, 0, 1); // black으로 초기화
 
-        if(Warning_Panel.activeSelf)
+        if (Warning_Panel.activeSelf)
         {
             Warning_Panel.SetActive(false);
         }
-        //gameObject.SetActive(false);
 
         // Back Method
         if (PushPop.Instance.pushPopBoardObject.Count > 0)
@@ -73,19 +103,14 @@ public class Speed_Timer : MonoBehaviour
 
         GameManager.Instance.bubblePos.Clear(); // bubble transform mode에 따라 달라짐
         PushPop.Instance.PushPopClear();
-        StopCoroutine(timer);
+        GameManager.Instance.pushpushCreate_Co = null;
     }
 
-
-    #endregion
-
-
-    #region Other Method
     //타이머 코루틴
     private IEnumerator Timer_co()
     {
+        yield return new WaitForSeconds(2f);
         // game ready
-        StartCoroutine(GameManager.Instance.GameReady_Co());
         int cashing = 1;
 
         while (true)
@@ -94,13 +119,32 @@ public class Speed_Timer : MonoBehaviour
             GameManager.Instance.TimeScore = currentTime; // score 저장
             SetText();
 
-            if (currentTime <= 0)
+            if (currentTime.Equals((int)difficult-10))
             {
-                //경고문 띄우기
+                time_Text.color = TimerCountColorChange("#FF0000");
+                if(!bNoTimePlaying)
+                {
+                    bNoTimePlaying = true;
+                    AudioManager.instance.SetAudioClip_SFX(1, true);
+                }
+            }
+            if (currentTime.Equals((int)difficult))
+            {
+                GameManager.Instance.GameClear();
                 yield break;
             }
             yield return new WaitForSeconds(cashing);
         }
+    }
+
+    private Color TimerCountColorChange(string _colorCode)
+    {
+        Color newColor = new Color(0, 0, 0, 1);
+        if (ColorUtility.TryParseHtmlString(_colorCode, out newColor))
+        {
+            return newColor;
+        }
+        return newColor;
     }
 
     //시분초 변환 & 텍스트 포맷 지정 함수
@@ -113,16 +157,37 @@ public class Speed_Timer : MonoBehaviour
 
     public void BackBtn_Clicked()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+
+        if(bNoTimePlaying)
+        {
+            AudioManager.instance.Pause_SFX(true);
+        }
+
         Time.timeScale = 0;
         Warning_Panel.SetActive(true);
-        
     }
 
     public void GoOutBtn_Clicked()
     {
+        GameManager.Instance.isStart = false;
+        if (GameManager.Instance.speedCreate != null)
+        {
+            GameManager.Instance.StopCoroutine(GameManager.Instance.speedCreate);
+        }
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.SetAudioClip_BGM(1);
+
         Time.timeScale = 1;
+        AudioManager.instance.Stop_SFX();
 
         // Back Method
+        if (PushPop.Instance.pushPopBoardUIObject.Count > 0)
+        {
+            Destroy(PushPop.Instance.pushPopBoardUIObject[0]);
+            PushPop.Instance.pushPopBoardUIObject.Clear();
+        }
+
         if (PushPop.Instance.pushPopBoardObject.Count > 0)
         {
             Destroy(PushPop.Instance.pushPopBoardObject[0]);
@@ -137,21 +202,58 @@ public class Speed_Timer : MonoBehaviour
 
         GameManager.Instance.bubblePos.Clear(); // bubble transform mode에 따라 달라짐
         PushPop.Instance.PushPopClear();
-        StopCoroutine(timer);
+        if(timer != null)
+        {
+            StopCoroutine(timer);
+        }
+        if (GameManager.Instance.pushpushCreate_Co != null)
+        {
+            GameManager.Instance.StopCoroutine(GameManager.Instance.pushpushCreate_Co); // speed pushpop create 초기화
+        }
 
         help_Canvas.gameObject.SetActive(true);
         help_Canvas.Button_Enable();
         SelectDifficulty_Panel.SetActive(true);
         speed_Canvas.Enable_Objects();
         Warning_Panel.SetActive(false);
+        resultPanel.SetActive(false);
         gameObject.SetActive(false);
+        TimerObj.SetActive(false);
     }
 
     public void CancelBtn_Clicked()
     {
         Time.timeScale = 1;
+
+        if(bNoTimePlaying)
+        {
+            AudioManager.instance.Pause_SFX(false);
+        }
+
         Warning_Panel.SetActive(false);
     }
 
+    public void Result()
+    {
+        int clearTitle;
+        resultImage.sprite = speed_Canvas.moldIcon;
+        resultTimer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+        bNoTimePlaying = false;
+        AudioManager.instance.Stop_SFX();
+
+        if (currentTime.Equals((int)difficult))
+        {
+            clearTitle = (int)ClearTitle.Fail;
+            AudioManager.instance.SetCommonAudioClip_SFX(8);
+        }
+        else
+        {
+            clearTitle = (int)Ranking.Instance.CompareRanking();
+            AudioManager.instance.SetCommonAudioClip_SFX(7);
+        }
+
+        resultTitle.text = $"{Ranking.Instance.ResultDialog.title[clearTitle]}";
+        resultLog.text = $"{Ranking.Instance.ResultDialog.speedResult[clearTitle]}";
+    }
     #endregion
 }

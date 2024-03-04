@@ -10,7 +10,7 @@ public class PushPop : MonoBehaviour
 
     [Header("PushPop Canvas")]
     public Transform pushPopCanvas = null; // Canvas_PushPop
-    [SerializeField] private GameObject pushPopButtonPrefab = null; // PushPop Button Prefab
+    public GameObject pushPopButtonPrefab = null; // PushPop Button Prefab
     public GameObject boardPrefabUI = null; // PushPop Board Canvas Prefab
     private RectTransform boardSizeUI;
     public List<GameObject> pushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
@@ -35,6 +35,7 @@ public class PushPop : MonoBehaviour
     public List<GameObject> pushPopButton = new List<GameObject>();
     public List<GameObject> activePos = new List<GameObject>();
 
+    public Sprite[] pushPopBtnSprites;
     public GameObject pushPopAni = null;
     public bool pushTurn = true;
 
@@ -43,7 +44,6 @@ public class PushPop : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -102,13 +102,14 @@ public class PushPop : MonoBehaviour
         pushObject.GetComponent<SpriteRenderer>().sprite = boardSprite;
         // size setting
         Rect boardRect = pushPopBoard.GetComponent<RectTransform>().rect;
+        // Vector2 boardSize = GameManager.Instance.BoardSizeGameObject;
+        // float scale = Mathf.Min(boardSize.x / boardSprite.textureRect.size.x, boardSize.x / boardSprite.textureRect.size.y) * 0.95f;
         float scale = Mathf.Min(boardRect.width / boardSprite.textureRect.size.x, boardRect.width / boardSprite.textureRect.size.y) * 0.95f;
         pushObject.transform.localScale = new Vector3(scale, scale, 1f);
         if (!pushTurn)
         { // image flip
             boardSizeUI.localScale = new Vector3(-1, 1, 1);
             pushObject.transform.rotation = Quaternion.Euler(0, 180f, 0);
-            Debug.Log("Rot: " + pushPopBoard.transform.rotation);
         }
         // polygon collider setting
         pushObject.AddComponent<PolygonCollider2D>();
@@ -130,7 +131,7 @@ public class PushPop : MonoBehaviour
             {
                 float posX = -boardSize.x / grid.x * x;
                 float posY = -boardSize.y / grid.y * y;
-                GetPushPopButton(pos, PosPrefab, _pushPopBoardObject.transform, posX, posY);
+                GetPushPopButton(pos, PosPrefab, _pushPopBoardObject.transform, posX, posY, y);
             }
         }
     }
@@ -138,10 +139,14 @@ public class PushPop : MonoBehaviour
     // PushPop Button Setting
     public void PushPopButtonSetting(Transform parent)
     {
+        PushPopCheck pos = activePos[0].GetComponent<PushPopCheck>();
+        int index = pos.spriteIndex;
+
         for (int i = 0; i < activePos.Count; i++)
         {
             GetPushPopButton(pushPopButton, pushPopButtonPrefab, parent);
             pushPopButton[i].GetComponent<RectTransform>().sizeDelta = buttonSize;
+            pushPopButton[i].GetComponent<Image>().sprite = pushPopBtnSprites[activePos[i].GetComponent<PushPopCheck>().spriteIndex-index];
             pushPopButton[i].transform.position = Camera.main.WorldToScreenPoint(activePos[i].transform.position);
         }
     }
@@ -164,7 +169,7 @@ public class PushPop : MonoBehaviour
     }
 
     // PushPop position Object Pooling
-    private void GetPushPopButton(List<GameObject> _pos, GameObject _prefab, Transform _parent, float _posX, float _posY)
+    private void GetPushPopButton(List<GameObject> _pos, GameObject _prefab, Transform _parent, float _posX, float _posY, int _spriteIndex)
     {
         _parent = this.gameObject.transform;
 
@@ -175,6 +180,7 @@ public class PushPop : MonoBehaviour
                 _pos[i].SetActive(true);
                 _pos[i].transform.position = boardPrefab.transform.position + new Vector3(boardSize.x / 2, boardSize.y / 2, 0f) + new Vector3(_posX, _posY, 1f); // grid 배치
                 _pos[i].GetComponent<PushPopCheck>().PointContains(); // collider check
+                _pos[i].GetComponent<PushPopCheck>().spriteIndex = _spriteIndex;
                 return;
             }
         }
@@ -183,6 +189,7 @@ public class PushPop : MonoBehaviour
         _pos.Add(newPos);
         _pos[_pos.Count - 1].transform.position = boardPrefab.transform.position + new Vector3(boardSize.x / 2, boardSize.y / 2, 0f) + new Vector3(_posX, _posY, 1f); // grid 배치
         _pos[_pos.Count - 1].GetComponent<PushPopCheck>().PointContains(); // collider chekc
+        _pos[_pos.Count - 1].GetComponent<PushPopCheck>().spriteIndex = _spriteIndex;
         return;
     }
     #endregion
@@ -196,11 +203,14 @@ public class PushPop : MonoBehaviour
         }
         pushPopBoardObject.Clear();
 
-        for (int i = 0; i < activePos.Count; i++)
+        if (!activePos.Count.Equals(0))
         {
-            activePos[i].SetActive(false);
+            for (int i = 0; i < activePos.Count; i++)
+            {
+                activePos[i].SetActive(false);
+            }
+            activePos.Clear();
         }
-        activePos.Clear();
 
         for (int i = 0; i < pushPopButton.Count; i++)
         {
