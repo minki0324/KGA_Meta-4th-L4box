@@ -420,7 +420,7 @@ public class GameManager : MonoBehaviour, IGameMode
         // puzzle position
         for (int i = 0; i < puzzleClass.Count; i++)
         {
-            CreateBubble(puzzleClass[i].puzzleArea, puzzleClass[i].puzzleCenter, puzzleClass[i].puzzleObject);
+            CreateBubble(puzzleClass[i].puzzleArea, puzzleClass[i].puzzleCenter, puzzleClass[i].puzzleObject, puzzleClass[i]);
         }
 
     }
@@ -439,7 +439,7 @@ public class GameManager : MonoBehaviour, IGameMode
         board.GetComponent<Image>().sprite = PushPop.Instance.boardSprite;
         board.GetComponent<RectTransform>().sizeDelta = BoardSize;
         PushPop.Instance.pushPopBoardObject.Add(board);
-        CreateBubble(BoardSize, board.transform.localPosition, board);
+        CreateBubble(BoardSize, board.transform.localPosition, board, null);
     }
 
     public void SpeedModePushPopCreate()
@@ -484,17 +484,16 @@ public class GameManager : MonoBehaviour, IGameMode
 
     }
 
-    private void CreateBubble(Vector2 _size, Vector2 _pos, GameObject _puzzle)
+    private void CreateBubble(Vector2 _size, Vector2 _pos, GameObject _puzzle, PuzzleObject _puzzleInfo)
     { // bubble size, pos, parent 상속 setting method
         GameObject bubbleObject = Instantiate(bubblePrefab, _puzzle.transform);
         Bubble bubble = bubbleObject.GetComponent<Bubble>();
 
         this.bubbleObject.Add(bubbleObject);
-        bubble.BubbleSetting(_size, _pos, _puzzle.transform);
+        bubble.BubbleSetting(_size, _pos, _puzzle.transform, _puzzleInfo);
         _puzzle.GetComponent<Image>().raycastTarget = false;
         // _puzzle.GetComponent<RectTransform>().sizeDelta = BoardSize;
         //_puzzle.SetParent(bubble.transform);
-        /*bubble.touchCount = 1;*/
         bubble.touchCount = Random.Range(10, 21); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
     }
 
