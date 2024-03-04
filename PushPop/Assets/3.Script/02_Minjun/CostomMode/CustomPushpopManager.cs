@@ -33,6 +33,7 @@ public class CustomPushpopManager : MonoBehaviour
     public bool isCustomMode;
     public Action onCustomEnd;
     public bool isCool = false;
+    private int currentCreatIndex =0;
     Coroutine cool;
 
     public GameObject decoPanel;
@@ -45,6 +46,7 @@ public class CustomPushpopManager : MonoBehaviour
     {
         onCustomEnd += DisableThisComponent;//커스텀모드 종료시 컴포넌트 끄기
         onCustomEnd += SetActiveCount;
+        currentCreatIndex =0;
     }
     
     private void OnDisable()
@@ -97,7 +99,8 @@ public class CustomPushpopManager : MonoBehaviour
         //UI상 위치에 push소환(실제로 보이는 push)
         newRectPush = Instantiate(RectPushPop, Input.mousePosition, Quaternion.identity);
         tempPushPop push = newPush.GetComponent<tempPushPop>(); // collider check GameObject
-
+        push.creatIndex = currentCreatIndex;
+        currentCreatIndex++;
         push.RectPush = newRectPush;
         PushPop.Instance.pushPopButton.Add(newRectPush);
 
@@ -117,16 +120,8 @@ public class CustomPushpopManager : MonoBehaviour
     public void ClickUp()
     {
         if (newPush == null) return;
-        tempPushPop push = newPush.GetComponent<tempPushPop>(); // collider check GameObject
         
-        //push.RectPush = newRectPush;
-        push.GetComponent<tempPushPop>().isSet = true; // 놓아졌는 지 확인
-
-        //isCheckOverLap = ture일시 다른 푸시팝과 겹치는지 확인함
-        push.isCheckOverlap = true;
-        //마우스가 퍼즐오브젝트 위에 있을시 true , 아니면 false -> 푸시팝설치를 오브젝트에만 하게하기위해
-        //StartCoroutine(CheckDelay(push));
-        newRectPush = null;
+            newRectPush = null;
         newPush = null;
       
     } // 마우스클릭을 뗏을때 or 터치를 뗏을때  
@@ -163,7 +158,6 @@ public class CustomPushpopManager : MonoBehaviour
     //}
     public void onCustomEndmethod()
     {
-        if (StackPops.Count == 0) return;
         decoPanel.SetActive(false);
         onCustomEnd?.Invoke();
     }
