@@ -22,12 +22,12 @@ public class NewProfile_Infomation : MonoBehaviour
 
     public void Receive_Infomation()
     {
-        GameManager.Instance.ProfileName2P = SQL_Manager.instance.Profile_list[Receive_Index()].name;
-        GameManager.Instance.ProfileIndex2P = SQL_Manager.instance.Profile_list[Receive_Index()].index;
-        GameManager.Instance.IsimageMode2P = SQL_Manager.instance.Profile_list[Receive_Index()].imageMode;
-        if (GameManager.Instance.IsimageMode2P)
+        ProfileManager.Instance.ProfileName2P = SQL_Manager.instance.Profile_list[Receive_Index()].name;
+        ProfileManager.Instance.ProfileIndex2P = SQL_Manager.instance.Profile_list[Receive_Index()].index;
+        ProfileManager.Instance.IsimageMode2P = SQL_Manager.instance.Profile_list[Receive_Index()].imageMode;
+        if (ProfileManager.Instance.IsimageMode2P)
         {
-            GameManager.Instance.DefaultImage2P = SQL_Manager.instance.Profile_list[Receive_Index()].defaultImage;
+            ProfileManager.Instance.DefaultImage2P = SQL_Manager.instance.Profile_list[Receive_Index()].defaultImage;
         }
 
     }
@@ -38,7 +38,7 @@ public class NewProfile_Infomation : MonoBehaviour
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         if (GameManager.Instance.gameMode == Mode.Bomb)
         { // Bomb 모드에서 2번째 Player를 선택했을 때
-            /*Bomb bomb = FindObjectOfType<Bomb>();
+            Bomb bomb = FindObjectOfType<Bomb>();
             bomb.SelectProfile.SetActive(false);
 
             // 프로필 이미지 출력
@@ -46,22 +46,23 @@ public class NewProfile_Infomation : MonoBehaviour
 
             bomb.tempPlayerName2P.text = SQL_Manager.instance.Profile_list[Receive_Index()].name;
             bomb.CurrentProfile.SetActive(true);
-            bomb.player2PInfo = this;*/
+            bomb.player2PInfo = this;
         }
         else
         { // 그 외에 모든 경우 본인의 프로필을 선택했을 때
             ProfileManager.Instance.ProfileName1P = SQL_Manager.instance.Profile_list[Receive_Index()].name;
             ProfileManager.Instance.ProfileIndex1P = SQL_Manager.instance.Profile_list[Receive_Index()].index;
-            ProfileManager.Instance.UID = SQL_Manager.instance.UID;
             ProfileManager.Instance.IsImageMode1P = SQL_Manager.instance.Profile_list[Receive_Index()].imageMode;
+            ProfileManager.Instance.DefaultImage1P = SQL_Manager.instance.Profile_list[Receive_Index()].defaultImage;
+            ProfileManager.Instance.UID = SQL_Manager.instance.UID;
 
             NewProfileCanvas profile = FindObjectOfType<NewProfileCanvas>();
-            profile.SelectProfilePanel.SetActive(false);
             // 프로필 이미지 출력
             SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode1P, profile.SelectProfileImage, ProfileManager.Instance.ProfileIndex1P);
 
             profile.SelectProfileText.text = ProfileManager.Instance.ProfileName1P;
-            profile.CurrnetProfilePanel.SetActive(true);
+            profile.ExitBtn.gameObject.SetActive(false);
+            profile.CurrentProfilePanel.SetActive(true);
         }
     }
 
@@ -71,8 +72,8 @@ public class NewProfile_Infomation : MonoBehaviour
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         if (GameManager.Instance.gameMode != Mode.Bomb)
         {
-            ProfileManager.Instance.ProfileName1P = SQL_Manager.instance.Profile_list[Receive_Index()].name;
-            ProfileManager.Instance.ProfileIndex1P = SQL_Manager.instance.Profile_list[Receive_Index()].index;
+            ProfileManager.Instance.tempName = SQL_Manager.instance.Profile_list[Receive_Index()].name;
+            ProfileManager.Instance.tempIndex = SQL_Manager.instance.Profile_list[Receive_Index()].index;
 
             NewProfileCanvas profile = FindObjectOfType<NewProfileCanvas>();
             if (profile != null)  profile.DeletePanel.SetActive(true);

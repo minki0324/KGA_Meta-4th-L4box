@@ -49,7 +49,7 @@ public class Profile_Information : MonoBehaviour
            
             bomb.tempPlayerName2P.text = SQL_Manager.instance.Profile_list[Receive_Index()].name;
             bomb.CurrentProfile.SetActive(true);
-            bomb.player2PInfo = this;
+            /*bomb.player2PInfo = this;*/
         }
         else
         { // 그 외에 모든 경우 본인의 프로필을 선택했을 때
@@ -90,7 +90,7 @@ public class Profile_Information : MonoBehaviour
         else if(GameManager.Instance.gameMode == Mode.Bomb)
         {
             Bomb bomb = FindObjectOfType<Bomb>();
-            bomb.player2PInfo = this;
+            /*bomb.player2PInfo = this;*/
             bomb.deletePanel.SetActive(true);
         }
     }

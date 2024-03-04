@@ -5,6 +5,8 @@ using UnityEngine.U2D;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using System.Text.RegularExpressions;
+using System;
 
 public enum Turn
 {
@@ -33,8 +35,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public Image tempPlayerImage2P = null;  // 프로필 선택 판넬에서 보이는 2P Image
     public TMP_Text playerName2P = null;    // 로비에서 보이는 2P Name
     public TMP_Text tempPlayerName2P = null;    // 프로필 선택 판넬에서 보이는 2P Name
-    public bool isImageSelect = false;  // 이미지 고르기에서 아이콘을 선택 했는지 
-    public bool isUpdate = false;   // 프로필 수정모드인지
     public bool isSelect2P = false;     // 2P 프로필이 선택 됐는지
     public List<GameObject> popList2P = new List<GameObject>(); // 1P의 Pushpop List
     [SerializeField] private Image inGameImage2P = null;    // 게임 화면에서 보이는 2P Image
@@ -65,7 +65,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public GameObject WarningPanel = null;
 
     [Header("ErrorLog")]
-    [SerializeField] private TMP_Text nameLog = null; // 한글만 입력해주세요 에러로그
+    [SerializeField] private TMP_Text nameErrorLog = null; // 한글만 입력해주세요 에러로그
     [SerializeField] private TMP_Text imageLog = null;    // 이미지를 선택해주세요 에러로그
     [SerializeField] private TMP_Text need2P = null;  // 2P를 선택해주세요 에러로그
 
@@ -95,7 +95,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Sprite quitNormal_Sprite; //quit 버튼 안눌렸을 때 스프라이트
     [SerializeField] private Sprite quitPressed_Sprite; //quit 버튼 눌렷을 때 스프라이트
     [SerializeField] private Button[] quitBtn;  // 양쪽의 나가기 버튼
-    public Profile_Information player2PInfo = null;
+    public NewProfile_Infomation player2PInfo = null;
 
     [Header("Versus")]
     [SerializeField] private TMP_Text[] winTexts;
@@ -196,7 +196,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         {
             if (iconPanel.activeSelf)
             {
-                isImageSelect = false;
+                ProfileManager.Instance.isImageSelect = false;
             }
         }
     }
@@ -210,7 +210,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         playerImage1P.sprite = GameManager.Instance.CacheProfileImage1P;
       
         // 프로필 이름 출력
-        playerName1P.text = GameManager.Instance.ProfileName;
+        playerName1P.text = ProfileManager.Instance.ProfileName1P;
     }
 
     public void Choice2P()
@@ -219,147 +219,66 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         player2PInfo.Receive_Infomation();
 
         // 2P 프로필 이미지 출력
-        SQL_Manager.instance.PrintProfileImage(GameManager.Instance.IsimageMode2P, playerImage2P, GameManager.Instance.ProfileIndex2P);
+        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsimageMode2P, playerImage2P, ProfileManager.Instance.ProfileIndex2P);
        
         // 2P 프로필 이름 출력
-        playerName2P.text = GameManager.Instance.ProfileName2P;
+        playerName2P.text = ProfileManager.Instance.ProfileName2P;
         isSelect2P = true;
     }
 
-    public void ImageSet(int index)
-    { // Profile에 넣을 Image 셋팅하는 Btn 연동 Method
-        if (!isUpdate)
-        { // 첫 등록일 때
-            if (index.Equals(0))
-            { // 사진 찍기 버튼 눌렀을 때
-                imagePath = $"{Application.persistentDataPath}/Profile/{GameManager.Instance.UID}_{GameManager.Instance.ProfileIndex2P}.png";
-                SQL_Manager.instance.SQL_AddProfileImage($"{imagePath}", GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
+    public void PrintProfileList()
+    {
+        ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P, ProfileManager.Instance.ProfileIndex2P);
+    }
 
-                PrintProfileList();
+    public void ImageSetting(bool _mode)
+    { // 사진찍기인지, 이미지 고르기인지 확인하고, 1P의 Image를 세팅하는 Btn 연동 Method
+        if (ProfileManager.Instance.ImageSet(_mode, false, nameErrorLog, ProfileManager.Instance.tempName, imageIndex))
+        { // 프로필 세팅 완료 했을 때
+            // Panel들 Active
+            if (_mode)
+            { // 이미지 고르기 버튼 눌렀을 때
+                iconPanel.SetActive(false);
+                CreateImagePanel.SetActive(false);
+                SelectProfile.SetActive(true);
+                if (ProfileManager.Instance.isUpdate)
+                {
+                    ProfileManager.Instance.isUpdate = false;
+                }
+            }
+            else
+            { // 사진 찍기 버튼 눌렀을 때
                 checkPanel.SetActive(false);
                 CreateImagePanel.SetActive(false);
             }
-            else if (index.Equals(1))
-            { // 이미지 고르기 버튼 눌렀을 때
-                if (!isImageSelect)
-                { // 이미지 선택을 안했을 때
-                    if (DialogManager.instance.log_co != null)
-                    {
-                        StopCoroutine(DialogManager.instance.log_co);
-                    }
-                    DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(imageLog, "이미지를 선택해주세요."));
-                }
-                else
-                { // 선택한 이미지가 있을 때
-                    GameManager.Instance.IsimageMode2P = true;
-                    AddProfile();
-                    SQL_Manager.instance.SQL_AddProfileImage(imageIndex, GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
-
-                    PrintProfileList();
-                    iconPanel.SetActive(false);
-                    CreateImagePanel.SetActive(false);
-                    SelectProfile.SetActive(true);
-                }
-            }
+            // 로비에서는 본인의 Profile List를 제외하고 출력해야함
+            PrintProfileList();
         }
-        else if (isUpdate)
-        { // 수정모드일 때
-            if (index.Equals(0))
-            { // 사진찍기 모드 눌렀을 때
-
-            }
-            else if (index.Equals(1))
-            { // 이미지 고르기 버튼 눌렀을 때
-                if (!isImageSelect)
-                { // 선택한 이미지가 없을 때
-                    if (DialogManager.instance.log_co != null)
-                    {
-                        StopCoroutine(DialogManager.instance.log_co);
-                    }
-                    DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(imageLog, "이미지를 선택해주세요."));
-                }
-                else
-                { // 선택한 이미지가 있을 때
-                    GameManager.Instance.IsimageMode2P = true;
-                    AddProfile();
-                    SQL_Manager.instance.SQL_UpdateProfile(GameManager.Instance.ProfileIndex2P, profile2PName, GameManager.Instance.UID, imageIndex);
-
-                    PrintProfileList();
-                    iconPanel.SetActive(false);
-                    CreateImagePanel.SetActive(false);
-                    SelectProfile.SetActive(true);
-                    isUpdate = false;
-                }
-            }
-        }
-    }
-
-    // Profile List 셋팅 후 Image, Name을 출력하는 Method (2P Mode, 1P로 설정해놓은 프로필은 출력 X) 
-    public void PrintProfileList()
-    {
-        // DB에 UID별로 저장되어있는 Profile들을 SQL_Manager에 List Up 해놓음
-        SQL_Manager.instance.SQL_ProfileListSet();
-
-        for (int i = 0; i < profileList.Count; i++)
-        { // 출력 전 기존에 출력되어 있는 List가 있다면 초기화
-            Destroy(profileList[i].gameObject);
-        }
-        profileList.Clear();
-
-        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        { // SQL_Manager에 Query문을 이용하여 UID에 담긴 Profile만큼 List를 셋팅하고, 해당 List의 Count 만큼 Profile Panel 생성
-            GameObject panel = Instantiate(profilePanel);
-            panel.transform.SetParent(profileParent);
-            profileList.Add(panel);
-        }
-
-        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        { // Panel의 Index 별로 Profile_Information 컴포넌트를 가져와서 name과 image를 Mode에 맞게 셋팅
-            Profile_Information info = profileList[i].GetComponent<Profile_Information>();
-
-            // 각 infomation 프로필 이름 출력
-            info.Profile_name.text = SQL_Manager.instance.Profile_list[i].name;
-
-            // 각 infomation 프로필 이미지 출력
-            SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, info.ProfileImage, SQL_Manager.instance.Profile_list[i].index);
-        }
-
-        for(int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
-        { // 세팅을 마친 후 본인의 프로필은 삭제
-            if(GameManager.Instance.ProfileIndex == SQL_Manager.instance.Profile_list[i].index)
-            { // index = index로 매칭 시켜놓은 로직 중간에 예외처리로 삭제하면 index오류가 날 것을 우려하여 세팅을 다 마친 후 본인 프로필 삭제
-                Profile tempProfile = SQL_Manager.instance.Profile_list[i];
-                SQL_Manager.instance.Profile_list.Remove(tempProfile);
-                GameObject list = profileList[i];
-                profileList.Remove(list);
-                Destroy(list);
-            }
-            else if (GameManager.Instance.ProfileIndex2P == SQL_Manager.instance.Profile_list[i].index)
-            { // index = index로 매칭 시켜놓은 로직 중간에 예외처리로 삭제하면 index오류가 날 것을 우려하여 세팅을 다 마친 후 본인 프로필 삭제
-                Profile tempProfile = SQL_Manager.instance.Profile_list[i];
-                SQL_Manager.instance.Profile_list.Remove(tempProfile);
-                GameObject list = profileList[i];
-                profileList.Remove(list);
-                Destroy(list);
-            }
+        else
+        { // 세팅 도중 오류가 나왔을 때
+            Debug.Log("등록 실패");
+            return;
         }
     }
     
     public void Update_Profile()
     { // Update Mode Bool값 설정 Btn 연동 Method
-        isUpdate = true;
+        ProfileManager.Instance.isUpdate = true;
     }
 
     public void DeleteProfile()
     { // 프로필 삭제 Btn 연동 Method (2P)
         player2PInfo.Receive_Infomation();
-        SQL_Manager.instance.SQL_DeleteProfile(GameManager.Instance.ProfileIndex2P);
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        ProfileManager.Instance.DeleteProfile(ProfileManager.Instance.ProfileIndex2P);
+        PrintProfileList();
+        deletePanel.SetActive(false);
     }
 
     public void AddProfile()
     { // Bomb 모드에서 2P 프로필 선택 시 Profile 등록하는 Btn 연동 Method
         int imageMode = -1;
-        switch (GameManager.Instance.IsimageMode2P)
+        switch (ProfileManager.Instance.IsimageMode2P)
         {
             case false: //  사진 찍기를 선택했을 때
                 imageMode = 0;
@@ -368,36 +287,82 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
                 imageMode = 1;
                 break;
         }
-        if (!isUpdate)
+        if (!ProfileManager.Instance.isUpdate)
         { // 첫 등록일 때
-            if (!string.IsNullOrWhiteSpace(profile2PName))
+            if (!string.IsNullOrWhiteSpace(ProfileManager.Instance.tempName))
             {
-                GameManager.Instance.ProfileIndex2P = SQL_Manager.instance.SQL_AddProfile(profile2PName, imageMode);
+                ProfileManager.Instance.ProfileIndex2P = SQL_Manager.instance.SQL_AddProfile(ProfileManager.Instance.tempName, imageMode);
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(profile2PName))
+                if (string.IsNullOrWhiteSpace(ProfileManager.Instance.tempName))
                 {
 
                 }
             }
         }
-        else if (isUpdate)
+        else if (ProfileManager.Instance.isUpdate)
         { // 수정 중일 때
-            SQL_Manager.instance.SQL_UpdateMode(imageMode, GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
+            SQL_Manager.instance.SQL_UpdateMode(imageMode, ProfileManager.Instance.UID, ProfileManager.Instance.ProfileIndex2P);
         }
     }
 
     public void SendProfile()
-    { // Profile Add 하기 전 InputField에 저장된 이름을 변수에 저장해주는 Btn 연동 Method
-        profile2PName = profile2PInput.text;
-        profile2PInput.text = string.Empty;
+    { // Profile Add 하기 전 InputField에 저장된 이름을 변수에 저장해주는 Btn 연동 Method 
+        // 각 조건들을 통과하면 (비속어, 초성, 글자수 제한 등) 등록 가능한 Name으로 판정하고 Profile Manager의 각 플레이어의 name 변수에 추가
+
+        for (int i = 0; i < DataManager2.instance.vulgarism_Arr.Length; i++)
+        { // 비속어 체크
+            if (profile2PInput.text.Contains(DataManager2.instance.vulgarism_Arr[i]))
+            {
+                if (DataManager2.instance.vulgarism_Arr[i] != string.Empty)
+                {
+                    if (DialogManager.instance.log_co != null)
+                    {
+                        StopCoroutine(DialogManager.instance.log_co);
+                    }
+                    DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "비속어는 포함시킬 수 없습니다."));
+                    profile2PInput.text = String.Empty;
+                    return;
+                }
+            }
+        }
+
+        for (int i = 0; i < profile2PInput.text.Length; i++)
+        { // 초성 체크
+            if (Regex.IsMatch(profile2PInput.text[i].ToString(), @"[^0-9a-zA-Z가-힣]"))
+            {
+                if (DialogManager.instance.log_co != null)
+                {
+                    StopCoroutine(DialogManager.instance.log_co);
+                }
+                DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "초성 입력은 불가능합니다."));
+                profile2PInput.text = String.Empty;
+                return;
+            }
+        }
+
+        if (profile2PInput.text != string.Empty && profile2PInput.text.Length > 1)
+        { // 글자수 체크
+            ProfileManager.Instance.tempName = profile2PInput.text;
+            profile2PInput.text = string.Empty;
+            CreateNamePanel.SetActive(false);
+            CreateImagePanel.SetActive(true);
+        }
+        else
+        {
+            if (DialogManager.instance.log_co != null)
+            {
+                StopCoroutine(DialogManager.instance.log_co);
+            }
+            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "2~6글자의 이름을 입력해주세요."));
+        }
     }
 
     public void SelectImage(int index)
     { // Profile Image Index를 저장하는 Method
         imageIndex = index;
-        isImageSelect = true;
+        ProfileManager.Instance.isImageSelect = true;
     }
 
     public void DeleteBtnOpen()
@@ -423,9 +388,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         {
             if (DialogManager.instance.log_co != null)
             {
-                StopCoroutine(DialogManager.instance.log_co);
+                DialogManager.instance.StopCoroutine(DialogManager.instance.log_co);
             }
-            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameLog, "한글 입력만 가능합니다."));
+            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "한글로 입력 해주세요."));
             return '\0'; // 입력 막음
         }
 
@@ -497,7 +462,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         bottomTimer = 60f;
         timerText.text = $"남은시간\n{(int)bottomTimer}";
         // 상단의 Bubble의 위치를 랜덤으로 부여하여 해당 위치에 따라 어떤 플레이어가 먼저 시작할지 턴을 부여
-        int randomPos = Random.Range(0, 2);
+        int randomPos = UnityEngine.Random.Range(0, 2);
         upperBubble.transform.localPosition = upperPos[randomPos];
         if(randomPos == 0)
         {
@@ -521,10 +486,10 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         TurnSetting();
 
         // Profile Setting
-        inGameText1P.text = GameManager.Instance.ProfileName;
-        inGameText2P.text = GameManager.Instance.ProfileName2P;
-        SQL_Manager.instance.PrintProfileImage(GameManager.Instance.IsImageMode, inGameImage1P, GameManager.Instance.ProfileIndex);
-        SQL_Manager.instance.PrintProfileImage(GameManager.Instance.IsimageMode2P, inGameImage2P, GameManager.Instance.ProfileIndex2P);
+        inGameText1P.text = ProfileManager.Instance.ProfileName1P;
+        inGameText2P.text = ProfileManager.Instance.ProfileName2P;
+        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode1P, inGameImage1P, ProfileManager.Instance.ProfileIndex1P);
+        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsimageMode2P, inGameImage2P, ProfileManager.Instance.ProfileIndex2P);
 
         readyGame_co = StartCoroutine(ReadyGame_Co());
     }
@@ -594,7 +559,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     private void SetSpriteImage(Transform _parent, List<GameObject> _popList)
     { // 매개변수를 이용해 각 Player의 Sprite와 PopBtn 세팅하는 Method
-        int randomIndex = Random.Range(0, sprites.Length);
+        int randomIndex = UnityEngine.Random.Range(0, sprites.Length);
 
         Sprite sprite = sprites[randomIndex];
         PushPop.Instance.boardSprite = sprite;
@@ -710,7 +675,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         if(turn == Turn.Turn1P) result = false;
         else if (turn == Turn.Turn2P) result = true;
 
-        Ranking.Instance.SetBombVersus(GameManager.Instance.ProfileIndex, GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex2P, GameManager.Instance.ProfileName2P, result);
+        Ranking.Instance.SetBombVersus(ProfileManager.Instance.ProfileIndex1P, ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex2P, ProfileManager.Instance.ProfileName2P, result);
        
         // 종료 애니메이션 켜주고 애니메이션 나올 위치 설정
         endAnimation.transform.gameObject.SetActive(true);
@@ -789,6 +754,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         Ranking.Instance.LoadVersusResult(winTexts, loseTexts, winProfileImages, loseProfileImages);
     }
     #endregion
+
+    #region Button Set
     public void QuitBtn(int _player)
     { // 매개변수 0은 1P / 1은 2P Btn연동 Method
         if(_player.Equals(0))
@@ -876,7 +843,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         SelectProfile.SetActive(true);
-        PrintProfileList();
+        ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P, ProfileManager.Instance.ProfileIndex2P);
         help_Canvas.Button_Disable();
         gameStartBtn.interactable = false;
     }
@@ -944,7 +911,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         MainPanel.SetActive(true);
         help_Canvas.gameObject.SetActive(true);
     }
-
+    #endregion
     public void Enable_Objects()
     {
         gameStartBtn.interactable = true;
