@@ -35,8 +35,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public Image tempPlayerImage2P = null;  // 프로필 선택 판넬에서 보이는 2P Image
     public TMP_Text playerName2P = null;    // 로비에서 보이는 2P Name
     public TMP_Text tempPlayerName2P = null;    // 프로필 선택 판넬에서 보이는 2P Name
-    public bool isImageSelect = false;  // 이미지 고르기에서 아이콘을 선택 했는지 
-    public bool isUpdate = false;   // 프로필 수정모드인지
     public bool isSelect2P = false;     // 2P 프로필이 선택 됐는지
     public List<GameObject> popList2P = new List<GameObject>(); // 1P의 Pushpop List
     [SerializeField] private Image inGameImage2P = null;    // 게임 화면에서 보이는 2P Image
@@ -198,7 +196,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         {
             if (iconPanel.activeSelf)
             {
-                isImageSelect = false;
+                ProfileManager.Instance.isImageSelect = false;
             }
         }
     }
@@ -237,9 +235,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     { // 사진찍기인지, 이미지 고르기인지 확인하고, 1P의 Image를 세팅하는 Btn 연동 Method
         if (ProfileManager.Instance.ImageSet(_mode, false, nameErrorLog, ProfileManager.Instance.tempName, imageIndex))
         { // 프로필 세팅 완료 했을 때
-          // 로비에서는 본인의 Profile List를 제외하고 출력해야함
-            PrintProfileList();
-
             // Panel들 Active
             if (_mode)
             { // 이미지 고르기 버튼 눌렀을 때
@@ -256,6 +251,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
                 checkPanel.SetActive(false);
                 CreateImagePanel.SetActive(false);
             }
+            // 로비에서는 본인의 Profile List를 제외하고 출력해야함
+            PrintProfileList();
         }
         else
         { // 세팅 도중 오류가 나왔을 때
@@ -266,7 +263,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     
     public void Update_Profile()
     { // Update Mode Bool값 설정 Btn 연동 Method
-        isUpdate = true;
+        ProfileManager.Instance.isUpdate = true;
     }
 
     public void DeleteProfile()
@@ -281,7 +278,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public void AddProfile()
     { // Bomb 모드에서 2P 프로필 선택 시 Profile 등록하는 Btn 연동 Method
         int imageMode = -1;
-        switch (GameManager.Instance.IsimageMode2P)
+        switch (ProfileManager.Instance.IsimageMode2P)
         {
             case false: //  사진 찍기를 선택했을 때
                 imageMode = 0;
@@ -290,23 +287,23 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
                 imageMode = 1;
                 break;
         }
-        if (!isUpdate)
+        if (!ProfileManager.Instance.isUpdate)
         { // 첫 등록일 때
-            if (!string.IsNullOrWhiteSpace(profile2PName))
+            if (!string.IsNullOrWhiteSpace(ProfileManager.Instance.tempName))
             {
-                GameManager.Instance.ProfileIndex2P = SQL_Manager.instance.SQL_AddProfile(profile2PName, imageMode);
+                ProfileManager.Instance.ProfileIndex2P = SQL_Manager.instance.SQL_AddProfile(ProfileManager.Instance.tempName, imageMode);
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(profile2PName))
+                if (string.IsNullOrWhiteSpace(ProfileManager.Instance.tempName))
                 {
 
                 }
             }
         }
-        else if (isUpdate)
+        else if (ProfileManager.Instance.isUpdate)
         { // 수정 중일 때
-            SQL_Manager.instance.SQL_UpdateMode(imageMode, GameManager.Instance.UID, GameManager.Instance.ProfileIndex2P);
+            SQL_Manager.instance.SQL_UpdateMode(imageMode, ProfileManager.Instance.UID, ProfileManager.Instance.ProfileIndex2P);
         }
     }
 
@@ -365,7 +362,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public void SelectImage(int index)
     { // Profile Image Index를 저장하는 Method
         imageIndex = index;
-        isImageSelect = true;
+        ProfileManager.Instance.isImageSelect = true;
     }
 
     public void DeleteBtnOpen()
@@ -489,10 +486,10 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         TurnSetting();
 
         // Profile Setting
-        inGameText1P.text = GameManager.Instance.ProfileName;
-        inGameText2P.text = GameManager.Instance.ProfileName2P;
-        SQL_Manager.instance.PrintProfileImage(GameManager.Instance.IsImageMode, inGameImage1P, GameManager.Instance.ProfileIndex);
-        SQL_Manager.instance.PrintProfileImage(GameManager.Instance.IsimageMode2P, inGameImage2P, GameManager.Instance.ProfileIndex2P);
+        inGameText1P.text = ProfileManager.Instance.ProfileName1P;
+        inGameText2P.text = ProfileManager.Instance.ProfileName2P;
+        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode1P, inGameImage1P, ProfileManager.Instance.ProfileIndex1P);
+        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsimageMode2P, inGameImage2P, ProfileManager.Instance.ProfileIndex2P);
 
         readyGame_co = StartCoroutine(ReadyGame_Co());
     }
@@ -678,7 +675,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         if(turn == Turn.Turn1P) result = false;
         else if (turn == Turn.Turn2P) result = true;
 
-        Ranking.Instance.SetBombVersus(GameManager.Instance.ProfileIndex, GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex2P, GameManager.Instance.ProfileName2P, result);
+        Ranking.Instance.SetBombVersus(ProfileManager.Instance.ProfileIndex1P, ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex2P, ProfileManager.Instance.ProfileName2P, result);
        
         // 종료 애니메이션 켜주고 애니메이션 나올 위치 설정
         endAnimation.transform.gameObject.SetActive(true);

@@ -170,7 +170,6 @@ public class Set_Time : MonoBehaviour
         if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
         { // Çª½ÃÇª½Ã ½ÃÀÛ
             pushpushMode_Canvas.SetActive(true);
-            help_Canvas.SetActive(true);
             help_Canvas.transform.SetParent(pushpushMode_Canvas.transform);
             help_Canvas.transform.SetSiblingIndex(3);
         }
@@ -188,6 +187,7 @@ public class Set_Time : MonoBehaviour
             bombMode_Canvas.SetActive(true);
             bombMode_Canvas.transform.GetComponent<Bomb>().PrintVersus();
         }     
+        help_Canvas.SetActive(true);
         main_Canvas.gameObject.SetActive(false);
         gameObject.SetActive(false);
     }

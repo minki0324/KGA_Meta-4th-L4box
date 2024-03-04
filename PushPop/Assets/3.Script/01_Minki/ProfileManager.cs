@@ -197,12 +197,12 @@ public class ProfileManager : MonoBehaviour
 
         if (!isUpdate)
         { // 첫 등록일 때
-            index = tempIndex;
             if (!_mode)
             { // 사진 찍기 버튼 눌렀을 때
                 if (_player.Equals(true)) IsImageMode1P = false;
                 else if (_player.Equals(false)) IsimageMode2P = false;
 
+                index = tempIndex;
                 TakePicture(isUpdate, index);
                 return true;
             }
@@ -211,7 +211,6 @@ public class ProfileManager : MonoBehaviour
                 if (!isImageSelect)
                 { // 이미지 선택을 안했을 때
                     if (DialogManager.instance.log_co != null) DialogManager.instance.StopCoroutine(DialogManager.instance.log_co);
-
                     DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(_nameLog, "이미지를 선택해주세요."));
                     return false;
                 }
@@ -222,6 +221,7 @@ public class ProfileManager : MonoBehaviour
 
                     // 프로필을 등록하고 Index 설정
                     AddProfile(_profileName, index, _mode);
+                    index = tempIndex;
 
                     // 전달받은 profile Index로 Profile Image 설정
                     SQL_Manager.instance.SQL_AddProfileImage(_defaultImageIndex, UID, index);
