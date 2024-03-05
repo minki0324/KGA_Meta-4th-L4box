@@ -705,7 +705,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         Ranking.Instance.SetBombVersus(ProfileManager.Instance.ProfileIndex1P, ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex2P, ProfileManager.Instance.ProfileName2P, result);
        
         // 종료 애니메이션 켜주고 애니메이션 나올 위치 설정
-        BombAnimatorSpeed(turn, true);
+        BombAnimatorSet(turn, true);
       
         AudioManager.instance.SetAudioClip_SFX(1, false);
 
@@ -716,7 +716,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     { // 결과창 출력 코루틴
         // 애니메이션 출력 기다림
         yield return new WaitForSeconds(2f);
-        BombAnimatorSpeed(turn, false);
+        BombAnimatorSet(turn, false);
 
         // 결과창 출력
         AudioManager.instance.Stop_SFX();
@@ -732,8 +732,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         yield return null;
     }
 
-    private void BombAnimatorSpeed(Turn _turn, bool _play)
-    {
+    private void BombAnimatorSet(Turn _turn, bool _play)
+    { // 패배 Animation 세팅
         if(_play)
         {
             upperBubble_Bomb.gameObject.SetActive(true);
@@ -759,7 +759,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     }
 
     private void SetAnimatorSpeed(GameObject bubble, float speed)
-    {
+    { 
         for (int i = 0; i < bubble.transform.childCount; i++)
         {
             Animator animator = bubble.transform.GetChild(i).GetComponent<Animator>();
@@ -811,11 +811,6 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         if(readyGame_co != null) StopCoroutine(readyGame_co);
         if(waterfall_co != null) StopCoroutine(waterfall_co);
 
-        upperBubble_Bomb.transform.GetChild(0).GetComponent<Animator>().speed = 1f;
-        upperBubble_Bomb.transform.GetChild(1).GetComponent<Animator>().speed = 1f;
-        bottomBubble_Bomb.transform.GetChild(0).GetComponent<Animator>().speed = 1f;
-        bottomBubble_Bomb.transform.GetChild(1).GetComponent<Animator>().speed = 1f;
-        bottomBubble_Bomb.transform.GetChild(2).GetComponent<Animator>().speed = 1f;
         upperBubble_Bomb.gameObject.SetActive(false);
         bottomBubble_Bomb.gameObject.SetActive(false);
     }
