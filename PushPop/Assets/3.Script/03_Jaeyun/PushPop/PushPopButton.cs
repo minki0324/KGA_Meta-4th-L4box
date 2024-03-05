@@ -41,6 +41,7 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
         if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
         {
             GameManager.Instance.pushPush.pushCount++;
+            gameObject.GetComponent<Image>().raycastTarget = false;
         }
         else if (GameManager.Instance.gameMode.Equals(Mode.Bomb))
         {

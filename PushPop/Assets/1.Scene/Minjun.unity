@@ -10881,7 +10881,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &345749144
 RectTransform:
   m_ObjectHideFlags: 0
@@ -29913,7 +29913,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ed7285e74142dd478bdb772f1f3852a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  costom: {fileID: 1331437610}
 --- !u!114 &1019504271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31756,9 +31755,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 335038092}
-        m_TargetAssemblyTypeName: PushPush_Result, Assembly-CSharp
-        m_MethodName: Success_BackBtn_Clicked
+      - m_Target: {fileID: 1331437607}
+        m_TargetAssemblyTypeName: PushPush_Game, Assembly-CSharp
+        m_MethodName: Success_ActiveChange
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -31768,33 +31767,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1722141590}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: Enable_Objects
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1415984646}
-        m_TargetAssemblyTypeName: PuzzleLozic, Assembly-CSharp
-        m_MethodName: ClearPieceList
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1331437610}
-        m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
-        m_MethodName: BtnAllClear
+      - m_Target: {fileID: 1722141594}
+        m_TargetAssemblyTypeName: PushPushManager, Assembly-CSharp
+        m_MethodName: OnPushPushEnd
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -38594,6 +38569,7 @@ MonoBehaviour:
   selectCategory_Panel: {fileID: 2054664752}
   puzzleLozic_Panel: {fileID: 1415984646}
   success_Panel: {fileID: 335038091}
+  backBtn: {fileID: 0}
   Colorset_Panel: {fileID: 31674732}
   colorButton_List: []
   colorSprite_List:
@@ -38649,24 +38625,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffdf059670282104fa8b85965b4e8ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CustomArea: {fileID: 1019504269}
-  rectTransform: {fileID: 0}
   pushPop: {fileID: 2804409159849094026, guid: c84c226c0b6b14b4bafe85eb215718fc, type: 3}
-  canvas: {fileID: 0}
   RectPushPop: {fileID: 7161972215700324124, guid: 1381da20a7f6349438dc19f56e561b10, type: 3}
-  ColorButton:
-  - {fileID: 220419874}
-  - {fileID: 105249491}
-  - {fileID: 159410993}
-  - {fileID: 766404661}
-  - {fileID: 322640674}
-  - {fileID: 1914560599}
-  - {fileID: 1663151321}
-  - {fileID: 1644191087}
-  - {fileID: 43216053}
-  - {fileID: 932410655}
-  isCanMakePush: 0
-  isOnArea: 0
+  result: {fileID: 335038091}
+  resultText: {fileID: 526941812}
+  resultImage: {fileID: 1705321179}
   puzzleBoard: {fileID: 1891312040}
   btnSprites:
   - {fileID: 21300000, guid: c4797b928419e844aaef5d3f039aa7f3, type: 3}
@@ -38679,13 +38642,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c04363870dc953b4d991e02af07d773a, type: 3}
   - {fileID: 21300000, guid: 1652f2efa5721a446892d51b273576dc, type: 3}
   - {fileID: 21300000, guid: 0607a023efa482e4d9055e78cf332f3d, type: 3}
-  spriteIndex: 0
-  result: {fileID: 335038091}
-  resultText: {fileID: 526941812}
-  resultImage: {fileID: 1705321179}
   isCustomMode: 0
+  spriteIndex: 0
   currentCreatIndex: 0
-  decoPanel: {fileID: 761843702}
   framePuzzle: {fileID: 1891312044}
 --- !u!1 &1337817162
 GameObject:
@@ -42057,13 +42016,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 101253ea2aedf6d4bb7702a007ccc8d3, type: 2}
   - {fileID: 11400000, guid: 477ca134c32920645b060ea71485b9ac, type: 2}
   - {fileID: 11400000, guid: a022932372f521e49baec83bb9fd7dad, type: 2}
+  currentPuzzle: {fileID: 0}
+  pieceList: []
   ClearCount: 0
   successCount: 0
-  currentPuzzle: {fileID: 0}
-  costom: {fileID: 1331437610}
-  pieceList: []
   atlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
-  DecorationPanel: {fileID: 761843702}
 --- !u!224 &1415984647
 RectTransform:
   m_ObjectHideFlags: 0
@@ -43115,9 +43072,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 335038092}
-        m_TargetAssemblyTypeName: PushPush_Result, Assembly-CSharp
-        m_MethodName: Success_BackBtn_Clicked
+      - m_Target: {fileID: 1331437607}
+        m_TargetAssemblyTypeName: PushPush_Game, Assembly-CSharp
+        m_MethodName: Success_ActiveChange
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -43127,106 +43084,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2054664752}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1331437605}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1722141590}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: Enable_Objects
+      - m_Target: {fileID: 1722141594}
+        m_TargetAssemblyTypeName: PushPushManager, Assembly-CSharp
+        m_MethodName: OnPushPushEnd
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1415984646}
-        m_TargetAssemblyTypeName: PuzzleLozic, Assembly-CSharp
-        m_MethodName: ClearPieceList
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1331437610}
-        m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
-        m_MethodName: BtnAllClear
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 335038091}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1443775788}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-        m_MethodName: set_interactable
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1864193693}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1620062676}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -43243,18 +43104,6 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1806288943}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
@@ -45970,7 +45819,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1722141594}
         m_TargetAssemblyTypeName: PushPushManager, Assembly-CSharp
-        m_MethodName: onCustomEndmethod
+        m_MethodName: OnCustomEndmethod
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -52218,6 +52067,8 @@ MonoBehaviour:
   custom: {fileID: 1331437610}
   puzzle: {fileID: 1415984646}
   frame: {fileID: 1891312044}
+  decoPanel: {fileID: 761843702}
+  pieceCount: 1
   pushCount: 0
 --- !u!1 &1722921899
 GameObject:

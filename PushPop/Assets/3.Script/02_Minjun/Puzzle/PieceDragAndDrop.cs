@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-    private Image _myImage;
+    public Image _myImage;
     private RectTransform _rect; //드래그할때 움직일 오브젝트 위치
     private Vector3 _distance; //마우스 클릭했을 때 오브젝트가 그대로 따라오게하기위해 계산한 Vector값
 
@@ -26,7 +26,6 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
     }
     private void Start()
     {
-        _myImage = GetComponent<Image>();
         //Sprite에서 Alpha 값이 0.1 이하 일시 인식하지 않게함
         _myImage.alphaHitTestMinimumThreshold = 0.1f;
     }
@@ -61,8 +60,8 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             canvasGroup.blocksRaycasts = true;
         }
         else
-        {
-            //퍼즐을 맞췄을때
+        {//퍼즐을 맞췄을때
+
             AudioManager.instance.SetAudioClip_SFX(2, false);
             //프레임위치로 정확하게 보정
             _rect.position = puzzleLozic.frampPos.position;

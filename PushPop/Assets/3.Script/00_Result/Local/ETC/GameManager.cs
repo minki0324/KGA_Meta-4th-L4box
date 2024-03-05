@@ -418,6 +418,7 @@ public class GameManager : MonoBehaviour, IGameMode
         pushPush.puzzle.SettingPuzzle();
         //초기화
         bubbleObject.Clear();
+
         // puzzle position
         for (int i = 0; i < puzzleClass.Count; i++)
         {
