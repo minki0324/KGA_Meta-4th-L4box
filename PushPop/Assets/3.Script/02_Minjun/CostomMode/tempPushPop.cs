@@ -2,59 +2,46 @@ using UnityEngine;
 
 public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHandler*/
 {
-    public bool isCanMakePush = false;
     public bool isSet = false;
-    public bool isCheckOverlap = false;
-    public bool isOverLap = false;
-    private bool isTrigger = false;
+    public bool isTrigger = false;
+    public int creatIndex = 0;
     public GameObject RectPush;
 
     private void OnEnable()
     {
-        CustomPushpopManager.Instance.StackFakePops.Push(gameObject);
+        GameManager.Instance.pushPush.custom.StackFakePops.Push(gameObject);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-       if (collision.CompareTag("PushPop"))
+       if (collision.CompareTag("PushPop") && !isSet && !isTrigger)
         {
-            if (!isSet && !isTrigger)
+            isTrigger = true;
+            if (creatIndex > collision.GetComponent<tempPushPop>().creatIndex )
             {
-                isTrigger = true;
                 CheckOverlap();
+            }
+            else
+            {
+                isSet = true;
             }
         }
     }
 
     public void CheckOverlap()
     {// °ãÄ¥ ½Ã
-        
-        CustomPushpopManager stack = FindObjectOfType<CustomPushpopManager>(); // gameobject
+
+        CustomPushpopManager stack = GameManager.Instance.pushPush.custom;
         GameObject lastFakeStack = stack.StackFakePops.Pop();
+        
         Destroy(lastFakeStack);
 
         GameObject lastStack = stack.StackPops.Pop(); // ui gameobject
         PushPop.Instance.pushPopButton.Remove(RectPush);
         Destroy(lastStack);
-        //Destroy(RectPush);
+            //Destroy(RectPush);
+        
+      
     }
-    //public void OnPointerEnter(PointerEventData eventData)
-    //{
-    //    Debug.Log(isCanMakePush);
-    //    if (eventData.selectedObject.CompareTag("Puzzle"))
-    //    {
-    //        isCanMakePush = true;
-    //        Debug.Log(isCanMakePush);
-    //    }
-    //}
-
-    //public void OnPointerExit(PointerEventData eventData)
-    //{
-    //    Debug.Log(isCanMakePush);
-    //    if (eventData.selectedObject.CompareTag("Puzzle"))
-    //    {
-    //        isCanMakePush = false;
-    //        Debug.Log(isCanMakePush);
-    //    }
-    //}
+  
 }

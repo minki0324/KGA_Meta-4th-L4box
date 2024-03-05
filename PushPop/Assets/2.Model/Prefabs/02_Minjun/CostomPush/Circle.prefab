@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 2804409159849094026}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -100,8 +100,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSet: 0
-  isCheckOverlap: 0
-  isOverlap: 0
+  isTrigger: 0
+  creatIndex: 0
+  RectPush: {fileID: 0}
 --- !u!58 &-5935238634485348753
 CircleCollider2D:
   m_ObjectHideFlags: 0

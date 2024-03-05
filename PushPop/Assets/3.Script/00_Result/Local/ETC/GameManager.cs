@@ -56,9 +56,9 @@ public class GameManager : MonoBehaviour, IGameMode
     public bool isShutdown = false;
 
     [Header("GameScript")]
-    [SerializeField] private CustomPushpopManager pushpushScript;
     public Bomb bombScript;
     public Speed_Timer speedTimer = null;
+    public PushPushManager pushPush;
 
     // Bubble
     [Header("Bubble Info")]
@@ -81,7 +81,6 @@ public class GameManager : MonoBehaviour, IGameMode
     public Vector2 puzzleSize;
     public Vector2 finalCenter;
     public List<PuzzleObject> puzzleClass = new List<PuzzleObject>();
-    [SerializeField] private PuzzleLozic puzzleLogic;
     public List<PushPushObject> pushlist = new List<PushPushObject>();
 
     [Header("Score")]
@@ -252,10 +251,12 @@ public class GameManager : MonoBehaviour, IGameMode
             switch (gameMode)
             {
                 case Mode.PushPush:
-                    if (PushPop.Instance.pushPopButton.Count == 0)
+                    if (PushPop.Instance.pushPopButton.Count == pushPush.pushCount)
                     {
+                        pushPush.OnButtonAllPush();
+                        PushPop.Instance.pushPopButton.Clear();
                         AudioManager.instance.SetAudioClip_SFX(4, false);
-                        
+                        CustomPushpopManager pushpushScript = pushPush.custom;
                         //담고
                         int[] spriteIndexs = new int[pushpushScript.puzzleBoard.transform.childCount];
                         Vector2[] childPos = new Vector2[pushpushScript.puzzleBoard.transform.childCount];
@@ -266,7 +267,7 @@ public class GameManager : MonoBehaviour, IGameMode
                             childPos[i] = pop.gameObject.transform.localPosition;
                         }
 
-                        PushPushObject newPush = new PushPushObject(puzzleLogic.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
+                        PushPushObject newPush = new PushPushObject(pushPush.puzzle.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
                         string json = JsonUtility.ToJson(newPush);
                         SQL_Manager.instance.SQL_AddPushpush(json, ProfileManager.Instance.ProfileIndex1P);
 
@@ -280,7 +281,7 @@ public class GameManager : MonoBehaviour, IGameMode
                         }
 
                         //출력
-                        pushpushScript.resultText.text = DataManager2.instance.iconDict[puzzleLogic.currentPuzzle.PuzzleID];
+                        pushpushScript.resultText.text = DataManager2.instance.iconDict[pushPush.puzzle.currentPuzzle.PuzzleID];
 
                         // List를 자동으로 먼저한 순서대로 담기게 해놨음
                         pushpushScript.resultImage.sprite = atlas.GetSprite(pushlist[0].spriteName.ToString());
@@ -388,17 +389,18 @@ public class GameManager : MonoBehaviour, IGameMode
     {
         BoardSize = new Vector2(520f, 400f); // scale
         // puzzle 생성
-        if (puzzleLogic == null)
+        if (pushPush.puzzle == null)
         {
-            puzzleLogic = FindObjectOfType<PuzzleLozic>();
+            pushPush.puzzle = FindObjectOfType<PuzzleLozic>();
         }
-        if (!puzzleLogic.gameObject.activeSelf)
+        if (!pushPush.puzzle.gameObject.activeSelf)
         {
-            puzzleLogic.gameObject.SetActive(true);
+            pushPush.puzzle.gameObject.SetActive(true);
         }
-        puzzleLogic.SettingPuzzle();
+        pushPush.puzzle.SettingPuzzle();
         //초기화
         bubbleObject.Clear();
+
         // puzzle position
         for (int i = 0; i < puzzleClass.Count; i++)
         {
@@ -476,8 +478,8 @@ public class GameManager : MonoBehaviour, IGameMode
         _puzzle.GetComponent<Image>().raycastTarget = false;
         // _puzzle.GetComponent<RectTransform>().sizeDelta = BoardSize;
         //_puzzle.SetParent(bubble.transform);
-        /*bubble.touchCount = 1;*/
-        bubble.touchCount = Random.Range(10, 21); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
+        bubble.touchCount = 1;
+        //bubble.touchCount = Random.Range(10, 21); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
     }
     #endregion
 

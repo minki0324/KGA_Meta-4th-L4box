@@ -11,6 +11,7 @@ public class PuzzlePiece : MonoBehaviour
     private Sprite puzzleSprite;
     private float centerPos;
     public Coroutine puzzleMove;
+    public int index;
     
     private void OnDisable()
     {
@@ -45,10 +46,11 @@ public class PuzzlePiece : MonoBehaviour
             transform.position = new Vector2(transform.position.x, transform.position.y + 10f);
         }
 
-        if (GameManager.Instance.bubbleObject.Count == 0 && isGround)
+        if (GameManager.Instance.bubbleObject.Count == 0 && isGround && index == GameManager.Instance.pushPush.puzzle.pieceList.Count )
         {//모두 방울에서 터진 퍼즐들이 모두 땅에 떨어졌을때
-            PuzzleLozic puzzle = FindObjectOfType<PuzzleLozic>();
-            puzzle.SettingGame();
+
+            
+            GameManager.Instance.pushPush.OnAllBubblesPopped();
         }
     }
 

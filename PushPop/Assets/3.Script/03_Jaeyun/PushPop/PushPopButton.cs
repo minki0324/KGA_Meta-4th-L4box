@@ -14,7 +14,7 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
         switch (GameManager.Instance.gameMode)
         {
             case Mode.PushPush:
-                CustomPushpopManager.Instance.StackPops.Push(gameObject);
+                GameManager.Instance.pushPush.custom.StackPops.Push(gameObject);
                 break;
             case Mode.Memory:
                 break;
@@ -36,13 +36,14 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
     // Push Pop Button click method
     public void PushPopClick()
     {
-       
+
         GameObject clickButton = this.gameObject;
         if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
         {
-            PushPop.Instance.pushPopButton.Remove(clickButton);
+            GameManager.Instance.pushPush.pushCount++;
+            gameObject.GetComponent<Image>().raycastTarget = false;
         }
-        if (GameManager.Instance.gameMode.Equals(Mode.Bomb))
+        else if (GameManager.Instance.gameMode.Equals(Mode.Bomb))
         {
             if (player.Equals(0))
             { // 1P ¼ÒÀ¯ ÆË ¹öÆ°
