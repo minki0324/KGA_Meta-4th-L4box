@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.VFX;
 
 public class TouchManager : MonoBehaviour
@@ -10,11 +11,14 @@ public class TouchManager : MonoBehaviour
     public Camera effectCamera;
     Coroutine touchTimer;
     public Transform particleCanvas;
+    [SerializeField] private RawImage rawImage;
 
 
     void Start()
     {
         visualEffects = VFXPrefab.GetComponentsInChildren<VisualEffect>();
+        rawImage.texture.width = Screen.width;
+        rawImage.texture.height = Screen.height;
     }
 
     void Update()
@@ -31,12 +35,13 @@ public class TouchManager : MonoBehaviour
             {
                 StopCoroutine(touchTimer);
             }
-            touchTimer = StartCoroutine(ClickStartTimer_Co());
-
+         
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            pos.z = 0;
+            pos.z = 1;
 
-            GameObject vfxEffect = Instantiate(VFXPrefab, pos, VFXPrefab.transform.rotation);
+
+            GameObject vfxEffect = Instantiate(VFXPrefab, pos, Quaternion.identity);
+            vfxEffect.transform.parent = particleCanvas;
 
          
             visualEffects = vfxEffect.GetComponentsInChildren<VisualEffect>();
