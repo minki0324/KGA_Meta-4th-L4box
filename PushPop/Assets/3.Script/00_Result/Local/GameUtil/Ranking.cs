@@ -221,7 +221,7 @@ public class Ranking : MonoBehaviour
         { // 만약 상위 3위를 채우지 못한 경우, 남은 텍스트 요소를 비움.
             _Score[i].text = "";
             _name[i].text = "";
-            _image[i].sprite = GameManager.Instance.noneSprite;
+            _image[i].sprite = ProfileManager.Instance.NoneBackground;
         }
 
         for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
@@ -249,7 +249,7 @@ public class Ranking : MonoBehaviour
         LoadRanking();
 
         // 게임매니저에 저장된 프로필 Infomation을 이용하여 rankList에 본인의 기록이 있는지 조회
-        var userRecord = rankList.FirstOrDefault(r => r.name == GameManager.Instance.ProfileName && r.index == GameManager.Instance.ProfileIndex);
+        var userRecord = rankList.FirstOrDefault(r => r.name == ProfileManager.Instance.ProfileName1P && r.index == ProfileManager.Instance.ProfileIndex1P);
 
         if (userRecord != null)
         { // 사용자 기록이 있을 경우, 정보를 표시.
@@ -266,11 +266,11 @@ public class Ranking : MonoBehaviour
         }
         else
         {
-            _name.text = GameManager.Instance.ProfileName;
+            _name.text = ProfileManager.Instance.ProfileName1P;
             _Score.text = "";
         }
 
-        _image.sprite = GameManager.Instance.CacheProfileImage1P;
+        _image.sprite = ProfileManager.Instance.CacheProfileImage;
     }
 
     /// <summary>
@@ -313,7 +313,7 @@ public class Ranking : MonoBehaviour
                     }
                     else
                     {
-                        _image[i].sprite = GameManager.Instance.noneSprite;
+                        _image[i].sprite = ProfileManager.Instance.NoneBackground;
                         _timer[i].text = "";
                         _name[i].text = "";
                     }
@@ -323,7 +323,7 @@ public class Ranking : MonoBehaviour
 
         for (int i = topRanks.Count; i < _timer.Length; i++)
         { // 만약 상위 3위를 채우지 못한 경우, 남은 텍스트 요소를 비움.
-            _image[i].sprite = GameManager.Instance.noneSprite;
+            _image[i].sprite = ProfileManager.Instance.NoneBackground;
             _timer[i].text = "";
             _name[i].text = "";
         }
@@ -353,7 +353,7 @@ public class Ranking : MonoBehaviour
         SQL_Manager.instance.SQL_ProfileListSet();
         LoadRanking();
 
-        var userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex && r.spriteName.Contains(_spriteName));
+        var userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.ProfileIndex1P && r.spriteName.Contains(_spriteName));
 
         if (userRecord != null)
         {
@@ -363,13 +363,13 @@ public class Ranking : MonoBehaviour
                 {
                     int sec = userRecord.timer[i] % 60;    //60으로 나눈 나머지 = 초
                     int min = userRecord.timer[i] / 60;
-                    _name.text = GameManager.Instance.ProfileName;
+                    _name.text = ProfileManager.Instance.ProfileName1P;
                     _timer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
                     break;
                 }
                 else
                 {
-                    _image.sprite = GameManager.Instance.noneSprite;
+                    _image.sprite = ProfileManager.Instance.NoneBackground;
                     _name.text = userRecord.name;
                     _timer.text = "";
                 }
@@ -377,11 +377,11 @@ public class Ranking : MonoBehaviour
         }
         else
         {
-            _image.sprite = GameManager.Instance.noneSprite;
-            _name.text = GameManager.Instance.ProfileName;
+            _image.sprite = ProfileManager.Instance.NoneBackground;
+            _name.text = ProfileManager.Instance.ProfileName1P;
             _timer.text = "";
         }
-        _image.sprite = GameManager.Instance.CacheProfileImage1P;
+        _image.sprite = ProfileManager.Instance.CacheProfileImage;
     }
 
     /// <summary>
@@ -409,8 +409,8 @@ public class Ranking : MonoBehaviour
                 { // 삭제된 기록이 있을 경우
                     _winText[i].text = "";
                     _loseText[i].text = "";
-                    _winImage[i].sprite = GameManager.Instance.noneSprite;
-                    _loseImage[i].sprite = GameManager.Instance.noneSprite;
+                    _winImage[i].sprite = ProfileManager.Instance.NoneBackground;
+                    _loseImage[i].sprite = ProfileManager.Instance.NoneBackground;
                 }
                 else if (currentGame.Result)
                 { // 1P가 이긴 경우
@@ -429,8 +429,8 @@ public class Ranking : MonoBehaviour
             {
                 _winText[i].text = "";
                 _loseText[i].text = "";
-                _winImage[i].sprite = GameManager.Instance.noneSprite;
-                _loseImage[i].sprite = GameManager.Instance.noneSprite;
+                _winImage[i].sprite = ProfileManager.Instance.NoneBackground;
+                _loseImage[i].sprite = ProfileManager.Instance.NoneBackground;
             }
         }
     }
@@ -472,7 +472,7 @@ public class Ranking : MonoBehaviour
 
         int index = GameManager.Instance.boardName;
         int scoreIndex = 0;
-        Rank userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex && r.spriteName.Contains(index));
+        Rank userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.ProfileIndex1P && r.spriteName.Contains(index));
 
         if (userRecord == null)
         {
@@ -482,7 +482,7 @@ public class Ranking : MonoBehaviour
         switch (GameManager.Instance.gameMode)
         {
             case Mode.Speed:
-                userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex && r.spriteName.Contains(index));
+                userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.ProfileIndex1P && r.spriteName.Contains(index));
                 for (int i = 0; i < userRecord.spriteName.Count; i++)
                 {
                     if (index.Equals(userRecord.spriteName[i]))
@@ -493,7 +493,7 @@ public class Ranking : MonoBehaviour
                 }
                 break;
             case Mode.Memory:
-                userRecord = rankList.FirstOrDefault(r => r.index == GameManager.Instance.ProfileIndex);
+                userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.ProfileIndex1P);
                 break;
         }
 
@@ -596,12 +596,12 @@ public class Ranking : MonoBehaviour
         {
             if (profile.imageMode)
             {
-                image.sprite = GameManager.Instance.ProfileImages[profile.defaultImage];
+                image.sprite = ProfileManager.Instance.ProfileImages[profile.defaultImage];
             }
             else
             {
-                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(GameManager.Instance.UID, profile.index);
-                Sprite profileSprite = GameManager.Instance.TextureToSprite(profileTexture);
+                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(ProfileManager.Instance.UID, profile.index);
+                Sprite profileSprite = ProfileManager.Instance.TextureToSprite(profileTexture);
                 image.sprite = profileSprite;
             }
         }

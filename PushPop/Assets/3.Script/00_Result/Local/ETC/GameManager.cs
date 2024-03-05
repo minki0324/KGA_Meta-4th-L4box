@@ -56,9 +56,9 @@ public class GameManager : MonoBehaviour, IGameMode
     public bool isShutdown = false;
 
     [Header("GameScript")]
-    [SerializeField] private CustomPushpopManager pushpushScript;
     public Bomb bombScript;
     public Speed_Timer speedTimer = null;
+    public PushPushManager pushPush;
 
     // Bubble
     [Header("Bubble Info")]
@@ -81,7 +81,6 @@ public class GameManager : MonoBehaviour, IGameMode
     public Vector2 puzzleSize;
     public Vector2 finalCenter;
     public List<PuzzleObject> puzzleClass = new List<PuzzleObject>();
-    [SerializeField] private PuzzleLozic puzzleLogic;
     public List<PushPushObject> pushlist = new List<PushPushObject>();
 
     [Header("Score")]
@@ -89,24 +88,10 @@ public class GameManager : MonoBehaviour, IGameMode
     public int Score = 0;
     public float TimeScore = 0;
 
-    [Header("User Infomation")]
-    public int UID;
-    public string ProfileName;
-    public int ProfileIndex;
-    public int DefaultImage;
-    public Sprite[] ProfileImages;
-    public bool IsImageMode = true; // false = 사진찍기, true = 이미지 선택
-
     [Header("Speed Mode")]
     public float count = 0.25f;
     public Coroutine pushpushCreate_Co = null;
     public Coroutine slider_Co = null;
-
-    [Header("2P Player")]
-    public string ProfileName2P = string.Empty;
-    public int ProfileIndex2P = 0;
-    public int DefaultImage2P = 0;
-    public bool IsimageMode2P = true;
 
     [Header("Speed Print")]
     [SerializeField] private TMP_Text[] printName;
@@ -118,7 +103,6 @@ public class GameManager : MonoBehaviour, IGameMode
 
     [Header("Other")]
     [SerializeField] private SpriteAtlas atlas;
-    public Sprite noneSprite;
     public bool backButtonClick = false;
     [SerializeField] private Sprite[] btnSprites;
     public bool isStart = false;
@@ -126,9 +110,6 @@ public class GameManager : MonoBehaviour, IGameMode
     public int boardName = 0; // mold name
     public int currentTime = 0;
     public Coroutine speedCreate = null;
-
-    public Sprite CacheProfileImage1P;
-
     #region Unity Callback
     private void Awake()
     {
@@ -270,10 +251,12 @@ public class GameManager : MonoBehaviour, IGameMode
             switch (gameMode)
             {
                 case Mode.PushPush:
-                    if (PushPop.Instance.pushPopButton.Count == 0)
+                    if (PushPop.Instance.pushPopButton.Count == pushPush.pushCount)
                     {
+                        pushPush.OnButtonAllPush();
+                        PushPop.Instance.pushPopButton.Clear();
                         AudioManager.instance.SetAudioClip_SFX(4, false);
-                        
+                        CustomPushpopManager pushpushScript = pushPush.custom;
                         //담고
                         int[] spriteIndexs = new int[pushpushScript.puzzleBoard.transform.childCount];
                         Vector2[] childPos = new Vector2[pushpushScript.puzzleBoard.transform.childCount];
@@ -284,21 +267,21 @@ public class GameManager : MonoBehaviour, IGameMode
                             childPos[i] = pop.gameObject.transform.localPosition;
                         }
 
-                        PushPushObject newPush = new PushPushObject(puzzleLogic.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
+                        PushPushObject newPush = new PushPushObject(pushPush.puzzle.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
                         string json = JsonUtility.ToJson(newPush);
-                        SQL_Manager.instance.SQL_AddPushpush(json, ProfileIndex);
+                        SQL_Manager.instance.SQL_AddPushpush(json, ProfileManager.Instance.ProfileIndex1P);
 
                         pushpushScript.result.SetActive(true);
 
                         // PushPushList 세팅
-                        List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileIndex);
+                        List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileManager.Instance.ProfileIndex1P);
                         if (pushlist == null)
                         {
                             Debug.Log("널");
                         }
 
                         //출력
-                        pushpushScript.resultText.text = DataManager2.instance.iconDict[puzzleLogic.currentPuzzle.PuzzleID];
+                        pushpushScript.resultText.text = DataManager2.instance.iconDict[pushPush.puzzle.currentPuzzle.PuzzleID];
 
                         // List를 자동으로 먼저한 순서대로 담기게 해놨음
                         pushpushScript.resultImage.sprite = atlas.GetSprite(pushlist[0].spriteName.ToString());
@@ -357,7 +340,7 @@ public class GameManager : MonoBehaviour, IGameMode
                         speedTimer.StopCoroutine(speedTimer.timer);
                         speedTimer.TimerObj.SetActive(false);
 
-                        Ranking.Instance.SetTimer(ProfileName, ProfileIndex, int.Parse(PushPop.Instance.boardSprite.name), speedTimer.currentTime);
+                        Ranking.Instance.SetTimer(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, int.Parse(PushPop.Instance.boardSprite.name), speedTimer.currentTime);
                         speedTimer.resultPanel.SetActive(true);
                         speedTimer.Result();
                     }
@@ -406,17 +389,18 @@ public class GameManager : MonoBehaviour, IGameMode
     {
         BoardSize = new Vector2(520f, 400f); // scale
         // puzzle 생성
-        if (puzzleLogic == null)
+        if (pushPush.puzzle == null)
         {
-            puzzleLogic = FindObjectOfType<PuzzleLozic>();
+            pushPush.puzzle = FindObjectOfType<PuzzleLozic>();
         }
-        if (!puzzleLogic.gameObject.activeSelf)
+        if (!pushPush.puzzle.gameObject.activeSelf)
         {
-            puzzleLogic.gameObject.SetActive(true);
+            pushPush.puzzle.gameObject.SetActive(true);
         }
-        puzzleLogic.SettingPuzzle();
+        pushPush.puzzle.SettingPuzzle();
         //초기화
         bubbleObject.Clear();
+
         // puzzle position
         for (int i = 0; i < puzzleClass.Count; i++)
         {
@@ -494,41 +478,8 @@ public class GameManager : MonoBehaviour, IGameMode
         _puzzle.GetComponent<Image>().raycastTarget = false;
         // _puzzle.GetComponent<RectTransform>().sizeDelta = BoardSize;
         //_puzzle.SetParent(bubble.transform);
-        bubble.touchCount = Random.Range(10, 21); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
-    }
-
-    /// <summary>
-    /// 변경할 gameobject를 매개변수로 받아서 그 안의 Image Component를 통해 프로필 이미지를 출력
-    /// </summary>
-    /// <param name="printobj"></param>
-    public void ProfileImagePrint(GameObject printobj)
-    {
-        Image image = printobj.GetComponent<Image>();
-
-        if (ProfileManager.Instance.IsImageMode1P) // 이미지 선택모드
-        {   // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
-            CacheProfileImage1P = ProfileManager.Instance.ProfileImages[ProfileManager.Instance.DefaultImage1P];
-            image.sprite = CacheProfileImage1P;
-        }
-        else if (!ProfileManager.Instance.IsImageMode1P) // 사진찍기 모드
-        {
-            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, ProfileManager.Instance.ProfileIndex1P);
-            Sprite profileSprite = TextureToSprite(profileTexture);
-            CacheProfileImage1P = profileSprite;
-            image.sprite = CacheProfileImage1P;
-        }
-    }
-
-    /// <summary>
-    /// SQL_Manager에서 Texture2D로 변환한 이미지파일을 Sprite로 한번 더 변환하는 Method
-    /// </summary>
-    /// <param name="texture"></param>
-    /// <returns></returns>
-    public Sprite TextureToSprite(Texture2D texture)
-    {
-        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
-
-        return sprite;
+        bubble.touchCount = 1;
+        //bubble.touchCount = Random.Range(10, 21); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
     }
     #endregion
 
@@ -544,7 +495,7 @@ public class GameManager : MonoBehaviour, IGameMode
         {
             printTimer[i].text = string.Empty;
             printName[i].text = string.Empty;
-            printImage[i].sprite = noneSprite;
+            printImage[i].sprite = ProfileManager.Instance.NoneBackground;
         }
     }
 

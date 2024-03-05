@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144083f40fe44584fa45588c2d82f59a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  puzzleLozic: {fileID: 0}
+  _myImage: {fileID: 5664669589769050586}
 --- !u!114 &-988349607845755168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,6 +106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGround: 0
   speed: 5
+  index: 1
 --- !u!225 &6305297396907938608
 CanvasGroup:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class PushPush_Game : MonoBehaviour
     [SerializeField] private GameObject selectCategory_Panel;
     [SerializeField] private PuzzleLozic puzzleLozic_Panel;
     [SerializeField] private GameObject success_Panel;
-
+    [SerializeField] private GameObject backBtn;
 
     [Header("꾸미기 패널")]
     [SerializeField] private GameObject Colorset_Panel;
@@ -57,15 +57,14 @@ public class PushPush_Game : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    public void Success_BackBtn_Clicked()
+    public void Success_ActiveChange()
     {   
-        GameManager.Instance.puzzleClass.Clear();
-
         pushpush_Canvas.Enable_Objects();
         success_Panel.SetActive(false);
         selectCategory_Panel.SetActive(true);
         gameObject.SetActive(false);
-
+        help_Canvas.gameObject.SetActive(true);
+        backBtn.SetActive(false);
     }
 
     #endregion

@@ -27,7 +27,6 @@ public class Main_Button : MonoBehaviour
     [SerializeField] private GameObject gameModePanel;
   
 
-    [Header("모드별 캔버스")]
 
     [SerializeField] private Help_Canvas help_Cavas;
 
@@ -74,7 +73,7 @@ public class Main_Button : MonoBehaviour
         NewProfileCanvas profile = profilePanel.GetComponent<NewProfileCanvas>();
         profilePanel.SetActive(true);
         profileReturnBtn.gameObject.SetActive(true);
-        ProfileManager.Instance.PrintProfileList(profile.profileParent, ProfileManager.Instance.ProfileIndex1P, null);
+        ProfileManager.Instance.PrintProfileList(profile.profileParent, ProfileManager.Instance.ProfileIndex1P);
         AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 

@@ -17,16 +17,11 @@ public class Help_Canvas : MonoBehaviour
     [SerializeField] private Memory_Canvas memory_Canvas;
     [SerializeField] private Bomb bomb_Canvas;
 
-
     [Header("도움말 창")]
     [SerializeField] private GameObject help_Panel;
-
     [SerializeField] private Button help_Btn;
-
     [SerializeField] private Image help_Image;
-
     [SerializeField] private TMP_Text help_Description;
-
     [SerializeField] private TMP_Text page_Text;
 
     [Header("버튼")]
@@ -40,8 +35,6 @@ public class Help_Canvas : MonoBehaviour
     [SerializeField] private List<Sprite> speedImage_List;
     [SerializeField] private List<Sprite> memoryImage_List;
     [SerializeField] private List<Sprite> bombImage_List;
-
-
 
     //도움말창이 켜져있는가 판단하는 변수, 도움말 창이 켜져있으면 그 외 모든 버튼 비활성화
     public bool bisHelpPanelOn = false;
@@ -109,12 +102,8 @@ public class Help_Canvas : MonoBehaviour
                     bomb_Canvas.BackBtn_Clicked();
                     break;
             }
-
-            
         }
- 
     }
-
 
     //우측하단 도움말 버튼 눌리면 호출될 메소드
     public void HelpBtn_Clicked()
@@ -151,7 +140,6 @@ public class Help_Canvas : MonoBehaviour
         }
     }
 
-
     //도움말 창의 x키(BackBtn) 눌리면 호출될 메소드
     public void Help_BackBtn_Clicked()
     {
@@ -162,7 +150,6 @@ public class Help_Canvas : MonoBehaviour
             Back_Btn.enabled = true;
             bisHelpPanelOn = false;
             help_Panel.SetActive(false);
-
 
             switch (GameManager.Instance.gameMode)
             {
@@ -182,11 +169,8 @@ public class Help_Canvas : MonoBehaviour
                     bomb_Canvas.Enable_Objects();
                     break;
             }
-
         }
-       
     }
-
 
     //도움말 창의 Next(다음) 버튼 눌리면 호출될 메소드
     public void NextBtn_Clicked()
@@ -207,9 +191,7 @@ public class Help_Canvas : MonoBehaviour
                 next_Btn.interactable = true;
             }
         }
-     
     }
-
 
     //도움말 창의 Previous(이전) 버튼 눌리면 호출될 메소드
     public void PreviousBtn_Clicked()
@@ -231,7 +213,6 @@ public class Help_Canvas : MonoBehaviour
             }
         }
     }
-
 
     //헬프 버튼 누르면 나오는 스크립트 
     private void Help_Window()

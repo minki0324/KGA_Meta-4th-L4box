@@ -14,6 +14,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
 {
     [Header("Other Component")] [Space(5)]
     [SerializeField] private CameraManager cameraManager; // ¿ÜºÎ Camera ¿¬µ¿ Script
+    [SerializeField] private Image CaptureImage;
 
     [Header("Game Lobby")] [Space(5)]
     [SerializeField] private GameObject MainButtonPanel; // Main Game LobbyÀÇ ¹öÆ°µé Panel
@@ -36,7 +37,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
     [SerializeField] private GameObject createImagePanel; // Create Image Panel
     [SerializeField] private GameObject iconPanel; // ÀÌ¹ÌÁö Icon Panel
     [SerializeField] private GameObject checkPanel; // »çÁø ÃÔ¿µ Panel
-    private int imageIndex; // IconÀÇ Index
+    public int imageIndex; // IconÀÇ Index
 
     [Header("Current Profile Panel")] [Space(5)]
     public GameObject CurrentProfilePanel; // Current Profile panel
@@ -56,7 +57,8 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     void Start()
     {
-        ProfileManager.Instance.PrintProfileList(profileParent, null, null);
+        ProfileManager.Instance.LoadOrCreateGUID();
+        ProfileManager.Instance.PrintProfileList(profileParent, null);
     }
 
     private void OnDisable()
@@ -85,7 +87,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
     { // DeletePanel ¼Ó Btn ¿¬µ¿ Method
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.DeleteProfile(ProfileManager.Instance.tempIndex);
-        ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P, null);
+        ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P);
         DeletePanel.SetActive(false);
         Enable_ExitBtn(true);
     }
@@ -100,11 +102,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
             {
                 if (DataManager2.instance.vulgarism_Arr[i] != string.Empty)
                 {
-                    if(DialogManager.instance.log_co != null)
-                    {
-                        StopCoroutine(DialogManager.instance.log_co);
-                    }
-                    DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "ºñ¼Ó¾î´Â Æ÷ÇÔ½ÃÅ³ ¼ö ¾ø½À´Ï´Ù."));
+                    PrintErrorLog(nameErrorLog, "ºñ¼Ó¾î´Â Æ÷ÇÔ½ÃÅ³ ¼ö ¾ø½À´Ï´Ù.");
                     inputProfileName.text = String.Empty;  
                     return;
                 }
@@ -115,11 +113,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
         { // ÃÊ¼º Ã¼Å©
             if (Regex.IsMatch(inputProfileName.text[i].ToString(), @"[^0-9a-zA-Z°¡-ÆR]"))
             {
-                if (DialogManager.instance.log_co != null)
-                {
-                    StopCoroutine(DialogManager.instance.log_co);
-                }
-                DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "ÃÊ¼º ÀÔ·ÂÀº ºÒ°¡´ÉÇÕ´Ï´Ù."));
+                PrintErrorLog(nameErrorLog, "ÃÊ¼º ÀÔ·ÂÀº ºÒ°¡´ÉÇÕ´Ï´Ù.");
                 inputProfileName.text = String.Empty;  
                 return;
             }
@@ -133,12 +127,8 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
             createImagePanel.SetActive(true);
         }
         else
-        { 
-            if (DialogManager.instance.log_co != null)
-            {
-                StopCoroutine(DialogManager.instance.log_co);
-            }
-            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "2~6±ÛÀÚÀÇ ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä."));
+        {
+            PrintErrorLog(nameErrorLog, "2~6±ÛÀÚÀÇ ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä.");
         }
     }
 
@@ -147,11 +137,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
         // ÀÔ·ÂµÈ ¹®ÀÚ°¡ ¿µ¾î ¾ËÆÄºª, ¼ıÀÚÀÎ °æ¿ì ÀÔ·ÂÀ» ¸·À½
         if ((addedChar >= 'a' && addedChar <= 'z') || (addedChar >= 'A' && addedChar <= 'Z') || (addedChar >= '0' && addedChar <= '9'))
         {
-            if (DialogManager.instance.log_co != null)
-            {
-                DialogManager.instance.StopCoroutine(DialogManager.instance.log_co);
-            }
-            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "ÇÑ±Û·Î ÀÔ·Â ÇØÁÖ¼¼¿ä."));
+            PrintErrorLog(nameErrorLog, "ÇÑ±Û·Î ÀÔ·Â ÇØÁÖ¼¼¿ä.");
             return '\0'; // ÀÔ·Â ¸·À½
         }
 
@@ -161,11 +147,11 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void ImageSetting(bool _mode)
     { // »çÁøÂï±âÀÎÁö, ÀÌ¹ÌÁö °í¸£±âÀÎÁö È®ÀÎÇÏ°í, 1PÀÇ Image¸¦ ¼¼ÆÃÇÏ´Â Btn ¿¬µ¿ Method
-        if(ProfileManager.Instance.ImageSet(_mode, true, nameErrorLog, ProfileManager.Instance.tempName, imageIndex))
+        if(ProfileManager.Instance.ImageSet(_mode, true, ProfileManager.Instance.tempName, imageIndex, nameErrorLog))
         { // ÇÁ·ÎÇÊ ¼¼ÆÃ ¿Ï·á ÇßÀ» ¶§
           // ·Îºñ¿¡¼­´Â º»ÀÎÀÇ Profile List¸¦ Á¦¿ÜÇÏ°í Ãâ·ÂÇØ¾ßÇÔ
-            if (isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P, null);
-            else ProfileManager.Instance.PrintProfileList(profileParent, null, null);
+            if (isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P);
+            else ProfileManager.Instance.PrintProfileList(profileParent, null);
 
             // Panelµé Active
             if (_mode)
@@ -184,7 +170,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
             }
             else
             { // »çÁø Âï±â ¹öÆ° ´­·¶À» ¶§
-                checkPanel.SetActive(false);
+                checkPanel.SetActive(true);
                 createImagePanel.SetActive(false);
             }
         }
@@ -213,10 +199,19 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    private void PrintErrorLog(TMP_Text logObj, string log)
+    {
+        if (DialogManager.instance.log_co != null)
+        {
+            StopCoroutine(DialogManager.instance.log_co);
+        }
+        DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(logObj, log));
+    }
+
     public void TakeAgainPicture()
     { // »çÁø Âï°í³­ µÚ ´Ù½Ã Âï±â Btn ¿¬µ¿ Method
         SQL_Manager.instance.SQL_DeleteProfile(ProfileManager.Instance.tempIndex);
-        cameraManager.CameraOpen();
+        cameraManager.CameraOpen(CaptureImage);
     }
 
     #region Active
@@ -254,8 +249,8 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
         CreateNamePanel.SetActive(false);
 
         // ·Îºñ¿¡¼­´Â º»ÀÎÀÇ Profile List¸¦ Á¦¿ÜÇÏ°í Ãâ·ÂÇØ¾ßÇÔ
-        if(isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P, null);
-        else ProfileManager.Instance.PrintProfileList(profileParent, null, null);
+        if(isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P);
+        else ProfileManager.Instance.PrintProfileList(profileParent, null);
         
         if (ProfileManager.Instance.isUpdate)
         { //¼öÁ¤¸ğµåÀÌ¸é µÚ·Î°¡±â ´­·¶À» ¶§ ´­¸° ÇÁ·ÎÇÊ ¶ç¿ì±â
@@ -285,8 +280,18 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
         iconPanel.SetActive(false);
 
         // ·Îºñ¿¡¼­´Â º»ÀÎÀÇ Profile List¸¦ Á¦¿ÜÇÏ°í Ãâ·ÂÇØ¾ßÇÔ
-        if (isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P, null);
-        else ProfileManager.Instance.PrintProfileList(profileParent, null, null);
+        if (isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P);
+        else ProfileManager.Instance.PrintProfileList(profileParent, null);
+    }
+
+    public void CreateImagePanelPictureConfirmBtn()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        CaptureImage.sprite = null;
+        checkPanel.SetActive(false);
+        createImagePanel.SetActive(false);
+        if (isLobby) ProfileManager.Instance.PrintProfileList(profileParent, ProfileManager.Instance.ProfileIndex1P);
+        else ProfileManager.Instance.PrintProfileList(profileParent, null);
     }
 
     public void CurrentProfilePanelSelectBtn()

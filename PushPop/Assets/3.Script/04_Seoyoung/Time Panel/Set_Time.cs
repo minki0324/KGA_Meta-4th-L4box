@@ -79,17 +79,6 @@ public class Set_Time : MonoBehaviour
     #endregion
 
     #region Other Method
-    private void Init()
-    {
-        
-        Confirm_Btn.onClick.AddListener(ConfirmBtn_Clicked);
-        Back_Btn.onClick.AddListener(() => {
-            gameObject.SetActive(false);
-            
-
-        });
-    }
-
     private void Calculate_Time()
     {
         sec = time % 60;    //60으로 나눈 나머지 = 초
@@ -102,9 +91,7 @@ public class Set_Time : MonoBehaviour
         {
             TimeText.text = $"{string.Format("{0:0}", min)}분 {sec}초";
         }
-      
     }
-
 
     public void IncreaseTimeBtn_Clicked()
     {
@@ -120,49 +107,6 @@ public class Set_Time : MonoBehaviour
         Calculate_Time();
     }
 
-
-    //InputField에 시간 직접 입력
-    public void TextFieldValue_Changed(string text)
-    {
-        int InputNum = 0;
-        bool bIsNumber;
-
-        bIsNumber = int.TryParse(text, out InputNum);
-
-        if (bIsNumber)
-        {
-            time = InputNum;
-        }
-        else
-        {
-            if (TimeText.text == $"{string.Format("{0:0}", min)}분 {sec}초")
-            {
-
-            }
-            else
-            {
-                Debug.Log("숫자가 아닙니다");
-                time = 300;
-                Calculate_Time();
-            }
-
-
-            if (TimeText.text == string.Empty || time < 60)
-            {
-                Debug.Log("시간 미입력 시");
-                time = 60;
-                Calculate_Time();
-            }
-
-            if (time > 900)
-            {
-                time = 900;
-                Calculate_Time();
-            }
-        }
-    }
-
-
     public void ConfirmBtn_Clicked()
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
@@ -170,6 +114,7 @@ public class Set_Time : MonoBehaviour
         if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
         { // 푸시푸시 시작
             pushpushMode_Canvas.SetActive(true);
+            help_Canvas.SetActive(true);
             help_Canvas.transform.SetParent(pushpushMode_Canvas.transform);
             help_Canvas.transform.SetSiblingIndex(3);
         }
@@ -187,11 +132,9 @@ public class Set_Time : MonoBehaviour
             bombMode_Canvas.SetActive(true);
             bombMode_Canvas.transform.GetComponent<Bomb>().PrintVersus();
         }     
-        help_Canvas.SetActive(true);
         main_Canvas.gameObject.SetActive(false);
         gameObject.SetActive(false);
     }
-
 
     public void BackBtnClicked()
     {
