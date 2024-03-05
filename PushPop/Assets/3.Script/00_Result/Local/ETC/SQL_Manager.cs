@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -467,7 +466,6 @@ public class SQL_Manager : MonoBehaviour
             }
             string SQL_command = "INSERT INTO Image (UID, Profile_Index, DefaultIndex) VALUES (@UID, @Index, @DefaultIndex)";
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
-            Debug.Log(index);
 
             // 파라미터 추가
             cmd.Parameters.AddWithValue("@UID", uid);
@@ -522,7 +520,6 @@ public class SQL_Manager : MonoBehaviour
             {
                 return;
             }
-            Debug.Log(filename);
             // 2. 기존 name찾아서 name 변경
             string name_command = string.Format(@"UPDATE Profile SET UID = '{0}', User_name = '{1}' WHERE UID = '{2}' AND Profile_Index = '{3}'", uid, newName, uid, profileIndex);
             MySqlCommand cmd = new MySqlCommand(name_command, connection);
@@ -685,9 +682,6 @@ public class SQL_Manager : MonoBehaviour
                 }
                 if (!reader.IsClosed) reader.Close();
             }
-
-            Debug.Log(push.Count);
-
             return push;
         }
         catch (Exception e)

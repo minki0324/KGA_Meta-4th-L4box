@@ -102,11 +102,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
             {
                 if (DataManager2.instance.vulgarism_Arr[i] != string.Empty)
                 {
-                    if(DialogManager.instance.log_co != null)
-                    {
-                        StopCoroutine(DialogManager.instance.log_co);
-                    }
-                    DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "ºñ¼Ó¾î´Â Æ÷ÇÔ½ÃÅ³ ¼ö ¾ø½À´Ï´Ù."));
+                    PrintErrorLog(nameErrorLog, "ºñ¼Ó¾î´Â Æ÷ÇÔ½ÃÅ³ ¼ö ¾ø½À´Ï´Ù.");
                     inputProfileName.text = String.Empty;  
                     return;
                 }
@@ -117,11 +113,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
         { // ÃÊ¼º Ã¼Å©
             if (Regex.IsMatch(inputProfileName.text[i].ToString(), @"[^0-9a-zA-Z°¡-ÆR]"))
             {
-                if (DialogManager.instance.log_co != null)
-                {
-                    StopCoroutine(DialogManager.instance.log_co);
-                }
-                DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "ÃÊ¼º ÀÔ·ÂÀº ºÒ°¡´ÉÇÕ´Ï´Ù."));
+                PrintErrorLog(nameErrorLog, "ÃÊ¼º ÀÔ·ÂÀº ºÒ°¡´ÉÇÕ´Ï´Ù.");
                 inputProfileName.text = String.Empty;  
                 return;
             }
@@ -135,12 +127,8 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
             createImagePanel.SetActive(true);
         }
         else
-        { 
-            if (DialogManager.instance.log_co != null)
-            {
-                StopCoroutine(DialogManager.instance.log_co);
-            }
-            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "2~6±ÛÀÚÀÇ ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä."));
+        {
+            PrintErrorLog(nameErrorLog, "2~6±ÛÀÚÀÇ ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä.");
         }
     }
 
@@ -149,11 +137,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
         // ÀÔ·ÂµÈ ¹®ÀÚ°¡ ¿µ¾î ¾ËÆÄºª, ¼ıÀÚÀÎ °æ¿ì ÀÔ·ÂÀ» ¸·À½
         if ((addedChar >= 'a' && addedChar <= 'z') || (addedChar >= 'A' && addedChar <= 'Z') || (addedChar >= '0' && addedChar <= '9'))
         {
-            if (DialogManager.instance.log_co != null)
-            {
-                DialogManager.instance.StopCoroutine(DialogManager.instance.log_co);
-            }
-            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "ÇÑ±Û·Î ÀÔ·Â ÇØÁÖ¼¼¿ä."));
+            PrintErrorLog(nameErrorLog, "ÇÑ±Û·Î ÀÔ·Â ÇØÁÖ¼¼¿ä.");
             return '\0'; // ÀÔ·Â ¸·À½
         }
 
@@ -213,6 +197,15 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
         {
             ExitBtn.interactable = false;
         }
+    }
+
+    private void PrintErrorLog(TMP_Text logObj, string log)
+    {
+        if (DialogManager.instance.log_co != null)
+        {
+            StopCoroutine(DialogManager.instance.log_co);
+        }
+        DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(logObj, log));
     }
 
     public void TakeAgainPicture()

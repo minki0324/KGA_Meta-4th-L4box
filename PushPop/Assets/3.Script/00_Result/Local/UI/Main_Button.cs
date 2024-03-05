@@ -27,7 +27,6 @@ public class Main_Button : MonoBehaviour
     [SerializeField] private GameObject gameModePanel;
   
 
-    [Header("모드별 캔버스")]
 
     [SerializeField] private Help_Canvas help_Cavas;
 

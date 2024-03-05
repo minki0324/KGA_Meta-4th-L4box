@@ -19,10 +19,7 @@ public enum Turn
 /// </summary>
 public class Bomb : MonoBehaviour, IPointerClickHandler
 {
-    [SerializeField] private GameObject changeBtn; // Back버튼을 모든 모드 통합으로 써서 ... 스크립트로 끄려면 참조할수밖에 없읍,,
-    [SerializeField] private GameObject selectBtn;// Back버튼을 모든 모드 통합으로 써서 ... 스크립트로 끄려면 참조할수밖에 없읍,,
-
-    [Header("1P Player")]
+    [Header("1P Player")] [Space(5)]
     [SerializeField] private Image playerImage1P = null;    // 로비에서 보이는 1P Image
     [SerializeField] private TMP_Text playerName1P = null;  // 로비에서 보이는 1P Name
     public List<GameObject> popList1P = new List<GameObject>(); // 1P의 Pushpop List
@@ -30,7 +27,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private TMP_Text inGameText1P = null;  // 게임 화면에서 보이는 1P Name
     private bool Quit1P = false;    // 게임 화면에서 뒤로가기 버튼 1P
 
-    [Header("2P Player")]
+    [Header("2P Player")] [Space(5)]
     public Image playerImage2P = null;    // 로비에서 보이는 2P Image
     public Image tempPlayerImage2P = null;  // 프로필 선택 판넬에서 보이는 2P Image
     public TMP_Text playerName2P = null;    // 로비에서 보이는 2P Name
@@ -40,9 +37,9 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Image inGameImage2P = null;    // 게임 화면에서 보이는 2P Image
     [SerializeField] private TMP_Text inGameText2P = null;  // 게임 화면에서 보이는 2P Name
     private bool Quit2P = false;    // 게임 화면에서 뒤로가기 버튼 2P
-    private bool isUpdate = false;
+    private bool isUpdate = false; // Profile 수정 중인지 확인
 
-    [Header("Profile Obj")]
+    [Header("Profile Obj")] [Space(5)]
     [SerializeField] private GameObject profilePanel = null;    // Profile Panel
     [SerializeField] private Transform profileParent = null;    // Profile Panel Parent    
     [SerializeField] private string profile2PName = null;   // Profile Add시 게임매니저나 SQL매니저에게 보내줄 string 값
@@ -53,7 +50,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private string imagePath = string.Empty;   // Camera Image Save Path
     public Image CaptureImage;
 
-    [Header("Panel")]
+    [Header("Panel")] [Space(5)]
     public GameObject MainPanel = null; // 게임 로비
     public GameObject GamePanel = null; // 게임 화면
     public GameObject CreateNamePanel = null;   //이름 입력 판넬
@@ -65,12 +62,12 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public GameObject main_Canvas = null;   // 메인 캔버스
     public GameObject WarningPanel = null;
 
-    [Header("ErrorLog")]
+    [Header("ErrorLog")] [Space(5)]
     [SerializeField] private TMP_Text nameErrorLog = null; // 한글만 입력해주세요 에러로그
     [SerializeField] private TMP_Text imageLog = null;    // 이미지를 선택해주세요 에러로그
     [SerializeField] private TMP_Text need2P = null;  // 2P를 선택해주세요 에러로그
 
-    [Header("BombGame")]
+    [Header("BombGame")] [Space(5)]
     [SerializeField] private bool isStart = false;  // 게임 시작 했는지 판단하는 Bool값
     [SerializeField] private Turn turn = new Turn();    // Turn enum
     [SerializeField] private SpriteAtlas atlas = null;  // spriteatlas
@@ -90,24 +87,27 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     [SerializeField] private GameObject readyPanel; // 처음 준비 모드 패널
     [SerializeField] private TMP_Text readyText; // 처음 준비 모드 텍스트 
 
-    [Header("Other Component")]
+    [Header("Other Component")] [Space(5)]
     [SerializeField] private CameraManager cameraManager;
     [SerializeField] private Button profileBtn;
     [SerializeField] private Button gameStartBtn;
     [SerializeField] private Sprite quitNormal_Sprite; //quit 버튼 안눌렸을 때 스프라이트
     [SerializeField] private Sprite quitPressed_Sprite; //quit 버튼 눌렷을 때 스프라이트
     [SerializeField] private Button[] quitBtn;  // 양쪽의 나가기 버튼
+    [SerializeField] private Button changeBtn; // Back버튼을 모든 모드 통합으로 써서 ... 스크립트로 끄려면 참조할수밖에 없읍,,
+    [SerializeField] private Button selectBtn;// Back버튼을 모든 모드 통합으로 써서 ... 스크립트로 끄려면 참조할수밖에 없읍,,
+
     public NewProfile_Infomation player2PInfo = null;
 
-    [Header("Versus")]
-    [SerializeField] private TMP_Text[] winTexts;
-    [SerializeField] private TMP_Text winText;
-    [SerializeField] private TMP_Text[] loseTexts;
-    [SerializeField] private TMP_Text loseText;
-    [SerializeField] private Image[] winProfileImages;
-    [SerializeField] private Image winProfileImage;
-    [SerializeField] private Image[] loseProfileImages;
-    [SerializeField] private Image loseProfileImage;
+    [Header("Versus")] [Space(5)]
+    [SerializeField] private TMP_Text[] winTexts; // Lobby의 2개의 결과 Text
+    [SerializeField] private TMP_Text winText; // Result의 1개의 결과 Text
+    [SerializeField] private TMP_Text[] loseTexts; // Lobby의 2개의 결과 Text
+    [SerializeField] private TMP_Text loseText; // Result의 1개의 결과 Text
+    [SerializeField] private Image[] winProfileImages; // Lobby의 2개의 결과 Image
+    [SerializeField] private Image winProfileImage; // Result의 1개의 결과 Image
+    [SerializeField] private Image[] loseProfileImages; // Lobby의 2개의 결과 Image
+    [SerializeField] private Image loseProfileImage; // Result의 1개의 결과 Image
 
     //waterfall 회전 변수들
     private bool rotateDirection = true; // true면 회전 방향이 +, false면 회전 방향이 -
@@ -131,8 +131,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void OnEnable()
     {
         // 버튼 사이즈 설정
-        PushPop.Instance.buttonSize = new Vector2(57f, 57f);
-        PushPop.Instance.percentage = 0.477f;
+        PushPop.Instance.buttonSize = new Vector2(56.8f, 56.8f);
+        PushPop.Instance.percentage = 0.476f;
 
         GameManager.Instance.GameStart();
 
@@ -230,10 +230,10 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
         // Active
         CurrentProfile.SetActive(false);
-        selectBtn.SetActive(false);
+        selectBtn.gameObject.SetActive(false);
         playerImage2P.gameObject.SetActive(true);
         playerName2P.gameObject.SetActive(true);
-        changeBtn.SetActive(true);
+        changeBtn.gameObject.SetActive(true);
         gameStartBtn.interactable = true;
 
         PrintVersus();
@@ -334,11 +334,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             {
                 if (DataManager2.instance.vulgarism_Arr[i] != string.Empty)
                 {
-                    if (DialogManager.instance.log_co != null)
-                    {
-                        StopCoroutine(DialogManager.instance.log_co);
-                    }
-                    DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "비속어는 포함시킬 수 없습니다."));
+                    PrintErrorLog(nameErrorLog, "비속어는 포함시킬 수 없습니다.");
+
                     profile2PInput.text = String.Empty;
                     return;
                 }
@@ -349,11 +346,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         { // 초성 체크
             if (Regex.IsMatch(profile2PInput.text[i].ToString(), @"[^0-9a-zA-Z가-힣]"))
             {
-                if (DialogManager.instance.log_co != null)
-                {
-                    StopCoroutine(DialogManager.instance.log_co);
-                }
-                DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "초성 입력은 불가능합니다."));
+                PrintErrorLog(nameErrorLog, "초성 입력은 불가능합니다.");
+               
                 profile2PInput.text = String.Empty;
                 return;
             }
@@ -368,11 +362,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            if (DialogManager.instance.log_co != null)
-            {
-                StopCoroutine(DialogManager.instance.log_co);
-            }
-            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "2~6글자의 이름을 입력해주세요."));
+            PrintErrorLog(nameErrorLog, "2~6글자의 이름을 입력해주세요.");
         }
     }
 
@@ -403,11 +393,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // 입력된 문자가 영어 알파벳, 숫자인 경우 입력을 막음
         if ((addedChar >= 'a' && addedChar <= 'z') || (addedChar >= 'A' && addedChar <= 'Z') || (addedChar >= '0' && addedChar <= '9'))
         {
-            if (DialogManager.instance.log_co != null)
-            {
-                DialogManager.instance.StopCoroutine(DialogManager.instance.log_co);
-            }
-            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(nameErrorLog, "한글로 입력 해주세요."));
+            PrintErrorLog(nameErrorLog, "한글로 입력 해주세요.");
             return '\0'; // 입력 막음
         }
 
@@ -427,24 +413,24 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     { // 게임 시작 버튼 눌렀을 때 2P 설정이 되어 있는지 확인 후 GamePanel 켜주는 Btn 연동 Method
         if(isSelect2P)
         {
+            // Sound 출력
             AudioManager.instance.SetCommonAudioClip_SFX(0);
             AudioManager.instance.SetAudioClip_BGM(5);
 
+            // Active 제어
             MainPanel.gameObject.SetActive(false);
             help_Canvas.gameObject.SetActive(false);
             GamePanel.SetActive(true);
             help_Canvas.gameObject.SetActive(false);
             WarningPanel.SetActive(false);
+
+            // 초기 세팅
             ButtonSetting();
             InitSetting();
         }
         else
         { // 2P 선택이 되지 않은 경우 ErrorLog를 출력하고 return
-            if (DialogManager.instance.log_co != null)
-            {
-                StopCoroutine(DialogManager.instance.log_co);
-            }
-            DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(need2P, "2P를 선택해주세요."));
+            PrintErrorLog(need2P, "2P를 선택해주세요.");
             return;
         }
     }
@@ -503,7 +489,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         SetSpriteImage(Frame[1], popList2P);
         Frame[0].transform.GetChild(0).transform.localPosition = bottomPos[0];
         Frame[1].transform.GetChild(0).transform.localPosition = bottomPos[1];
-        
+
 
         // 버튼 interactable 설정하여 누구의 턴인지 설정
         TurnSetting();
@@ -606,7 +592,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             GameObject temp = PushPop.Instance.pushPopBoardObject[0];
             PushPop.Instance.pushPopBoardObject.Remove(temp);
             Destroy(temp);
-            for(int i = 0; i < PushPop.Instance.activePos.Count; i++)
+            for (int i = 0; i < PushPop.Instance.activePos.Count; i++)
             {
                 PushPop.Instance.activePos[i].SetActive(false);
             }
@@ -626,17 +612,20 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private IEnumerator Waterfall_co()
     { // 시간에 따라 bubble속의 waterfall의 sprite를 결정하고 uppertimer가 0보다 작아지면 게임 종료
         waterfall.sprite = upperBubbleSprite[0]; // 방울의 sprite를 초기 상태로 변경
+        int lastSpriteIndex = 0; // 마지막으로 변경된 스프라이트 인덱스를 추적
 
         while (upperTimer > 0)
         { // upperTimer가 0보다 클 때까지 반복
             upperTimer -= Time.deltaTime; // upperTimer 감소
 
             // upperTimer 값에 따라 waterfall의 sprite 변경
-            if (upperTimer < 2) waterfall.sprite = upperBubbleSprite[5];
-            else if (upperTimer < 4) waterfall.sprite = upperBubbleSprite[4];
-            else if (upperTimer < 6) waterfall.sprite = upperBubbleSprite[3];
-            else if (upperTimer < 8) waterfall.sprite = upperBubbleSprite[2];
-            else if (upperTimer < 10) waterfall.sprite = upperBubbleSprite[1];
+            int spriteIndex = GetSpriteIndexByTimer(upperTimer);
+            if (spriteIndex != lastSpriteIndex)
+            {
+                waterfall.sprite = upperBubbleSprite[spriteIndex];
+                lastSpriteIndex = spriteIndex; // 마지막으로 변경된 스프라이트 인덱스 업데이트
+            }
+
 
             // Z 축 회전 처리
             if (rotateDirection)
@@ -664,6 +653,16 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // while문을 벗어났다면 upperTimer가 0보다 작아졌다는 것을 의미하기에 게임 종료
         AudioManager.instance.SetAudioClip_SFX(0, false);
         EndGame();
+    }
+
+    private int GetSpriteIndexByTimer(float timer)
+    {
+        if (timer < 2) return 5;
+        if (timer < 4) return 4;
+        if (timer < 6) return 3;
+        if (timer < 8) return 2;
+        if (timer < 10) return 1;
+        return 0; // 기본 값
     }
 
     private IEnumerator ReadyGame_Co()
@@ -777,6 +776,15 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         Ranking.Instance.LoadVersusResult(winTexts, loseTexts, winProfileImages, loseProfileImages);
     }
     #endregion
+
+    private void PrintErrorLog(TMP_Text logObj, string log)
+    {
+        if (DialogManager.instance.log_co != null)
+        {
+            StopCoroutine(DialogManager.instance.log_co);
+        }
+        DialogManager.instance.log_co = StartCoroutine(DialogManager.instance.Print_Dialog_Co(logObj, log));
+    }
 
     #region Button Set
     public void QuitBtn(int _player)
@@ -911,8 +919,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
         GameManager.Instance.gameMode = Mode.None;
         main_Canvas.SetActive(true);
-        selectBtn.SetActive(true);
-        changeBtn.SetActive(false);
+        selectBtn.gameObject.SetActive(true);
+        changeBtn.gameObject.SetActive(false);
         playerImage2P.gameObject.SetActive(false);
         playerName2P.gameObject.SetActive(false);
         GamePanel.SetActive(false);
