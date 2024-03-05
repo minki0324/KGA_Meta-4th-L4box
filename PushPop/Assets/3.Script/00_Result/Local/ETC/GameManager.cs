@@ -11,7 +11,8 @@ public enum Mode // GameMode
     Speed,
     Memory,
     Bomb,
-    None
+    Profile,
+    Main
 }
 #region Other Class
 public class PushPushObject

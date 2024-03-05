@@ -57,13 +57,14 @@ public class NewProfile_Infomation : MonoBehaviour
             ProfileManager.Instance.DefaultImage1P = SQL_Manager.instance.Profile_list[Receive_Index()].defaultImage;
             ProfileManager.Instance.UID = SQL_Manager.instance.UID;
 
-            NewProfileCanvas profile = FindObjectOfType<NewProfileCanvas>();
+            ProfileCanvas profile = FindObjectOfType<ProfileCanvas>();
             // 프로필 이미지 출력
-            SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode1P, profile.SelectProfileImage, ProfileManager.Instance.ProfileIndex1P);
+            SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode1P, profile.ProfileIamge, ProfileManager.Instance.ProfileIndex1P);
+            profile.ProfileText.text = ProfileManager.Instance.ProfileName1P;
 
-            profile.SelectProfileText.text = ProfileManager.Instance.ProfileName1P;
-            profile.ExitBtn.gameObject.SetActive(false);
-            profile.CurrentProfilePanel.SetActive(true);
+            profile.Select.SetActive(false);
+            profile.ExitButton.SetActive(false);
+            profile.CurrentProfile.SetActive(true);
         }
     }
 

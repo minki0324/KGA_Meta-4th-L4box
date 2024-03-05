@@ -961,7 +961,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         AudioManager.instance.SetAudioClip_BGM(0);
 
-        GameManager.Instance.gameMode = Mode.None;
+        GameManager.Instance.gameMode = Mode.Profile;
         main_Canvas.SetActive(true);
         selectBtn.gameObject.SetActive(true);
         changeBtn.gameObject.SetActive(false);
