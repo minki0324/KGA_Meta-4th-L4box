@@ -80,7 +80,7 @@ public class ProfileManager : MonoBehaviour
             PlayerPrefs.Save();
         }
         // GUID를 가지고 DB와 연동하여 UID를 부여받음
-        Debug.Log(uniqueID);
+        DebugLog.instance.Adding_Message(uniqueID);
         SQL_Manager.instance.SQL_AddUser(uniqueID);
     }
 
