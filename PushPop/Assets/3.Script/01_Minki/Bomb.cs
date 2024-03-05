@@ -705,19 +705,10 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         Ranking.Instance.SetBombVersus(ProfileManager.Instance.ProfileIndex1P, ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex2P, ProfileManager.Instance.ProfileName2P, result);
        
         // 종료 애니메이션 켜주고 애니메이션 나올 위치 설정
-        upperBubble_Bomb.gameObject.SetActive(true);
-        bottomBubble_Bomb.gameObject.SetActive(true);
-        upperBubble_Bomb.transform.GetChild(0).GetComponent<Animator>().speed = 1f;
-        upperBubble_Bomb.transform.GetChild(1).GetComponent<Animator>().speed = 1f;
-        bottomBubble_Bomb.transform.GetChild(0).GetComponent<Animator>().speed = 1f;
-        bottomBubble_Bomb.transform.GetChild(1).GetComponent<Animator>().speed = 1f;
-        bottomBubble_Bomb.transform.GetChild(2).GetComponent<Animator>().speed = 1f;
+        BombAnimatorSpeed(turn, true);
+      
         AudioManager.instance.SetAudioClip_SFX(1, false);
 
-        //if (turn.Equals(Turn.Turn1P)) endAnimation.transform.localPosition = bottomPos[0];
-        //else if (turn.Equals(Turn.Turn2P)) endAnimation.transform.localPosition = bottomPos[1];
-
-        //endAnimation.SetTrigger("EndGame");
         StartCoroutine(Result_Co());
     }
 
@@ -725,11 +716,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     { // 결과창 출력 코루틴
         // 애니메이션 출력 기다림
         yield return new WaitForSeconds(2f);
-        upperBubble_Bomb.transform.GetChild(0).GetComponent<Animator>().speed = 0f;
-        upperBubble_Bomb.transform.GetChild(1).GetComponent<Animator>().speed = 0f;
-        bottomBubble_Bomb.transform.GetChild(0).GetComponent<Animator>().speed = 0f;
-        bottomBubble_Bomb.transform.GetChild(1).GetComponent<Animator>().speed = 0f;
-        bottomBubble_Bomb.transform.GetChild(2).GetComponent<Animator>().speed = 0f;
+        BombAnimatorSpeed(turn, false);
 
         // 결과창 출력
         AudioManager.instance.Stop_SFX();
@@ -743,6 +730,44 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // 오브젝트들 삭제
         ResetGame();
         yield return null;
+    }
+
+    private void BombAnimatorSpeed(Turn _turn, bool _play)
+    {
+        if(_play)
+        {
+            upperBubble_Bomb.gameObject.SetActive(true);
+            bottomBubble_Bomb.gameObject.SetActive(true);
+            SetAnimatorSpeed(upperBubble_Bomb, 1f);
+            SetAnimatorSpeed(bottomBubble_Bomb, 1f);
+            if (_turn.Equals(Turn.Turn1P))
+            {
+                upperBubble_Bomb.transform.localPosition = upperPos[0];
+                bottomBubble_Bomb.transform.localPosition = bottomPos[0];
+            }
+            else if (_turn.Equals(Turn.Turn2P))
+            {
+                upperBubble_Bomb.transform.localPosition = upperPos[1];
+                bottomBubble_Bomb.transform.localPosition = bottomPos[1];
+            }
+        }
+        else if (!_play)
+        {
+            SetAnimatorSpeed(upperBubble_Bomb, 0f);
+            SetAnimatorSpeed(bottomBubble_Bomb, 0f);
+        }
+    }
+
+    private void SetAnimatorSpeed(GameObject bubble, float speed)
+    {
+        for (int i = 0; i < bubble.transform.childCount; i++)
+        {
+            Animator animator = bubble.transform.GetChild(i).GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.speed = speed;
+            }
+        }
     }
 
     private void QuitGame()
