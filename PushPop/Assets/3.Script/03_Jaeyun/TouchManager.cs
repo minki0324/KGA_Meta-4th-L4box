@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.VFX;
 
 public class TouchManager : MonoBehaviour
@@ -10,10 +11,14 @@ public class TouchManager : MonoBehaviour
     public Camera effectCamera;
     Coroutine touchTimer;
     public Transform particleCanvas;
+    [SerializeField] private RawImage rawImage;
+
 
     void Start()
     {
         visualEffects = VFXPrefab.GetComponentsInChildren<VisualEffect>();
+        rawImage.texture.width = Screen.width;
+        rawImage.texture.height = Screen.height;
     }
 
     void Update()
@@ -22,19 +27,23 @@ public class TouchManager : MonoBehaviour
     }
 
     private void ClickEffect()
-    {
+    {       
+        //ui상 클릭한 좌표를 world로 바꿔서 그 위치에 생성
         if (Input.anyKeyDown)
         {
             if (touchTimer != null)
             {
                 StopCoroutine(touchTimer);
             }
-            touchTimer = StartCoroutine(ClickStartTimer_Co());
-
-            GameObject vfxEffect = Instantiate(VFXPrefab, particleCanvas);
+         
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            pos.z = 0;
-            vfxEffect.transform.position = pos;
+            pos.z = 1;
+
+
+            GameObject vfxEffect = Instantiate(VFXPrefab, pos, Quaternion.identity);
+            vfxEffect.transform.parent = particleCanvas;
+
+         
             visualEffects = vfxEffect.GetComponentsInChildren<VisualEffect>();
 
             for (int i = 0; i < visualEffects.Length; i++)

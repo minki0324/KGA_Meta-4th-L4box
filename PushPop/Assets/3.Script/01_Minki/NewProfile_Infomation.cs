@@ -40,6 +40,7 @@ public class NewProfile_Infomation : MonoBehaviour
         { // Bomb 모드에서 2번째 Player를 선택했을 때
             Bomb bomb = FindObjectOfType<Bomb>();
             bomb.SelectProfile.SetActive(false);
+            Receive_Infomation();
 
             // 프로필 이미지 출력
             SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[Receive_Index()].imageMode, bomb.tempPlayerImage2P, SQL_Manager.instance.Profile_list[Receive_Index()].index);
@@ -80,9 +81,9 @@ public class NewProfile_Infomation : MonoBehaviour
         }
         else if (GameManager.Instance.gameMode == Mode.Bomb)
         {
-           /* Bomb bomb = FindObjectOfType<Bomb>();
+            Bomb bomb = FindObjectOfType<Bomb>();
             bomb.player2PInfo = this;
-            bomb.deletePanel.SetActive(true);*/
+            bomb.deletePanel.SetActive(true);
         }
     }
     #endregion

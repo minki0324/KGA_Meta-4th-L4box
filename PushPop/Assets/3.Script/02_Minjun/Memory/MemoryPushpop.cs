@@ -109,8 +109,6 @@ public class MemoryPushpop : MonoBehaviour
 
     private void onStageClear()
     {//스테이지  클리어시 불리는 메소드
-        Debug.Log(MemoryManager.Instance.currentStage + " : 스테이지클리어");
-
         //코루틴으로 텀주고 훌륭해요 띄워주기 2초
         StartCoroutine(Clear_co());
 

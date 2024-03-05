@@ -89,24 +89,10 @@ public class GameManager : MonoBehaviour, IGameMode
     public int Score = 0;
     public float TimeScore = 0;
 
-    [Header("User Infomation")]
-    public int UID;
-    public string ProfileName;
-    public int ProfileIndex;
-    public int DefaultImage;
-    public Sprite[] ProfileImages;
-    public bool IsImageMode = true; // false = 사진찍기, true = 이미지 선택
-
     [Header("Speed Mode")]
     public float count = 0.25f;
     public Coroutine pushpushCreate_Co = null;
     public Coroutine slider_Co = null;
-
-    [Header("2P Player")]
-    public string ProfileName2P = string.Empty;
-    public int ProfileIndex2P = 0;
-    public int DefaultImage2P = 0;
-    public bool IsimageMode2P = true;
 
     [Header("Speed Print")]
     [SerializeField] private TMP_Text[] printName;
@@ -118,7 +104,6 @@ public class GameManager : MonoBehaviour, IGameMode
 
     [Header("Other")]
     [SerializeField] private SpriteAtlas atlas;
-    public Sprite noneSprite;
     public bool backButtonClick = false;
     [SerializeField] private Sprite[] btnSprites;
     public bool isStart = false;
@@ -126,9 +111,6 @@ public class GameManager : MonoBehaviour, IGameMode
     public int boardName = 0; // mold name
     public int currentTime = 0;
     public Coroutine speedCreate = null;
-
-    public Sprite CacheProfileImage1P;
-
     #region Unity Callback
     private void Awake()
     {
@@ -286,12 +268,12 @@ public class GameManager : MonoBehaviour, IGameMode
 
                         PushPushObject newPush = new PushPushObject(puzzleLogic.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
                         string json = JsonUtility.ToJson(newPush);
-                        SQL_Manager.instance.SQL_AddPushpush(json, ProfileIndex);
+                        SQL_Manager.instance.SQL_AddPushpush(json, ProfileManager.Instance.ProfileIndex1P);
 
                         pushpushScript.result.SetActive(true);
 
                         // PushPushList 세팅
-                        List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileIndex);
+                        List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileManager.Instance.ProfileIndex1P);
                         if (pushlist == null)
                         {
                             Debug.Log("널");
@@ -357,7 +339,7 @@ public class GameManager : MonoBehaviour, IGameMode
                         speedTimer.StopCoroutine(speedTimer.timer);
                         speedTimer.TimerObj.SetActive(false);
 
-                        Ranking.Instance.SetTimer(ProfileName, ProfileIndex, int.Parse(PushPop.Instance.boardSprite.name), speedTimer.currentTime);
+                        Ranking.Instance.SetTimer(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, int.Parse(PushPop.Instance.boardSprite.name), speedTimer.currentTime);
                         speedTimer.resultPanel.SetActive(true);
                         speedTimer.Result();
                     }
@@ -497,40 +479,6 @@ public class GameManager : MonoBehaviour, IGameMode
         /*bubble.touchCount = 1;*/
         bubble.touchCount = Random.Range(10, 21); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
     }
-
-    /// <summary>
-    /// 변경할 gameobject를 매개변수로 받아서 그 안의 Image Component를 통해 프로필 이미지를 출력
-    /// </summary>
-    /// <param name="printobj"></param>
-    public void ProfileImagePrint(GameObject printobj)
-    {
-        Image image = printobj.GetComponent<Image>();
-
-        if (ProfileManager.Instance.IsImageMode1P) // 이미지 선택모드
-        {   // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
-            CacheProfileImage1P = ProfileManager.Instance.ProfileImages[ProfileManager.Instance.DefaultImage1P];
-            image.sprite = CacheProfileImage1P;
-        }
-        else if (!ProfileManager.Instance.IsImageMode1P) // 사진찍기 모드
-        {
-            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, ProfileManager.Instance.ProfileIndex1P);
-            Sprite profileSprite = TextureToSprite(profileTexture);
-            CacheProfileImage1P = profileSprite;
-            image.sprite = CacheProfileImage1P;
-        }
-    }
-
-    /// <summary>
-    /// SQL_Manager에서 Texture2D로 변환한 이미지파일을 Sprite로 한번 더 변환하는 Method
-    /// </summary>
-    /// <param name="texture"></param>
-    /// <returns></returns>
-    public Sprite TextureToSprite(Texture2D texture)
-    {
-        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
-
-        return sprite;
-    }
     #endregion
 
     public void PrintSpeed(int _spriteName)
@@ -545,7 +493,7 @@ public class GameManager : MonoBehaviour, IGameMode
         {
             printTimer[i].text = string.Empty;
             printName[i].text = string.Empty;
-            printImage[i].sprite = noneSprite;
+            printImage[i].sprite = ProfileManager.Instance.NoneBackground;
         }
     }
 

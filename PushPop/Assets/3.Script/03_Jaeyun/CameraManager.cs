@@ -11,16 +11,17 @@ using UnityEngine.UI;
 public class CameraManager : MonoBehaviour
 {
 	[SerializeField] private Image captureImage;
-	[SerializeField] private ProfileManager profile;
+	[SerializeField] private NewProfileCanvas profile;
+	[SerializeField] private Bomb bomb;
 	private Texture2D captureTexture; // Create Image
 
-	public void CameraOpen() // Camera Open method
+	public void CameraOpen(Image capture) // Camera Open method
     {
 		if (NativeCamera.IsCameraBusy()) return; // camera X 
-		TakePicture();
+		TakePicture(capture);
 	}
 
-	private void TakePicture()
+	private void TakePicture(Image capture)
     {
 		string _filePath = $"{Application.persistentDataPath}/Profile";
 		Debug.Log(_filePath);
@@ -58,7 +59,7 @@ public class CameraManager : MonoBehaviour
 				// capture texture 표시
 				captureTexture = texture;
 				Rect rect = new Rect(0, 0, captureTexture.width, captureTexture.height);
-				captureImage.sprite = Sprite.Create(captureTexture, rect, new Vector2(0.5f, 0.5f));
+				capture.sprite = Sprite.Create(captureTexture, rect, new Vector2(0.5f, 0.5f));
 
 				// Profile_index 설정
 				if (GameManager.Instance.gameMode == Mode.Bomb)
@@ -75,8 +76,24 @@ public class CameraManager : MonoBehaviour
 				// capture texture save
 				Texture2D readableTexture = GetReadableTexture(texture); // Texture 변환
 				byte[] texturePNGByte = readableTexture.EncodeToPNG(); // texture to pngByte encode
-				string fileName = $"{_filePath}/{GameManager.Instance.UID}_{GameManager.Instance.ProfileIndex}.png";
-				File.WriteAllBytes(fileName, texturePNGByte); // file save
+				string fileName = $"{_filePath}/{ProfileManager.Instance.UID}_{ProfileManager.Instance.tempIndex}.png";
+				try
+				{
+					File.WriteAllBytes(fileName, texturePNGByte); // file save
+				}
+				catch (Exception e)
+				{
+					Debug.LogError($"File save error: {e.Message}");
+				}
+
+				if (GameManager.Instance.gameMode == Mode.Bomb)
+                {
+					ProfileManager.Instance.ImageSet(false, false, ProfileManager.Instance.tempName, bomb.imageIndex, null);
+				}
+				else
+                {
+					ProfileManager.Instance.ImageSet(false, true, ProfileManager.Instance.tempName, profile.imageIndex, null);
+				}
 				Destroy(quad, 5f);
 			}
 		}, 2048, true, NativeCamera.PreferredCamera.Front);

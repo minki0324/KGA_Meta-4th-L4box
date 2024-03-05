@@ -132,7 +132,7 @@ public class MemoryManager : MonoBehaviour
         Life = 3;
         ResetLife();
         //점수 기록하기
-        Ranking.Instance.SetScore(GameManager.Instance.ProfileName, GameManager.Instance.ProfileIndex, Score);
+        Ranking.Instance.SetScore(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, Score);
         //스코어초기화
         ResetScore();
 
@@ -189,8 +189,8 @@ public class MemoryManager : MonoBehaviour
     }
     public void OnGameEnd()
     {
-        profileImage.sprite = GameManager.Instance.CacheProfileImage1P;
-        profileName.text = GameManager.Instance.ProfileName;
+        profileImage.sprite = ProfileManager.Instance.CacheProfileImage;
+        profileName.text = ProfileManager.Instance.ProfileName1P;
         resultScore.text = $"{Score}";
         clearMessage = (int)Ranking.Instance.CompareRanking();
         resultMassage.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
