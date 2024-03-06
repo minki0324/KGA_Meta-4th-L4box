@@ -9,15 +9,13 @@ public class ProfileInfo : MonoBehaviour
     public Image ProfileImage = null;
     public GameObject DeleteButton = null;
 
-    #region Other Method
-    // 본인이 몇번째 자식인지 확인하는 Method
     public int ReceiveIndex()
-    {
+    { // 본인이 몇번째 자식인지 확인하는 Method
         return gameObject.transform.GetSiblingIndex();
     }
 
     public void ReceiveInfo()
-    { // Profile 정보 Setting
+    { // Profile 2P 정보 Setting
         ProfileManager.Instance.ProfileName2P = SQL_Manager.instance.ProfileList[ReceiveIndex()].name;
         ProfileManager.Instance.SecondPlayerIndex = SQL_Manager.instance.ProfileList[ReceiveIndex()].index;
         ProfileManager.Instance.IsIconMode2P = SQL_Manager.instance.ProfileList[ReceiveIndex()].imageMode;
@@ -85,5 +83,4 @@ public class ProfileInfo : MonoBehaviour
 
         if (profileCanvas != null) profileCanvas.DeletePanel.SetActive(true);
     }
-    #endregion
 }

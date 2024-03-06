@@ -309,22 +309,18 @@ public class ProfileManager : MonoBehaviour
     /// <summary>
     /// 변경할 gameobject를 매개변수로 받아서 그 안의 Image Component를 통해 프로필 이미지를 출력
     /// </summary>
-    /// <param name="printobj"></param>
-    public void ProfileImagePrint(GameObject printobj)
-    {
-        Image image = printobj.GetComponent<Image>();
-
+    /// <param name="_profileImage"></param>
+    public void ProfileImageCaching()
+    { // 선택한 프로필 이미지 캐싱
         if (IsIconMode1P) // 이미지 선택모드
         {   // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
-            CacheProfileImage = ProfileImages[DefaultImage1P];
-            image.sprite = CacheProfileImage;
+            CacheProfileImage = ProfileImages[TempImageIndex];
         }
         else if (!IsIconMode1P) // 사진찍기 모드
         {
             Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, FirstPlayerIndex);
             Sprite profileSprite = TextureToSprite(profileTexture);
             CacheProfileImage = profileSprite;
-            image.sprite = CacheProfileImage;
         }
     }
 

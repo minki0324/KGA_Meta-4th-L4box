@@ -42,15 +42,16 @@ public class ProfileCanvas : MonoBehaviour
     [Header("Delete Panel")]
     public GameObject DeletePanel = null;
 
+    private void OnEnable()
+    {
+        BlockPanel.SetActive(false);
+    }
+
     private void Start()
     {
         ProfileManager.Instance.LoadOrCreateGUID();
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
-    }
-
-    private void OnEnable()
-    {
-        BlockPanel.SetActive(false);
+        // Audio start
     }
 
     #region Select
@@ -87,7 +88,7 @@ public class ProfileCanvas : MonoBehaviour
         {
             ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
-            if (ProfileManager.Instance.isUpdate)
+            if (!ProfileManager.Instance.isUpdate)
             { // 프로필 생성 시
                 Select.SetActive(true);
             }
@@ -97,6 +98,7 @@ public class ProfileCanvas : MonoBehaviour
             }
 
             SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsIconMode1P, ProfileIamge, ProfileManager.Instance.FirstPlayerIndex);
+            ProfileManager.Instance.ProfileImageCaching();
             ProfileIconSelect.SetActive(false);
         }
         else
@@ -157,12 +159,22 @@ public class ProfileCanvas : MonoBehaviour
 
         CaptureImage.sprite = null;
 
-        Select.SetActive(true);
-        CaptureCheck.SetActive(false);
+        if (!ProfileManager.Instance.isUpdate)
+        { // 프로필 생성 시
+            Select.SetActive(true);
+            CaptureCheck.SetActive(false);
+        }
+        else
+        { // 프로필 수정 시
+            CurrentProfile.SetActive(true);
+            CaptureCheck.SetActive(false);
+        }
     }
 
     public void AgainTakePicture()
     { // 사진 찍은 후 - 다시 찍기
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+
         CaptureImage.sprite = null;
         SQL_Manager.instance.SQL_DeleteProfile(ProfileManager.Instance.TempUserIndex);
         cameraManager.CameraOpen(CaptureImage);
@@ -190,7 +202,7 @@ public class ProfileCanvas : MonoBehaviour
             ProfileManager.Instance.StopCoroutine(ProfileManager.Instance.WarningCoroutine);
         }
 
-        if (ProfileManager.Instance.isUpdate)
+        if (!ProfileManager.Instance.isUpdate)
         { // 프로필 생성 시
             Select.SetActive(true);
         }
@@ -213,16 +225,21 @@ public class ProfileCanvas : MonoBehaviour
         }
         GameManager.Instance.gameMode = Mode.None;
 
-        mainCanvas.titleText.SetActive(true);
-        mainCanvas.optionButton.SetActive(true);
-        mainCanvas.profileButton.SetActive(true);
-        mainCanvas.homeButton.SetActive(true);
-        mainCanvas.pushpushButton.SetActive(true);
-        mainCanvas.speedButton.SetActive(true);
-        mainCanvas.memoryButton.SetActive(true);
-        mainCanvas.multiButton.SetActive(true);
-        mainCanvas.networkButton.SetActive(true);
+        mainCanvas.TitleText.SetActive(true);
+        mainCanvas.OptionButton.SetActive(true);
+        mainCanvas.ProfileButton.SetActive(true);
+        mainCanvas.HomeButton.SetActive(true);
+        mainCanvas.PushpushButton.SetActive(true);
+        mainCanvas.SpeedButton.SetActive(true);
+        mainCanvas.MemoryButton.SetActive(true);
+        mainCanvas.MultiButton.SetActive(true);
+        mainCanvas.NetworkButton.SetActive(true);
 
+        // profile sprite setting
+        ProfileManager.Instance.ProfileImageCaching();
+        mainCanvas.CaptureImage.sprite = ProfileManager.Instance.CacheProfileImage;
+
+        CurrentProfile.SetActive(false);
         gameObject.SetActive(false);
     }
 

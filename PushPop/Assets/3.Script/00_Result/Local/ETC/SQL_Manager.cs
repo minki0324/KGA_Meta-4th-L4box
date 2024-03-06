@@ -712,6 +712,7 @@ public class SQL_Manager : MonoBehaviour
             Texture2D profileTexture = SQL_LoadProfileImage(ProfileManager.Instance.UID, _profileIndex);
             Sprite profileSprite = ProfileManager.Instance.TextureToSprite(profileTexture);
             _image.sprite = profileSprite;
+
         }
     }
     #endregion
