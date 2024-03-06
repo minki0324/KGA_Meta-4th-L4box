@@ -189,7 +189,7 @@ public class MemoryManager : MonoBehaviour
     }
     public void OnGameEnd()
     {
-        profileImage.sprite = ProfileManager.Instance.CacheProfileImage;
+        profileImage.sprite = ProfileManager.Instance.CacheProfileImage1P;
         profileName.text = ProfileManager.Instance.ProfileName1P;
         resultScore.text = $"{Score}";
         clearMessage = (int)Ranking.Instance.CompareRanking();

@@ -75,7 +75,7 @@ public class CameraManager : MonoBehaviour
                 }
 
                 // Image Setting
-                if (GameManager.Instance.gameMode.Equals(Mode.Multi))
+                if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
                 { // Second Player
                     ProfileManager.Instance.ImageSet(false, false, ProfileManager.Instance.TempProfileName, -1, null);
                 }

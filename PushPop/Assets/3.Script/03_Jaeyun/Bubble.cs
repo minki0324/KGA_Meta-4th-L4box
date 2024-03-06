@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 { // bubble prefab's script
-    private Mode gameMode;
+    private GameMode gameMode;
     private RectTransform bubbleRectTrans;
     private Animator bubbleAnimator;
     [SerializeField] private Vector2 bubbleSize = Vector2.zero;
@@ -28,7 +28,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     private void OnEnable()
     {
         StartCoroutine(CenterSave());
-        gameMode = GameManager.Instance.gameMode; // game start 시 load
+        gameMode = GameManager.Instance.GameMode; // game start 시 load
         bubbleRectTrans = GetComponent<RectTransform>();
         bubbleAnimator = GetComponent<Animator>();
     }
@@ -37,7 +37,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
     {
         switch (gameMode)
         {
-            case Mode.PushPush:
+            case GameMode.PushPush:
                 currentSpeed = 0f;
                 PuzzlePiece piece = transform.parent.GetComponent<PuzzlePiece>();
                 if (GameManager.Instance.backButtonClick) return;
@@ -46,12 +46,12 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
                 Debug.Log(piece.index);
                 GameManager.Instance.pushPush.pieceCount++;
                 break;
-            case Mode.Speed:
+            case GameMode.Speed:
                 GameManager.Instance.SpeedOnBubbleDestroy(); 
                 break;
-            case Mode.Memory:
+            case GameMode.Memory:
                 break;
-            case Mode.Multi:
+            case GameMode.Multi:
                 break;
         }
 
@@ -74,15 +74,15 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
 
         switch (gameMode)
         {
-            case Mode.PushPush:
+            case GameMode.PushPush:
                 PushPushMode(bubblePosition, touchPosition);
                 break;
-            case Mode.Speed:
+            case GameMode.Speed:
                 SpeedMode(bubblePosition, touchPosition);
                 break;
-            case Mode.Memory:
+            case GameMode.Memory:
                 break;
-            case Mode.Multi:
+            case GameMode.Multi:
                 break;
         }
     }
@@ -96,7 +96,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
         puzzleSize = _puzzleSize;
         puzzleObject = _puzzleInfo;
 
-        if (gameMode.Equals(Mode.PushPush))
+        if (gameMode.Equals(GameMode.PushPush))
         {
             bigger *= 1.3f;
         }

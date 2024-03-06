@@ -35,7 +35,7 @@ public class Main_Button : MonoBehaviour
     {
         Enable_Button();
         help_Cavas.gameObject.SetActive(false);
-        GameManager.Instance.shutdownTimer = 0;
+        GameManager.Instance.ShutdownTimer = 0;
     }
     #endregion
 
@@ -64,7 +64,7 @@ public class Main_Button : MonoBehaviour
     public void BombBtn_Clicked()
     { // GameMode MultiBtn ¿¬µ¿ Method
         timesetPanel.SetActive(true);
-        GameManager.Instance.GameModeSetting((int)Mode.Multi);
+        GameManager.Instance.GameModeSetting((int)GameMode.Multi);
         AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 

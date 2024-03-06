@@ -211,7 +211,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     private void PlayerSet1P()
     { // 본인의 프로필을 출력하는 Method
         // 프로필 이미지 출력
-        playerImage1P.sprite = ProfileManager.Instance.CacheProfileImage;
+        playerImage1P.sprite = ProfileManager.Instance.CacheProfileImage1P;
       
         // 프로필 이름 출력
         playerName1P.text = ProfileManager.Instance.ProfileName1P;
@@ -227,7 +227,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         PrintProfileList();
 
         // 2P 프로필 이름 출력
-        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsIconMode2P, playerImage2P, ProfileManager.Instance.SecondPlayerIndex);
+        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode2P, playerImage2P, ProfileManager.Instance.SecondPlayerIndex);
         playerName2P.text = ProfileManager.Instance.ProfileName2P;
         isSelect2P = true;
 
@@ -298,7 +298,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
     public void AddProfile()
     { // Bomb 모드에서 2P 프로필 선택 시 Profile 등록하는 Btn 연동 Method
         int imageMode = -1;
-        switch (ProfileManager.Instance.IsIconMode2P)
+        switch (ProfileManager.Instance.IsImageMode2P)
         {
             case false: //  사진 찍기를 선택했을 때
                 imageMode = 0;
@@ -502,8 +502,8 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         // Profile Setting
         inGameText1P.text = ProfileManager.Instance.ProfileName1P;
         inGameText2P.text = ProfileManager.Instance.ProfileName2P;
-        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsIconMode1P, inGameImage1P, ProfileManager.Instance.FirstPlayerIndex);
-        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsIconMode2P, inGameImage2P, ProfileManager.Instance.SecondPlayerIndex);
+        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode1P, inGameImage1P, ProfileManager.Instance.FirstPlayerIndex);
+        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode2P, inGameImage2P, ProfileManager.Instance.SecondPlayerIndex);
 
         readyGame_co = StartCoroutine(ReadyGame_Co());
     }
@@ -961,7 +961,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         AudioManager.instance.SetAudioClip_BGM(0);
 
-        GameManager.Instance.gameMode = Mode.None;
+        GameManager.Instance.GameMode = GameMode.None;
         main_Canvas.SetActive(true);
         selectBtn.gameObject.SetActive(true);
         changeBtn.gameObject.SetActive(false);

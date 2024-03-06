@@ -51,7 +51,9 @@ public class ProfileCanvas : MonoBehaviour
     {
         ProfileManager.Instance.LoadOrCreateGUID();
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
-        // Audio start
+
+        // audio PlayerPrefs setting ... todo
+        AudioManager.instance.SetAudioClip_BGM(0);
     }
 
     #region Select
@@ -97,7 +99,7 @@ public class ProfileCanvas : MonoBehaviour
                 CurrentProfile.SetActive(true);
             }
 
-            SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsIconMode1P, ProfileIamge, ProfileManager.Instance.FirstPlayerIndex);
+            SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode1P, ProfileIamge, ProfileManager.Instance.FirstPlayerIndex);
             ProfileManager.Instance.ProfileImageCaching();
             ProfileIconSelect.SetActive(false);
         }
@@ -223,7 +225,7 @@ public class ProfileCanvas : MonoBehaviour
         {
             ProfileManager.Instance.isProfileSelected = true;
         }
-        GameManager.Instance.gameMode = Mode.None;
+        GameManager.Instance.GameMode = GameMode.None;
 
         mainCanvas.TitleText.SetActive(true);
         mainCanvas.OptionButton.SetActive(true);
@@ -236,10 +238,11 @@ public class ProfileCanvas : MonoBehaviour
         mainCanvas.NetworkButton.SetActive(true);
 
         // profile sprite setting
-        ProfileManager.Instance.ProfileImageCaching();
-        mainCanvas.CaptureImage.sprite = ProfileManager.Instance.CacheProfileImage;
+        mainCanvas.CaptureImage.sprite = ProfileManager.Instance.ProfileImageCaching();
 
         CurrentProfile.SetActive(false);
+        ExitButton.SetActive(false);
+        Select.SetActive(true);
         gameObject.SetActive(false);
     }
 
@@ -287,4 +290,13 @@ public class ProfileCanvas : MonoBehaviour
         DeletePanel.SetActive(false);
     }
     #endregion
+    public void GameQuitButton()
+    { // 게임 종료
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 }

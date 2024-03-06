@@ -270,7 +270,7 @@ public class Ranking : MonoBehaviour
             _Score.text = "";
         }
 
-        _image.sprite = ProfileManager.Instance.CacheProfileImage;
+        _image.sprite = ProfileManager.Instance.CacheProfileImage1P;
     }
 
     /// <summary>
@@ -381,7 +381,7 @@ public class Ranking : MonoBehaviour
             _name.text = ProfileManager.Instance.ProfileName1P;
             _timer.text = "";
         }
-        _image.sprite = ProfileManager.Instance.CacheProfileImage;
+        _image.sprite = ProfileManager.Instance.CacheProfileImage1P;
     }
 
     /// <summary>
@@ -479,9 +479,9 @@ public class Ranking : MonoBehaviour
             previousScore = 0;
             return;
         }
-        switch (GameManager.Instance.gameMode)
+        switch (GameManager.Instance.GameMode)
         {
-            case Mode.Speed:
+            case GameMode.Speed:
                 userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.FirstPlayerIndex && r.spriteName.Contains(index));
                 for (int i = 0; i < userRecord.spriteName.Count; i++)
                 {
@@ -492,18 +492,18 @@ public class Ranking : MonoBehaviour
                     }
                 }
                 break;
-            case Mode.Memory:
+            case GameMode.Memory:
                 userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.FirstPlayerIndex);
                 break;
         }
 
 
-        switch (GameManager.Instance.gameMode)
+        switch (GameManager.Instance.GameMode)
         {
-            case Mode.Speed:
+            case GameMode.Speed:
                 previousScore = userRecord.timer[scoreIndex];
                 break;
-            case Mode.Memory:
+            case GameMode.Memory:
                 previousScore = userRecord.score;
                 break;
         }
@@ -515,12 +515,12 @@ public class Ranking : MonoBehaviour
         ClearTitle clearTitle = ClearTitle.Clear;
         int currentScore = 0;
 
-        if (GameManager.Instance.gameMode.Equals(Mode.Speed))
+        if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
         {
             currentScore = GameManager.Instance.currentTime;
             clearTitle = previousScore > currentScore ? ClearTitle.Better : ClearTitle.Clear;
         }
-        else if (GameManager.Instance.gameMode.Equals(Mode.Memory))
+        else if (GameManager.Instance.GameMode.Equals(GameMode.Memory))
         {
             currentScore = MemoryManager.Instance.Score;
             clearTitle = previousScore < currentScore ? ClearTitle.Better : ClearTitle.Clear;

@@ -4,7 +4,9 @@ using UnityEngine;
 
 public interface IGameCanvas
 {
-    void GameStart();
-    void HelpButton();
-    void BackButton();
+    void GameStartButton();
+    void GameExitButton();
+    void GameCancelButton();
+    void GameBackButton();
+    void HelpPanelButton();
 }

@@ -53,17 +53,17 @@ public class Help_Canvas : MonoBehaviour
     {
 
         Button_Enable();
-        switch(GameManager.Instance.gameMode)
+        switch(GameManager.Instance.GameMode)
         {
-            case Mode.PushPush:
+            case GameMode.PushPush:
               //  pushMode_Panel.SetActive(true);
                 break;
 
-            case Mode.Speed:
+            case GameMode.Speed:
              //   speedMode_Panel.SetActive(true);
                 break;
 
-            case Mode.Memory:
+            case GameMode.Memory:
                 //memoryMode_Panel.SetActive(true);
                 break;
         }
@@ -84,21 +84,21 @@ public class Help_Canvas : MonoBehaviour
         {
             //GameManager.Instance.gameMode = Mode.None;
 
-            switch (GameManager.Instance.gameMode)
+            switch (GameManager.Instance.GameMode)
             {
-                case Mode.PushPush:
+                case GameMode.PushPush:
                     pushpush_Canvas.BackBtn_Clicked();
                     break;
 
-                case Mode.Speed:
+                case GameMode.Speed:
                     speed_Canvas.BackBtn_Clicked();
                     break;
 
-                case Mode.Memory:
+                case GameMode.Memory:
                     memory_Canvas.BackBtn_Clicked();
                     break;
 
-                case Mode.Multi:
+                case GameMode.Multi:
                     bomb_Canvas.BackBtn_Clicked();
                     break;
             }
@@ -119,21 +119,21 @@ public class Help_Canvas : MonoBehaviour
             currentPage = 1;
             Help_Window();
 
-            switch (GameManager.Instance.gameMode)
+            switch (GameManager.Instance.GameMode)
             {
-                case Mode.PushPush:
+                case GameMode.PushPush:
                     pushpush_Canvas.Disable_Objects();
                     break;
 
-                case Mode.Speed:
+                case GameMode.Speed:
                     speed_Canvas.Disable_Objects();
                     break;
 
-                case Mode.Memory:
+                case GameMode.Memory:
                     memory_Canvas.DisalbeObjects();
                     break;
 
-                case Mode.Multi:
+                case GameMode.Multi:
                     bomb_Canvas.Disable_Objects();
                     break;
             }
@@ -151,21 +151,21 @@ public class Help_Canvas : MonoBehaviour
             bisHelpPanelOn = false;
             help_Panel.SetActive(false);
 
-            switch (GameManager.Instance.gameMode)
+            switch (GameManager.Instance.GameMode)
             {
-                case Mode.PushPush:
+                case GameMode.PushPush:
                     pushpush_Canvas.Enable_Objects();
                     break;
 
-                case Mode.Speed:
+                case GameMode.Speed:
                     speed_Canvas.Enable_Objects();
                     break;
 
-                case Mode.Memory:
+                case GameMode.Memory:
                     memory_Canvas.EnableObjects();
                     break;
 
-                case Mode.Multi:
+                case GameMode.Multi:
                     bomb_Canvas.Enable_Objects();
                     break;
             }
@@ -222,11 +222,11 @@ public class Help_Canvas : MonoBehaviour
         previous_Btn.interactable = false;
         next_Btn.interactable = true;
 
-        switch (GameManager.Instance.gameMode)
+        switch (GameManager.Instance.GameMode)
         {
 
             //푸시푸시모드 도움말
-            case Mode.PushPush:
+            case GameMode.PushPush:
                 maxPage = DataManager2.instance.helpScripts_List[0].script.Count;
 
                 for(int i = 0; i < DataManager2.instance.helpScripts_List[0].script.Count; i++)
@@ -240,7 +240,7 @@ public class Help_Canvas : MonoBehaviour
                 break;
 
             //스피드 모드 도움말
-            case Mode.Speed:
+            case GameMode.Speed:
                 maxPage = DataManager2.instance.helpScripts_List[1].script.Count;
 
                 for (int i = 0; i < DataManager2.instance.helpScripts_List[1].script.Count; i++)
@@ -254,7 +254,7 @@ public class Help_Canvas : MonoBehaviour
                 break;
 
             //메모리 모드 도움말
-            case Mode.Memory:
+            case GameMode.Memory:
                 maxPage = DataManager2.instance.helpScripts_List[2].script.Count;
 
                 for (int i = 0; i < DataManager2.instance.helpScripts_List[2].script.Count; i++)
@@ -268,7 +268,7 @@ public class Help_Canvas : MonoBehaviour
                 break;
 
             //2인모드 도움맒
-            case Mode.Multi:
+            case GameMode.Multi:
                 maxPage = DataManager2.instance.helpScripts_List[3].script.Count;
 
                 for (int i = 0; i < DataManager2.instance.helpScripts_List[3].script.Count; i++)

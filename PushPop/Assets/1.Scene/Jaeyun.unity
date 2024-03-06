@@ -2654,7 +2654,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &76516207
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4840,7 +4840,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &157396272
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4962,7 +4962,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &160001177
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5512,9 +5512,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1457637500}
-        m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
-        m_MethodName: Select2PBtn_Clicked
+      - m_Target: {fileID: 1457637505}
+        m_TargetAssemblyTypeName: MultiCanvas, Assembly-CSharp
+        m_MethodName: ProfileSelectButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7195,7 +7195,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &213746909
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7753,7 +7753,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &217595934
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9168,7 +9168,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 251623509}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: MusicOptionButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &251623509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10444,17 +10456,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Set_Time, Assembly-CSharp
-        m_MethodName: IncreaseTimeBtn_Clicked
-        m_Mode: 1
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: TimeSettingButton
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &298892527
 MonoBehaviour:
@@ -11394,26 +11406,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Set_Time, Assembly-CSharp
-        m_MethodName: SetShutdownTime
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: TimeSelectButton
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 900
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
+          m_IntArgument: 15
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -11901,7 +11901,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 329255860}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: GameModeButton
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &329255860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13201,7 +13213,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 370149362}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: TimeSelectButton
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &370149362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13436,7 +13460,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 377069163}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: GameModeButton
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &377069163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18377,12 +18413,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 160
+  m_fontSize: 141.3
   m_fontSizeBase: 160
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 160
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -18393,7 +18429,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -20384,7 +20420,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 587878195}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: HomeSiteButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &587878195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26649,9 +26697,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1457637500}
-        m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
-        m_MethodName: Select2PBtn_Clicked
+      - m_Target: {fileID: 1457637505}
+        m_TargetAssemblyTypeName: MultiCanvas, Assembly-CSharp
+        m_MethodName: ProfileSelectButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -27550,26 +27598,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Set_Time, Assembly-CSharp
-        m_MethodName: SetShutdownTime
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: TimeSelectButton
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 540
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
+          m_IntArgument: 9
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -33050,14 +33086,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Main_Button, Assembly-CSharp
-        m_MethodName: BombBtn_Clicked
-        m_Mode: 1
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: GameModeButton
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -33496,38 +33532,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1008019757}
   - component: {fileID: 1008019756}
-  - component: {fileID: 1008019754}
   m_Layer: 5
   m_Name: Select Difficutly Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1008019754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008019753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 4
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 400, y: 400}
-  m_Spacing: {x: 100, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_IsActive: 1
 --- !u!222 &1008019756
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -34889,7 +34900,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1055911157
 RectTransform:
   m_ObjectHideFlags: 0
@@ -36049,7 +36060,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1089263673}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: GameModeButton
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1089263673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37479,31 +37502,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1126118000}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Mirror.NetworkManager, Mirror
-        m_MethodName: StartClient
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Main_Button, Assembly-CSharp
-        m_MethodName: CollectionBtn_Clicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1126118000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37858,26 +37857,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Set_Time, Assembly-CSharp
-        m_MethodName: SetShutdownTime
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: TimeSelectButton
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 360
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
+          m_IntArgument: 6
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -42373,7 +42360,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1275463593
 RectTransform:
   m_ObjectHideFlags: 0
@@ -43677,7 +43664,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1317759487
 RectTransform:
   m_ObjectHideFlags: 0
@@ -45697,10 +45684,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Set_Time, Assembly-CSharp
-        m_MethodName: DecreaseTimeBtn_Clicked
-        m_Mode: 1
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: TimeSettingButton
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -47048,6 +47035,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   profileCanvas: {fileID: 1705917596}
+  pushpushCanvas: {fileID: 214550375}
+  speedCanvas: {fileID: 634666737}
+  memoryCanvas: {fileID: 2088030754}
   multiCanvas: {fileID: 1457637505}
   TitleText: {fileID: 1344067477}
   OptionButton: {fileID: 251623507}
@@ -47061,6 +47051,7 @@ MonoBehaviour:
   NetworkButton: {fileID: 1126117998}
   timeSettingPanel: {fileID: 2025499454}
   optionPanel: {fileID: 62066098}
+  timeText: {fileID: 541198531}
 --- !u!1 &1415138156
 GameObject:
   m_ObjectHideFlags: 0
@@ -47079,7 +47070,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1415138157
 RectTransform:
   m_ObjectHideFlags: 0
@@ -48043,6 +48034,7 @@ MonoBehaviour:
   BackButton: {fileID: 1779875773}
   HelpButton: {fileID: 160001176}
   Ready: {fileID: 1317759486}
+  readyProfileSetting: {fileID: 0}
   SelectButton: {fileID: 167740168}
   ChangeButton: {fileID: 784087072}
   MultiGame: {fileID: 313937940}
@@ -52704,9 +52696,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7451f3ad8c9098b479a198926557b0a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameMode: 0
-  shutdownTimer: 0
-  isShutdown: 0
+  GameMode: 4
+  ShutdownTimer: 0
+  IsShutdown: 0
   bombScript: {fileID: 0}
   speedTimer: {fileID: 1185710473}
   pushPush: {fileID: 0}
@@ -55975,7 +55967,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1772616314
 RectTransform:
   m_ObjectHideFlags: 0
@@ -56442,7 +56434,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1779875774
 RectTransform:
   m_ObjectHideFlags: 0
@@ -56974,26 +56966,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Set_Time, Assembly-CSharp
-        m_MethodName: SetShutdownTime
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: TimeSelectButton
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 720
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
+          m_IntArgument: 12
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -57427,7 +57407,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1797268697}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: GameQuitButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1797268697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60547,9 +60539,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Set_Time, Assembly-CSharp
-        m_MethodName: ConfirmBtn_Clicked
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: TimeSettingEndButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -66712,7 +66704,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2135017923}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1412654232}
+        m_TargetAssemblyTypeName: MainCanvas, Assembly-CSharp
+        m_MethodName: TimeSettingBackButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2135017923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67259,12 +67263,13 @@ MonoBehaviour:
   ProfileName1P: 
   FirstPlayerIndex: 0
   DefaultImage1P: 0
-  IsIconMode1P: 0
-  CacheProfileImage: {fileID: 0}
+  IsImageMode1P: 0
+  CacheProfileImage1P: {fileID: 0}
   ProfileName2P: 
   SecondPlayerIndex: 0
   DefaultImage2P: 0
-  IsIconMode2P: 0
+  IsImageMode2P: 0
+  CacheProfileImage2P: {fileID: 0}
   ProfileImages:
   - {fileID: 21300000, guid: ec63b76a27e30a848b5dc421a7b14d79, type: 3}
   - {fileID: 21300000, guid: b3816496fcb51864494ebdb56ff07abb, type: 3}

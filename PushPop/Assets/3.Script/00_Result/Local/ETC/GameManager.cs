@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 
-public enum Mode // GameMode
+public enum GameMode // GameMode
 {
     PushPush = 0,
     Speed,
@@ -50,10 +50,13 @@ public class PuzzleObject
 public class GameManager : MonoBehaviour, IGameMode
 {
     public static GameManager Instance = null;
-    public Mode gameMode = Mode.None;
+
+    public GameMode GameMode = GameMode.None;
+
     [Header("ShutDown")]
-    public float shutdownTimer;
-    public bool isShutdown = false;
+    public float ShutdownTimer = 3f;
+    public Coroutine ShutdownCoroutine = null;
+    public bool IsShutdown = false;
 
     [Header("GameScript")]
     public Bomb bombScript;
@@ -126,28 +129,37 @@ public class GameManager : MonoBehaviour, IGameMode
     }
     private void Update()
     {
-        if (shutdownTimer > 0)
-        {
-            if (isShutdown) { isShutdown = false; }
-            shutdownTimer -= Time.deltaTime;
-        }
-        else
-        {
-            shutdownTimer = 0f;
-            isShutdown = true;
-        }
+        
     }
     #endregion
 
     #region Other Method
     public void GameModeSetting(int _gameMode)
     { // game mode setting button click method
-        gameMode = (Mode)_gameMode;
+        GameMode = (GameMode)_gameMode;
     }
 
     public void GameStageSetting(int _stage)
     { // game stage button click method
         PushPopStage = _stage;
+    }
+
+    public void ShutdownTimerStart()
+    {
+        ShutdownCoroutine = StartCoroutine(ShutDownTimer_Co());
+    }
+
+    private IEnumerator ShutDownTimer_Co()
+    { // Shutdown Timer
+        while (ShutdownTimer >= 0)
+        {
+            ShutdownTimer -= Time.deltaTime;
+            yield return null;
+        }
+
+        ShutdownTimer = 0f;
+        IsShutdown = true;
+        ShutdownCoroutine = null;
     }
 
     public void GameStart()
@@ -167,17 +179,17 @@ public class GameManager : MonoBehaviour, IGameMode
 
         
 
-        switch (gameMode)
+        switch (GameMode)
         {
-            case Mode.PushPush:
+            case GameMode.PushPush:
                 PushPushMode();
                 break;
-            case Mode.Speed:
+            case GameMode.Speed:
                 SpeedMode();
                 break;
-            case Mode.Memory:
+            case GameMode.Memory:
                 break;
-            case Mode.Multi:
+            case GameMode.Multi:
                 BombMode();
                 break;
         }
@@ -186,7 +198,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public IEnumerator GameReady_Co(GameObject _panel, TMP_Text text)
     {
 
-        if(gameMode == Mode.PushPush)
+        if(GameMode == GameMode.PushPush)
         {
             //게임 시작 버튼 소리가 안들려서 잠깐 시간 좀 띄울게..
             yield return new WaitForSeconds(0.5f);
@@ -203,7 +215,7 @@ public class GameManager : MonoBehaviour, IGameMode
         DialogManager.instance.Print_Dialog(text, "준비 ~");
         yield return new WaitForSeconds(2f);
 
-        if(gameMode == Mode.Speed)
+        if(GameMode == GameMode.Speed)
         {
             SpeedModePushPopCreate();
             speedTimer.TimerObj.SetActive(true);
@@ -217,17 +229,17 @@ public class GameManager : MonoBehaviour, IGameMode
         _panel.SetActive(false);
 
 
-        switch(gameMode)
+        switch(GameMode)
         {
-            case Mode.PushPush:
+            case GameMode.PushPush:
                 PushPushMode();
                 break;
-            case Mode.Speed:
+            case GameMode.Speed:
                 break;
-            case Mode.Memory:
+            case GameMode.Memory:
                 MemoryManager.Instance.CreatBoard();
                 break;
-            case Mode.Multi:
+            case GameMode.Multi:
                 break;
             default:
                 break;
@@ -238,7 +250,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public void GameClear()
     { // Game End 시 호출하는 method
         // button active check
-        if (gameMode.Equals(Mode.Multi))
+        if (GameMode.Equals(GameMode.Multi))
         {
             if (bombScript.popList1P.Count.Equals(0) || bombScript.popList2P.Count.Equals(0))
             {
@@ -248,9 +260,9 @@ public class GameManager : MonoBehaviour, IGameMode
         }
         else
         {
-            switch (gameMode)
+            switch (GameMode)
             {
-                case Mode.PushPush:
+                case GameMode.PushPush:
                     if (PushPop.Instance.pushPopButton.Count == pushPush.pushCount)
                     {
                         pushPush.OnButtonAllPush();
@@ -315,7 +327,7 @@ public class GameManager : MonoBehaviour, IGameMode
                     }
                     break;
 
-                case Mode.Speed:
+                case GameMode.Speed:
                     if (speedTimer == null)
                     {
                         speedTimer = FindObjectOfType<Speed_Timer>();
@@ -349,7 +361,7 @@ public class GameManager : MonoBehaviour, IGameMode
                         pushpushCreate_Co = StartCoroutine(SpeedCreate_Co());
                     }
                     break;
-                case Mode.Multi:
+                case GameMode.Multi:
 
                     break;
             }

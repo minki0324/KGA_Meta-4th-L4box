@@ -110,24 +110,24 @@ public class Set_Time : MonoBehaviour
     public void ConfirmBtn_Clicked()
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
-        GameManager.Instance.shutdownTimer = time;
-        if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
+        GameManager.Instance.ShutdownTimer = time;
+        if (GameManager.Instance.GameMode.Equals(GameMode.PushPush))
         { // 푸시푸시 시작
             pushpushMode_Canvas.SetActive(true);
             help_Canvas.SetActive(true);
             help_Canvas.transform.SetParent(pushpushMode_Canvas.transform);
             help_Canvas.transform.SetSiblingIndex(3);
         }
-        else if (GameManager.Instance.gameMode.Equals(Mode.Speed))
+        else if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
         { // 스피드 시작
             speedMode_Canvas.SetActive(true);
         }
-        else if (GameManager.Instance.gameMode.Equals(Mode.Memory))
+        else if (GameManager.Instance.GameMode.Equals(GameMode.Memory))
         { // 메모리 시작
             memoryMode_Canvas.SetActive(true);
             memoryMode_Canvas.GetComponent<Memory_Canvas>().RankingLoad();
         }
-        else if (GameManager.Instance.gameMode.Equals(Mode.Multi))
+        else if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
         { // 2인모드 시작
             bombMode_Canvas.SetActive(true);
             bombMode_Canvas.transform.GetComponent<Bomb>().PrintVersus();

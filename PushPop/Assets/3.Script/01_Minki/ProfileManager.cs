@@ -22,15 +22,16 @@ public class ProfileManager : MonoBehaviour
     public string ProfileName1P = string.Empty; // 1P Profile Name
     public int FirstPlayerIndex = 0; // 1P Profile Index
     public int DefaultImage1P = 0; // 1P Profile DefaultImage Index
-    public bool IsIconMode1P = false; // false = 사진찍기, true = 이미지 선택
-    public Sprite CacheProfileImage = null;
+    public bool IsImageMode1P = false; // false = 사진찍기, true = 이미지 선택
+    public Sprite CacheProfileImage1P = null;
 
     [Header("2P Player")]
     [Space(5)]
     public string ProfileName2P = string.Empty; // 2P Profile Name
     public int SecondPlayerIndex = 0; // 2P Profile Index
     public int DefaultImage2P = 0; // 2P Profile DefaultImage Index
-    public bool IsIconMode2P = false; // false = 사진찍기, true = 이미지 선택
+    public bool IsImageMode2P = false; // false = 사진찍기, true = 이미지 선택
+    public Sprite CacheProfileImage2P = null;
 
     [Header("Profile Component")]
     [Space(5)]
@@ -135,7 +136,7 @@ public class ProfileManager : MonoBehaviour
             ProfilePanelList.Add(panel);
         }
 
-        if (GameManager.Instance.gameMode.Equals(Mode.Multi))
+        if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
         { // Multi Mode에서 Profile 수정 시
             DuplicateProfileDelete();
         }
@@ -171,7 +172,7 @@ public class ProfileManager : MonoBehaviour
     public bool ImageSet(bool _isIconMode, bool _isFirstPlayer, string _profileName, int _defaultImageIndex, TMP_Text _nameLog = null)
     { // Profile에 넣을 Image Setting
         // _player bool값에 따라 1P를 설정하는지 2P를 설정하는지 결정
-        int profileIndex = GameManager.Instance.gameMode.Equals(Mode.Multi) ? FirstPlayerIndex : SecondPlayerIndex;
+        int profileIndex = GameManager.Instance.GameMode.Equals(GameMode.Multi) ? FirstPlayerIndex : SecondPlayerIndex;
 
         if (!_isIconMode)
         { // 사진 찍기 버튼 클릭 시
@@ -284,11 +285,11 @@ public class ProfileManager : MonoBehaviour
     {
         if (isFirstPlayer)
         {
-            IsIconMode1P = isImageMode;
+            IsImageMode1P = isImageMode;
         }
         else
         {
-            IsIconMode2P = isImageMode;
+            IsImageMode2P = isImageMode;
         }
     }
 
@@ -310,17 +311,43 @@ public class ProfileManager : MonoBehaviour
     /// 변경할 gameobject를 매개변수로 받아서 그 안의 Image Component를 통해 프로필 이미지를 출력
     /// </summary>
     /// <param name="_profileImage"></param>
-    public void ProfileImageCaching()
+    public Sprite ProfileImageCaching()
     { // 선택한 프로필 이미지 캐싱
-        if (IsIconMode1P) // 이미지 선택모드
-        {   // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
-            CacheProfileImage = ProfileImages[TempImageIndex];
+        bool isImageMode = IsImageMode1P; // 1P일 때 IsImageMode1P, 2P일 때 IsImageMode2P
+        int profileIndex = FirstPlayerIndex;
+
+        if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
+        { // 2P일 때
+            isImageMode = IsImageMode2P;
+            profileIndex = SecondPlayerIndex;
+
+            if (isImageMode)
+            { // 이미지 선택 모드
+                CacheProfileImage2P = ProfileImages[TempImageIndex]; // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
+            }
+            else
+            { // 사진 찍기 모드
+                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, profileIndex);
+                Sprite profileSprite = TextureToSprite(profileTexture);
+                CacheProfileImage2P = profileSprite;
+            }
+
+            return CacheProfileImage2P;
         }
-        else if (!IsIconMode1P) // 사진찍기 모드
+        else
         {
-            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, FirstPlayerIndex);
-            Sprite profileSprite = TextureToSprite(profileTexture);
-            CacheProfileImage = profileSprite;
+            if (isImageMode)
+            { // 이미지 선택 모드
+                CacheProfileImage1P = ProfileImages[TempImageIndex]; // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
+            }
+            else
+            { // 사진 찍기 모드
+                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, profileIndex);
+                Sprite profileSprite = TextureToSprite(profileTexture);
+                CacheProfileImage1P = profileSprite;
+            }
+
+            return CacheProfileImage1P;
         }
     }
 
