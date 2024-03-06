@@ -8726,6 +8726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraManager: {fileID: 1645217681}
+  CaptureImage: {fileID: 0}
   MainButtonPanel: {fileID: 853315397}
   GameModePanel: {fileID: 1594830399}
   ExitBtn: {fileID: 1243418121}
@@ -8738,6 +8739,7 @@ MonoBehaviour:
   createImagePanel: {fileID: 1212556729}
   iconPanel: {fileID: 504135945}
   checkPanel: {fileID: 1793814293}
+  imageIndex: 0
   CurrentProfilePanel: {fileID: 653503640}
   SelectProfileText: {fileID: 2121005617}
   SelectProfileImage: {fileID: 474612689}
@@ -13813,6 +13815,7 @@ MonoBehaviour:
   bombScript: {fileID: 0}
   speedTimer: {fileID: 1362194178}
   pushPush: {fileID: 1722141594}
+  Memory: {fileID: 0}
   bubbleCanvas: {fileID: 1415984645}
   bubblePrefab: {fileID: 8925204162082192838, guid: b1233b5acd8a67a4b9328d6e3efeedfb, type: 3}
   bubbleObject: []
@@ -13832,19 +13835,7 @@ MonoBehaviour:
   finalCenter: {x: 0, y: 0}
   Score: 0
   TimeScore: 0
-  UID: 0
-  ProfileName: 
-  ProfileIndex: 0
-  DefaultImage: 0
-  ProfileImages:
-  - {fileID: 21300000, guid: 807b7464a7f4d7b49a0af0ff03f1f844, type: 3}
-  - {fileID: 21300000, guid: fa674ec355fdfbd4595ceb81aed8cc80, type: 3}
-  IsImageMode: 1
   count: 0.25
-  ProfileName2P: 
-  ProfileIndex2P: 0
-  DefaultImage2P: 0
-  IsimageMode2P: 1
   printName:
   - {fileID: 927640425}
   - {fileID: 502820566}
@@ -13861,7 +13852,6 @@ MonoBehaviour:
   printTimerPersonal: {fileID: 1667328926}
   printImagePersonal: {fileID: 284762877}
   atlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
-  noneSprite: {fileID: 21300000, guid: d968872060a35ef4f955cbc2e5e9c94c, type: 3}
   backButtonClick: 0
   btnSprites:
   - {fileID: 21300000, guid: c4797b928419e844aaef5d3f039aa7f3, type: 3}
@@ -13877,7 +13867,6 @@ MonoBehaviour:
   isStart: 0
   boardName: 0
   currentTime: 0
-  CacheProfileImage1P: {fileID: 0}
 --- !u!4 &474713271
 Transform:
   m_ObjectHideFlags: 0
@@ -38569,7 +38558,7 @@ MonoBehaviour:
   selectCategory_Panel: {fileID: 2054664752}
   puzzleLozic_Panel: {fileID: 1415984646}
   success_Panel: {fileID: 335038091}
-  backBtn: {fileID: 0}
+  backBtn: {fileID: 1864193693}
   Colorset_Panel: {fileID: 31674732}
   colorButton_List: []
   colorSprite_List:
@@ -41110,8 +41099,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 171ae90e7d537e6469dd8169399cf24f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  changeBtn: {fileID: 1885069521}
-  selectBtn: {fileID: 418758383}
   playerImage1P: {fileID: 1579944847}
   playerName1P: {fileID: 1456493966}
   popList1P: []
@@ -41127,11 +41114,12 @@ MonoBehaviour:
   inGameText2P: {fileID: 45935721}
   profilePanel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
   profileParent: {fileID: 1702421061}
-  profileList: []
   profile2PName: 
   profile2PInput: {fileID: 603508530}
   iconPanel: {fileID: 595043346}
   checkPanel: {fileID: 375374651}
+  imageIndex: 0
+  CaptureImage: {fileID: 0}
   MainPanel: {fileID: 1375043748}
   GamePanel: {fileID: 1658094499}
   CreateNamePanel: {fileID: 1557997594}
@@ -41171,10 +41159,12 @@ MonoBehaviour:
   - {fileID: 21300000, guid: fede0d47f04fc704aaaf634321d5962a, type: 3}
   - {fileID: 21300000, guid: 24228e6a6eec5b14d8e7399bc9f1b35d, type: 3}
   - {fileID: 21300000, guid: df8c9ca8870e2244fbcc116b419df9c7, type: 3}
-  endAnimation: {fileID: 1779954764}
   result: {fileID: 1646558988}
   readyPanel: {fileID: 1138857877}
   readyText: {fileID: 573481329}
+  upperBubble_Bomb: {fileID: 0}
+  bottomBubble_Bomb: {fileID: 0}
+  cameraManager: {fileID: 0}
   profileBtn: {fileID: 418758385}
   gameStartBtn: {fileID: 628962907}
   quitNormal_Sprite: {fileID: 21300000, guid: 911e8d9d9bbc39f4ea7954285f69455d, type: 3}
@@ -41182,6 +41172,8 @@ MonoBehaviour:
   quitBtn:
   - {fileID: 1374489456}
   - {fileID: 1439568484}
+  changeBtn: {fileID: 1885069521}
+  selectBtn: {fileID: 418758383}
   player2PInfo: {fileID: 0}
   winTexts:
   - {fileID: 1538512354}
@@ -49047,6 +49039,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   captureImage: {fileID: 0}
   profile: {fileID: 0}
+  bomb: {fileID: 0}
 --- !u!1 &1646558988
 GameObject:
   m_ObjectHideFlags: 0

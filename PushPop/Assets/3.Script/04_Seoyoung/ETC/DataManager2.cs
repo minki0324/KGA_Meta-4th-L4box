@@ -82,7 +82,7 @@ public class DataManager2 : MonoBehaviour
     //파일 이름 (이 친구들은 Assets/StreamingAssets 폴더에 미리 담겨져 있어야 합니다)
     public string categoryDict_fileName = "category.json";
     public string iconDict_fileName = "icon.json";
-    public string helpScript_fileName = "help.json";
+    public string helpScript_fileName = "helpme.json";
     public string badWord_fileName = "badword.json";
     public string vulgarism_fileName = "vulgarism.json";
 
@@ -292,7 +292,7 @@ public class DataManager2 : MonoBehaviour
             ;
         }
 
-        string realPath = Datapath + "/help.json";
+        string realPath = Datapath + "/" + helpScript_fileName;
 
         byte[] data = reader.bytes;
         string resultData = System.Text.Encoding.UTF8.GetString(data);

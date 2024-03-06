@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public Bomb bombScript;
     public Speed_Timer speedTimer = null;
     public PushPushManager pushPush;
+    public MemoryManager Memory;
 
     // Bubble
     [Header("Bubble Info")]

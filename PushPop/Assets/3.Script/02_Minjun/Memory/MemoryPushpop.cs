@@ -77,7 +77,7 @@ public class MemoryPushpop : MonoBehaviour
         //todo 점수주기
         button.interactable = false; //누른버튼은 비활성화
         memoryBoard.CurrentCorrectCount++; //정답카운트 증가
-        MemoryManager.Instance.AddScore(); //점수 증가
+        MemoryManager.Instance.AddScore(100); //점수 증가
         if (memoryBoard.isStageClear())
         {
             onStageClear();
@@ -95,9 +95,7 @@ public class MemoryPushpop : MonoBehaviour
         if (MemoryManager.Instance.Life == 0)
         {//결과창호출
             //모든라이프가 소진해서 패배
-            MemoryManager.Instance.OnGameEnd();
-            AudioManager.instance.SetAudioClip_SFX(5, false);
-            MemoryManager.Instance.ResultPanel.SetActive(true);
+            MemoryManager.Instance.Result();
         }
 
     }
@@ -128,9 +126,7 @@ public class MemoryPushpop : MonoBehaviour
         {
             //결과창호출
             //모든스테이지 클리어 했을때
-            MemoryManager.Instance.OnGameEnd();
-            AudioManager.instance.SetAudioClip_SFX(5, false);
-            MemoryManager.Instance.ResultPanel.SetActive(true);
+            MemoryManager.Instance.Result();
             yield break;
         }
         Destroy(memoryBoard.gameObject); //현재보드 지우기

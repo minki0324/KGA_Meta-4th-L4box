@@ -24,20 +24,10 @@ public class MemoryBoard : MonoBehaviour
     }
     private void OnEnable()
     {//스테이지마다 새로운 보드를 생성해줌
-
-
         stage = MemoryManager.Instance.GetStage(); //현재스테이지 가져오기
         RandCorrectDraw(stage.CorrectCount); // 스테이지의 정답갯수만큼 정답버튼 랜덤으로 고르기
         Blink(!isReplay); //고른 정답버튼을 깜빡여주기 true : 힌트버튼 false : 처음시작할때 
-       
-
-
     }
-
-  
-
-
-
     private void OnDisable()
     {
         CorrectBtnList.Clear(); //정답버튼 리스트 초기화
