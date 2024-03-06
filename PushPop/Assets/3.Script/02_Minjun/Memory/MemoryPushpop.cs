@@ -100,11 +100,9 @@ public class MemoryPushpop : MonoBehaviour
 
     }
 
-    
+
     #endregion
     #region 스테이지 승리콜백메소드
-
-
     private void onStageClear()
     {//스테이지  클리어시 불리는 메소드
         //코루틴으로 텀주고 훌륭해요 띄워주기 2초

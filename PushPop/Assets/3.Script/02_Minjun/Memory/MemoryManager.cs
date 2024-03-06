@@ -125,6 +125,7 @@ public class MemoryManager : MonoBehaviour
     public void CreatBoard()
     {//현재 스테이지에 맞는 보드판 소환
         Instantiate(stages[currentStage - 1].board, SapwnPos.position, Quaternion.identity, gameObject.transform);
+        DebugLog.instance.Adding_Message("되는데? 짱인데~");
     } // 게임시작 , 스테이지넘어갈때 새로운 PushPopBoard생성
     public MemoryStageData GetStage()
     {//다른곳에서 현재스테이지 가져오기
@@ -139,7 +140,7 @@ public class MemoryManager : MonoBehaviour
 
         //현재보드 꺼주기
         Destroy(currentBoard.gameObject);
-        canvas.RankingLoad();
+     
 
         switch (_string)
         {
@@ -164,6 +165,7 @@ public class MemoryManager : MonoBehaviour
                 break;
 
         }
+        canvas.RankingLoad();
     } //게임종료
     public void Gameinit()
     {

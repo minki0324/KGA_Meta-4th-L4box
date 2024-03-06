@@ -27,9 +27,10 @@ public class DebugLog : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        message_Box = transform.GetComponentsInChildren<TMP_Text>();
         Message = Adding_Message;
         past_me = current_me;
+
+
     }
 
     public void Adding_Message(string m)

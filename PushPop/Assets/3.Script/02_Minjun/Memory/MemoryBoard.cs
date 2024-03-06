@@ -34,6 +34,27 @@ public class MemoryBoard : MonoBehaviour
         ClearCount = 0;
         CurrentCorrectCount = 0;
     }
+    #region 버튼활성화 비활성화
+    public void BtnAllStop()
+    {//버튼활성화 끄는 메소드
+        MemoryManager.Instance.hintbuttonIamge.raycastTarget = false;
+        MemoryManager.Instance.Backbutton.enabled = false;
+        for (int i = 0; i < allButton.Count; i++)
+        {
+            allButton[i].GetComponent<Image>().raycastTarget = false;
+        }
+    }
+    public void BtnAllPlay()
+    {//버튼활성화 키는 메소드
+        MemoryManager.Instance.hintbuttonIamge.raycastTarget = true;
+        MemoryManager.Instance.Backbutton.enabled = true;
+        for (int i = 0; i < allButton.Count; i++)
+        {
+            allButton[i].GetComponent<Image>().raycastTarget = true;
+        }
+    }
+    #endregion
+    #region 버튼 정답 관련( 클리어 유무 , 정답버튼 랜덤지정)
     public void RandCorrectDraw(int DrawNum)
     {
         //DrawNum의 횟수만큼 정답버튼을 정합니다.
@@ -55,7 +76,7 @@ public class MemoryBoard : MonoBehaviour
             }
             CorrectBtnList.Add(allButton[RandCorrectNum]);
             CorrectBtnQueue.Enqueue(allButton[RandCorrectNum]);
-            DrawCount ++;
+            DrawCount++;
         }
         //버튼에게 너가 정답이라고 알려주기
         foreach (MemoryPushpop pushpop in CorrectBtnList)
@@ -63,33 +84,33 @@ public class MemoryBoard : MonoBehaviour
             pushpop.isCorrect = true;
         }
         currentOrderPushPop = CorrectBtnQueue.Dequeue();
-    }
-    public void BtnAllStop()
-    {//버튼활성화 끄는 메소드
-        MemoryManager.Instance.hintbuttonIamge.raycastTarget = false;
-        MemoryManager.Instance.Backbutton.enabled = false;
-        for (int i = 0; i < allButton.Count; i++)
-        {
-            allButton[i].GetComponent<Image>().raycastTarget = false;
-        }
-    }
-    public void BtnAllPlay()
-    {//버튼활성화 키는 메소드
-        MemoryManager.Instance.hintbuttonIamge.raycastTarget = true;
-        MemoryManager.Instance.Backbutton.enabled = true;
-        for (int i = 0; i < allButton.Count; i++)
-        {
-            allButton[i].GetComponent<Image>().raycastTarget = true;
-        }
-    }
+    }//랜덤 정답 버튼 정하는곳
     public bool isStageClear()
-    {
-        if(ClearCount == CurrentCorrectCount)
+    {//일반 스테이지 클리어 유무확인 
+        //정답 누른 갯수 = 정답갯수 동일시 클리어
+        if (ClearCount == CurrentCorrectCount)
         {
-            return true;  
+            return true;
         }
         return false;
     }
+    public bool IsOrder(MemoryPushpop btn)
+    {//스페셜 스테이지전용 순서대로 누르는지 확인하는 곳
+        //Queue에 정답을 차례대로 담고
+        //하나씩 꺼내서 현재 정답으로 지정후 누른 버튼과 비교함.
+        if (currentOrderPushPop == btn)
+        {
+            if (CorrectBtnQueue.Count > 0)
+            {
+                currentOrderPushPop = CorrectBtnQueue.Dequeue();
+            }
+            return true;
+        }
+
+        return false;
+    }
+    #endregion
+    #region 스테이지 시작 or 텍스트
     public IEnumerator ReadyGame(bool isReplay)
     {//순서상관없는모드
         BtnAllStop();
@@ -98,7 +119,8 @@ public class MemoryBoard : MonoBehaviour
             yield return new WaitForSeconds(1f);
             //게임시작 텍스트 띄우기
             int randindex = Random.Range(1, 4);
-            switch (randindex) {
+            switch (randindex)
+            {
                 case 1:
                     MemoryManager.Instance.PlayStartPanel("집중해보세요!");
                     break;
@@ -110,7 +132,7 @@ public class MemoryBoard : MonoBehaviour
                     break;
             }
 
-          
+
 
             yield return new WaitForSeconds(2f);
         }
@@ -142,13 +164,8 @@ public class MemoryBoard : MonoBehaviour
         StartCoroutine(CorrectBtnPlayBlink_InOrder());
 
     }
-    public void CorrectBtnPlayBlink()
-    {
-        for (int i = 0; i < CorrectBtnList.Count; i++)
-        {
-            CorrectBtnList[i].PlayBlink();
-        }
-    }
+    #endregion
+    #region 버튼깜빡깜빡
     public IEnumerator CorrectBtnPlayBlink_InOrder()
     {
         for (int i = 0; i < CorrectBtnList.Count; i++)
@@ -157,20 +174,14 @@ public class MemoryBoard : MonoBehaviour
             yield return WaitTime;
         }
         BtnAllPlay();
-    }
-    public bool IsOrder(MemoryPushpop btn)
+    } //스페셜스테이지 전용 Blink
+    public void CorrectBtnPlayBlink()
     {
-        
-        if (currentOrderPushPop == btn)
+        for (int i = 0; i < CorrectBtnList.Count; i++)
         {
-            if (CorrectBtnQueue.Count > 0) { 
-            currentOrderPushPop = CorrectBtnQueue.Dequeue();
-            }
-            return true;
+            CorrectBtnList[i].PlayBlink();
         }
-
-        return false;
-    }
+    }//일반스테이지  Blink
     public void Blink(bool isReplay)
     {
         if (stage.isSpecialStage)
@@ -181,6 +192,8 @@ public class MemoryBoard : MonoBehaviour
         {
             StartCoroutine(ReadyGame(isReplay));
         }
-    }
- 
+    } //블링크 통합
+    #endregion
+
+
 }
