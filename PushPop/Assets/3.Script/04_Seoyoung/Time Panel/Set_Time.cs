@@ -127,7 +127,7 @@ public class Set_Time : MonoBehaviour
             memoryMode_Canvas.SetActive(true);
             memoryMode_Canvas.GetComponent<Memory_Canvas>().RankingLoad();
         }
-        else if (GameManager.Instance.gameMode.Equals(Mode.Bomb))
+        else if (GameManager.Instance.gameMode.Equals(Mode.Multi))
         { // 2인모드 시작
             bombMode_Canvas.SetActive(true);
             bombMode_Canvas.transform.GetComponent<Bomb>().PrintVersus();

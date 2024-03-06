@@ -224,14 +224,14 @@ public class Ranking : MonoBehaviour
             _image[i].sprite = ProfileManager.Instance.NoneBackground;
         }
 
-        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        for (int i = 0; i < SQL_Manager.instance.ProfileList.Count; i++)
         { // SQL에 등록되어 있는 Profile
             for (int j = 0; j < topRanks.Count; j++)
             { // 정렬된 List
-                if (SQL_Manager.instance.Profile_list[i].index == topRanks[j].index)
+                if (SQL_Manager.instance.ProfileList[i].index == topRanks[j].index)
                 { // Profile Index와 정렬된 List의 Index가 일치한 걸 찾아옴
-                    _name[j].text = SQL_Manager.instance.Profile_list[i].name;
-                    SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, _image[j], SQL_Manager.instance.Profile_list[i].index);
+                    _name[j].text = SQL_Manager.instance.ProfileList[i].name;
+                    SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.ProfileList[i].imageMode, _image[j], SQL_Manager.instance.ProfileList[i].index);
                 }
             }
         }
@@ -249,7 +249,7 @@ public class Ranking : MonoBehaviour
         LoadRanking();
 
         // 게임매니저에 저장된 프로필 Infomation을 이용하여 rankList에 본인의 기록이 있는지 조회
-        var userRecord = rankList.FirstOrDefault(r => r.name == ProfileManager.Instance.ProfileName1P && r.index == ProfileManager.Instance.ProfileIndex1P);
+        var userRecord = rankList.FirstOrDefault(r => r.name == ProfileManager.Instance.ProfileName1P && r.index == ProfileManager.Instance.FirstPlayerIndex);
 
         if (userRecord != null)
         { // 사용자 기록이 있을 경우, 정보를 표시.
@@ -328,14 +328,14 @@ public class Ranking : MonoBehaviour
             _name[i].text = "";
         }
 
-        for (int i = 0; i < SQL_Manager.instance.Profile_list.Count; i++)
+        for (int i = 0; i < SQL_Manager.instance.ProfileList.Count; i++)
         { // SQL에 등록되어 있는 Profile
             for (int j = 0; j < topRanks.Count; j++)
             { // 정렬된 List
-                if (SQL_Manager.instance.Profile_list[i].index == topRanks[j].Rank.index)
+                if (SQL_Manager.instance.ProfileList[i].index == topRanks[j].Rank.index)
                 { // Profile Index와 정렬된 List의 Index가 일치한 걸 찾아옴
-                    _name[j].text = SQL_Manager.instance.Profile_list[i].name;
-                    SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.Profile_list[i].imageMode, _image[j], SQL_Manager.instance.Profile_list[i].index);
+                    _name[j].text = SQL_Manager.instance.ProfileList[i].name;
+                    SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.ProfileList[i].imageMode, _image[j], SQL_Manager.instance.ProfileList[i].index);
                 }
             }
         }
@@ -353,7 +353,7 @@ public class Ranking : MonoBehaviour
         SQL_Manager.instance.SQL_ProfileListSet();
         LoadRanking();
 
-        var userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.ProfileIndex1P && r.spriteName.Contains(_spriteName));
+        var userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.FirstPlayerIndex && r.spriteName.Contains(_spriteName));
 
         if (userRecord != null)
         {
@@ -472,7 +472,7 @@ public class Ranking : MonoBehaviour
 
         int index = GameManager.Instance.boardName;
         int scoreIndex = 0;
-        Rank userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.ProfileIndex1P && r.spriteName.Contains(index));
+        Rank userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.FirstPlayerIndex && r.spriteName.Contains(index));
 
         if (userRecord == null)
         {
@@ -482,7 +482,7 @@ public class Ranking : MonoBehaviour
         switch (GameManager.Instance.gameMode)
         {
             case Mode.Speed:
-                userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.ProfileIndex1P && r.spriteName.Contains(index));
+                userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.FirstPlayerIndex && r.spriteName.Contains(index));
                 for (int i = 0; i < userRecord.spriteName.Count; i++)
                 {
                     if (index.Equals(userRecord.spriteName[i]))
@@ -493,7 +493,7 @@ public class Ranking : MonoBehaviour
                 }
                 break;
             case Mode.Memory:
-                userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.ProfileIndex1P);
+                userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.FirstPlayerIndex);
                 break;
         }
 
@@ -609,7 +609,7 @@ public class Ranking : MonoBehaviour
 
     private Profile GetPlayerProfile(int playerIndex)
     {
-        foreach (Profile profile in SQL_Manager.instance.Profile_list)
+        foreach (Profile profile in SQL_Manager.instance.ProfileList)
         {
             if (profile.index == playerIndex)
             {

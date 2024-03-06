@@ -132,7 +132,7 @@ public class MemoryManager : MonoBehaviour
         Life = 3;
         ResetLife();
         //점수 기록하기
-        Ranking.Instance.SetScore(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, Score);
+        Ranking.Instance.SetScore(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.FirstPlayerIndex, Score);
         //스코어초기화
         ResetScore();
 

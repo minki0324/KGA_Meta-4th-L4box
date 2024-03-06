@@ -10,9 +10,8 @@ public enum Mode // GameMode
     PushPush = 0,
     Speed,
     Memory,
-    Bomb,
-    Profile,
-    Main
+    Multi,
+    None
 }
 #region Other Class
 public class PushPushObject
@@ -51,7 +50,7 @@ public class PuzzleObject
 public class GameManager : MonoBehaviour, IGameMode
 {
     public static GameManager Instance = null;
-    public Mode gameMode;
+    public Mode gameMode = Mode.None;
     [Header("ShutDown")]
     public float shutdownTimer;
     public bool isShutdown = false;
@@ -178,7 +177,7 @@ public class GameManager : MonoBehaviour, IGameMode
                 break;
             case Mode.Memory:
                 break;
-            case Mode.Bomb:
+            case Mode.Multi:
                 BombMode();
                 break;
         }
@@ -228,7 +227,7 @@ public class GameManager : MonoBehaviour, IGameMode
             case Mode.Memory:
                 MemoryManager.Instance.CreatBoard();
                 break;
-            case Mode.Bomb:
+            case Mode.Multi:
                 break;
             default:
                 break;
@@ -239,7 +238,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public void GameClear()
     { // Game End 시 호출하는 method
         // button active check
-        if (gameMode.Equals(Mode.Bomb))
+        if (gameMode.Equals(Mode.Multi))
         {
             if (bombScript.popList1P.Count.Equals(0) || bombScript.popList2P.Count.Equals(0))
             {
@@ -270,12 +269,12 @@ public class GameManager : MonoBehaviour, IGameMode
 
                         PushPushObject newPush = new PushPushObject(pushPush.puzzle.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
                         string json = JsonUtility.ToJson(newPush);
-                        SQL_Manager.instance.SQL_AddPushpush(json, ProfileManager.Instance.ProfileIndex1P);
+                        SQL_Manager.instance.SQL_AddPushpush(json, ProfileManager.Instance.FirstPlayerIndex);
 
                         pushpushScript.result.SetActive(true);
 
                         // PushPushList 세팅
-                        List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileManager.Instance.ProfileIndex1P);
+                        List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileManager.Instance.FirstPlayerIndex);
                         if (pushlist == null)
                         {
                             Debug.Log("널");
@@ -341,7 +340,7 @@ public class GameManager : MonoBehaviour, IGameMode
                         speedTimer.StopCoroutine(speedTimer.timer);
                         speedTimer.TimerObj.SetActive(false);
 
-                        Ranking.Instance.SetTimer(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, int.Parse(PushPop.Instance.boardSprite.name), speedTimer.currentTime);
+                        Ranking.Instance.SetTimer(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.FirstPlayerIndex, int.Parse(PushPop.Instance.boardSprite.name), speedTimer.currentTime);
                         speedTimer.resultPanel.SetActive(true);
                         speedTimer.Result();
                     }
@@ -350,7 +349,7 @@ public class GameManager : MonoBehaviour, IGameMode
                         pushpushCreate_Co = StartCoroutine(SpeedCreate_Co());
                     }
                     break;
-                case Mode.Bomb:
+                case Mode.Multi:
 
                     break;
             }

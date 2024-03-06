@@ -98,7 +98,7 @@ public class Help_Canvas : MonoBehaviour
                     memory_Canvas.BackBtn_Clicked();
                     break;
 
-                case Mode.Bomb:
+                case Mode.Multi:
                     bomb_Canvas.BackBtn_Clicked();
                     break;
             }
@@ -133,7 +133,7 @@ public class Help_Canvas : MonoBehaviour
                     memory_Canvas.DisalbeObjects();
                     break;
 
-                case Mode.Bomb:
+                case Mode.Multi:
                     bomb_Canvas.Disable_Objects();
                     break;
             }
@@ -165,7 +165,7 @@ public class Help_Canvas : MonoBehaviour
                     memory_Canvas.EnableObjects();
                     break;
 
-                case Mode.Bomb:
+                case Mode.Multi:
                     bomb_Canvas.Enable_Objects();
                     break;
             }
@@ -268,7 +268,7 @@ public class Help_Canvas : MonoBehaviour
                 break;
 
             //2인모드 도움맒
-            case Mode.Bomb:
+            case Mode.Multi:
                 maxPage = DataManager2.instance.helpScripts_List[3].script.Count;
 
                 for (int i = 0; i < DataManager2.instance.helpScripts_List[3].script.Count; i++)

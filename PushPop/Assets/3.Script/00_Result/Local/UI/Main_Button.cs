@@ -64,7 +64,7 @@ public class Main_Button : MonoBehaviour
     public void BombBtn_Clicked()
     { // GameMode MultiBtn ¿¬µ¿ Method
         timesetPanel.SetActive(true);
-        GameManager.Instance.GameModeSetting((int)Mode.Bomb);
+        GameManager.Instance.GameModeSetting((int)Mode.Multi);
         AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 
@@ -73,7 +73,7 @@ public class Main_Button : MonoBehaviour
         NewProfileCanvas profile = profilePanel.GetComponent<NewProfileCanvas>();
         profilePanel.SetActive(true);
         profileReturnBtn.gameObject.SetActive(true);
-        ProfileManager.Instance.PrintProfileList(profile.profileParent, ProfileManager.Instance.ProfileIndex1P);
+        ProfileManager.Instance.PrintProfileList(profile.profileParent);
         AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 

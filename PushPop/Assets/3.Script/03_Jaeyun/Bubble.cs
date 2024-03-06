@@ -51,7 +51,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
                 break;
             case Mode.Memory:
                 break;
-            case Mode.Bomb:
+            case Mode.Multi:
                 break;
         }
 
@@ -82,7 +82,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
                 break;
             case Mode.Memory:
                 break;
-            case Mode.Bomb:
+            case Mode.Multi:
                 break;
         }
     }

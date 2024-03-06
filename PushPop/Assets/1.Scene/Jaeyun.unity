@@ -2526,7 +2526,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 75354235}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2536,8 +2536,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 112}
-  m_SizeDelta: {x: 1000, y: 200}
+  m_AnchoredPosition: {x: 0, y: -135}
+  m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &75354237
 MonoBehaviour:
@@ -2561,15 +2561,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC774\uBBF8\uC9C0\uB97C \uC120\uD0DD\uD574\uC8FC\uC138\uC694."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: af5d80b79de4260479e6a418228d5c22, type: 2}
-  m_sharedMaterial: {fileID: -4103859119262839534, guid: af5d80b79de4260479e6a418228d5c22, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: c09db771132988447ad609927afe0278, type: 2}
+  m_sharedMaterial: {fileID: -6148485437377755008, guid: c09db771132988447ad609927afe0278, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4287168454
-  m_fontColor: {r: 0.77836657, g: 1, b: 0.5330188, a: 1}
+    rgba: 4290032633
+  m_fontColor: {r: 0.97647065, g: 0.7019608, b: 0.7058824, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2586,12 +2586,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 70
+  m_fontSize: 50
   m_fontSizeBase: 70
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 50
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -2602,7 +2602,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -9742,7 +9742,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -120}
-  m_SizeDelta: {x: 800, y: 200}
+  m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &277286613
 GameObject:
@@ -9973,7 +9973,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &287551146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10690,21 +10690,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1679424134}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: ProfileImagePrint
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 2147337050}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 854371828}
-        m_TargetAssemblyTypeName: NewProfileCanvas, Assembly-CSharp
-        m_MethodName: CurrentProfilePanelSelectBtn
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: CurrentProfileSelectButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11136,7 +11124,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 316992920}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: ProfileCreateButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &316992920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11857,7 +11857,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &329255859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13323,7 +13323,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 373325581}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: ProfileSelectDeleteButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &373325581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13380,7 +13392,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &377069162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16140,22 +16152,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 492249257}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1420713463}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: CreateImageBackButton
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -16788,9 +16788,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 854371828}
-        m_TargetAssemblyTypeName: NewProfileCanvas, Assembly-CSharp
-        m_MethodName: TakeAgainPicture
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: AgainTakePicture
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -21231,9 +21231,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 854371828}
-        m_TargetAssemblyTypeName: NewProfileCanvas, Assembly-CSharp
-        m_MethodName: CreateNamePanelBackBtn
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: CreateNameBackButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -22241,9 +22241,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Profile_, Assembly-CSharp
-        m_MethodName: Btn_DeletePanel_Clicked
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: ProfileDeleteReturnButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -22920,7 +22920,7 @@ RectTransform:
   - {fileID: 1625313975}
   - {fileID: 1983486690}
   m_Father: {fileID: 854371827}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -24671,26 +24671,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 854371828}
-        m_TargetAssemblyTypeName: NewProfileCanvas, Assembly-CSharp
+      - m_Target: {fileID: 1244475458}
+        m_TargetAssemblyTypeName: SelectProfileIcon, Assembly-CSharp
         m_MethodName: SelectImage
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioManager123, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -26402,7 +26390,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd9b8a6ad230c2246a13602ae7fa5cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  captureImage: {fileID: 0}
   profile: {fileID: 0}
   bomb: {fileID: 0}
 --- !u!1 &782810918
@@ -28562,7 +28549,6 @@ GameObject:
   - component: {fileID: 854371827}
   - component: {fileID: 854371830}
   - component: {fileID: 854371829}
-  - component: {fileID: 854371828}
   m_Layer: 5
   m_Name: Profile Panel
   m_TagString: Untagged
@@ -28582,8 +28568,9 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 666971696}
   - {fileID: 1797268695}
+  - {fileID: 1529507262}
+  - {fileID: 666971696}
   - {fileID: 1720487627}
   m_Father: {fileID: 1705917595}
   m_RootOrder: 0
@@ -28593,38 +28580,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &854371828
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 854371826}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a29e5bddd51bf44998d1e2b6fc5f558, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraManager: {fileID: 762217189}
-  CaptureImage: {fileID: 0}
-  MainButtonPanel: {fileID: 531380403}
-  GameModePanel: {fileID: 287551145}
-  ExitBtn: {fileID: 1797268696}
-  SelectProfilePanel: {fileID: 968345961}
-  profileParent: {fileID: 180205962}
-  profileScrollView: {fileID: 1751961004}
-  CreateNamePanel: {fileID: 1420713463}
-  inputProfileName: {fileID: 851848190}
-  nameErrorLog: {fileID: 276249993}
-  createImagePanel: {fileID: 492249257}
-  iconPanel: {fileID: 1244475454}
-  checkPanel: {fileID: 1625313972}
-  imageIndex: 0
-  CurrentProfilePanel: {fileID: 1983486687}
-  SelectProfileText: {fileID: 2020246405}
-  SelectProfileImage: {fileID: 667300150}
-  DeletePanel: {fileID: 1720487626}
-  isLobby: 0
 --- !u!114 &854371829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30675,10 +30630,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1244475454}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: CreateImageSelectImageButton
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -30686,42 +30641,6 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioManager123, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 456702209}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Profile_, Assembly-CSharp
-        m_MethodName: ImageModeSet
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &910711236
 MonoBehaviour:
@@ -32095,9 +32014,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 854371828}
-        m_TargetAssemblyTypeName: NewProfileCanvas, Assembly-CSharp
-        m_MethodName: CreateImagePanelIconBackBtn
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: ProfileIconSelectBackButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -32106,18 +32025,6 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 456702209}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &951567084
 MonoBehaviour:
@@ -32375,26 +32282,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 854371828}
-        m_TargetAssemblyTypeName: NewProfileCanvas, Assembly-CSharp
+      - m_Target: {fileID: 1244475458}
+        m_TargetAssemblyTypeName: SelectProfileIcon, Assembly-CSharp
         m_MethodName: SelectImage
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioManager123, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -33110,7 +33005,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &969444761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36110,7 +36005,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1089263672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37540,7 +37435,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1126117999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38109,10 +38004,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 854371828}
-        m_TargetAssemblyTypeName: NewProfileCanvas, Assembly-CSharp
-        m_MethodName: ImageSetting
-        m_Mode: 6
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: CaptureImageSelect
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -38779,22 +38674,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 854371828}
-        m_TargetAssemblyTypeName: NewProfileCanvas, Assembly-CSharp
-        m_MethodName: SendProfile
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 456702209}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: CreateNameConfirmationButton
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -41184,9 +41067,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 854371828}
-        m_TargetAssemblyTypeName: NewProfileCanvas, Assembly-CSharp
-        m_MethodName: DeleteProfile
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: ProfileDeleteButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -41663,6 +41546,7 @@ GameObject:
   - component: {fileID: 1244475457}
   - component: {fileID: 1244475456}
   - component: {fileID: 1244475455}
+  - component: {fileID: 1244475458}
   m_Layer: 0
   m_Name: Profile Icon Select
   m_TagString: Untagged
@@ -41732,6 +41616,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1244475458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244475454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 030c712a1a33a3742ad9aebd6b742cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WarningLog: {fileID: 75354237}
 --- !u!1 &1252790253
 GameObject:
   m_ObjectHideFlags: 0
@@ -47294,6 +47191,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1420713466}
   - component: {fileID: 1420713465}
+  - component: {fileID: 1420713467}
   m_Layer: 0
   m_Name: Create Name
   m_TagString: Untagged
@@ -47333,6 +47231,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1420713467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420713463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c20b4b21ac287214f9fe2990b28ba3c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profileNameInputField: {fileID: 851848190}
+  WarningLog: {fileID: 276249993}
 --- !u!1 &1421871012
 GameObject:
   m_ObjectHideFlags: 0
@@ -47772,58 +47684,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CameraManager, Assembly-CSharp
-        m_MethodName: CameraOpen
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: CreateImageTakePictureButton
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1625313972}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 456702209}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Profile_, Assembly-CSharp
-        m_MethodName: ImageModeSet
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioManager123, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -49011,9 +48875,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 854371828}
-        m_TargetAssemblyTypeName: NewProfileCanvas, Assembly-CSharp
-        m_MethodName: CurrentProfilePanelReturnBtn
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: CurrentProfileReturnButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -50228,6 +50092,82 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1524703914}
+  m_CullTransparentMesh: 1
+--- !u!1 &1529507261
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1529507262}
+  - component: {fileID: 1529507264}
+  - component: {fileID: 1529507263}
+  m_Layer: 5
+  m_Name: Block Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1529507262
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529507261}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 854371827}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1529507263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529507261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.39215687}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1529507264
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529507261}
   m_CullTransparentMesh: 1
 --- !u!1 &1537968436
 GameObject:
@@ -54001,6 +53941,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCanvas: {fileID: 1412654232}
   multiCanvas: {fileID: 1457637505}
+  BlockPanel: {fileID: 1529507261}
   ProfilePanel: {fileID: 854371826}
   Select: {fileID: 968345961}
   CreateName: {fileID: 1420713463}
@@ -54008,10 +53949,16 @@ MonoBehaviour:
   ProfileIconSelect: {fileID: 1244475454}
   CaptureCheck: {fileID: 1625313972}
   CurrentProfile: {fileID: 1983486687}
-  ExitButton: {fileID: 1797268694}
-  DeletePanel: {fileID: 1720487626}
+  SelectScrollView: {fileID: 1751961004}
+  SelectScrollViewContent: {fileID: 180205962}
+  inputFieldCheck: {fileID: 1420713467}
+  cameraManager: {fileID: 762217189}
+  CaptureImage: {fileID: 1545556489}
+  selectProfileIcon: {fileID: 1244475458}
   ProfileIamge: {fileID: 667300150}
   ProfileText: {fileID: 2020246405}
+  ExitButton: {fileID: 1797268694}
+  DeletePanel: {fileID: 1720487626}
 --- !u!1 &1706025066
 GameObject:
   m_ObjectHideFlags: 0
@@ -54288,7 +54235,7 @@ RectTransform:
   m_Children:
   - {fileID: 1940908822}
   m_Father: {fileID: 854371827}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -57414,7 +57361,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1797268695
 RectTransform:
   m_ObjectHideFlags: 0
@@ -57429,7 +57376,7 @@ RectTransform:
   m_Children:
   - {fileID: 2031059053}
   m_Father: {fileID: 854371827}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -57872,9 +57819,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 854371828}
-        m_TargetAssemblyTypeName: NewProfileCanvas, Assembly-CSharp
-        m_MethodName: CurrentProfilePanelChangeBtn
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: CurrentProfileChangeButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -61220,10 +61167,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 854371828}
-        m_TargetAssemblyTypeName: NewProfileCanvas, Assembly-CSharp
-        m_MethodName: ImageSetting
-        m_Mode: 6
+      - m_Target: {fileID: 1705917596}
+        m_TargetAssemblyTypeName: ProfileCanvas, Assembly-CSharp
+        m_MethodName: ProfileIconSelectOkButton
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -61231,18 +61178,6 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioManager123, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1953620848
 MonoBehaviour:
@@ -67309,14 +67244,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UID: 0
   ProfileName1P: 
-  ProfileIndex1P: 0
+  FirstPlayerIndex: 0
   DefaultImage1P: 0
-  IsImageMode1P: 0
+  IsIconMode1P: 0
   CacheProfileImage: {fileID: 0}
   ProfileName2P: 
-  ProfileIndex2P: 0
+  SecondPlayerIndex: 0
   DefaultImage2P: 0
-  IsimageMode2P: 0
+  IsIconMode2P: 0
   ProfileImages:
   - {fileID: 21300000, guid: 807b7464a7f4d7b49a0af0ff03f1f844, type: 3}
   - {fileID: 21300000, guid: fa674ec355fdfbd4595ceb81aed8cc80, type: 3}
@@ -67326,8 +67261,9 @@ MonoBehaviour:
   isUpdate: 0
   isImageSelect: 0
   isProfileSelected: 0
-  tempIndex: 0
-  tempName: 
+  TempImageIndex: 0
+  TempUserIndex: 0
+  TempProfileName: 
 --- !u!4 &2199113746186542486
 Transform:
   m_ObjectHideFlags: 0
