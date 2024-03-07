@@ -7,6 +7,12 @@ using UnityEngine.VFX;
 
 public class TouchManager : MonoBehaviour
 {
+    struct TouchEvent
+    {
+        public Touch touch;
+        public bool isDrag;
+    }
+
     //This is a simple script that does a raycast and plays the VFX on a prefab
     public GameObject VFXPrefab;
     public GameObject TouchMovePrefab;
@@ -17,27 +23,30 @@ public class TouchManager : MonoBehaviour
     public Transform particleCanvas;
     [SerializeField] private RawImage rawImage;
 
-    private Vector2 nowPos;
-    private Vector2 prePos;
-    private Vector3 movePos;
-    private float speed = 0.25f;
+    [SerializeField] private List<Touch> touch_List = new List<Touch>();
+    [SerializeField] private List<Vector2> nowPos_List = new List<Vector2>();
+    private int maxTouchCount = 10;
+    private int preTouchCout = 0;
+
+    private Vector2 nowPos; //현재 터치 포지션
     public Transform touchTransform;
+
 
     public bool bisDrag = false;
     public bool bCanCreate = true;
 
-    float touchTime = 0;
-    float createTime = 0;
+    float touchTime = 0;    //꾹 눌렀을 때 판정 시간
+    float createTime = 0;   //생성 쿨타임
 
 
     public List<GameObject> DragPool = new List<GameObject>();
 
-    public int MaxCount = 15;
-    private int CurrentCount = 0;
+    public int MaxCount = 15;   //꾹 눌렀을 떄 생성되는 프리팹 최대 갯수
+    private int CurrentCount = 0;   //꾹 눌렀을 떄 생성되는 프리팹 현재 갯수
 
     private void Awake()
     {
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = 60;
     }
 
     void Start()
@@ -50,91 +59,150 @@ public class TouchManager : MonoBehaviour
     }
 
     void Update()
-    {
-        //if (Input.touchCount == 1)
-        //{
-        //    Touch touch = Input.GetTouch(0);
-        //    if (touch.phase == TouchPhase.Began)
-        //    {
-        //        prePos = touch.position = touch.deltaPosition;
-        //    }
-        //    else if (touch.phase == TouchPhase.Moved)
-        //    {
-        //        nowPos = touch.position - touch.deltaPosition;
-        //        movePos = (Vector3)(prePos - nowPos) * Time.deltaTime * speed;
-        //        touchTransform.Translate(movePos);
-        //        prePos = touch.position - touch.deltaPosition;
-        //    }
-        //}
-
-        ClickEffect();
+    {      
+        if (Input.touchCount > 0)
+        {
+            Debug.Log("터치 발생");
+            // ClickEffect();
+            MultiTouchEvent();
+        }         
     }
 
-    private void ClickEffect()
+    private void SingleTouchEvent()
     {
-        //ui상 클릭한 좌표를 world로 바꿔서 그 위치에 생성
-
-        //마우스 클릭된 상태에서 마우스 클릭위치와 현재위치가 다르면 이펙트 변경
-        //position은 현재 터치 위치
-        //deltaposition은 전 프레임에서의 터치 위치와 이번 프레임에서 터치위치의 차이, 터치의 이동량
-
         if (Input.touchCount == 1)
-        {
-           
+        {       
             Touch touch = Input.GetTouch(0);
 
-            if (touch.phase == TouchPhase.Began)
+            switch(touch.phase)
             {
-                nowPos = touch.position;
-                TouchEffect();
-            }  
-            else if (touch.phase == TouchPhase.Stationary)
-            {
-                //터치중이면
-              
-                touchTime += Time.deltaTime;
-                if (touchTime > 0.4f)
-                {
-                    bisDrag = true;             
-                }
-                if (bisDrag)
-                {
-                    nowPos = touch.position - touch.deltaPosition;
-                    if(bCanCreate)
-                    {
-                        DragEffect();
-                    }
-                    
-                }
-            }
-            else if(touch.phase == TouchPhase.Moved)
-            {
-                if(bisDrag)
-                {
-                    nowPos = touch.position - touch.deltaPosition;
-                    if (bCanCreate)
-                    {
-                        DragEffect();
-                    }
-                }
-            }
-            else if(touch.phase == TouchPhase.Ended)
-            {
-              
-                bisDrag = false;
-                touchTime = 0f;
-                createTime = 0f;
-            }
+                case TouchPhase.Began:
+                    nowPos = touch.position;
+                    TouchEffect();
+                    break;
 
+                case TouchPhase.Stationary:
+                    touchTime += Time.deltaTime;
+                    if (touchTime > 0.4f)
+                    {
+                        bisDrag = true;
+                    }
+                    if (bisDrag)
+                    {
+                        nowPos = touch.position - touch.deltaPosition;
+                        if (bCanCreate)
+                        {
+                            DragEffect();
+                        }
+
+                    }
+                    break;
+
+                case TouchPhase.Moved:
+                    if (bisDrag)
+                    {
+                        nowPos = touch.position - touch.deltaPosition;
+                        if (bCanCreate)
+                        {
+                            DragEffect();
+                        }
+                    }
+                    break;
+
+                case TouchPhase.Ended:
+                    bisDrag = false;
+                    touchTime = 0f;
+                    createTime = 0f;
+                    break;
+            }
             createTime += Time.deltaTime;
-            if(createTime > 0.5f)
+            if (createTime >= 0.5f)
             {
                 bCanCreate = true;
             }
+        
         }
-
+       
+        
     }
     
+    private void MultiTouchEvent()
+    {
+        //if (Input.touchCount > 0 ) -> update에 박기전에 넣기
+ 
+        for (int i = 0; i < Input.touchCount; i++)
+        {
+            if(Input.touchCount < maxTouchCount + 1)
+            {
+                Touch touch = Input.GetTouch(i);
+                touch_List.Add(touch);
+
+                switch (touch.phase)
+                {
+                    case TouchPhase.Began:
+                        nowPos = touch.position;
+                       
+                        TouchEffect();
+                        break;
+
+                    case TouchPhase.Stationary:
+                        touchTime += Time.deltaTime;
+                        if (touchTime > 0.4f)
+                        {
+                            bisDrag = true;
+                        }
+                        if (bisDrag)
+                        {
+                            nowPos = touch.position - touch.deltaPosition;
+                            if (bCanCreate)
+                            {
+                                DragEffect();
+                            }
+                        }
+
+                        break;
+
+                    case TouchPhase.Moved:
+                        if (bisDrag )
+                        {
+                            nowPos = touch.position - touch.deltaPosition;
+                            if (bCanCreate)
+                            {
+                                DragEffect();
+                            }
+                        }
+
+                        break;
+
+                    case TouchPhase.Ended:
+                        bisDrag = false;
+                        touchTime = 0f;
+                        createTime = 0f;
+
+
+                        break;
+                }
+
+                createTime += Time.deltaTime;
+                if (createTime >= 0.5f)
+                {
+                    bCanCreate = true;
+                }
+            }
+
+            //if (Input.touchCount == 0)
+            //{
+            //    bisDrag = false;
+            //    touchTime = 0f;
+            //    createTime = 0f;
+
+            //}
+
+        }
+
+
+
+    }
 
     public void TouchEffect()
     {
@@ -153,14 +221,10 @@ public class TouchManager : MonoBehaviour
             visualEffects[i].SendEvent("Click");
         }
         Destroy(vfxEffect, 1.5f);
-
-
-
     }
 
     public void DragEffect()
-    {
-        
+    {   
         if(bisDrag)
         {
             Vector3 worldPos = new Vector3();
@@ -203,21 +267,48 @@ public class TouchManager : MonoBehaviour
 
     public void OriginalCode()
     {
-        //Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //pos.z = 1;
-
-
-        //GameObject vfxEffect = Instantiate(VFXPrefab, pos, Quaternion.identity);
-        //vfxEffect.transform.parent = particleCanvas;
-
-
-        //visualEffects = vfxEffect.GetComponentsInChildren<VisualEffect>();
-
-        //for (int i = 0; i < visualEffects.Length; i++)
+        //if (touch.phase == TouchPhase.Began)
         //{
-        //    visualEffects[i].SendEvent("Click");
+        //    nowPos = touch.position;
+        //    TouchEffect();
         //}
-        //Destroy(vfxEffect, 1.5f);
+        //else if (touch.phase == TouchPhase.Stationary)
+        //{
+        //    //터치중이면
+
+        //    touchTime += Time.deltaTime;
+        //    if (touchTime > 0.4f)
+        //    {
+        //        bisDrag = true;
+        //    }
+        //    if (bisDrag)
+        //    {
+        //        nowPos = touch.position - touch.deltaPosition;
+        //        if (bCanCreate)
+        //        {
+        //            DragEffect();
+        //        }
+
+        //    }
+        //}
+        //else if (touch.phase == TouchPhase.Moved)
+        //{
+        //    if (bisDrag)
+        //    {
+        //        nowPos = touch.position - touch.deltaPosition;
+        //        if (bCanCreate)
+        //        {
+        //            DragEffect();
+        //        }
+        //    }
+        //}
+        //else if (touch.phase == TouchPhase.Ended)
+        //{
+
+        //    bisDrag = false;
+        //    touchTime = 0f;
+        //    createTime = 0f;
+        //}
     }
 
     private IEnumerator ClickStartTimer_Co()

@@ -5087,7 +5087,7 @@ GameObject:
   - component: {fileID: 775070155}
   - component: {fileID: 775070154}
   m_Layer: 0
-  m_Name: Effect Texture
+  m_Name: Effect TextureRawImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10559,7 +10559,9 @@ MonoBehaviour:
   effectCamera: {fileID: 391822139}
   particleCanvas: {fileID: 1716477167}
   rawImage: {fileID: 775070154}
+  nowPos_List: []
   touchTransform: {fileID: 0}
+  bisTouch: 0
   bisDrag: 0
   bCanCreate: 0
   DragPool: []
@@ -27042,7 +27044,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2611825053433720870}
   m_HandleRect: {fileID: 2611825053433720921}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -41692,7 +41694,7 @@ GameObject:
   - component: {fileID: 4475185842924557271}
   - component: {fileID: 4475185842924557272}
   m_Layer: 6
-  m_Name: Tocuh
+  m_Name: TocuhEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42723,7 +42725,7 @@ GameObject:
   - component: {fileID: 5115978559520836460}
   - component: {fileID: 5115978559520836464}
   m_Layer: 6
-  m_Name: Drag
+  m_Name: DragEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
