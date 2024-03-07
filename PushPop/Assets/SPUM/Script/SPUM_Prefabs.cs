@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
-
 public class SPUM_Prefabs : MonoBehaviour
 {
     public float _version;
@@ -35,19 +34,35 @@ public class SPUM_Prefabs : MonoBehaviour
         }
     }
     private void Awake() {
-        InitAnimPair();
+        // InitAnimPair();
     }
     private void Start() {
         UnitTypeChanged.AddListener(InitAnimPair);
     }
     // 이름으로 애니메이션 실행
     public void PlayAnimation(string name){
-        foreach (var animationName in _nameToHashPair)
+
+        Debug.Log(name);
+        
+        // foreach (var animationName in _nameToHashPair)
+        // {
+        //     if(animationName.Key.ToLower().Contains(name.ToLower()) ){
+        //         _anim.Play(animationName.Value, 0);
+        //         break;
+        //     }
+        // }
+
+        switch(name)
         {
-            if(animationName.Key.ToLower().Contains(name.ToLower()) ){
-                _anim.Play(animationName.Value, 0);
-                break;
-            }
+            case "idle":
+                _anim.SetBool("Move",false);
+            break;
+
+            case "run":
+                _anim.SetBool("Move",true);
+            break;
+
+            
         }
     }
 }
