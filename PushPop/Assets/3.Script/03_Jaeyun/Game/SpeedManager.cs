@@ -14,6 +14,13 @@ public class SpeedManager : MonoBehaviour, IGame
         throw new System.NotImplementedException();
     }
 
+    public IEnumerator GameStart_Co()
+    {
+        // ready
+        throw new System.NotImplementedException();
+        GameStart();
+    }
+
     public void Init()
     {
         throw new System.NotImplementedException();

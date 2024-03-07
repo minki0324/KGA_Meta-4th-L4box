@@ -13,6 +13,4 @@ public class GameResult : MonoBehaviour
     public string message = string.Empty;
     private Sprite pushPopImage;
     private string score;
-
-
 }

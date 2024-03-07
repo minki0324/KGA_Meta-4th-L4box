@@ -65,4 +65,11 @@ public class PushPushManager : MonoBehaviour, IGame
     {
         throw new NotImplementedException();
     }
+
+    public IEnumerator GameStart_Co()
+    {
+        // ready
+        throw new NotImplementedException();
+        GameStart();
+    }
 }

@@ -231,7 +231,7 @@ public class Ranking : MonoBehaviour
                 if (SQL_Manager.instance.ProfileList[i].index == topRanks[j].index)
                 { // Profile Index와 정렬된 List의 Index가 일치한 걸 찾아옴
                     _name[j].text = SQL_Manager.instance.ProfileList[i].name;
-                    SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.ProfileList[i].imageMode, _image[j], SQL_Manager.instance.ProfileList[i].index);
+                    SQL_Manager.instance.PrintProfileImage(_image[j], SQL_Manager.instance.ProfileList[i].imageMode, SQL_Manager.instance.ProfileList[i].index);
                 }
             }
         }
@@ -335,7 +335,7 @@ public class Ranking : MonoBehaviour
                 if (SQL_Manager.instance.ProfileList[i].index == topRanks[j].Rank.index)
                 { // Profile Index와 정렬된 List의 Index가 일치한 걸 찾아옴
                     _name[j].text = SQL_Manager.instance.ProfileList[i].name;
-                    SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.ProfileList[i].imageMode, _image[j], SQL_Manager.instance.ProfileList[i].index);
+                    SQL_Manager.instance.PrintProfileImage(_image[j], SQL_Manager.instance.ProfileList[i].imageMode, SQL_Manager.instance.ProfileList[i].index);
                 }
             }
         }
@@ -402,15 +402,15 @@ public class Ranking : MonoBehaviour
         for (int i = 0; i < versusData.games.Length; i++)
         {
             BombVersus currentGame = versusData.games[i];
-
             if (currentGame != null)
             {
                 if (currentGame.Player1PIndex == 0 && currentGame.Player2PIndex == 0)
-                { // 삭제된 기록이 있을 경우
-                    _winText[i].text = "";
-                    _loseText[i].text = "";
+                { // 프로필 삭제 기록이 있는 경우, 칸 정리
+                    _winText[i].text = string.Empty;
+                    _loseText[i].text = string.Empty;
                     _winImage[i].sprite = ProfileManager.Instance.NoneBackground;
                     _loseImage[i].sprite = ProfileManager.Instance.NoneBackground;
+
                 }
                 else if (currentGame.Result)
                 { // 1P가 이긴 경우
@@ -427,8 +427,8 @@ public class Ranking : MonoBehaviour
             }
             else
             {
-                _winText[i].text = "";
-                _loseText[i].text = "";
+                _winText[i].text = string.Empty;
+                _loseText[i].text = string.Empty;
                 _winImage[i].sprite = ProfileManager.Instance.NoneBackground;
                 _loseImage[i].sprite = ProfileManager.Instance.NoneBackground;
             }

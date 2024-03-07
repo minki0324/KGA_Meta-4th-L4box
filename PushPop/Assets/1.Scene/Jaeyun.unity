@@ -2489,9 +2489,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
-        m_MethodName: StartGame
+      - m_Target: {fileID: 1457637505}
+        m_TargetAssemblyTypeName: MultiCanvas, Assembly-CSharp
+        m_MethodName: GameStartButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5027,7 +5027,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 160001179}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1457637505}
+        m_TargetAssemblyTypeName: MultiCanvas, Assembly-CSharp
+        m_MethodName: HelpPanelButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &160001179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7233,6 +7245,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ecabbe96340a5e4aa9f8e20379a606f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerScore: 0
+  profileImage1P: {fileID: 0}
+  profileName1P: {fileID: 0}
+  profileScore: {fileID: 0}
+  ProfileImage2P: {fileID: 0}
+  ProfileName2P: {fileID: 0}
+  winLankImage: []
+  winProfileName: []
+  winFrameImage: []
+  loseLankImage: []
+  loseProfileName: []
+  loseFrameImage: []
+  rankProfileScore: []
+  IsSelect: 0
 --- !u!1 &213979909
 GameObject:
   m_ObjectHideFlags: 0
@@ -43823,6 +43849,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ecabbe96340a5e4aa9f8e20379a606f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerScore: 0
+  profileImage1P: {fileID: 1802099974}
+  profileName1P: {fileID: 559822936}
+  profileScore: {fileID: 0}
+  ProfileImage2P: {fileID: 105123980}
+  ProfileName2P: {fileID: 897787282}
+  winLankImage:
+  - {fileID: 1745752335}
+  - {fileID: 710880333}
+  winProfileName:
+  - {fileID: 1040558617}
+  - {fileID: 1033829744}
+  winFrameImage:
+  - {fileID: 1917774204}
+  - {fileID: 1315352283}
+  loseLankImage:
+  - {fileID: 653500075}
+  - {fileID: 1703162188}
+  loseProfileName:
+  - {fileID: 554635069}
+  - {fileID: 1213294841}
+  loseFrameImage:
+  - {fileID: 1699046451}
+  - {fileID: 1012640014}
+  rankProfileScore: []
+  IsSelect: 0
 --- !u!1 &1322458998
 GameObject:
   m_ObjectHideFlags: 0
@@ -48061,7 +48113,10 @@ MonoBehaviour:
   BackButton: {fileID: 1779875773}
   HelpButton: {fileID: 160001176}
   Ready: {fileID: 1317759486}
-  readyProfileSetting: {fileID: 0}
+  ReadyProfileSetting: {fileID: 1317759488}
+  ProfileSelectText: {fileID: 782810918}
+  warningLog: {fileID: 182836015}
+  MaskImage: {fileID: 263553759}
   SelectButton: {fileID: 167740168}
   ChangeButton: {fileID: 784087072}
   MultiGame: {fileID: 313937940}
@@ -51415,6 +51470,7 @@ GameObject:
   - component: {fileID: 1601699443}
   - component: {fileID: 1601699445}
   - component: {fileID: 1601699444}
+  - component: {fileID: 1601699446}
   m_Layer: 5
   m_Name: Ready
   m_TagString: Untagged
@@ -51481,6 +51537,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1601699442}
   m_CullTransparentMesh: 1
+--- !u!114 &1601699446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601699442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ecabbe96340a5e4aa9f8e20379a606f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerScore: 0
+  profileImage1P: {fileID: 0}
+  profileName1P: {fileID: 0}
+  profileScore: {fileID: 0}
+  ProfileImage2P: {fileID: 0}
+  ProfileName2P: {fileID: 0}
+  winLankImage: []
+  winProfileName: []
+  winFrameImage: []
+  loseLankImage: []
+  loseProfileName: []
+  loseFrameImage: []
+  rankProfileScore: []
+  IsSelect: 0
 --- !u!1 &1603454831
 GameObject:
   m_ObjectHideFlags: 0
@@ -53975,7 +54057,7 @@ MonoBehaviour:
   cameraManager: {fileID: 762217189}
   CaptureImage: {fileID: 1545556489}
   selectProfileIcon: {fileID: 1244475458}
-  ProfileIamge: {fileID: 667300150}
+  ProfileImage: {fileID: 667300150}
   ProfileText: {fileID: 2020246405}
   ExitButton: {fileID: 1797268694}
   DeletePanel: {fileID: 1720487626}
@@ -56525,7 +56607,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1779875776}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1457637505}
+        m_TargetAssemblyTypeName: MultiCanvas, Assembly-CSharp
+        m_MethodName: MultiBackButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1779875776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67274,6 +67368,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UID: 0
+  SelectPlayer: 0
   ProfileName1P: 
   FirstPlayerIndex: 0
   DefaultImage1P: 0
@@ -67296,6 +67391,7 @@ MonoBehaviour:
   TempImageIndex: 0
   TempUserIndex: 0
   TempProfileName: 
+  TempImageMode: 1
 --- !u!4 &2199113746186542486
 Transform:
   m_ObjectHideFlags: 0

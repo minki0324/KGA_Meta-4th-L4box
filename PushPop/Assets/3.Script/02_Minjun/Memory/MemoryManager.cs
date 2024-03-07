@@ -210,4 +210,11 @@ public class MemoryManager : MonoBehaviour, IGame
     {
         throw new System.NotImplementedException();
     }
+
+    public IEnumerator GameStart_Co()
+    {
+        // ready
+        throw new System.NotImplementedException();
+        GameStart();
+    }
 }

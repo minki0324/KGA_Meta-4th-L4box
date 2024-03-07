@@ -692,27 +692,23 @@ public class SQL_Manager : MonoBehaviour
     }
     #endregion
 
-    public void PrintProfileImage(bool _imageMode, Image _image, int _profileIndex)
-    {
-        int defaultImage = -1;
-
+    public void PrintProfileImage(Image _profileImage, bool _imageMode, int _profileIndex)
+    { // 프로필 인덱스에 따라 이미지 출력
         if (_imageMode)
         { // 이미지 고르기 선택한 플레이어일 때
             for (int i = 0; i < ProfileList.Count; i++)
             {
-                if (_profileIndex == ProfileList[i].index)
+                if (_profileIndex.Equals(ProfileList[i].index))
                 {
-                    defaultImage = ProfileList[i].defaultImage;
-                    _image.sprite = ProfileManager.Instance.ProfileImages[defaultImage];
+                    _profileImage.sprite = ProfileManager.Instance.ProfileImages[ProfileList[i].defaultImage];
                 }
             }
         }
-        else if (!_imageMode)
+        else
         { // 사진 찍기를 선택한 플레이어일 때
             Texture2D profileTexture = SQL_LoadProfileImage(ProfileManager.Instance.UID, _profileIndex);
             Sprite profileSprite = ProfileManager.Instance.TextureToSprite(profileTexture);
-            _image.sprite = profileSprite;
-
+            _profileImage.sprite = profileSprite;
         }
     }
     #endregion

@@ -48,6 +48,8 @@ public class MainCanvas : MonoBehaviour
     public void ProfileImageButton()
     { // Profile 이미지 클릭 시 프로필 선택으로 돌아감
         AudioManager.instance.SetCommonAudioClip_SFX(3);
+        ProfileManager.Instance.PrintProfileList(profileCanvas.SelectScrollViewContent);
+
         profileCanvas.gameObject.SetActive(true);
         profileCanvas.ExitButton.SetActive(true);
 

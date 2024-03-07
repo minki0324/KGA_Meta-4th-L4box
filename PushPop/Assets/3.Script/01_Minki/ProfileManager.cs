@@ -3,7 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+
+public class PlayerInfo
+{
+    public Sprite profileImage;
+    public string profileName;
+    public int playerIndex;
+    public int defaultImageIndex;
+    public bool imageMode;
+
+    public PlayerInfo(string _profileName, int _playerIndex, int _defaultImageIndex, bool _imageMode)
+    { // sprite는 캐싱 후 추가
+        profileName = _profileName;
+        playerIndex = _playerIndex;
+        defaultImageIndex = _defaultImageIndex; // image mode true일 때 -1로 저장
+        imageMode = _imageMode;
+    }
+}
 
 /// <summary>
 /// Profile 관련 행동 처리 Class
@@ -17,7 +33,11 @@ public class ProfileManager : MonoBehaviour
     private string uniqueID = string.Empty; // PlayerPrefs에 저장되는 고유 GUID;
     public int UID = 0; // 기기별 고유 번호 > SQL과 연동
 
-    [Header("1P Infomation")]
+    [Header("Player Info")]
+    public Player SelectPlayer = Player.Player1;
+    public PlayerInfo[] PlayerInfo = new PlayerInfo[2]; // Player1, Player2
+
+    [Header("1P Info")]
     [Space(5)]
     public string ProfileName1P = string.Empty; // 1P Profile Name
     public int FirstPlayerIndex = 0; // 1P Profile Index
@@ -25,7 +45,7 @@ public class ProfileManager : MonoBehaviour
     public bool IsImageMode1P = false; // false = 사진찍기, true = 이미지 선택
     public Sprite CacheProfileImage1P = null;
 
-    [Header("2P Player")]
+    [Header("2P Info")]
     [Space(5)]
     public string ProfileName2P = string.Empty; // 2P Profile Name
     public int SecondPlayerIndex = 0; // 2P Profile Index
@@ -44,7 +64,7 @@ public class ProfileManager : MonoBehaviour
     [Space(5)]
     private string imagePath = string.Empty; // Image Saving Path
     public bool isUpdate = false; // Profile 추가 시 false, 수정 시 true
-    public bool isImageSelect = false; // Profile Image Icon Select ?
+    public bool isImageSelect = false; // Profile Image Icon 선택 시 true, 아닐 시 false
     public bool isProfileSelected = false; // is Profile Select ?
 
     [Header("Temp Info")]
@@ -52,8 +72,9 @@ public class ProfileManager : MonoBehaviour
     public int TempImageIndex = 0; // profile 등록 시 이미지 고르기에서 선택한 index
     public int TempUserIndex = -1; // Profile 등록할 때 사용할 임시 ProfileIndex
     public string TempProfileName = string.Empty; // Profile 등록할 때 사용할 임시 ProfileName
+    public bool TempImageMode = true; // profile 이미지 등록 시 true, 사진 찍기 시 false
 
-    public Coroutine WarningCoroutine = null;
+    public Coroutine WarningCoroutine = null; // 닉네임, 이미지 선택 체크 시 사용
 
     #region Unity Callback
     private void Awake()
@@ -109,7 +130,7 @@ public class ProfileManager : MonoBehaviour
         else
         { // profile 수정 시
             SQL_Manager.instance.SQL_UpdateMode(iconMode, UID, TempUserIndex);
-            ProfileName1P = TempProfileName; // 본인을 Update 해서 넣어줌
+            PlayerInfo[(int)SelectPlayer].profileName = TempProfileName; // 본인을 Update 해서 넣어줌
         }
     }
 
@@ -145,11 +166,9 @@ public class ProfileManager : MonoBehaviour
         { // Panel의 Index 별로 Profile_Information 컴포넌트를 가져와서 name과 image를 Mode에 맞게 셋팅
             ProfileInfo info = ProfilePanelList[i].GetComponent<ProfileInfo>();
 
-            // 각 infomation 프로필 이름 출력
+            // 프로필 출력
+            SQL_Manager.instance.PrintProfileImage(info.ProfileImage, SQL_Manager.instance.ProfileList[i].imageMode, SQL_Manager.instance.ProfileList[i].index);
             info.ProfileName.text = SQL_Manager.instance.ProfileList[i].name;
-
-            // 각 information 프로필 이미지 출력
-            SQL_Manager.instance.PrintProfileImage(SQL_Manager.instance.ProfileList[i].imageMode, info.ProfileImage, SQL_Manager.instance.ProfileList[i].index);
         }
     }
 
@@ -157,7 +176,7 @@ public class ProfileManager : MonoBehaviour
     { // 본인의 프로필 제외하고 출력
         for (int i = 0; i < SQL_Manager.instance.ProfileList.Count; i++)
         {  // index = index로 매칭 시켜놓은 로직 중간에 예외처리로 삭제하면 index오류가 날 것을 우려하여 세팅을 다 마친 후 본인 프로필 삭제
-            if (FirstPlayerIndex.Equals(SQL_Manager.instance.ProfileList[i].index))
+            if (PlayerInfo[(int)Player.Player1].playerIndex.Equals(SQL_Manager.instance.ProfileList[i].index))
             {
                 Profile tempProfile = SQL_Manager.instance.ProfileList[i];
                 SQL_Manager.instance.ProfileList.Remove(tempProfile);
@@ -313,41 +332,17 @@ public class ProfileManager : MonoBehaviour
     /// <param name="_profileImage"></param>
     public Sprite ProfileImageCaching()
     { // 선택한 프로필 이미지 캐싱
-        bool isImageMode = IsImageMode1P; // 1P일 때 IsImageMode1P, 2P일 때 IsImageMode2P
-        int profileIndex = FirstPlayerIndex;
-
-        if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
-        { // 2P일 때
-            isImageMode = IsImageMode2P;
-            profileIndex = SecondPlayerIndex;
-
-            if (isImageMode)
-            { // 이미지 선택 모드
-                CacheProfileImage2P = ProfileImages[TempImageIndex]; // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
-            }
-            else
-            { // 사진 찍기 모드
-                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, profileIndex);
-                Sprite profileSprite = TextureToSprite(profileTexture);
-                CacheProfileImage2P = profileSprite;
-            }
-
-            return CacheProfileImage2P;
+        Sprite profileSprite = null;
+        if (TempImageMode)
+        { // 이미지 선택 모드
+            profileSprite = ProfileImages[TempImageIndex]; // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
+            return profileSprite;
         }
         else
-        {
-            if (isImageMode)
-            { // 이미지 선택 모드
-                CacheProfileImage1P = ProfileImages[TempImageIndex]; // 저장된 Index의 이미지를 프로필 Sprite에 넣어줌
-            }
-            else
-            { // 사진 찍기 모드
-                Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, profileIndex);
-                Sprite profileSprite = TextureToSprite(profileTexture);
-                CacheProfileImage1P = profileSprite;
-            }
-
-            return CacheProfileImage1P;
+        { // 사진 찍기 모드
+            Texture2D profileTexture = SQL_Manager.instance.SQL_LoadProfileImage(UID, TempUserIndex);
+            profileSprite = TextureToSprite(profileTexture);
+            return profileSprite;
         }
     }
 
@@ -365,6 +360,8 @@ public class ProfileManager : MonoBehaviour
     #endregion
 
     // Jaeyun Profile Canvas
+
+
     #region Warning Log Output
     public void PrintErrorLog(TMP_Text _warningLog, string _logText)
     { // InputField Check 후 Error Log 띄우는 method

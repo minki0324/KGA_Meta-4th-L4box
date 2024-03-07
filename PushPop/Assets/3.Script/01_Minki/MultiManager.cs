@@ -133,14 +133,10 @@ public class MultiManager : MonoBehaviour, IPointerClickHandler, IGame
 
     private void OnEnable()
     {
+        AudioManager.instance.SetAudioClip_BGM(1);
         GameSetting();
-        // 버튼 사이즈 설정
-        PushPop.Instance.buttonSize = new Vector2(56.8f, 56.8f);
-        PushPop.Instance.percentage = 0.476f;
-
         GameManager.Instance.GameStart();
 
-        AudioManager.instance.SetAudioClip_BGM(1);
         PlayerSet1P();
         profile2PInput.onValidateInput += ValidateInput;
 
@@ -229,7 +225,7 @@ public class MultiManager : MonoBehaviour, IPointerClickHandler, IGame
         PrintProfileList();
 
         // 2P 프로필 이름 출력
-        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode2P, playerImage2P, ProfileManager.Instance.SecondPlayerIndex);
+        // SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode2P, playerImage2P, ProfileManager.Instance.SecondPlayerIndex);
         playerName2P.text = ProfileManager.Instance.ProfileName2P;
         isSelect2P = true;
 
@@ -504,9 +500,9 @@ public class MultiManager : MonoBehaviour, IPointerClickHandler, IGame
         // Profile Setting
         inGameText1P.text = ProfileManager.Instance.ProfileName1P;
         inGameText2P.text = ProfileManager.Instance.ProfileName2P;
-        SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode1P, inGameImage1P, ProfileManager.Instance.FirstPlayerIndex);
+       /* SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode1P, inGameImage1P, ProfileManager.Instance.FirstPlayerIndex);
         SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode2P, inGameImage2P, ProfileManager.Instance.SecondPlayerIndex);
-
+*/
         readyGame_co = StartCoroutine(ReadyGame_Co());
     }
 
@@ -1038,12 +1034,21 @@ public class MultiManager : MonoBehaviour, IPointerClickHandler, IGame
 
     public void GameSetting()
     {
-        
+        // 버튼 사이즈 설정
+        PushPop.Instance.buttonSize = new Vector2(56.8f, 56.8f);
+        PushPop.Instance.percentage = 0.476f;
     }
 
     public void GameStart()
     {
 
+    }
+
+    public IEnumerator GameStart_Co()
+    {
+        // ready
+        throw new NotImplementedException();
+        GameStart();
     }
     #endregion
 }

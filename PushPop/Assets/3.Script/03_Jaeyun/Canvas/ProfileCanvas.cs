@@ -33,7 +33,7 @@ public class ProfileCanvas : MonoBehaviour
     [SerializeField] private SelectProfileIcon selectProfileIcon = null;
 
     [Header("Current Profile")]
-    public Image ProfileIamge = null;
+    public Image ProfileImage = null;
     public TMP_Text ProfileText = null;
 
     [Header("Exit Button")]
@@ -71,7 +71,7 @@ public class ProfileCanvas : MonoBehaviour
         AudioManager.instance.SetCommonAudioClip_SFX(3);
 
         if (ProfileManager.Instance.ProfilePanelList.Count > 0)
-        {
+        { // 프로필 리스트 출력
             bool active = ProfileManager.Instance.ProfilePanelList[0].GetComponent<ProfileInfo>().DeleteButton.activeSelf;
             for (int i = 0; i < ProfileManager.Instance.ProfilePanelList.Count; i++)
             {
@@ -96,11 +96,14 @@ public class ProfileCanvas : MonoBehaviour
             }
             else
             { // 프로필 수정 시
+                // Profile Update
+                ProfileManager.Instance.PlayerInfo[(int)ProfileManager.Instance.SelectPlayer].profileImage = ProfileManager.Instance.ProfileImageCaching();
+                SQL_Manager.instance.PrintProfileImage(ProfileImage, true, ProfileManager.Instance.TempUserIndex);
+                ProfileText.text = ProfileManager.Instance.PlayerInfo[(int)ProfileManager.Instance.SelectPlayer].profileName;
+                
                 CurrentProfile.SetActive(true);
             }
 
-            SQL_Manager.instance.PrintProfileImage(ProfileManager.Instance.IsImageMode1P, ProfileIamge, ProfileManager.Instance.FirstPlayerIndex);
-            ProfileManager.Instance.ProfileImageCaching();
             ProfileIconSelect.SetActive(false);
         }
         else
@@ -129,6 +132,7 @@ public class ProfileCanvas : MonoBehaviour
         AudioManager.instance.SetCommonAudioClip_SFX(3);
 
         CreateImage.SetActive(false);
+        ProfileManager.Instance.TempImageMode = false;
 
         // Camera
         CaptureImage.sprite = null;
@@ -140,6 +144,8 @@ public class ProfileCanvas : MonoBehaviour
     public void CreateImageSelectImageButton()
     { // 프로필 이미지 등록 - 이미지 고르기
         AudioManager.instance.SetCommonAudioClip_SFX(3);
+        
+        ProfileManager.Instance.TempImageMode = true;
 
         ProfileIconSelect.SetActive(true);
         CreateImage.SetActive(false);
@@ -168,6 +174,11 @@ public class ProfileCanvas : MonoBehaviour
         }
         else
         { // 프로필 수정 시
+            // Profile Update
+            ProfileManager.Instance.PlayerInfo[(int)ProfileManager.Instance.SelectPlayer].profileImage = ProfileManager.Instance.ProfileImageCaching();
+            SQL_Manager.instance.PrintProfileImage(ProfileImage, false, ProfileManager.Instance.TempUserIndex);
+            ProfileText.text = ProfileManager.Instance.PlayerInfo[(int)ProfileManager.Instance.SelectPlayer].profileName;
+
             CurrentProfile.SetActive(true);
             CaptureCheck.SetActive(false);
         }
@@ -225,20 +236,28 @@ public class ProfileCanvas : MonoBehaviour
         {
             ProfileManager.Instance.isProfileSelected = true;
         }
-        GameManager.Instance.GameMode = GameMode.None;
 
-        mainCanvas.TitleText.SetActive(true);
-        mainCanvas.OptionButton.SetActive(true);
-        mainCanvas.ProfileButton.SetActive(true);
-        mainCanvas.HomeButton.SetActive(true);
-        mainCanvas.PushpushButton.SetActive(true);
-        mainCanvas.SpeedButton.SetActive(true);
-        mainCanvas.MemoryButton.SetActive(true);
-        mainCanvas.MultiButton.SetActive(true);
-        mainCanvas.NetworkButton.SetActive(true);
+        if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
+        {
+            multiCanvas.ReadyProfileSetting.SelectPlayerInfoSetting(); // 2P Profile Setting
+            multiCanvas.ProfileSelectText.SetActive(false);
+            multiCanvas.MaskImage.SetActive(true);
+            multiCanvas.ReadyProfileSetting.ProfileName2P.gameObject.SetActive(true);
+        }
+        else
+        { // Gamemode.None
+            mainCanvas.TitleText.SetActive(true);
+            mainCanvas.OptionButton.SetActive(true);
+            mainCanvas.ProfileButton.SetActive(true);
+            mainCanvas.HomeButton.SetActive(true);
+            mainCanvas.PushpushButton.SetActive(true);
+            mainCanvas.SpeedButton.SetActive(true);
+            mainCanvas.MemoryButton.SetActive(true);
+            mainCanvas.MultiButton.SetActive(true);
+            mainCanvas.NetworkButton.SetActive(true);
 
-        // profile sprite setting
-        mainCanvas.CaptureImage.sprite = ProfileManager.Instance.ProfileImageCaching();
+            mainCanvas.CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
+        }
 
         CurrentProfile.SetActive(false);
         ExitButton.SetActive(false);
@@ -260,11 +279,6 @@ public class ProfileCanvas : MonoBehaviour
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         SelectScrollView.normalizedPosition = new Vector2(1f, 1f);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
-
-        // temp init
-        ProfileManager.Instance.TempProfileName = string.Empty;
-        ProfileManager.Instance.TempUserIndex = -1;
-        ProfileManager.Instance.TempImageIndex = 0;
 
         BlockPanel.SetActive(false);
         CurrentProfile.SetActive(false);

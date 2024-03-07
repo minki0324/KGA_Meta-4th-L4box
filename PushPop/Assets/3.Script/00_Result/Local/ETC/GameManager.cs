@@ -151,6 +151,7 @@ public class GameManager : MonoBehaviour, IGameMode_
 
     private IEnumerator ShutDownTimer_Co()
     { // Shutdown Timer
+        ShutdownTimer *= 60f; // 1분
         while (ShutdownTimer >= 0)
         {
             ShutdownTimer -= Time.deltaTime;
