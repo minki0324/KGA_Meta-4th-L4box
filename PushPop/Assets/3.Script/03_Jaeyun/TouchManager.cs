@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.VFX;
 
+//update-> coroutine으로 바꿀지 생각할 것
+
 public class TouchManager : MonoBehaviour
 {
     class TouchEvent
@@ -21,7 +23,6 @@ public class TouchManager : MonoBehaviour
     [SerializeField] private GameObject DragEffectPrefab;   //드래그했을 때 나오는 Visual Effect 프리팹
 
     [Header("List & Array")]
-    [SerializeField] private VisualEffect[] visualEffects;       //프리팹에 하위 오브젝트 존재 시 모든 VisualEffect 참조용 배열
     [SerializeField] private VisualEffect[] visualEffect_Pooling;    //드래그 시 생성되는 프리팹 오브젝트 풀링용 배열
 
     [SerializeField] private List<TouchEvent> touchEvent_List = new List<TouchEvent>();     //TouchEvent 담을 리스트
@@ -148,20 +149,17 @@ public class TouchManager : MonoBehaviour
     }
 
     public void TouchEffect_Multi(int _index)
-    {//터치 이펙트 생성 메소드
+    {//터치 이펙트 생성 메소드 -> 얘도 풀링으로 할까요?
         Vector3 worldPos = new Vector3();
 
         worldPos = Camera.main.ScreenToWorldPoint(nowPos_List[_index]);
         worldPos.z = 1;
         GameObject vfxEffect = Instantiate(TouchEffectPrefab, worldPos, Quaternion.identity);
 
-        vfxEffect.transform.parent = particleCanvas;
-        visualEffects = vfxEffect.GetComponentsInChildren<VisualEffect>();
+        //vfxEffect.transform.parent = particleCanvas;
 
-        for (int i = 0; i < visualEffects.Length; i++)
-        {
-            visualEffects[i].SendEvent("Click");
-        }
+        vfxEffect.GetComponent<VisualEffect>().SendEvent("Click");
+     
         Destroy(vfxEffect, 1.5f);
     }
 
@@ -175,7 +173,7 @@ public class TouchManager : MonoBehaviour
         if (CurrentCount < MaxCount)
         {//오브젝트 풀이 비어있으면 생성
             GameObject vfxEffect = Instantiate(DragEffectPrefab, worldPos, Quaternion.identity);
-            vfxEffect.transform.parent = particleCanvas;
+            //vfxEffect.transform.parent = particleCanvas;
 
             visualEffect_Pooling[CurrentCount] = vfxEffect.GetComponent<VisualEffect>();
             visualEffect_Pooling[CurrentCount].gameObject.SetActive(true);

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Drag_Particle : MonoBehaviour
 {
-    // Start is called before the first frame update
+
+    float cashing = 1.5f;
 
     private void OnEnable()
     {
@@ -15,7 +16,7 @@ public class Drag_Particle : MonoBehaviour
     private IEnumerator Destory_co()
     {//SetActive(false ÄÚ·çÆ¾)
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(cashing);
         gameObject.SetActive(false);
     }
 }
