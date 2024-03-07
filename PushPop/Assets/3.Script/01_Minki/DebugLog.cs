@@ -21,6 +21,7 @@ public class DebugLog : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            Application.logMessageReceived += HandleLog; // 로그 메시지 이벤트에 핸들러 등록
         }
         else
         {
@@ -29,8 +30,17 @@ public class DebugLog : MonoBehaviour
         }
         Message = Adding_Message;
         past_me = current_me;
+    }
 
+    private void OnDestroy()
+    {
+        Application.logMessageReceived -= HandleLog; // 오브젝트 파괴 시 이벤트 핸들러 제거
+    }
 
+    private void HandleLog(string logString, string stackTrace, LogType type)
+    {
+        // 여기서 받은 로그 메시지를 처리합니다. 예를 들어:
+        Adding_Message($"{type}: {logString}\n{stackTrace}");
     }
 
     public void Adding_Message(string m)
@@ -62,7 +72,6 @@ public class DebugLog : MonoBehaviour
             for (int i = 1; i < message_Box.Length; i++)
             {
                 message_Box[i - 1].text = message_Box[i].text;
-                //미는 작업
             }
             message_Box[message_Box.Length - 1].text = me;
         }
