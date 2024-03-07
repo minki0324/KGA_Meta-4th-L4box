@@ -2489,7 +2489,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1457637500}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
         m_MethodName: StartGame
         m_Mode: 1
@@ -7189,6 +7189,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 213746909}
+  - component: {fileID: 213746910}
   m_Layer: 5
   m_Name: Ready
   m_TagString: Untagged
@@ -7220,6 +7221,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &213746910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 213746908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ecabbe96340a5e4aa9f8e20379a606f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &213979909
 GameObject:
   m_ObjectHideFlags: 0
@@ -10895,6 +10908,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 313937941}
+  - component: {fileID: 313937942}
   m_Layer: 5
   m_Name: Multi Game
   m_TagString: Untagged
@@ -10929,6 +10943,93 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &313937942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313937940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3b93406775c29d40ac597289d871c28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerImage1P: {fileID: 0}
+  playerName1P: {fileID: 0}
+  popList1P: []
+  inGameImage1P: {fileID: 0}
+  inGameText1P: {fileID: 0}
+  playerImage2P: {fileID: 0}
+  tempPlayerImage2P: {fileID: 0}
+  playerName2P: {fileID: 0}
+  tempPlayerName2P: {fileID: 0}
+  isSelect2P: 0
+  popList2P: []
+  inGameImage2P: {fileID: 0}
+  inGameText2P: {fileID: 0}
+  profilePanel: {fileID: 0}
+  profileParent: {fileID: 0}
+  profile2PName: 
+  profile2PInput: {fileID: 0}
+  iconPanel: {fileID: 0}
+  checkPanel: {fileID: 0}
+  imageIndex: 0
+  CaptureImage: {fileID: 0}
+  MainPanel: {fileID: 0}
+  GamePanel: {fileID: 0}
+  CreateNamePanel: {fileID: 0}
+  CreateImagePanel: {fileID: 0}
+  SelectProfile: {fileID: 0}
+  CurrentProfile: {fileID: 0}
+  deletePanel: {fileID: 0}
+  help_Canvas: {fileID: 0}
+  main_Canvas: {fileID: 0}
+  WarningPanel: {fileID: 0}
+  nameErrorLog: {fileID: 0}
+  imageLog: {fileID: 0}
+  need2P: {fileID: 0}
+  isStart: 0
+  turn: 0
+  atlas: {fileID: 0}
+  sprites: []
+  upperTimer: 12
+  bottomTimer: 60
+  upperPos:
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  bottomPos:
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  upperBubble: {fileID: 0}
+  bottomBubble: {fileID: 0}
+  Frame: []
+  waterfall: {fileID: 0}
+  timerText: {fileID: 0}
+  upperBubbleSprite: []
+  result: {fileID: 0}
+  readyPanel: {fileID: 0}
+  readyText: {fileID: 0}
+  upperBubble_Bomb: {fileID: 0}
+  bottomBubble_Bomb: {fileID: 0}
+  cameraManager: {fileID: 0}
+  profileBtn: {fileID: 0}
+  gameStartBtn: {fileID: 0}
+  quitNormal_Sprite: {fileID: 0}
+  quitPressed_Sprite: {fileID: 0}
+  quitBtn: []
+  changeBtn: {fileID: 0}
+  selectBtn: {fileID: 0}
+  player2PInfo: {fileID: 0}
+  winTexts: []
+  winText: {fileID: 0}
+  loseTexts: []
+  loseText: {fileID: 0}
+  winProfileImages: []
+  winProfileImage: {fileID: 0}
+  loseProfileImages: []
+  loseProfileImage: {fileID: 0}
+  bNoTimePlaying: 0
 --- !u!1 &314627180
 GameObject:
   m_ObjectHideFlags: 0
@@ -16678,7 +16779,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1457637500}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
         m_MethodName: InitSetting
         m_Mode: 1
@@ -24102,6 +24203,7 @@ GameObject:
   - component: {fileID: 700190504}
   - component: {fileID: 700190503}
   - component: {fileID: 700190506}
+  - component: {fileID: 700190507}
   m_Layer: 5
   m_Name: PushPush Game
   m_TagString: Untagged
@@ -24226,6 +24328,24 @@ MonoBehaviour:
   spriteIndex: 0
   currentCreatIndex: 0
   framePuzzle: {fileID: 0}
+--- !u!114 &700190507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700190501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d154ae8ecb3a5b6498e9aaa1e392a774, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  custom: {fileID: 0}
+  puzzle: {fileID: 0}
+  frame: {fileID: 0}
+  decoPanel: {fileID: 0}
+  pieceCount: 1
+  pushCount: 0
 --- !u!1 &710880331
 GameObject:
   m_ObjectHideFlags: 0
@@ -30496,7 +30616,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1457637500}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
         m_MethodName: BottomBubbleTouch
         m_Mode: 1
@@ -31023,7 +31143,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1457637500}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
         m_MethodName: QuitBtn
         m_Mode: 3
@@ -38882,7 +39002,7 @@ MonoBehaviour:
   pushpush_Canvas: {fileID: 214550370}
   speed_Canvas: {fileID: 634666733}
   memory_Canvas: {fileID: 2088030749}
-  bomb_Canvas: {fileID: 1457637500}
+  bomb_Canvas: {fileID: 0}
   help_Panel: {fileID: 198841550}
   help_Btn: {fileID: 1379470113}
   help_Image: {fileID: 965851044}
@@ -43658,6 +43778,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1317759487}
+  - component: {fileID: 1317759488}
   m_Layer: 5
   m_Name: Ready
   m_TagString: Untagged
@@ -43690,6 +43811,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1317759488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1317759486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ecabbe96340a5e4aa9f8e20379a606f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1322458998
 GameObject:
   m_ObjectHideFlags: 0
@@ -47815,7 +47948,6 @@ GameObject:
   - component: {fileID: 1457637503}
   - component: {fileID: 1457637502}
   - component: {fileID: 1457637505}
-  - component: {fileID: 1457637500}
   m_Layer: 5
   m_Name: Multi Canvas
   m_TagString: Untagged
@@ -47823,111 +47955,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1457637500
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1457637499}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 171ae90e7d537e6469dd8169399cf24f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerImage1P: {fileID: 1802099974}
-  playerName1P: {fileID: 559822936}
-  popList1P: []
-  inGameImage1P: {fileID: 1934505033}
-  inGameText1P: {fileID: 200109585}
-  playerImage2P: {fileID: 105123980}
-  tempPlayerImage2P: {fileID: 0}
-  playerName2P: {fileID: 897787282}
-  tempPlayerName2P: {fileID: 0}
-  isSelect2P: 0
-  popList2P: []
-  inGameImage2P: {fileID: 0}
-  inGameText2P: {fileID: 0}
-  profilePanel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
-  profileParent: {fileID: 0}
-  profile2PName: 
-  profile2PInput: {fileID: 0}
-  iconPanel: {fileID: 0}
-  checkPanel: {fileID: 0}
-  imageIndex: 0
-  CaptureImage: {fileID: 0}
-  MainPanel: {fileID: 1317759486}
-  GamePanel: {fileID: 313937940}
-  CreateNamePanel: {fileID: 0}
-  CreateImagePanel: {fileID: 0}
-  SelectProfile: {fileID: 0}
-  CurrentProfile: {fileID: 0}
-  deletePanel: {fileID: 0}
-  help_Canvas: {fileID: 1180641591}
-  main_Canvas: {fileID: 1412654227}
-  WarningPanel: {fileID: 0}
-  nameErrorLog: {fileID: 0}
-  imageLog: {fileID: 0}
-  need2P: {fileID: 182836015}
-  isStart: 0
-  turn: 0
-  atlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
-  sprites: []
-  upperTimer: 10
-  bottomTimer: 60
-  upperPos:
-  - {x: -500, y: 380}
-  - {x: 500, y: 380}
-  bottomPos:
-  - {x: -500, y: -100}
-  - {x: 500, y: -100}
-  upperBubble: {fileID: 1185274074}
-  bottomBubble: {fileID: 906239926}
-  Frame:
-  - {fileID: 678929093}
-  - {fileID: 10243900}
-  waterfall: {fileID: 858794267}
-  timerText: {fileID: 836683583}
-  upperBubbleSprite:
-  - {fileID: 21300000, guid: a1927ce4620d959468a86eeafe851e8a, type: 3}
-  - {fileID: 21300000, guid: c07ca9f1ebdf5664c9e817b1144a0ae6, type: 3}
-  - {fileID: 21300000, guid: f79993a68d000b84b9a631c8dea7b2ab, type: 3}
-  - {fileID: 21300000, guid: fede0d47f04fc704aaaf634321d5962a, type: 3}
-  - {fileID: 21300000, guid: 24228e6a6eec5b14d8e7399bc9f1b35d, type: 3}
-  - {fileID: 21300000, guid: df8c9ca8870e2244fbcc116b419df9c7, type: 3}
-  result: {fileID: 1943040060}
-  readyPanel: {fileID: 0}
-  readyText: {fileID: 0}
-  upperBubble_Bomb: {fileID: 0}
-  bottomBubble_Bomb: {fileID: 0}
-  cameraManager: {fileID: 0}
-  profileBtn: {fileID: 167740170}
-  gameStartBtn: {fileID: 74868897}
-  quitNormal_Sprite: {fileID: 21300000, guid: 911e8d9d9bbc39f4ea7954285f69455d, type: 3}
-  quitPressed_Sprite: {fileID: 21300000, guid: a65cc37934fc43445ab82708cdffb866, type: 3}
-  quitBtn:
-  - {fileID: 2095790725}
-  - {fileID: 0}
-  changeBtn: {fileID: 784087072}
-  selectBtn: {fileID: 167740168}
-  player2PInfo: {fileID: 0}
-  winTexts:
-  - {fileID: 1040558617}
-  - {fileID: 0}
-  winText: {fileID: 213979912}
-  loseTexts:
-  - {fileID: 0}
-  - {fileID: 0}
-  loseText: {fileID: 0}
-  winProfileImages:
-  - {fileID: 1745752335}
-  - {fileID: 0}
-  winProfileImage: {fileID: 2050704333}
-  loseProfileImages:
-  - {fileID: 0}
-  - {fileID: 0}
-  loseProfileImage: {fileID: 0}
-  bNoTimePlaying: 0
 --- !u!224 &1457637501
 RectTransform:
   m_ObjectHideFlags: 0
@@ -62542,7 +62569,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1457637500}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
         m_MethodName: PrintVersus
         m_Mode: 1
@@ -62554,7 +62581,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1457637500}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
         m_MethodName: ReturnBtn_ResultPanel_Clicked
         m_Mode: 1
@@ -63140,7 +63167,6 @@ GameObject:
   - component: {fileID: 2014516027}
   - component: {fileID: 2014516030}
   - component: {fileID: 2014516029}
-  - component: {fileID: 2014516028}
   m_Layer: 0
   m_Name: Custom Area
   m_TagString: CostomArea
@@ -63169,18 +63195,6 @@ RectTransform:
   m_AnchoredPosition: {x: -350, y: -60}
   m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2014516028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2014516026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ed7285e74142dd478bdb772f1f3852a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2014516029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65518,7 +65532,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1457637500}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
         m_MethodName: QuitBtn
         m_Mode: 3

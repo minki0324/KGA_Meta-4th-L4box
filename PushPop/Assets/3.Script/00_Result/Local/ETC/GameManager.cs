@@ -47,7 +47,7 @@ public class PuzzleObject
 }
 #endregion
 
-public class GameManager : MonoBehaviour, IGameMode
+public class GameManager : MonoBehaviour, IGameMode_
 {
     public static GameManager Instance = null;
 
@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public bool IsShutdown = false;
 
     [Header("GameScript")]
-    public Bomb bombScript;
+    public MultiManager bombScript;
     public Speed_Timer speedTimer = null;
     public PushPushManager pushPush;
 

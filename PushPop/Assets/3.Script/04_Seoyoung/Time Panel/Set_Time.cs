@@ -130,7 +130,7 @@ public class Set_Time : MonoBehaviour
         else if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
         { // 2인모드 시작
             bombMode_Canvas.SetActive(true);
-            bombMode_Canvas.transform.GetComponent<Bomb>().PrintVersus();
+            bombMode_Canvas.transform.GetComponent<MultiManager>().PrintVersus();
         }     
         main_Canvas.gameObject.SetActive(false);
         gameObject.SetActive(false);

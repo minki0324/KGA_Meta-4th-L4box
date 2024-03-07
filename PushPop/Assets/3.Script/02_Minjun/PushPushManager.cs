@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-public class PushPushManager : MonoBehaviour
-{
-
+public class PushPushManager : MonoBehaviour, IGame
+{ // pushpush game
     public CustomPushpopManager custom;
     public PuzzleLozic puzzle;
     [SerializeField] FramePuzzle frame;
@@ -52,6 +51,18 @@ public class PushPushManager : MonoBehaviour
         decoPanel.SetActive(_bool);
     }
 
+    public void Init()
+    {
+        throw new NotImplementedException();
+    }
 
+    public void GameSetting()
+    {
+        throw new NotImplementedException();
+    }
 
+    public void GameStart()
+    {
+        throw new NotImplementedException();
+    }
 }

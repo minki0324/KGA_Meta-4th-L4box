@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class MemoryManager : MonoBehaviour
+public class MemoryManager : MonoBehaviour, IGame
 {
     public static MemoryManager Instance;
     [Header("판넬")]
@@ -194,5 +194,20 @@ public class MemoryManager : MonoBehaviour
         resultScore.text = $"{Score}";
         clearMessage = (int)Ranking.Instance.CompareRanking();
         resultMassage.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
+    }
+
+    public void Init()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void GameSetting()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void GameStart()
+    {
+        throw new System.NotImplementedException();
     }
 }

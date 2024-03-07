@@ -15,7 +15,7 @@ public class Help_Canvas : MonoBehaviour
     [SerializeField] private PushPush_Canvas pushpush_Canvas;
     [SerializeField] private Speed_Canvas speed_Canvas;
     [SerializeField] private Memory_Canvas memory_Canvas;
-    [SerializeField] private Bomb bomb_Canvas;
+    [SerializeField] private MultiManager bomb_Canvas;
 
     [Header("도움말 창")]
     [SerializeField] private GameObject help_Panel;

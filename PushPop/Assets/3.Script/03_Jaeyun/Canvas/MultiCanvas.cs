@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MultiCanvas : MonoBehaviour, IGameCanvas
+public class MultiCanvas : MonoBehaviour
 {
     [Header("Canvas")]
     [SerializeField] private MainCanvas mainCanvas = null;
@@ -36,29 +36,4 @@ public class MultiCanvas : MonoBehaviour, IGameCanvas
         profileCanvas.BlockPanel.SetActive(true);
     }
     #endregion
-
-    public void GameStartButton()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void GameExitButton()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void GameCancelButton()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void GameBackButton()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void HelpPanelButton()
-    {
-        throw new System.NotImplementedException();
-    }
 }

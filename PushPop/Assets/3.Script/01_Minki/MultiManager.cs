@@ -17,8 +17,8 @@ public enum Turn
 /// <summary>
 /// 2인 모드(폭탄 돌리기) 관련 Class
 /// </summary>
-public class Bomb : MonoBehaviour, IPointerClickHandler
-{
+public class MultiManager : MonoBehaviour, IPointerClickHandler, IGame
+{ // multi game
     [Header("1P Player")] [Space(5)]
     [SerializeField] private Image playerImage1P = null;    // 로비에서 보이는 1P Image
     [SerializeField] private TMP_Text playerName1P = null;  // 로비에서 보이는 1P Name
@@ -133,6 +133,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     private void OnEnable()
     {
+        GameSetting();
         // 버튼 사이즈 설정
         PushPop.Instance.buttonSize = new Vector2(56.8f, 56.8f);
         PushPop.Instance.percentage = 0.476f;
@@ -185,6 +186,7 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
 
     private void OnDisable()
     {
+        Init();
         profile2PInput.onValidateInput -= ValidateInput;
         isSelect2P = false;
         isStart = false;
@@ -1027,6 +1029,21 @@ public class Bomb : MonoBehaviour, IPointerClickHandler
             return newColor;
         }
         return newColor;
+    }
+
+    public void Init()
+    {
+
+    }
+
+    public void GameSetting()
+    {
+        
+    }
+
+    public void GameStart()
+    {
+
     }
     #endregion
 }
