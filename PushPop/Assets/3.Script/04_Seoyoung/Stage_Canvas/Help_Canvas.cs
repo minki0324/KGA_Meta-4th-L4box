@@ -99,7 +99,7 @@ public class Help_Canvas : MonoBehaviour
                     break;
 
                 case GameMode.Multi:
-                    bomb_Canvas.BackBtn_Clicked();
+                    //bomb_Canvas.BackBtn_Clicked();
                     break;
             }
         }
@@ -134,7 +134,7 @@ public class Help_Canvas : MonoBehaviour
                     break;
 
                 case GameMode.Multi:
-                    bomb_Canvas.Disable_Objects();
+                    //bomb_Canvas.Disable_Objects();
                     break;
             }
         }
@@ -166,7 +166,7 @@ public class Help_Canvas : MonoBehaviour
                     break;
 
                 case GameMode.Multi:
-                    bomb_Canvas.Enable_Objects();
+                    //bomb_Canvas.Enable_Objects();
                     break;
             }
         }

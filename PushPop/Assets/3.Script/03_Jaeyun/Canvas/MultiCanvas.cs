@@ -50,8 +50,10 @@ public class MultiCanvas : MonoBehaviour
         AudioManager.instance.SetCommonAudioClip_SFX(0);
         AudioManager.instance.SetAudioClip_BGM(5);
 
+        // todo... gamereadypanel에 뜨도록 수정
         if (!ReadyProfileSetting.IsSelect)
         { // 플레이어 선택을 안했을 시
+            
             ProfileManager.Instance.PrintErrorLog(warningLog, "플레이어를 선택해주세요.");
             return;
         }

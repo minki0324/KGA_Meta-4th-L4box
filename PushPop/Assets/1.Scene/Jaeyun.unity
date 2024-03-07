@@ -6023,7 +6023,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -400}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &180205963
 MonoBehaviour:
@@ -11038,7 +11038,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &313937941
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11078,81 +11078,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3b93406775c29d40ac597289d871c28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerImage1P: {fileID: 0}
-  playerName1P: {fileID: 0}
+  quitButton:
+  - {fileID: 2095790725}
+  - {fileID: 914505800}
+  ready: {fileID: 1317759486}
+  GameReadyPanel: {fileID: 1488364040}
+  GameReadyPanelText: {fileID: 1957250458}
+  warningPanel: {fileID: 1732976011}
+  resultPanel: {fileID: 806619359}
+  profileImage:
+  - {fileID: 1934505033}
+  - {fileID: 1000241798}
+  profileName:
+  - {fileID: 200109585}
+  - {fileID: 440569447}
+  playerTurn: 0
   popList1P: []
-  inGameImage1P: {fileID: 0}
-  inGameText1P: {fileID: 0}
-  playerImage2P: {fileID: 0}
-  tempPlayerImage2P: {fileID: 0}
-  playerName2P: {fileID: 0}
-  tempPlayerName2P: {fileID: 0}
-  isSelect2P: 0
   popList2P: []
-  inGameImage2P: {fileID: 0}
-  inGameText2P: {fileID: 0}
-  profilePanel: {fileID: 0}
-  profileParent: {fileID: 0}
-  profile2PName: 
-  profile2PInput: {fileID: 0}
-  iconPanel: {fileID: 0}
-  checkPanel: {fileID: 0}
-  imageIndex: 0
-  CaptureImage: {fileID: 0}
-  MainPanel: {fileID: 0}
-  GamePanel: {fileID: 0}
-  CreateNamePanel: {fileID: 0}
-  CreateImagePanel: {fileID: 0}
-  SelectProfile: {fileID: 0}
-  CurrentProfile: {fileID: 0}
-  deletePanel: {fileID: 0}
-  help_Canvas: {fileID: 0}
-  main_Canvas: {fileID: 0}
-  WarningPanel: {fileID: 0}
-  nameErrorLog: {fileID: 0}
-  imageLog: {fileID: 0}
-  need2P: {fileID: 0}
-  isStart: 0
-  turn: 0
-  atlas: {fileID: 0}
-  sprites: []
-  upperTimer: 12
-  bottomTimer: 60
+  boardSprite: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
+  boardTransform:
+  - {fileID: 678929093}
+  - {fileID: 10243900}
   upperPos:
   - {x: 0, y: 0}
   - {x: 0, y: 0}
   bottomPos:
   - {x: 0, y: 0}
   - {x: 0, y: 0}
-  upperBubble: {fileID: 0}
-  bottomBubble: {fileID: 0}
-  Frame: []
-  waterfall: {fileID: 0}
-  timerText: {fileID: 0}
-  upperBubbleSprite: []
-  result: {fileID: 0}
-  readyPanel: {fileID: 0}
-  readyText: {fileID: 0}
-  upperBubble_Bomb: {fileID: 0}
-  bottomBubble_Bomb: {fileID: 0}
-  cameraManager: {fileID: 0}
-  profileBtn: {fileID: 0}
-  gameStartBtn: {fileID: 0}
-  quitNormal_Sprite: {fileID: 0}
-  quitPressed_Sprite: {fileID: 0}
-  quitBtn: []
-  changeBtn: {fileID: 0}
-  selectBtn: {fileID: 0}
-  player2PInfo: {fileID: 0}
-  winTexts: []
-  winText: {fileID: 0}
-  loseTexts: []
-  loseText: {fileID: 0}
-  winProfileImages: []
-  winProfileImage: {fileID: 0}
-  loseProfileImages: []
-  loseProfileImage: {fileID: 0}
-  bNoTimePlaying: 0
+  upperBubbleObject: {fileID: 1185274074}
+  bottomBubbleObject: {fileID: 906239926}
+  upperBubbleImage: {fileID: 858794267}
+  upperBubbleSprite:
+  - {fileID: 21300000, guid: a1927ce4620d959468a86eeafe851e8a, type: 3}
+  - {fileID: 21300000, guid: c07ca9f1ebdf5664c9e817b1144a0ae6, type: 3}
+  - {fileID: 21300000, guid: f79993a68d000b84b9a631c8dea7b2ab, type: 3}
+  - {fileID: 21300000, guid: fede0d47f04fc704aaaf634321d5962a, type: 3}
+  - {fileID: 21300000, guid: 24228e6a6eec5b14d8e7399bc9f1b35d, type: 3}
+  - {fileID: 21300000, guid: df8c9ca8870e2244fbcc116b419df9c7, type: 3}
+  upperWaterfall: {fileID: 1430546220}
+  bottomWaterfall: {fileID: 2012077599}
+  quitButtonSprite:
+  - {fileID: 21300000, guid: 0a5881dfad071694795a867cd8218059, type: 3}
+  - {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
+  winText: {fileID: 213979912}
+  loseText: {fileID: 1635748790}
+  winProfileImage: {fileID: 2050704333}
+  loseProfileImage: {fileID: 453111136}
+  gameTimer: {fileID: 1514445333}
 --- !u!1 &314627180
 GameObject:
   m_ObjectHideFlags: 0
@@ -16987,34 +16959,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1943040060}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
-        m_MethodName: InitSetting
+      - m_Target: {fileID: 313937942}
+        m_TargetAssemblyTypeName: MultiManager, Assembly-CSharp
+        m_MethodName: ResultRestartButton
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -24899,57 +24847,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1345232716}
-        m_TargetAssemblyTypeName: PushPush_Result, Assembly-CSharp
-        m_MethodName: Success_BackBtn_Clicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 214550370}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: Enable_Objects
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 615755819}
-        m_TargetAssemblyTypeName: PuzzleLozic, Assembly-CSharp
-        m_MethodName: ClearPieceList
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 700190506}
-        m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
-        m_MethodName: BtnAllClear
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 214550370}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: GoOutBtn_Clicked
+      - m_Target: {fileID: 313937942}
+        m_TargetAssemblyTypeName: MultiManager, Assembly-CSharp
+        m_MethodName: WarningPanelGoOutButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -31545,7 +31445,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
     m_DisabledSprite: {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -31558,9 +31458,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
-        m_MethodName: QuitBtn
+      - m_Target: {fileID: 313937942}
+        m_TargetAssemblyTypeName: MultiManager, Assembly-CSharp
+        m_MethodName: QuitButton
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -36740,7 +36640,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -48540,7 +48440,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1457637501
 RectTransform:
   m_ObjectHideFlags: 0
@@ -48654,9 +48554,7 @@ MonoBehaviour:
   SelectButton: {fileID: 167740168}
   ChangeButton: {fileID: 784087072}
   MultiGame: {fileID: 313937940}
-  ResultPanel: {fileID: 806619359}
-  WarningPanel: {fileID: 1732976011}
-  GameReadyPanel: {fileID: 1488364040}
+  multiManager: {fileID: 313937942}
   HelpPanel: {fileID: 757051146}
 --- !u!1 &1468796085
 GameObject:
@@ -50245,6 +50143,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1514445332}
+  - component: {fileID: 1514445333}
   m_Layer: 5
   m_Name: Timer
   m_TagString: Untagged
@@ -50274,6 +50173,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -125}
   m_SizeDelta: {x: 0, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1514445333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514445331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d798a136c64402149953eee25894a5c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimerText: {fileID: 1755494401}
+  CurrentTime: 0
+  TenCount: 0
+  EndTimer: 0
 --- !u!1 &1517353185
 GameObject:
   m_ObjectHideFlags: 0
@@ -53849,9 +53764,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -4, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1691983036
 MonoBehaviour:
@@ -54480,7 +54395,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1705917592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63197,21 +63112,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
-        m_MethodName: PrintVersus
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
-        m_MethodName: ReturnBtn_ResultPanel_Clicked
+      - m_Target: {fileID: 313937942}
+        m_TargetAssemblyTypeName: MultiManager, Assembly-CSharp
+        m_MethodName: ResultExitButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -63600,9 +63503,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 214550370}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: CancelBtn_Clicked
+      - m_Target: {fileID: 313937942}
+        m_TargetAssemblyTypeName: MultiManager, Assembly-CSharp
+        m_MethodName: WarningPanelCancelButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -66195,7 +66098,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
     m_DisabledSprite: {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -66208,9 +66111,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
-        m_MethodName: QuitBtn
+      - m_Target: {fileID: 313937942}
+        m_TargetAssemblyTypeName: MultiManager, Assembly-CSharp
+        m_MethodName: QuitButton
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
