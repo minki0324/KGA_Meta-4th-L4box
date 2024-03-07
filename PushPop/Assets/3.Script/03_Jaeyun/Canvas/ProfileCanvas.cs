@@ -42,11 +42,6 @@ public class ProfileCanvas : MonoBehaviour
     [Header("Delete Panel")]
     public GameObject DeletePanel = null;
 
-    private void OnEnable()
-    {
-        BlockPanel.SetActive(false);
-    }
-
     private void Start()
     {
         ProfileManager.Instance.LoadOrCreateGUID();
@@ -259,6 +254,7 @@ public class ProfileCanvas : MonoBehaviour
             mainCanvas.CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
         }
 
+        BlockPanel.SetActive(false);
         CurrentProfile.SetActive(false);
         ExitButton.SetActive(false);
         Select.SetActive(true);
@@ -280,10 +276,14 @@ public class ProfileCanvas : MonoBehaviour
         SelectScrollView.normalizedPosition = new Vector2(1f, 1f);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
-        BlockPanel.SetActive(false);
+        if (!GameManager.Instance.GameMode.Equals(GameMode.Multi))
+        {
+            BlockPanel.SetActive(false);
+            ExitButton.SetActive(true);
+        }
+
         CurrentProfile.SetActive(false);
         Select.SetActive(true);
-        ExitButton.SetActive(true);
     }
     #endregion
     #region Delete Panel

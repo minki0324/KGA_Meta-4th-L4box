@@ -51,8 +51,7 @@ public class BombVersus
     public string Player2PName;
     public int Player1PIndex;
     public int Player2PIndex;
-    // true면 1P가 이긴 게임 false면 2P가 이긴 게임
-    public bool Result = false;
+    public bool Result = false; // true면 1P가 이긴 게임 false면 2P가 이긴 게임
 
     public BombVersus(string player1PName, string player2PName, int player1PIndex, int player2PIndex, bool result)
     {

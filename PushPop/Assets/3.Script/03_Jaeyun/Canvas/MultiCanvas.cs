@@ -15,6 +15,8 @@ public class MultiCanvas : MonoBehaviour
     public GameObject Ready = null;
     public ReadyProfileSetting ReadyProfileSetting = null;
     public GameObject ProfileSelectText = null;
+
+    [Header("Ready Info")]
     [SerializeField] private TMP_Text warningLog = null;
 
     [Header("Profile Info")]
@@ -24,11 +26,9 @@ public class MultiCanvas : MonoBehaviour
 
     [Header("Multi Game")]
     public GameObject MultiGame = null;
+    [SerializeField] private MultiManager multiManager = null;
 
     [Header("Panel")]
-    public GameObject ResultPanel = null;
-    public GameObject WarningPanel = null;
-    public GameObject GameReadyPanel = null;
     public GameObject HelpPanel = null;
 
     #region Ready
@@ -47,7 +47,8 @@ public class MultiCanvas : MonoBehaviour
 
     public void GameStartButton()
     { // 대기 - 게임 시작
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.SetCommonAudioClip_SFX(0);
+        AudioManager.instance.SetAudioClip_BGM(5);
 
         if (!ReadyProfileSetting.IsSelect)
         { // 플레이어 선택을 안했을 시
@@ -59,6 +60,7 @@ public class MultiCanvas : MonoBehaviour
         HelpButton.SetActive(false);
         BackButton.SetActive(false);
         Ready.SetActive(false);
+        multiManager.GameStart();
     }
     #endregion
     #region Side Panel

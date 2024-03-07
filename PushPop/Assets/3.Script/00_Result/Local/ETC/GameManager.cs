@@ -164,21 +164,11 @@ public class GameManager : MonoBehaviour, IGameMode_
     }
 
     public void GameStart()
-    { // game Start 시 호출되는 method
-        /*if (gameMode.Equals(0))
-        {
-            for (int i = 0; i < pos[(int)gameMode].transform.childCount; i++)
-            { // 지정된 position
-                bubblePos.Add(pos[(int)gameMode].GetChild(i));
-            }
-        }*/
-
+    { 
         // score 초기화
         Score = 0;
         TimeScore = 0;
         buttonActive = 0;
-
-        
 
         switch (GameMode)
         {
@@ -475,10 +465,6 @@ public class GameManager : MonoBehaviour, IGameMode_
     public void BombMode()
     {
         BoardSize = new Vector2(500f, 500f);
-        // 상단 배치
-
-        // 게임 보드에 배치
-
     }
 
     private void CreateBubble(Vector2 _size, Vector2 _pos, GameObject _puzzle, PuzzleObject _puzzleInfo)
