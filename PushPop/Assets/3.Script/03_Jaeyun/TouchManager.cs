@@ -7,211 +7,153 @@ using UnityEngine.VFX;
 
 public class TouchManager : MonoBehaviour
 {
-    struct TouchEvent
-    {
+    class TouchEvent
+    { //터치이벤트 클래스 : 개별 터치 및 드래그 판정용
         public Touch touch;
-        public bool isDrag;
+        public bool bisDrag = false;
     }
 
-    //This is a simple script that does a raycast and plays the VFX on a prefab
-    public GameObject VFXPrefab;
-    public GameObject TouchMovePrefab;
-    VisualEffect[] visualEffects;
-    VisualEffect[] visualEffect_Pooling;
-    public Camera effectCamera;
-    Coroutine touchTimer;
-    public Transform particleCanvas;
-    [SerializeField] private RawImage rawImage;
+    [Header("Camera")]
+    public Camera effectCamera;     //이펙트 촬영 카메라
 
-    [SerializeField] private List<Touch> touch_List = new List<Touch>();
-    [SerializeField] private List<Vector2> nowPos_List = new List<Vector2>();
-    private int maxTouchCount = 10;
-    private int preTouchCout = 0;
+    [Header("Prefabs")]
+    [SerializeField] private GameObject TouchEffectPrefab;  //터치했을 때 나오는 Visual Effect 프리팹
+    [SerializeField] private GameObject DragEffectPrefab;   //드래그했을 때 나오는 Visual Effect 프리팹
 
-    private Vector2 nowPos; //현재 터치 포지션
-    public Transform touchTransform;
+    [Header("List & Array")]
+    [SerializeField] private VisualEffect[] visualEffects;       //프리팹에 하위 오브젝트 존재 시 모든 VisualEffect 참조용 배열
+    [SerializeField] private VisualEffect[] visualEffect_Pooling;    //드래그 시 생성되는 프리팹 오브젝트 풀링용 배열
 
+    [SerializeField] private List<TouchEvent> touchEvent_List = new List<TouchEvent>();     //TouchEvent 담을 리스트
+    [SerializeField] private List<Vector2> nowPos_List = new List<Vector2>();       //TouchEvent의 Touch.position을 담을 리스트
 
-    public bool bisDrag = false;
-    public bool bCanCreate = true;
+    [Header("ETC")]
+    // Coroutine touchTimer;
+    [SerializeField] private Transform particleCanvas;  //터치&드래그 생성 시 상속될 오브젝트 Transform
+    [SerializeField] private RawImage rawImage;     //EffectCamera가 촬영하는 RawImage 오브젝트
 
-    float touchTime = 0;    //꾹 눌렀을 때 판정 시간
-    float createTime = 0;   //생성 쿨타임
+    public int maxTouchCount = 10;      //최대 터치 허용 수
 
+    public float dragTime = 0.4f;   //드래그로 판정될 시간 변수
+    private float touchTime = 0;    //터치 꾹 눌렀을 때 드래그로 판정되는 시간 측정용 변수
 
-    public List<GameObject> DragPool = new List<GameObject>();
+    public float createCoolTime = 0.1f;  //프리팹 생성 쿨타임 변수
+    private float createTime = 0;   //프리팹 생성 쿨타임 측정용 변수
+    public bool bCanCreate = true;   //프리팹 생성이 가능한가 판정용 변수
 
-    public int MaxCount = 15;   //꾹 눌렀을 떄 생성되는 프리팹 최대 갯수
+    public int MaxCount = 60;   //꾹 눌렀을 떄 생성되는 프리팹 최대 갯수
     private int CurrentCount = 0;   //꾹 눌렀을 떄 생성되는 프리팹 현재 갯수
 
+    #region Unity Callback
     private void Awake()
     {
+        //프레임 속도 고정
         Application.targetFrameRate = 60;
-    }
 
-    void Start()
-    {
-
-        visualEffect_Pooling = new VisualEffect[MaxCount];
-        visualEffects = VFXPrefab.GetComponentsInChildren<VisualEffect>();
+        //RawImage의 텍스처 크기 변경
         rawImage.texture.width = Screen.width;
         rawImage.texture.height = Screen.height;
     }
 
+    void Start()
+    {
+        Init();
+    }
+
     void Update()
-    {      
+    {
         if (Input.touchCount > 0)
         {
-            Debug.Log("터치 발생");
-            // ClickEffect();
-            MultiTouchEvent();
-        }         
+            MultiTouchEvent_Independent();
+        }
     }
 
-    private void SingleTouchEvent()
-    {
-        if (Input.touchCount == 1)
-        {       
-            Touch touch = Input.GetTouch(0);
+    #endregion
 
-            switch(touch.phase)
-            {
-                case TouchPhase.Began:
-                    nowPos = touch.position;
-                    TouchEffect();
-                    break;
+    #region Other Method
+    private void Init()
+    {//초기화 메소드      
+        visualEffect_Pooling = new VisualEffect[MaxCount];
 
-                case TouchPhase.Stationary:
-                    touchTime += Time.deltaTime;
-                    if (touchTime > 0.4f)
-                    {
-                        bisDrag = true;
-                    }
-                    if (bisDrag)
-                    {
-                        nowPos = touch.position - touch.deltaPosition;
-                        if (bCanCreate)
-                        {
-                            DragEffect();
-                        }
+        for (int i = 0; i < 10; i++)
+        {
+            TouchEvent touchEvent = new TouchEvent();
+            touchEvent_List.Add(touchEvent);
 
-                    }
-                    break;
-
-                case TouchPhase.Moved:
-                    if (bisDrag)
-                    {
-                        nowPos = touch.position - touch.deltaPosition;
-                        if (bCanCreate)
-                        {
-                            DragEffect();
-                        }
-                    }
-                    break;
-
-                case TouchPhase.Ended:
-                    bisDrag = false;
-                    touchTime = 0f;
-                    createTime = 0f;
-                    break;
-            }
-            createTime += Time.deltaTime;
-            if (createTime >= 0.5f)
-            {
-                bCanCreate = true;
-            }
-        
+            Vector2 pos = new Vector2();
+            nowPos_List.Add(pos);
         }
-       
-        
     }
     
-    private void MultiTouchEvent()
-    {
-        //if (Input.touchCount > 0 ) -> update에 박기전에 넣기
- 
+    private void MultiTouchEvent_Independent()
+    {//멀티터치 이벤트 (각 터치별 독립적 작동) 메소드
         for (int i = 0; i < Input.touchCount; i++)
         {
-            if(Input.touchCount < maxTouchCount + 1)
+            if (Input.touchCount < maxTouchCount + 1)
             {
+                //터치의 핑거아이디를 인덱스로하는 touchEvent를 넣기
                 Touch touch = Input.GetTouch(i);
-                touch_List.Add(touch);
+                touchEvent_List[touch.fingerId].touch = touch;
 
-                switch (touch.phase)
+                //터치 아이디별 터치 판정에 따른 이펙트 생성
+                switch (touchEvent_List[touch.fingerId].touch.phase)
                 {
                     case TouchPhase.Began:
-                        nowPos = touch.position;
-                       
-                        TouchEffect();
+                        nowPos_List[touch.fingerId] = touchEvent_List[touch.fingerId].touch.position;
+                        TouchEffect_Multi(touch.fingerId);
                         break;
 
                     case TouchPhase.Stationary:
                         touchTime += Time.deltaTime;
-                        if (touchTime > 0.4f)
+                        if (touchTime > dragTime)
                         {
-                            bisDrag = true;
+                            touchEvent_List[touch.fingerId].bisDrag = true;
                         }
-                        if (bisDrag)
+                        if (touchEvent_List[touch.fingerId].bisDrag)
                         {
-                            nowPos = touch.position - touch.deltaPosition;
+                            nowPos_List[touch.fingerId] = touchEvent_List[touch.fingerId].touch.position - touchEvent_List[touch.fingerId].touch.deltaPosition;
                             if (bCanCreate)
                             {
-                                DragEffect();
+                                DragEffect_Multi(touch.fingerId);
                             }
                         }
-
                         break;
 
                     case TouchPhase.Moved:
-                        if (bisDrag )
+                        if (touchEvent_List[touch.fingerId].bisDrag)
                         {
-                            nowPos = touch.position - touch.deltaPosition;
+                            nowPos_List[touch.fingerId] = touchEvent_List[touch.fingerId].touch.position - touchEvent_List[touch.fingerId].touch.deltaPosition;
                             if (bCanCreate)
                             {
-                                DragEffect();
+                                DragEffect_Multi(touch.fingerId);
                             }
                         }
-
                         break;
 
                     case TouchPhase.Ended:
-                        bisDrag = false;
+                        touchEvent_List[touch.fingerId].bisDrag = false;
                         touchTime = 0f;
                         createTime = 0f;
-
-
                         break;
                 }
 
+                //드래그 이펙트 생성 쿨타임 판정
                 createTime += Time.deltaTime;
-                if (createTime >= 0.5f)
+                if (createTime >= createCoolTime)
                 {
                     bCanCreate = true;
                 }
             }
-
-            //if (Input.touchCount == 0)
-            //{
-            //    bisDrag = false;
-            //    touchTime = 0f;
-            //    createTime = 0f;
-
-            //}
-
         }
-
-
-
     }
 
-    public void TouchEffect()
-    {
-
+    public void TouchEffect_Multi(int _index)
+    {//터치 이펙트 생성 메소드
         Vector3 worldPos = new Vector3();
 
-        worldPos = Camera.main.ScreenToWorldPoint(nowPos);
+        worldPos = Camera.main.ScreenToWorldPoint(nowPos_List[_index]);
         worldPos.z = 1;
-        GameObject vfxEffect = Instantiate(VFXPrefab, worldPos, Quaternion.identity);
+        GameObject vfxEffect = Instantiate(TouchEffectPrefab, worldPos, Quaternion.identity);
 
         vfxEffect.transform.parent = particleCanvas;
         visualEffects = vfxEffect.GetComponentsInChildren<VisualEffect>();
@@ -223,102 +165,43 @@ public class TouchManager : MonoBehaviour
         Destroy(vfxEffect, 1.5f);
     }
 
-    public void DragEffect()
-    {   
-        if(bisDrag)
+    public void DragEffect_Multi(int _index)
+    {//드래그 이펙트 생성 메소드 
+        Vector3 worldPos = new Vector3();
+        worldPos = Camera.main.ScreenToWorldPoint(nowPos_List[_index]);
+        worldPos.z = 1;
+
+        //오브젝트 풀링
+        if (CurrentCount < MaxCount)
+        {//오브젝트 풀이 비어있으면 생성
+            GameObject vfxEffect = Instantiate(DragEffectPrefab, worldPos, Quaternion.identity);
+            vfxEffect.transform.parent = particleCanvas;
+
+            visualEffect_Pooling[CurrentCount] = vfxEffect.GetComponent<VisualEffect>();
+            visualEffect_Pooling[CurrentCount].gameObject.SetActive(true);
+            visualEffect_Pooling[CurrentCount].SendEvent("Click");
+            CurrentCount += 1;
+        }
+        else
         {
-            Vector3 worldPos = new Vector3();
-            worldPos = Camera.main.ScreenToWorldPoint(nowPos);
-            worldPos.z = 1;
-          
-            if(CurrentCount < MaxCount)
-            {//오브젝트 풀이 비어있으면 생성
-                GameObject vfxEffect = Instantiate(TouchMovePrefab, worldPos, Quaternion.identity);
-                vfxEffect.transform.parent = particleCanvas;
+            for (int i = 0; i < MaxCount; i++)
+            {//오브젝트 풀이 가득 차있으면 풀링
 
-                visualEffect_Pooling[CurrentCount] = vfxEffect.GetComponent<VisualEffect>();
-
-                visualEffect_Pooling[CurrentCount].SendEvent("Click");
-                CurrentCount += 1;
-                Debug.Log(CurrentCount);
-            }
-            else
-            {
-                for (int i = 0; i < MaxCount; i++)
-                {//오브젝트 풀이 가득 차있으면 풀링
-
-                    if(!visualEffect_Pooling[i].gameObject.activeSelf)
-                    {//오브젝트가 꺼져있으면
-                        visualEffect_Pooling[i].gameObject.SetActive(true);
-                        visualEffect_Pooling[i].transform.position = worldPos;
-                        visualEffect_Pooling[i].SendEvent("Click"); 
-                        break;
-                    }
+                if (!visualEffect_Pooling[i].gameObject.activeSelf)
+                {//오브젝트가 꺼져있으면
+                    visualEffect_Pooling[i].gameObject.SetActive(true);
+                    visualEffect_Pooling[i].transform.position = worldPos;
+                    visualEffect_Pooling[i].SendEvent("Click");
+                    break;
                 }
             }
-
-            createTime = 0f;
-
         }
 
+        //드래그 이펙트 생성 쿨타임 초기화
+        bCanCreate = false;
+        createTime = 0f;
     }
-
-
-
-    public void OriginalCode()
-    {
-        //if (touch.phase == TouchPhase.Began)
-        //{
-        //    nowPos = touch.position;
-        //    TouchEffect();
-        //}
-        //else if (touch.phase == TouchPhase.Stationary)
-        //{
-        //    //터치중이면
-
-        //    touchTime += Time.deltaTime;
-        //    if (touchTime > 0.4f)
-        //    {
-        //        bisDrag = true;
-        //    }
-        //    if (bisDrag)
-        //    {
-        //        nowPos = touch.position - touch.deltaPosition;
-        //        if (bCanCreate)
-        //        {
-        //            DragEffect();
-        //        }
-
-        //    }
-        //}
-        //else if (touch.phase == TouchPhase.Moved)
-        //{
-        //    if (bisDrag)
-        //    {
-        //        nowPos = touch.position - touch.deltaPosition;
-        //        if (bCanCreate)
-        //        {
-        //            DragEffect();
-        //        }
-        //    }
-        //}
-        //else if (touch.phase == TouchPhase.Ended)
-        //{
-
-        //    bisDrag = false;
-        //    touchTime = 0f;
-        //    createTime = 0f;
-        //}
-    }
-
-    private IEnumerator ClickStartTimer_Co()
-    {
-        effectCamera.gameObject.SetActive(true);
-
-        yield return new WaitForSeconds(1.5f);
-
-        effectCamera.gameObject.SetActive(false);
-    }
-
 
 }
+
+    #endregion

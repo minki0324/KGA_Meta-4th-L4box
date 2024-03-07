@@ -10554,18 +10554,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c824b1fdaec61bf4bb9e260d36f88db7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VFXPrefab: {fileID: 4475185842924557267}
-  TouchMovePrefab: {fileID: 5115978559520836458}
   effectCamera: {fileID: 391822139}
+  TouchEffectPrefab: {fileID: 4475185842924557267}
+  DragEffectPrefab: {fileID: 5115978559520836458}
+  visualEffects: []
+  visualEffect_Pooling: []
+  nowPos_List: []
   particleCanvas: {fileID: 1716477167}
   rawImage: {fileID: 775070154}
-  nowPos_List: []
-  touchTransform: {fileID: 0}
-  bisTouch: 0
-  bisDrag: 0
-  bCanCreate: 0
-  DragPool: []
-  MaxCount: 50
+  maxTouchCount: 10
+  dragTime: 0.4
+  createCoolTime: 0.1
+  bCanCreate: 1
+  MaxCount: 60
 --- !u!4 &1624145973
 Transform:
   m_ObjectHideFlags: 0
@@ -41694,7 +41695,7 @@ GameObject:
   - component: {fileID: 4475185842924557271}
   - component: {fileID: 4475185842924557272}
   m_Layer: 6
-  m_Name: TocuhEffect
+  m_Name: TouchEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
