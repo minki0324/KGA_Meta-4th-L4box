@@ -115,6 +115,7 @@ public class Set_Time : MonoBehaviour
         { // 푸시푸시 시작
             pushpushMode_Canvas.SetActive(true);
             help_Canvas.SetActive(true);
+            GameManager.Instance.pushPush.TitleSet("비눗방울을 터트려보세요!");
             help_Canvas.transform.SetParent(pushpushMode_Canvas.transform);
             help_Canvas.transform.SetSiblingIndex(3);
         }

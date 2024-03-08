@@ -94,6 +94,7 @@ public class CustomPushpopManager : MonoBehaviour
     public void RetryCustom()
     {
         GameManager.Instance.pushPush.DecoPanelSetActive(true);
+        GameManager.Instance.pushPush.TitleSet("내 마음대로 그림을 꾸며보자!");
         enabled = true;
         isCustomMode = true;
         framePuzzle.ImageAlphaHitSet(0.1f);
