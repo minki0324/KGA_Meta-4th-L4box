@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using TMPro;
-public class PushPushManager : MonoBehaviour
-{
 
+public class PushPushManager : MonoBehaviour, IGame
+{ // pushpush game
     public CustomPushpopManager custom;
     public PuzzleLozic puzzle;
     [SerializeField] FramePuzzle frame;
@@ -57,10 +57,29 @@ public class PushPushManager : MonoBehaviour
     {
         decoPanel.SetActive(_bool);
     }
+    public void Init()
+    {
+        throw new NotImplementedException();
+    }
     public void TitleSet(string _string)
     {
         stageTitle.text = _string;
     }
 
+    public void GameSetting()
+    {
+        throw new NotImplementedException();
+    }
 
+    public void GameStart()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerator GameStart_Co()
+    {
+        // ready
+        throw new NotImplementedException();
+        GameStart();
+    }
 }

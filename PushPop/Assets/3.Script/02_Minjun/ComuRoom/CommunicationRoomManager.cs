@@ -20,7 +20,7 @@ public class CommunicationRoomManager : NetworkBehaviour
     #region Unity Callback
     private void Start()
     {
-        pushObjs = SQL_Manager.instance.SQL_SetPushPush(ProfileManager.Instance.ProfileIndex1P);
+        pushObjs = SQL_Manager.instance.SQL_SetPushPush(ProfileManager.Instance.FirstPlayerIndex);
         SetMoaMoaList();
     }
     #endregion

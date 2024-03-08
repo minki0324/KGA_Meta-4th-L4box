@@ -28,14 +28,14 @@ public class Main_Button : MonoBehaviour
   
 
 
-    [SerializeField] private Help_Canvas help_Cavas;
+    [SerializeField] private HelpScriptManager help_Cavas;
 
     #region Unity Callback
     private void OnEnable()
     {
         Enable_Button();
         help_Cavas.gameObject.SetActive(false);
-        GameManager.Instance.shutdownTimer = 0;
+        GameManager.Instance.ShutdownTimer = 0;
     }
     #endregion
 
@@ -64,7 +64,7 @@ public class Main_Button : MonoBehaviour
     public void BombBtn_Clicked()
     { // GameMode MultiBtn ¿¬µ¿ Method
         timesetPanel.SetActive(true);
-        GameManager.Instance.GameModeSetting((int)Mode.Bomb);
+        GameManager.Instance.GameModeSetting((int)GameMode.Multi);
         AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 
@@ -73,7 +73,7 @@ public class Main_Button : MonoBehaviour
         NewProfileCanvas profile = profilePanel.GetComponent<NewProfileCanvas>();
         profilePanel.SetActive(true);
         profileReturnBtn.gameObject.SetActive(true);
-        ProfileManager.Instance.PrintProfileList(profile.profileParent, ProfileManager.Instance.ProfileIndex1P);
+        ProfileManager.Instance.PrintProfileList(profile.profileParent);
         AudioManager.instance.SetCommonAudioClip_SFX(3);
     }
 

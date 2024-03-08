@@ -79,7 +79,7 @@ public class SQL_Manager : MonoBehaviour
 
     public string DB_path = string.Empty;   // Json Path (DB)
     public int UID;                         
-    public List<Profile> Profile_list = new List<Profile>();
+    public List<Profile> ProfileList = new List<Profile>();
 
     #region Unity Callback
     private void Awake()
@@ -288,20 +288,19 @@ public class SQL_Manager : MonoBehaviour
     /// <summary>
     /// 프로필 생성 Method, name 중복 체크는 따로 하지 않음 (동명이인 고려)
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="_profileName"></param>
     /// <returns></returns>
-    public int SQL_AddProfile(string name, int imageMode)
+    public int SQL_AddProfile(string _profileName, int _imageMode)
     {
         try
         {
-            // 1. SQL 서버에 접속 되어 있는지 확인
             if (!ConnectionCheck(connection))
-            {
+            { // server connection check
                 return -1;
             }
 
-            // 2. 프로필 생성
-            string SQL_command = string.Format(@"INSERT INTO Profile (UID, User_name, ImageMode) VALUES('{0}', '{1}', '{2}'); SELECT LAST_INSERT_ID();", UID, name, imageMode);
+            // profile Insert into
+            string SQL_command = string.Format(@"INSERT INTO Profile (UID, User_name, ImageMode) VALUES('{0}', '{1}', '{2}'); SELECT LAST_INSERT_ID();", UID, _profileName, _imageMode);
             MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
             int profileIndex = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -381,12 +380,12 @@ public class SQL_Manager : MonoBehaviour
             Ranking.Instance.DeleteRankAndVersus(index);
 
             // 6. List 초기화
-            for(int i = 0; i < Profile_list.Count; i++)
+            for(int i = 0; i < ProfileList.Count; i++)
             {
-                if(index == Profile_list[i].index)
+                if(index == ProfileList[i].index)
                 {
-                    Profile tempProfile = Profile_list[i];
-                    Profile_list.Remove(tempProfile);
+                    Profile tempProfile = ProfileList[i];
+                    ProfileList.Remove(tempProfile);
                 }
             }
 
@@ -413,7 +412,7 @@ public class SQL_Manager : MonoBehaviour
                 return;
             }
 
-            Profile_list.Clear();
+            ProfileList.Clear();
             // UID에 연결된 프로필 조회 쿼리 실행
             string SQL_command = string.Format(@"SELECT DISTINCT Profile.User_name, Profile.Profile_Index, Profile.ImageMode, Image.DefaultIndex 
                                                                                           FROM Profile 
@@ -430,7 +429,7 @@ public class SQL_Manager : MonoBehaviour
                     int imageMode = reader.GetInt32("ImageMode");
                     int defaultImage = reader.IsDBNull(reader.GetOrdinal("DefaultIndex")) ? -1 : reader.GetInt32("DefaultIndex");
                     // 넘겨줄 리스트 Add해주기
-                    Profile_list.Add(new Profile(profileName, profileIndex, imageMode, defaultImage));
+                    ProfileList.Add(new Profile(profileName, profileIndex, imageMode, defaultImage));
                 }
                 if (!reader.IsClosed) reader.Close();
                 return;
@@ -878,26 +877,24 @@ public class SQL_Manager : MonoBehaviour
     }
     #endregion
 
-    public void PrintProfileImage(bool _imageMode, Image _image, int _profileIndex)
-    {
+    public void PrintProfileImage(Image _profileImage, bool _imageMode, int _profileIndex)
+    { // 프로필 인덱스에 따라 이미지 출력
         int defaultImage = -1;
-
         if (_imageMode)
         { // 이미지 고르기 선택한 플레이어일 때
-            for (int i = 0; i < Profile_list.Count; i++)
+            for (int i = 0; i < ProfileList.Count; i++)
             {
-                if (_profileIndex == Profile_list[i].index)
+                if (_profileIndex.Equals(ProfileList[i].index))
                 {
-                    defaultImage = Profile_list[i].defaultImage;
-                    _image.sprite = ProfileManager.Instance.ProfileImages[defaultImage];
+                    _profileImage.sprite = ProfileManager.Instance.ProfileImages[ProfileList[i].defaultImage];
                 }
             }
         }
-        else if (!_imageMode)
+        else
         { // 사진 찍기를 선택한 플레이어일 때
             Texture2D profileTexture = SQL_LoadProfileImage(ProfileManager.Instance.UID, _profileIndex);
             Sprite profileSprite = ProfileManager.Instance.TextureToSprite(profileTexture);
-            _image.sprite = profileSprite;
+            _profileImage.sprite = profileSprite;
         }
     }
     #endregion

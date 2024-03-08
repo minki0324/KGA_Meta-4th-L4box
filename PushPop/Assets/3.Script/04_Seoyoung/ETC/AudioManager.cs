@@ -75,8 +75,6 @@ public class AudioManager : MonoBehaviour
 
     public void SetAudioClip_BGM(int index)
     {
-        
-
         if (bBgmChanging)
         {
             StopCoroutine(stopMusic);
@@ -90,11 +88,6 @@ public class AudioManager : MonoBehaviour
             playingBgm = index;
             stopMusic = StartCoroutine(BGM_Fade(playingBgm));
         }
-
-
-
-
-
         //audioSource_arr[1].clip = bgmClip_List[index];
         //audioSource_arr[1].Play();
         //audioSource_arr[1].loop = true;
@@ -104,22 +97,22 @@ public class AudioManager : MonoBehaviour
     {
         if (!bLoop)
         {
-            switch (GameManager.Instance.gameMode)
+            switch (GameManager.Instance.GameMode)
             {
-                case Mode.PushPush:
+                case GameMode.PushPush:
 
                     audioSource_arr[2].PlayOneShot(pushSfxClip_List[index]);
                     break;
 
-                case Mode.Speed:
+                case GameMode.Speed:
                     audioSource_arr[2].PlayOneShot(speedSfxClip_List[index]);
                     break;
 
-                case Mode.Memory:
+                case GameMode.Memory:
                     audioSource_arr[2].PlayOneShot(memorySfxClip_List[index]);
                     break;
 
-                case Mode.Bomb:
+                case GameMode.Multi:
                     audioSource_arr[2].PlayOneShot(bombSfxClip_List[index]);
                     break;
 
@@ -128,27 +121,27 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            switch (GameManager.Instance.gameMode)
+            switch (GameManager.Instance.GameMode)
             {
-                case Mode.PushPush:
+                case GameMode.PushPush:
                     audioSource_arr[2].clip = pushSfxClip_List[index];
                     audioSource_arr[2].Play();
                     audioSource_arr[2].loop = bLoop;
                     break;
 
-                case Mode.Speed:
+                case GameMode.Speed:
                     audioSource_arr[2].clip = speedSfxClip_List[index];
                     audioSource_arr[2].Play();
                     audioSource_arr[2].loop = bLoop;
                     break;
 
-                case Mode.Memory:
+                case GameMode.Memory:
                     audioSource_arr[2].clip = memorySfxClip_List[index];
                     audioSource_arr[2].Play();
                     audioSource_arr[2].loop = bLoop;
                     break;
 
-                case Mode.Bomb:
+                case GameMode.Multi:
                     audioSource_arr[2].clip = bombSfxClip_List[index];
                     audioSource_arr[2].Play();
                     audioSource_arr[2].loop = bLoop;

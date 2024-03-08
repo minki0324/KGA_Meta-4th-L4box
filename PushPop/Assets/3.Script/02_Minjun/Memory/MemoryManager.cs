@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class MemoryManager : MonoBehaviour
+public class MemoryManager : MonoBehaviour, IGame
 {
     public static MemoryManager Instance;
     [Header("Panel")]
@@ -140,7 +140,16 @@ public class MemoryManager : MonoBehaviour
 
         //현재보드 꺼주기
         Destroy(currentBoard.gameObject);
-     
+        //stage초기화
+        currentStage = 1;
+        SetStageIndex();
+        //라이프초기화
+        Life = 3;
+        ResetLife();
+        //점수 기록하기
+        Ranking.Instance.SetScore(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.FirstPlayerIndex, Score);
+        //스코어초기화
+        ResetScore();
 
         switch (_string)
         {
@@ -211,7 +220,43 @@ public class MemoryManager : MonoBehaviour
         Debug.Log("코루틴후");
 
         GetComponent<Memory_Game>().GoOutBtn_Clicked();
-    } //로비이동 코루틴
+    }
+    public void BlinkRePlay()
+    {
+        Score -= 300;
+        ScoreText.text = $"점수 : {Score}";
+        HintBtnActive();
+        currentBoard.Blink(true);
+    }
+    public void OnGameEnd()
+    {
+        profileImage.sprite = ProfileManager.Instance.CacheProfileImage1P;
+        profileName.text = ProfileManager.Instance.ProfileName1P;
+        resultScore.text = $"{Score}";
+        clearMessage = (int)Ranking.Instance.CompareRanking();
+        resultMassage.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
+    }
 
+    public void Init()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void GameSetting()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void GameStart()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public IEnumerator GameStart_Co()
+    {
+        // ready
+        throw new System.NotImplementedException();
+        GameStart();
+    }//로비이동 코루틴
 }
 

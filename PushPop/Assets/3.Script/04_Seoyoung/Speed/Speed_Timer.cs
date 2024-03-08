@@ -14,7 +14,7 @@ public class Speed_Timer : MonoBehaviour
 {
     [Header("캔버스")]
     [SerializeField] private Speed_Canvas speed_Canvas;
-    [SerializeField] private Help_Canvas help_Canvas;
+    [SerializeField] private HelpScriptManager help_Canvas;
 
     [Header("패널")]
     [SerializeField] private GameObject SelectDifficulty_Panel;

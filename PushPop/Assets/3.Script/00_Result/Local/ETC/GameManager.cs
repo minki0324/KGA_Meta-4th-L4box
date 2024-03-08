@@ -5,12 +5,12 @@ using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 
-public enum Mode // GameMode
+public enum GameMode // GameMode
 {
     PushPush = 0,
     Speed,
     Memory,
-    Bomb,
+    Multi,
     None
 }
 #region Other Class
@@ -47,16 +47,19 @@ public class PuzzleObject
 }
 #endregion
 
-public class GameManager : MonoBehaviour, IGameMode
+public class GameManager : MonoBehaviour, IGameMode_
 {
     public static GameManager Instance = null;
-    public Mode gameMode;
+
+    public GameMode GameMode = GameMode.None;
+
     [Header("ShutDown")]
-    public float shutdownTimer;
-    public bool isShutdown = false;
+    public float ShutdownTimer = 3f;
+    public Coroutine ShutdownCoroutine = null;
+    public bool IsShutdown = false;
 
     [Header("GameScript")]
-    public Bomb bombScript;
+    public MultiManager multiGame = null;
     public Speed_Timer speedTimer = null;
     public PushPushManager pushPush;
     public MemoryManager Memory;
@@ -127,23 +130,14 @@ public class GameManager : MonoBehaviour, IGameMode
     }
     private void Update()
     {
-        if (shutdownTimer > 0)
-        {
-            if (isShutdown) { isShutdown = false; }
-            shutdownTimer -= Time.deltaTime;
-        }
-        else
-        {
-            shutdownTimer = 0f;
-            isShutdown = true;
-        }
+        
     }
     #endregion
 
     #region Other Method
     public void GameModeSetting(int _gameMode)
     { // game mode setting button click method
-        gameMode = (Mode)_gameMode;
+        GameMode = (GameMode)_gameMode;
     }
 
     public void GameStageSetting(int _stage)
@@ -151,34 +145,43 @@ public class GameManager : MonoBehaviour, IGameMode
         PushPopStage = _stage;
     }
 
-    public void GameStart()
-    { // game Start 시 호출되는 method
-        /*if (gameMode.Equals(0))
-        {
-            for (int i = 0; i < pos[(int)gameMode].transform.childCount; i++)
-            { // 지정된 position
-                bubblePos.Add(pos[(int)gameMode].GetChild(i));
-            }
-        }*/
+    public void ShutdownTimerStart()
+    {
+        ShutdownCoroutine = StartCoroutine(ShutDownTimer_Co());
+    }
 
+    private IEnumerator ShutDownTimer_Co()
+    { // Shutdown Timer
+        ShutdownTimer *= 60f; // 1분
+        while (ShutdownTimer >= 0)
+        {
+            ShutdownTimer -= Time.deltaTime;
+            yield return null;
+        }
+
+        ShutdownTimer = 0f;
+        IsShutdown = true;
+        ShutdownCoroutine = null;
+    }
+
+    public void GameStart()
+    { 
         // score 초기화
         Score = 0;
         TimeScore = 0;
         buttonActive = 0;
 
-        
-
-        switch (gameMode)
+        switch (GameMode)
         {
-            case Mode.PushPush:
+            case GameMode.PushPush:
                 PushPushMode();
                 break;
-            case Mode.Speed:
+            case GameMode.Speed:
                 SpeedMode();
                 break;
-            case Mode.Memory:
+            case GameMode.Memory:
                 break;
-            case Mode.Bomb:
+            case GameMode.Multi:
                 BombMode();
                 break;
         }
@@ -187,7 +190,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public IEnumerator GameReady_Co(GameObject _panel, TMP_Text text)
     {
 
-        if(gameMode == Mode.PushPush)
+        if(GameMode == GameMode.PushPush)
         {
             //게임 시작 버튼 소리가 안들려서 잠깐 시간 좀 띄울게..
             yield return new WaitForSeconds(0.5f);
@@ -204,7 +207,7 @@ public class GameManager : MonoBehaviour, IGameMode
         DialogManager.instance.Print_Dialog(text, "준비 ~");
         yield return new WaitForSeconds(2f);
 
-        if(gameMode == Mode.Speed)
+        if(GameMode == GameMode.Speed)
         {
             SpeedModePushPopCreate();
             speedTimer.TimerObj.SetActive(true);
@@ -218,17 +221,17 @@ public class GameManager : MonoBehaviour, IGameMode
         _panel.SetActive(false);
 
 
-        switch(gameMode)
+        switch(GameMode)
         {
-            case Mode.PushPush:
+            case GameMode.PushPush:
                 PushPushMode();
                 break;
-            case Mode.Speed:
+            case GameMode.Speed:
                 break;
-            case Mode.Memory:
+            case GameMode.Memory:
                 MemoryManager.Instance.CreatBoard();
                 break;
-            case Mode.Bomb:
+            case GameMode.Multi:
                 break;
             default:
                 break;
@@ -239,19 +242,19 @@ public class GameManager : MonoBehaviour, IGameMode
     public void GameClear()
     { // Game End 시 호출하는 method
         // button active check
-        if (gameMode.Equals(Mode.Bomb))
+        if (GameMode.Equals(GameMode.Multi))
         {
-            if (bombScript.popList1P.Count.Equals(0) || bombScript.popList2P.Count.Equals(0))
+            if (multiGame.popButtonList1P.Count.Equals(0) || multiGame.popButtonList2P.Count.Equals(0))
             {
-                bombScript.RepeatGameLogic();
+                multiGame.RepeatGameLogic();
                 return;
             }
         }
         else
         {
-            switch (gameMode)
+            switch (GameMode)
             {
-                case Mode.PushPush:
+                case GameMode.PushPush:
                     if (PushPop.Instance.pushPopButton.Count == pushPush.pushCount)
                     {
                         pushPush.OnButtonAllPush();
@@ -270,12 +273,12 @@ public class GameManager : MonoBehaviour, IGameMode
 
                         PushPushObject newPush = new PushPushObject(pushPush.puzzle.currentPuzzle.PuzzleID, pushpushScript.StackPops.Count, spriteIndexs, childPos);
                         string json = JsonUtility.ToJson(newPush);
-                        SQL_Manager.instance.SQL_AddPushpush(json, ProfileManager.Instance.ProfileIndex1P);
+                        SQL_Manager.instance.SQL_AddPushpush(json, ProfileManager.Instance.FirstPlayerIndex);
 
                         pushpushScript.result.SetActive(true);
 
                         // PushPushList 세팅
-                        List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileManager.Instance.ProfileIndex1P);
+                        List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileManager.Instance.FirstPlayerIndex);
                         if (pushlist == null)
                         {
                             Debug.Log("널");
@@ -316,7 +319,7 @@ public class GameManager : MonoBehaviour, IGameMode
                     }
                     break;
 
-                case Mode.Speed:
+                case GameMode.Speed:
                     if (speedTimer == null)
                     {
                         speedTimer = FindObjectOfType<Speed_Timer>();
@@ -341,7 +344,7 @@ public class GameManager : MonoBehaviour, IGameMode
                         speedTimer.StopCoroutine(speedTimer.timer);
                         speedTimer.TimerObj.SetActive(false);
 
-                        Ranking.Instance.SetTimer(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, int.Parse(PushPop.Instance.boardSprite.name), speedTimer.currentTime);
+                        Ranking.Instance.SetTimer(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.FirstPlayerIndex, int.Parse(PushPop.Instance.boardSprite.name), speedTimer.currentTime);
                         speedTimer.resultPanel.SetActive(true);
                         speedTimer.Result();
                     }
@@ -350,7 +353,7 @@ public class GameManager : MonoBehaviour, IGameMode
                         pushpushCreate_Co = StartCoroutine(SpeedCreate_Co());
                     }
                     break;
-                case Mode.Bomb:
+                case GameMode.Multi:
 
                     break;
             }
@@ -463,10 +466,6 @@ public class GameManager : MonoBehaviour, IGameMode
     public void BombMode()
     {
         BoardSize = new Vector2(500f, 500f);
-        // 상단 배치
-
-        // 게임 보드에 배치
-
     }
 
     private void CreateBubble(Vector2 _size, Vector2 _pos, GameObject _puzzle, PuzzleObject _puzzleInfo)

@@ -8,7 +8,7 @@ public class Memory_Game : MonoBehaviour
 {
     [Header("캔버스")]   
     [SerializeField] Canvas memory_Canvas;
-    [SerializeField] Help_Canvas help_Canvas;
+    [SerializeField] HelpScriptManager help_Canvas;
 
     [Header("패널")]
     [SerializeField] GameObject gameSet_Panel;

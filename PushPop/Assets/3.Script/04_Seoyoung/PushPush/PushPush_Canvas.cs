@@ -9,7 +9,7 @@ public class PushPush_Canvas : MonoBehaviour
 {
     [Header("Canvas")]
     [SerializeField] private Canvas main_Canvas;
-    [SerializeField] private Help_Canvas help_Canvas;
+    [SerializeField] private HelpScriptManager help_Canvas;
 
     [Header("Panel")]
     [SerializeField] private GameObject selectCategory_Panel;
