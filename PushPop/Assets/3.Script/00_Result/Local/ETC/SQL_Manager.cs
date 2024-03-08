@@ -53,18 +53,14 @@ public class server_info
     }
 }
 
-public class Friend
+public class FriendAndRequest
 {
-    public Friend(int uID, int profileIndex, List<int> friendIndex, List<int> requestIndex)
+    public FriendAndRequest(List<int> friendIndex, List<int> requestIndex)
     {
-        UID = uID;
-        ProfileIndex = profileIndex;
         FriendIndex = friendIndex;
         RequestIndex = requestIndex;
     }
 
-    public int UID { get; private set; }
-    public int ProfileIndex { get; private set; }
     public List<int> FriendIndex { get; private set; }
     public List<int> RequestIndex { get; private set; }
 }
@@ -106,25 +102,25 @@ public class SQL_Manager : MonoBehaviour
             // serverinfo에 받아온 데이터가 없다면 오류
             if (serverinfo.Equals(string.Empty))
             {
-                DebugLog.instance.Adding_Message("SQL Awake : " + serverinfo);
+                Debug.Log("SQL Awake : " + serverinfo);
                 return;
             }
 
             // if문에서 오류가 없이 지나왔다면 SQL 열어주기
             connection = new MySqlConnection(serverinfo);
-            DebugLog.instance.Adding_Message($"SQL Awake : {connection.State}");
+            Debug.Log($"SQL Awake : {connection.State}");
             connection.Open(); // 시도: 데이터베이스 연결
            
         }
         catch (MySqlException ex) // MySQL 예외 처리
         {
             // MySQL 예외에 대한 상세 정보 로깅
-            DebugLog.instance.Adding_Message($"SQL Awake: MySQL Error Code: {ex.Number}. Message: {ex.Message}");
+            Debug.Log($"SQL Awake: MySQL Error Code: {ex.Number}. Message: {ex.Message}");
         }
         catch (Exception e) // 기타 모든 예외 처리
         {
             // 일반 예외 정보 로깅
-            DebugLog.instance.Adding_Message("SQL Awake : " + e.Message);
+            Debug.Log("SQL Awake : " + e.Message);
         }
     }
 
@@ -148,11 +144,10 @@ public class SQL_Manager : MonoBehaviour
 
             JsonData data = JsonMapper.ToJson(userInfo);
             File.WriteAllText(path + "/config.json", data.ToString());
-            /*DebugLog.instance.Adding_Message("DefaultData : " + "DefaultData Pass");*/
         }
         catch(Exception e)
         {
-            /*DebugLog.instance.Adding_Message("DefaultData : " + e.Message);*/
+            Debug.Log("DefaultData : " + e.Message);
         }
     }
 
@@ -182,12 +177,11 @@ public class SQL_Manager : MonoBehaviour
                 $" Port = {itemdata[0]["PORT"]};" +
                 $" CharSet=utf8;";
 
-            /*DebugLog.instance.Adding_Message("ServerSet : " + "ServerSet Pass");*/
             return serverInfo;
         }
         catch(Exception e)
         {
-            /*DebugLog.instance.Adding_Message("ServerSet : " + e.Message);*/
+            Debug.Log("ServerSet : " + e.Message);
             return null;
         }
     }
@@ -206,12 +200,11 @@ public class SQL_Manager : MonoBehaviour
                     return false;
                 }
             }
-            /*DebugLog.instance.Adding_Message("ConnectionCheck : " + "Connection Pass");*/
             return true;
         }
         catch(Exception e)
         {
-            /*DebugLog.instance.Adding_Message("ConnectionCheck : " + e.Message);*/
+            Debug.Log("ConnectionCheck : " + e.Message);
             return false;
         }
     }
@@ -228,8 +221,7 @@ public class SQL_Manager : MonoBehaviour
             reader = cmd_.ExecuteReader();
 
             if (reader.HasRows)
-            {
-                /*DebugLog.instance.Adding_Message("GUID_DuplicateCheck : " + "GUID_DuplicateCheck Pass");*/
+            {                
                 if (!reader.IsClosed) reader.Close();
                 return true;
             }
@@ -241,7 +233,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch(Exception e)
         {
-            /*DebugLog.instance.Adding_Message("GUID_DuplicateCheck : " + e.Message);*/
+            Debug.Log("GUID_DuplicateCheck : " + e.Message);
             return false;
         }
     }
@@ -280,8 +272,7 @@ public class SQL_Manager : MonoBehaviour
                 // 4. UID를 클래스의 멤버 변수에 할당
                 reader.Read();
                 UID = reader.GetInt32("UID");
-                ProfileManager.Instance.UID = UID;
-                /*DebugLog.instance.Adding_Message("SQL_AddUser : " + "SQL_AddUser Pass");*/
+                ProfileManager.Instance.UID = UID;                
             }
             if (!reader.IsClosed) reader.Close();
             return; // 회원가입 성공
@@ -289,7 +280,7 @@ public class SQL_Manager : MonoBehaviour
         catch (Exception e)
         {
             if (!reader.IsClosed) reader.Close();
-            /*DebugLog.instance.Adding_Message("SQL_AddUser : " + e.Message);*/
+            Debug.Log("SQL AddUser : " + e.Message);
             return;
         }
     }
@@ -325,7 +316,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            DebugLog.instance.Adding_Message(e.Message);
+            Debug.Log("SQL AddProfile : " + e.Message);
             return -1;
         }
     }
@@ -352,7 +343,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            DebugLog.instance.Adding_Message(e.Message);
+            Debug.Log("SQL UpdateMode : " + e.Message);
             return;
         }
     }
@@ -404,7 +395,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            DebugLog.instance.Adding_Message(e.Message);
+            Debug.Log("SQL DeleteProfile : " + e.Message);
         }
     }
 
@@ -453,7 +444,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            DebugLog.instance.Adding_Message(e.Message);
+            Debug.Log("SQL ProfileListSet : " + e.Message);
             if (!reader.IsClosed) reader.Close();
             return;
         }
@@ -500,7 +491,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            DebugLog.instance.Adding_Message(e.Message);
+            Debug.Log("SQL AddProfileImage : " + e.Message);
             if (!reader.IsClosed) reader.Close();
             return;
         }
@@ -534,7 +525,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            DebugLog.instance.Adding_Message(e.Message);
+            Debug.Log("SQL AddProfileImage : " + e.Message);
             if (!reader.IsClosed) reader.Close();
             return;
         }
@@ -548,20 +539,28 @@ public class SQL_Manager : MonoBehaviour
     /// <returns></returns>
     public Texture2D SQL_LoadProfileImage(int uid, int profileIndex)
     {
-        string SQL_command = "SELECT ImageData FROM Image WHERE UID = @UID AND Profile_Index = @ProfileIndex";
-        MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
+        try
+        {
+            string SQL_command = "SELECT ImageData FROM Image WHERE UID = @UID AND Profile_Index = @ProfileIndex";
+            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
 
-        // 파라미터 추가
-        cmd.Parameters.AddWithValue("@UID", uid);
-        cmd.Parameters.AddWithValue("@ProfileIndex", profileIndex);
+            // 파라미터 추가
+            cmd.Parameters.AddWithValue("@UID", uid);
+            cmd.Parameters.AddWithValue("@ProfileIndex", profileIndex);
 
-        // 이미지 데이터를 읽기 위해 ExecuteScalar() 메서드를 사용합니다.
-        byte[] imageData = (byte[])cmd.ExecuteScalar();
+            // 이미지 데이터를 읽기 위해 ExecuteScalar() 메서드를 사용합니다.
+            byte[] imageData = (byte[])cmd.ExecuteScalar();
 
-        // ImageData를 Texture2D로 변환
-        Texture2D texture = new Texture2D(1, 1);
-        texture.LoadImage(imageData); // 바이트 배열로부터 텍스처를 로드합니다.
-        return texture;
+            // ImageData를 Texture2D로 변환
+            Texture2D texture = new Texture2D(1, 1);
+            texture.LoadImage(imageData); // 바이트 배열로부터 텍스처를 로드합니다.
+            return texture;
+        }
+        catch(Exception e)
+        {
+            Debug.Log("SQL LoadProfileImage : " + e.Message);
+            return null;
+        }
     }
 
     /// <summary>
@@ -613,7 +612,7 @@ public class SQL_Manager : MonoBehaviour
     }
         catch (Exception e)
         {
-            DebugLog.instance.Adding_Message(e.Message);
+            Debug.Log("SQL UpdateProfile : " + e.Message);
             return;
         }
     }
@@ -656,7 +655,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            DebugLog.instance.Adding_Message(e.Message);
+            Debug.Log("SQL UpdateProfile : " + e.Message);
             return;
         }
     }
@@ -701,7 +700,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log(e.Message);
+            Debug.Log("SQL AddPushpush : " + e.Message);
             return;
         }
     }
@@ -745,14 +744,62 @@ public class SQL_Manager : MonoBehaviour
         catch (Exception e)
         {
             if (!reader.IsClosed) reader.Close();
-            Debug.Log(e.Message);
+            Debug.Log("SQL SetPushPush : " + e.Message);
             return null;
         }
     }
     #endregion
 
     #region Friend
-    public void SQL_AddFriend(int uid, int _profileIndex, int _friendIndex)
+    public void SQL_SearchProfile(string _name, GameObject _friendPanel)
+    { // 이름을 검색해서 해당 이름과 동일한 프로필 출력해주는 Method
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+            // Input에 입력한 name에 맞는 프로필을 검색
+            string select_cmd = $"SELECT FriendAndRequest, Profile_Index, UID FROM Friend WHERE Profile_Name = '{_name}';";
+            MySqlCommand selectcmd_ = new MySqlCommand(select_cmd, connection);
+            reader = selectcmd_.ExecuteReader();
+
+            List<FriendAndRequest> relationList = new List<FriendAndRequest>();
+            List<int> profileIndexList = new List<int>();
+            List<int> UIDList = new List<int>();
+
+            if (reader.HasRows)
+            { 
+                while(reader.Read())
+                { // 읽어온 데이터를 각각 리스트에 담아줌
+                    string friendinfo = reader.GetString("FriendAndRequest");
+                    FriendAndRequest friend = JsonUtility.FromJson<FriendAndRequest>(friendinfo);
+
+                    int profileIndex = reader.GetInt32("Profile_Index");
+                    int UID = reader.GetInt32("UID");
+
+                    relationList.Add(friend);
+                    profileIndexList.Add(profileIndex);
+                    UIDList.Add(UID);
+                }
+            }
+
+            for(int i = 0; i < relationList.Count; i++)
+            {
+                GameObject friendpanel = Instantiate(_friendPanel);
+                // 여기 밑에 프로필들 세팅 해주는 로직 추가
+            }
+            if (!reader.IsClosed) reader.Close();
+        }
+        catch(Exception e)
+        {
+            if (!reader.IsClosed) reader.Close();
+            Debug.Log("SQL SearchProfile : " + e.Message);
+        }
+    }
+
+    public void SQL_AddFriend(int _profileIndex, int _friendIndex)
     { // 친구 추가 버튼 눌렀을 때, 수락 버튼 눌렀을 때 공용 Method
         try
         {
@@ -763,12 +810,13 @@ public class SQL_Manager : MonoBehaviour
             }
 
             // 2. Profile 정보 받아오기
-            Friend currentUserFriend = GetFriendData(_profileIndex);
-            Friend targetUserFriend = GetFriendData(_friendIndex);
+            FriendAndRequest currentUserFriend = GetFriendData(_profileIndex);
+            FriendAndRequest targetUserFriend = GetFriendData(_friendIndex);
 
+            // 3. 각 Friend Class에 담긴 요청을 조회해서 해당 유저와 관계 정리
             if (currentUserFriend.RequestIndex.Contains(_friendIndex))
             { // 매개 변수로 받은 index가 요청 목록에 있다면 친구 수락 버튼을 눌렀을 때 case
-                AcceptFriendRequest(currentUserFriend, _profileIndex, _friendIndex, uid);
+                AcceptFriendRequest(currentUserFriend, _profileIndex, _friendIndex);
                 return;
             }
             else if(targetUserFriend.RequestIndex.Contains(_profileIndex))
@@ -779,18 +827,18 @@ public class SQL_Manager : MonoBehaviour
             else if(!targetUserFriend.RequestIndex.Contains(_profileIndex))
             { // 해당 유저에게 나의 친구요청이 없으니 친구 추가 요청을 보낼 수 있음
                 targetUserFriend.RequestIndex.Add(_profileIndex);
-                UpdateFriendData(_friendIndex, JsonUtility.ToJson(targetUserFriend), targetUserFriend.UID);
+                UpdateFriendData(_friendIndex, JsonUtility.ToJson(targetUserFriend));
             }
             return; // 요청 or 친구 등록 성공
         }
         catch (Exception e)
         {
-            /*DebugLog.instance.Adding_Message("SQL_AddUser : " + e.Message);*/
+            Debug.Log("SQL AddFriend : " + e.Message);
             return;
         }
     }
 
-    private Friend GetFriendData(int profileIndex)
+    private FriendAndRequest GetFriendData(int profileIndex)
     {
         string selectCmd = $"SELECT FriendAndRequest FROM Friend WHERE Profile_Index = '{profileIndex}';";
         MySqlCommand cmd = new MySqlCommand(selectCmd, connection);
@@ -800,31 +848,31 @@ public class SQL_Manager : MonoBehaviour
             {
                 reader.Read();
                 string jsonData = reader.GetString("FriendAndRequest");
-                return JsonUtility.FromJson<Friend>(jsonData);
+                return JsonUtility.FromJson<FriendAndRequest>(jsonData);
             }
         }
         return null;
     }
 
-    private void AcceptFriendRequest(Friend friend, int profileIndex, int friendIndex, int uid)
+    private void AcceptFriendRequest(FriendAndRequest friend, int profileIndex, int friendIndex)
     {
         // 요청 리스트에서 지우고 친구 리스트에 추가
         friend.RequestIndex.Remove(friendIndex);
         friend.FriendIndex.Add(friendIndex);
-        UpdateFriendData(profileIndex, JsonUtility.ToJson(friend), uid);
+        UpdateFriendData(profileIndex, JsonUtility.ToJson(friend));
 
         // 상대방 프로필 업데이트
-        Friend friendProfile = GetFriendData(friendIndex);
+        FriendAndRequest friendProfile = GetFriendData(friendIndex);
         if (friendProfile != null)
         {
             friendProfile.FriendIndex.Add(profileIndex);
-            UpdateFriendData(friendIndex, JsonUtility.ToJson(friendProfile), uid);
+            UpdateFriendData(friendIndex, JsonUtility.ToJson(friendProfile));
         }
     }
 
-    private void UpdateFriendData(int profileIndex, string jsonData, int uid)
+    private void UpdateFriendData(int profileIndex, string jsonData)
     {
-        string updateCmd = $"UPDATE Friend SET FriendAndRequest = '{jsonData}' WHERE UID = '{uid}' AND Profile_Index = '{profileIndex}';";
+        string updateCmd = $"UPDATE Friend SET FriendAndRequest = '{jsonData}' Profile_Index = '{profileIndex}';";
         MySqlCommand cmd = new MySqlCommand(updateCmd, connection);
         cmd.ExecuteNonQuery();
     }
