@@ -52,6 +52,18 @@ public class server_info
         PORT = port;
     }
 }
+
+public class FriendAndRequest
+{
+    public FriendAndRequest(List<int> friendIndex, List<int> requestIndex)
+    {
+        FriendIndex = friendIndex;
+        RequestIndex = requestIndex;
+    }
+
+    public List<int> FriendIndex { get; private set; }
+    public List<int> RequestIndex { get; private set; }
+}
 #endregion
 
 /// <summary>
@@ -84,25 +96,31 @@ public class SQL_Manager : MonoBehaviour
         }
 
         DB_path = Application.persistentDataPath + "/Database";
-        Debug.Log(DB_path);
         string serverinfo = ServerSet(DB_path);
         try
         {
             // serverinfo에 받아온 데이터가 없다면 오류
             if (serverinfo.Equals(string.Empty))
             {
-                Debug.Log("SQL Server Json Error!");
+                Debug.Log("SQL Awake : " + serverinfo);
                 return;
             }
 
             // if문에서 오류가 없이 지나왔다면 SQL 열어주기
             connection = new MySqlConnection(serverinfo);
-            connection.Open();
-            Debug.Log("SQL Server Open Compelate!");
+            Debug.Log($"SQL Awake : {connection.State}");
+            connection.Open(); // 시도: 데이터베이스 연결
+           
         }
-        catch (Exception e)
+        catch (MySqlException ex) // MySQL 예외 처리
         {
-            Debug.Log(e.Message);
+            // MySQL 예외에 대한 상세 정보 로깅
+            Debug.Log($"SQL Awake: MySQL Error Code: {ex.Number}. Message: {ex.Message}");
+        }
+        catch (Exception e) // 기타 모든 예외 처리
+        {
+            // 일반 예외 정보 로깅
+            Debug.Log("SQL Awake : " + e.Message);
         }
     }
 
@@ -117,55 +135,78 @@ public class SQL_Manager : MonoBehaviour
     //경로에 파일이 없다면 기본 Default 파일 생성 Method
     private void DefaultData(string path)
     {
-        List<server_info> userInfo = new List<server_info>();
+        try
+        {
+            List<server_info> userInfo = new List<server_info>();
 
-        // (database-1.cj4ki2qmepdi.ap-northeast-2.rds.amazonaws.com) = RDS 접속 IP
-        userInfo.Add(new server_info("database-1.cj4ki2qmepdi.ap-northeast-2.rds.amazonaws.com", "PushPop", "PushPopDB", "ruddlf4wh", "7958"));
+            // (database-1.cj4ki2qmepdi.ap-northeast-2.rds.amazonaws.com) = RDS 접속 IP
+            userInfo.Add(new server_info("database-1.cj4ki2qmepdi.ap-northeast-2.rds.amazonaws.com", "PushPop", "PushPopDB", "ruddlf4wh", "7958"));
 
-        JsonData data = JsonMapper.ToJson(userInfo);
-        File.WriteAllText(path + "/config.json", data.ToString());
+            JsonData data = JsonMapper.ToJson(userInfo);
+            File.WriteAllText(path + "/config.json", data.ToString());
+        }
+        catch(Exception e)
+        {
+            Debug.Log("DefaultData : " + e.Message);
+        }
     }
 
     // SQL DATA를 불러오는 Method
     // 경로, 파일 탐색 후 Json파일 읽어와서 HeidiSQL 접속
     private string ServerSet(string path)
     {
-        if (!File.Exists(path)) // 경로 탐색
+        try
         {
-            Directory.CreateDirectory(path);
-        }
+            if (!File.Exists(path)) // 경로 탐색
+            {
+                Directory.CreateDirectory(path);
+            }
 
-        if (!File.Exists(path + "/config.json"))  // 파일 탐색
+            if (!File.Exists(path + "/config.json"))  // 파일 탐색
+            {
+                DefaultData(path);
+            }
+            string Jsonstring = File.ReadAllText(path + "/config.json");
+
+            JsonData itemdata = JsonMapper.ToObject(Jsonstring);
+            string serverInfo =
+                $"server = {itemdata[0]["IP"]};" + $"" +
+                $" Database = {itemdata[0]["TableName"]};" +
+                $" Uid = {itemdata[0]["ID"]};" +
+                $" Pwd = {itemdata[0]["PW"]};" +
+                $" Port = {itemdata[0]["PORT"]};" +
+                $" CharSet=utf8;";
+
+            return serverInfo;
+        }
+        catch(Exception e)
         {
-            DefaultData(path);
+            Debug.Log("ServerSet : " + e.Message);
+            return null;
         }
-        string Jsonstring = File.ReadAllText(path + "/config.json");
-
-        JsonData itemdata = JsonMapper.ToObject(Jsonstring);
-        string serverInfo =
-            $"server = {itemdata[0]["IP"]};" + $"" +
-            $" Database = {itemdata[0]["TableName"]};" +
-            $" Uid = {itemdata[0]["ID"]};" +
-            $" Pwd = {itemdata[0]["PW"]};" +
-            $" Port = {itemdata[0]["PORT"]};" +
-            $" CharSet=utf8;";
-
-        return serverInfo;
     }
 
     //SQL이 열려 있는지 확인하는 Method 
     private bool ConnectionCheck(MySqlConnection con)
     {
-        //현재 MySQLConnection open 이 아니라면?
-        if (con.State != System.Data.ConnectionState.Open)
+        try
         {
-            con.Open();
+            //현재 MySQLConnection open 이 아니라면?
             if (con.State != System.Data.ConnectionState.Open)
             {
-                return false;
+                con.Open();
+                if (con.State != System.Data.ConnectionState.Open)
+                {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+        catch(Exception e)
+        {
+            Debug.Log("ConnectionCheck : " + e.Message);
+            return false;
+        }
     }
     #endregion
 
@@ -173,18 +214,26 @@ public class SQL_Manager : MonoBehaviour
     // GUID 중복체크 Method
     private bool GUID_DuplicateCheck(string GUID)
     {
-        string sql_cmd = string.Format(@"SELECT GUID FROM User_Info WHERE GUID='{0}';", GUID);
-        MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
-        reader = cmd_.ExecuteReader();
+        try
+        {
+            string sql_cmd = string.Format(@"SELECT GUID FROM User_Info WHERE GUID='{0}';", GUID);
+            MySqlCommand cmd_ = new MySqlCommand(sql_cmd, connection);
+            reader = cmd_.ExecuteReader();
 
-        if (reader.HasRows)
-        {
-            if (!reader.IsClosed) reader.Close();
-            return true;
+            if (reader.HasRows)
+            {                
+                if (!reader.IsClosed) reader.Close();
+                return true;
+            }
+            else
+            {
+                if (!reader.IsClosed) reader.Close();
+                return false;
+            }
         }
-        else
+        catch(Exception e)
         {
-            if (!reader.IsClosed) reader.Close();
+            Debug.Log("GUID_DuplicateCheck : " + e.Message);
             return false;
         }
     }
@@ -223,7 +272,7 @@ public class SQL_Manager : MonoBehaviour
                 // 4. UID를 클래스의 멤버 변수에 할당
                 reader.Read();
                 UID = reader.GetInt32("UID");
-                ProfileManager.Instance.UID = UID;
+                ProfileManager.Instance.UID = UID;                
             }
             if (!reader.IsClosed) reader.Close();
             return; // 회원가입 성공
@@ -231,7 +280,7 @@ public class SQL_Manager : MonoBehaviour
         catch (Exception e)
         {
             if (!reader.IsClosed) reader.Close();
-            Debug.Log(e.Message);
+            Debug.Log("SQL AddUser : " + e.Message);
             return;
         }
     }
@@ -267,7 +316,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log(e.Message);
+            Debug.Log("SQL AddProfile : " + e.Message);
             return -1;
         }
     }
@@ -294,7 +343,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log(e.Message);
+            Debug.Log("SQL UpdateMode : " + e.Message);
             return;
         }
     }
@@ -346,7 +395,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log(e.Message);
+            Debug.Log("SQL DeleteProfile : " + e.Message);
         }
     }
 
@@ -395,7 +444,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log($"프로필 조회 중 오류 발생: {e.Message}");
+            Debug.Log("SQL ProfileListSet : " + e.Message);
             if (!reader.IsClosed) reader.Close();
             return;
         }
@@ -442,7 +491,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log($"프로필 조회 중 오류 발생: {e.Message}");
+            Debug.Log("SQL AddProfileImage : " + e.Message);
             if (!reader.IsClosed) reader.Close();
             return;
         }
@@ -476,7 +525,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log($"프로필 조회 중 오류 발생: {e.Message}");
+            Debug.Log("SQL AddProfileImage : " + e.Message);
             if (!reader.IsClosed) reader.Close();
             return;
         }
@@ -490,20 +539,28 @@ public class SQL_Manager : MonoBehaviour
     /// <returns></returns>
     public Texture2D SQL_LoadProfileImage(int uid, int profileIndex)
     {
-        string SQL_command = "SELECT ImageData FROM Image WHERE UID = @UID AND Profile_Index = @ProfileIndex";
-        MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
+        try
+        {
+            string SQL_command = "SELECT ImageData FROM Image WHERE UID = @UID AND Profile_Index = @ProfileIndex";
+            MySqlCommand cmd = new MySqlCommand(SQL_command, connection);
 
-        // 파라미터 추가
-        cmd.Parameters.AddWithValue("@UID", uid);
-        cmd.Parameters.AddWithValue("@ProfileIndex", profileIndex);
+            // 파라미터 추가
+            cmd.Parameters.AddWithValue("@UID", uid);
+            cmd.Parameters.AddWithValue("@ProfileIndex", profileIndex);
 
-        // 이미지 데이터를 읽기 위해 ExecuteScalar() 메서드를 사용합니다.
-        byte[] imageData = (byte[])cmd.ExecuteScalar();
+            // 이미지 데이터를 읽기 위해 ExecuteScalar() 메서드를 사용합니다.
+            byte[] imageData = (byte[])cmd.ExecuteScalar();
 
-        // ImageData를 Texture2D로 변환
-        Texture2D texture = new Texture2D(1, 1);
-        texture.LoadImage(imageData); // 바이트 배열로부터 텍스처를 로드합니다.
-        return texture;
+            // ImageData를 Texture2D로 변환
+            Texture2D texture = new Texture2D(1, 1);
+            texture.LoadImage(imageData); // 바이트 배열로부터 텍스처를 로드합니다.
+            return texture;
+        }
+        catch(Exception e)
+        {
+            Debug.Log("SQL LoadProfileImage : " + e.Message);
+            return null;
+        }
     }
 
     /// <summary>
@@ -555,7 +612,7 @@ public class SQL_Manager : MonoBehaviour
     }
         catch (Exception e)
         {
-            Debug.Log(e.Message);
+            Debug.Log("SQL UpdateProfile : " + e.Message);
             return;
         }
     }
@@ -598,7 +655,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log(e.Message);
+            Debug.Log("SQL UpdateProfile : " + e.Message);
             return;
         }
     }
@@ -643,7 +700,7 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log(e.Message);
+            Debug.Log("SQL AddPushpush : " + e.Message);
             return;
         }
     }
@@ -687,9 +744,137 @@ public class SQL_Manager : MonoBehaviour
         catch (Exception e)
         {
             if (!reader.IsClosed) reader.Close();
-            Debug.Log(e.Message);
+            Debug.Log("SQL SetPushPush : " + e.Message);
             return null;
         }
+    }
+    #endregion
+
+    #region Friend
+    public void SQL_SearchProfile(string _name, GameObject _friendPanel)
+    { // 이름을 검색해서 해당 이름과 동일한 프로필 출력해주는 Method
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+            // Input에 입력한 name에 맞는 프로필을 검색
+            string select_cmd = $"SELECT FriendAndRequest, Profile_Index, UID FROM Friend WHERE Profile_Name = '{_name}';";
+            MySqlCommand selectcmd_ = new MySqlCommand(select_cmd, connection);
+            reader = selectcmd_.ExecuteReader();
+
+            List<FriendAndRequest> relationList = new List<FriendAndRequest>();
+            List<int> profileIndexList = new List<int>();
+            List<int> UIDList = new List<int>();
+
+            if (reader.HasRows)
+            { 
+                while(reader.Read())
+                { // 읽어온 데이터를 각각 리스트에 담아줌
+                    string friendinfo = reader.GetString("FriendAndRequest");
+                    FriendAndRequest friend = JsonUtility.FromJson<FriendAndRequest>(friendinfo);
+
+                    int profileIndex = reader.GetInt32("Profile_Index");
+                    int UID = reader.GetInt32("UID");
+
+                    relationList.Add(friend);
+                    profileIndexList.Add(profileIndex);
+                    UIDList.Add(UID);
+                }
+            }
+
+            for(int i = 0; i < relationList.Count; i++)
+            {
+                GameObject friendpanel = Instantiate(_friendPanel);
+                // 여기 밑에 프로필들 세팅 해주는 로직 추가
+            }
+            if (!reader.IsClosed) reader.Close();
+        }
+        catch(Exception e)
+        {
+            if (!reader.IsClosed) reader.Close();
+            Debug.Log("SQL SearchProfile : " + e.Message);
+        }
+    }
+
+    public void SQL_AddFriend(int _profileIndex, int _friendIndex)
+    { // 친구 추가 버튼 눌렀을 때, 수락 버튼 눌렀을 때 공용 Method
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+
+            // 2. Profile 정보 받아오기
+            FriendAndRequest currentUserFriend = GetFriendData(_profileIndex);
+            FriendAndRequest targetUserFriend = GetFriendData(_friendIndex);
+
+            // 3. 각 Friend Class에 담긴 요청을 조회해서 해당 유저와 관계 정리
+            if (currentUserFriend.RequestIndex.Contains(_friendIndex))
+            { // 매개 변수로 받은 index가 요청 목록에 있다면 친구 수락 버튼을 눌렀을 때 case
+                AcceptFriendRequest(currentUserFriend, _profileIndex, _friendIndex);
+                return;
+            }
+            else if(targetUserFriend.RequestIndex.Contains(_profileIndex))
+            { // 이미 친구추가 요청된 사람
+                // 추후 이미 신청한 유저입니다. 등의 에러로그 띄우기 todo..
+                return;
+            }
+            else if(!targetUserFriend.RequestIndex.Contains(_profileIndex))
+            { // 해당 유저에게 나의 친구요청이 없으니 친구 추가 요청을 보낼 수 있음
+                targetUserFriend.RequestIndex.Add(_profileIndex);
+                UpdateFriendData(_friendIndex, JsonUtility.ToJson(targetUserFriend));
+            }
+            return; // 요청 or 친구 등록 성공
+        }
+        catch (Exception e)
+        {
+            Debug.Log("SQL AddFriend : " + e.Message);
+            return;
+        }
+    }
+
+    private FriendAndRequest GetFriendData(int profileIndex)
+    {
+        string selectCmd = $"SELECT FriendAndRequest FROM Friend WHERE Profile_Index = '{profileIndex}';";
+        MySqlCommand cmd = new MySqlCommand(selectCmd, connection);
+        using (MySqlDataReader reader = cmd.ExecuteReader())
+        {
+            if (reader.HasRows)
+            {
+                reader.Read();
+                string jsonData = reader.GetString("FriendAndRequest");
+                return JsonUtility.FromJson<FriendAndRequest>(jsonData);
+            }
+        }
+        return null;
+    }
+
+    private void AcceptFriendRequest(FriendAndRequest friend, int profileIndex, int friendIndex)
+    {
+        // 요청 리스트에서 지우고 친구 리스트에 추가
+        friend.RequestIndex.Remove(friendIndex);
+        friend.FriendIndex.Add(friendIndex);
+        UpdateFriendData(profileIndex, JsonUtility.ToJson(friend));
+
+        // 상대방 프로필 업데이트
+        FriendAndRequest friendProfile = GetFriendData(friendIndex);
+        if (friendProfile != null)
+        {
+            friendProfile.FriendIndex.Add(profileIndex);
+            UpdateFriendData(friendIndex, JsonUtility.ToJson(friendProfile));
+        }
+    }
+
+    private void UpdateFriendData(int profileIndex, string jsonData)
+    {
+        string updateCmd = $"UPDATE Friend SET FriendAndRequest = '{jsonData}' Profile_Index = '{profileIndex}';";
+        MySqlCommand cmd = new MySqlCommand(updateCmd, connection);
+        cmd.ExecuteNonQuery();
     }
     #endregion
 

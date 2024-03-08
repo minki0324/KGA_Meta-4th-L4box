@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using TMPro;
 public class PushPushManager : MonoBehaviour
 {
 
@@ -9,6 +10,7 @@ public class PushPushManager : MonoBehaviour
     public PuzzleLozic puzzle;
     [SerializeField] FramePuzzle frame;
     public GameObject decoPanel;
+    [SerializeField] private TMP_Text stageTitle;
     public int pieceCount = 1; //버블터졋을때 중복호출을 방지하기위한 인덱스
     public int pushCount; //버튼눌렀을때 + 되는 카운트 pushCount == 버튼리스트.Count 비교해서 동일시 클리어 판정(GameManager)
     public event Action onPushPushGameEnd;
@@ -17,11 +19,14 @@ public class PushPushManager : MonoBehaviour
     public void OnAllBubblesPopped() //버블이 모두 터지고 땅에닿았을때 불리는 메소드
     {
         puzzle.SettingGame();//퍼즐게임 시작
+        TitleSet("그림에 맞게 퍼즐을 맞춰 보세요!");
         pieceCount = 1;
     }
     public void OnPuzzleSolved() //퍼즐을 모두 맞췄을때 불리는 메소드
     {
         AudioManager.instance.SetAudioClip_SFX(1, false);
+        TitleSet("내 마음대로 그림을 꾸며보자!");
+        DebugLog.instance.Adding_Message("재윤아 다했다고? 대박 최곤데?");
         puzzle.successCount = 0;
         DecoPanelSetActive(true);
         puzzle.onPuzzleClear?.Invoke();
@@ -30,6 +35,7 @@ public class PushPushManager : MonoBehaviour
     public void OnCustomEndmethod() //커스텀하다가 다음으로 버튼 눌렀을때 불리는 메소드
     {//다음으로 버튼에 onClick 참조되있음.
         GameManager.Instance.GameClear();
+        TitleSet("모든 푸쉬팝을 눌러보자!");
         DecoPanelSetActive(false);
         custom.onCustomEnd?.Invoke();
         frame._myImage.alphaHitTestMinimumThreshold = 0f;
@@ -51,7 +57,10 @@ public class PushPushManager : MonoBehaviour
     {
         decoPanel.SetActive(_bool);
     }
-
+    public void TitleSet(string _string)
+    {
+        stageTitle.text = _string;
+    }
 
 
 }

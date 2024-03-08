@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 public class ProfileManager : MonoBehaviour
 {
     public static ProfileManager Instance;
+    public NewProfileCanvas canvas;
 
     [Header("UID")] [Space(5)]
     private string uniqueID = string.Empty; // PlayerPrefs에 저장되는 고유 GUID;
@@ -62,26 +63,39 @@ public class ProfileManager : MonoBehaviour
             return;
         }
     }
+
+    private void Start()
+    {
+        LoadOrCreateGUID();
+        PrintProfileList(canvas.profileParent, null);
+    }
     #endregion
 
     #region Other Method
     public void LoadOrCreateGUID()
     {
-        if (PlayerPrefs.HasKey("DeviceGUID"))
-        { // 기존 GUID가 있는 경우 해당 GUID를 변수에 담아줌
-            uniqueID = PlayerPrefs.GetString("DeviceGUID");
-        }
-        else
-        { // 첫 접속시 GUID를 부여하고 해당 GUID를 변수에 담아줌
-            uniqueID = Guid.NewGuid().ToString();
+        try
+        {
+            if (PlayerPrefs.HasKey("DeviceGUID"))
+            { // 기존 GUID가 있는 경우 해당 GUID를 변수에 담아줌
+                uniqueID = PlayerPrefs.GetString("DeviceGUID");
+            }
+            else
+            { // 첫 접속시 GUID를 부여하고 해당 GUID를 변수에 담아줌
+                uniqueID = Guid.NewGuid().ToString();
 
-            // PlayerPrefs에 GUID를 저장
-            PlayerPrefs.SetString("DeviceGUID", uniqueID);
-            PlayerPrefs.Save();
+                // PlayerPrefs에 GUID를 저장
+                PlayerPrefs.SetString("DeviceGUID", uniqueID);
+                PlayerPrefs.Save();
+            }
+            // GUID를 가지고 DB와 연동하여 UID를 부여받음
+            //DebugLog.instance.Adding_Message(uniqueID);
+            SQL_Manager.instance.SQL_AddUser(uniqueID);
         }
-        // GUID를 가지고 DB와 연동하여 UID를 부여받음
-        Debug.Log(uniqueID);
-        SQL_Manager.instance.SQL_AddUser(uniqueID);
+       catch(Exception e)
+        {
+            DebugLog.instance.Adding_Message(e.Message);
+        }
     }
 
     /// <summary>

@@ -55,12 +55,6 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
         inputProfileName.onValidateInput += ValidateInput;
     }
 
-    void Start()
-    {
-        ProfileManager.Instance.LoadOrCreateGUID();
-        ProfileManager.Instance.PrintProfileList(profileParent, null);
-    }
-
     private void OnDisable()
     {
         inputProfileName.onValidateInput -= ValidateInput;
