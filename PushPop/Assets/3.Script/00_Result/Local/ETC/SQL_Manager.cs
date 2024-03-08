@@ -97,31 +97,18 @@ public class SQL_Manager : MonoBehaviour
 
         DB_path = Application.persistentDataPath + "/Database";
         string serverinfo = ServerSet(DB_path);
-        try
-        {
-            // serverinfo에 받아온 데이터가 없다면 오류
-            if (serverinfo.Equals(string.Empty))
-            {
-                Debug.Log("SQL Awake : " + serverinfo);
-                return;
-            }
+        Debug.Log("SQL Awake : " + serverinfo);
 
-            // if문에서 오류가 없이 지나왔다면 SQL 열어주기
-            connection = new MySqlConnection(serverinfo);
-            connection.Open(); // 시도: 데이터베이스 연결
-            Debug.Log($"SQL Awake : {connection.State}");
-           
-        }
-        catch (MySqlException ex) // MySQL 예외 처리
+        // serverinfo에 받아온 데이터가 없다면 오류
+        if (serverinfo.Equals(string.Empty))
         {
-            // MySQL 예외에 대한 상세 정보 로깅
-            Debug.Log($"SQL Awake: MySQL Error Code: {ex.Number}. Message: {ex.Message}");
+            return;
         }
-        catch (Exception e) // 기타 모든 예외 처리
-        {
-            // 일반 예외 정보 로깅
-            Debug.Log("SQL Awake : " + e.Message);
-        }
+
+        // if문에서 오류가 없이 지나왔다면 SQL 열어주기
+        connection = new MySqlConnection(serverinfo);
+        connection.Open(); // 시도: 데이터베이스 연결
+        Debug.Log($"SQL Awake : {connection.State}");
     }
 
     private void OnApplicationQuit()
@@ -175,7 +162,7 @@ public class SQL_Manager : MonoBehaviour
                 $" Uid = {itemdata[0]["ID"]};" +
                 $" Pwd = {itemdata[0]["PW"]};" +
                 $" Port = {itemdata[0]["PORT"]};" +
-                $" CharSet=utf8;";
+                $" CharSet = utf8;";
 
             return serverInfo;
         }
@@ -244,8 +231,8 @@ public class SQL_Manager : MonoBehaviour
     /// <param name="GUID"></param>
     public void SQL_AddUser(string GUID)
     {
-        try
-        {
+       /* try
+        {*/
             // 1. SQL 서버에 접속 되어 있는지 확인
             if (!ConnectionCheck(connection))
             {
@@ -276,13 +263,13 @@ public class SQL_Manager : MonoBehaviour
             }
             if (!reader.IsClosed) reader.Close();
             return; // 회원가입 성공
-        }
+       /* }
         catch (Exception e)
         {
             if (!reader.IsClosed) reader.Close();
             Debug.Log("SQL AddUser : " + e.Message);
             return;
-        }
+        }*/
     }
 
     /// <summary>
