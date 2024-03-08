@@ -28,6 +28,7 @@ public class TouchManager : MonoBehaviour
     [SerializeField] private List<TouchEvent> touchEvent_List = new List<TouchEvent>();     //TouchEvent 담을 리스트
     [SerializeField] private List<Vector2> nowPos_List = new List<Vector2>();       //TouchEvent의 Touch.position을 담을 리스트
 
+
     [Header("ETC")]
     // Coroutine touchTimer;
     [SerializeField] private Transform particleCanvas;  //터치&드래그 생성 시 상속될 오브젝트 Transform
@@ -45,20 +46,30 @@ public class TouchManager : MonoBehaviour
     public int MaxCount = 60;   //꾹 눌렀을 떄 생성되는 프리팹 최대 갯수
     private int CurrentCount = 0;   //꾹 눌렀을 떄 생성되는 프리팹 현재 갯수
 
+    private float timeCool = 0.3f;
     #region Unity Callback
     private void Awake()
     {
         //프레임 속도 고정
         Application.targetFrameRate = 60;
 
-        //RawImage의 텍스처 크기 변경
-        rawImage.texture.width = Screen.width;
-        rawImage.texture.height = Screen.height;
     }
+
+
+
 
     void Start()
     {
+        //SetResolution();
+        //RawImage의 텍스처 크기 변경
+        rawImage.texture.width = Screen.width;
+        rawImage.texture.height = Screen.height;
+
+
         Init();
+     //   StartCoroutine(Update_co());
+
+
     }
 
     void Update()
@@ -68,6 +79,21 @@ public class TouchManager : MonoBehaviour
             MultiTouchEvent_Independent();
         }
     }
+
+    //public IEnumerator Update_co()
+    //{
+    //    while(true)
+    //    {
+    //        if (Input.touchCount > 0)
+    //        {
+    //            MultiTouchEvent_Independent();
+
+    //        }
+
+    //        yield return null;
+    //    }
+
+    //}
 
     #endregion
 
@@ -84,8 +110,46 @@ public class TouchManager : MonoBehaviour
             Vector2 pos = new Vector2();
             nowPos_List.Add(pos);
         }
+
+
+        //for (int i = 0; i < MaxCount; i++)
+        //{//오브젝트 풀이 비어있으면 생성
+        //    GameObject vfxEffect = Instantiate(DragEffectPrefab, Vector3.zero, Quaternion.identity);
+        //    //vfxEffect.transform.parent = particleCanvas;
+
+        //    visualEffect_Pooling[i] = vfxEffect.GetComponent<VisualEffect>();
+        //    visualEffect_Pooling[i].gameObject.SetActive(false);
+        //    visualEffect_Pooling[i].SendEvent("Click");
+        //    // CurrentCount += 1;
+        //}
     }
-    
+
+    public void SetResolution()
+    {
+        int setWidth = 1920; // 사용자 설정 너비
+        int setHeight = 1080; // 사용자 설정 높이
+
+        int deviceWidth = Screen.width; // 기기 너비 저장
+        int deviceHeight = Screen.height; // 기기 높이 저장
+
+        Screen.SetResolution(setWidth, (int)(((float)deviceHeight / deviceWidth) * setWidth), true); // SetResolution 함수 제대로 사용하기
+
+        if ((float)setWidth / setHeight < (float)deviceWidth / deviceHeight) // 기기의 해상도 비가 더 큰 경우
+        {
+            float newWidth = ((float)setWidth / setHeight) / ((float)deviceWidth / deviceHeight); // 새로운 너비
+            Camera.main.rect = new Rect((1f - newWidth) / 2f, 0f, newWidth, 1f); // 새로운 Rect 적용
+        }
+        else // 게임의 해상도 비가 더 큰 경우
+        {
+            float newHeight = ((float)deviceWidth / deviceHeight) / ((float)setWidth / setHeight); // 새로운 높이
+            Camera.main.rect = new Rect(0f, (1f - newHeight) / 2f, 1f, newHeight); // 새로운 Rect 적용
+        }
+
+        rawImage.texture.width = (int)Camera.main.pixelRect.width;
+        rawImage.texture.height = (int)Camera.main.pixelRect.height;
+    }
+
+
     private void MultiTouchEvent_Independent()
     {//멀티터치 이벤트 (각 터치별 독립적 작동) 메소드
         for (int i = 0; i < Input.touchCount; i++)
@@ -94,45 +158,45 @@ public class TouchManager : MonoBehaviour
             {
                 //터치의 핑거아이디를 인덱스로하는 touchEvent를 넣기
                 Touch touch = Input.GetTouch(i);
-                touchEvent_List[touch.fingerId].touch = touch;
+                touchEvent_List[i].touch = touch;
 
                 //터치 아이디별 터치 판정에 따른 이펙트 생성
-                switch (touchEvent_List[touch.fingerId].touch.phase)
+                switch (touchEvent_List[i].touch.phase)
                 {
                     case TouchPhase.Began:
-                        nowPos_List[touch.fingerId] = touchEvent_List[touch.fingerId].touch.position;
-                        TouchEffect_Multi(touch.fingerId);
+                        nowPos_List[i] = touchEvent_List[i].touch.position;
+                        TouchEffect_Multi(i);
                         break;
 
                     case TouchPhase.Stationary:
                         touchTime += Time.deltaTime;
                         if (touchTime > dragTime)
                         {
-                            touchEvent_List[touch.fingerId].bisDrag = true;
+                            touchEvent_List[i].bisDrag = true;
                         }
-                        if (touchEvent_List[touch.fingerId].bisDrag)
+                        if (touchEvent_List[i].bisDrag)
                         {
-                            nowPos_List[touch.fingerId] = touchEvent_List[touch.fingerId].touch.position - touchEvent_List[touch.fingerId].touch.deltaPosition;
+                            nowPos_List[i] = touchEvent_List[i].touch.position - touchEvent_List[i].touch.deltaPosition;
                             if (bCanCreate)
                             {
-                                DragEffect_Multi(touch.fingerId);
+                                DragEffect_Multi(i);
                             }
                         }
                         break;
 
                     case TouchPhase.Moved:
-                        if (touchEvent_List[touch.fingerId].bisDrag)
+                        if (touchEvent_List[i].bisDrag)
                         {
-                            nowPos_List[touch.fingerId] = touchEvent_List[touch.fingerId].touch.position - touchEvent_List[touch.fingerId].touch.deltaPosition;
+                            nowPos_List[i] = touchEvent_List[i].touch.position - touchEvent_List[i].touch.deltaPosition;
                             if (bCanCreate)
                             {
-                                DragEffect_Multi(touch.fingerId);
+                                DragEffect_Multi(i);
                             }
                         }
                         break;
 
                     case TouchPhase.Ended:
-                        touchEvent_List[touch.fingerId].bisDrag = false;
+                        touchEvent_List[i].bisDrag = false;
                         touchTime = 0f;
                         createTime = 0f;
                         break;
@@ -190,6 +254,7 @@ public class TouchManager : MonoBehaviour
                     visualEffect_Pooling[i].gameObject.SetActive(true);
                     visualEffect_Pooling[i].transform.position = worldPos;
                     visualEffect_Pooling[i].SendEvent("Click");
+
                     break;
                 }
             }
@@ -199,6 +264,27 @@ public class TouchManager : MonoBehaviour
         bCanCreate = false;
         createTime = 0f;
     }
+
+    public void DragEffect_Multi_NonePool(int _index)
+    {
+        Vector3 worldPos = new Vector3();
+        worldPos = Camera.main.ScreenToWorldPoint(nowPos_List[_index]);
+        worldPos.z = 1;
+
+        GameObject vfxEffect = Instantiate(DragEffectPrefab, worldPos, Quaternion.identity);
+
+        vfxEffect.GetComponent<VisualEffect>().SendEvent("Click");
+
+        Destroy(vfxEffect, 1.5f);
+        //드래그 이펙트 생성 쿨타임 초기화
+        bCanCreate = false;
+        createTime = 0f;
+
+        
+
+       
+    }
+
 
 }
 

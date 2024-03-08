@@ -10548,7 +10548,7 @@ MonoBehaviour:
   dragTime: 0.4
   createCoolTime: 0.1
   bCanCreate: 1
-  MaxCount: 60
+  MaxCount: 100
 --- !u!4 &1624145973
 Transform:
   m_ObjectHideFlags: 0
@@ -27027,7 +27027,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2611825053433720870}
   m_HandleRect: {fileID: 2611825053433720921}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -42789,7 +42789,7 @@ VisualEffect:
       - m_Value: {x: 1, y: 1, z: 1, w: 1}
         m_Name: Sparkles Color
         m_Overridden: 0
-      - m_Value: {x: 3.5648696, y: 2.7227018, z: 0, w: 1}
+      - m_Value: {x: 4.759381, y: 4.759381, z: 4.759381, w: 1}
         m_Name: Glow Color
         m_Overridden: 1
     m_Uint:
@@ -42824,6 +42824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddfde3a62b824304d984ac6fa28ace10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cashing: 1.5
 --- !u!222 &5434988643926339761
 CanvasRenderer:
   m_ObjectHideFlags: 0
