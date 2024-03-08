@@ -28,7 +28,7 @@ public class Main_Button : MonoBehaviour
   
 
 
-    [SerializeField] private Help_Canvas help_Cavas;
+    [SerializeField] private HelpScriptManager help_Cavas;
 
     #region Unity Callback
     private void OnEnable()

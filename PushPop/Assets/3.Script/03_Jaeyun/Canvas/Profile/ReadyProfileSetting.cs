@@ -24,6 +24,9 @@ public class ReadyProfileSetting : MonoBehaviour
     public Image ProfileImage2P = null;
     public TMP_Text ProfileName2P = null;
 
+    [Header("Rank Info")]
+
+
     [Header("Rank Win Info")]
     [SerializeField] private Image[] winLankImage = null;
     [SerializeField] private TMP_Text[] winProfileName = null;
@@ -69,21 +72,31 @@ public class ReadyProfileSetting : MonoBehaviour
     }
 
     private void RankInfoSetting()
-    { // 랭킹 프로필 세팅
-        Ranking.Instance.LoadVersusResult(winProfileName, loseProfileName, winLankImage, loseLankImage);
-        for (int i = 0; i < winProfileName.Length; i++)
+    { // 랭킹 세팅
+        switch (GameManager.Instance.GameMode)
         {
-            // 기록이 없을 때 Frame Image 꺼두기
-            if (string.IsNullOrEmpty(winProfileName[i].text))
-            {
-                winFrameImage[i].enabled = false;
-                loseFrameImage[i].enabled = false;
-            }
-            else
-            {
-                winFrameImage[i].enabled = true;
-                loseFrameImage[i].enabled = true;
-            }
+            case GameMode.Speed:
+                break;
+            case GameMode.Memory:
+
+                break;
+            case GameMode.Multi:
+                Ranking.Instance.LoadVersusResult(winProfileName, loseProfileName, winLankImage, loseLankImage);
+                for (int i = 0; i < winProfileName.Length; i++)
+                {
+                    // 기록이 없을 때 Frame Image 꺼두기
+                    if (winProfileName[i].text.Equals(""))
+                    {
+                        winFrameImage[i].enabled = false;
+                        loseFrameImage[i].enabled = false;
+                    }
+                    else
+                    {
+                        winFrameImage[i].enabled = true;
+                        loseFrameImage[i].enabled = true;
+                    }
+                }
+                break;
         }
     }
 }

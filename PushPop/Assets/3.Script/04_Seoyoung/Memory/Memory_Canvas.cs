@@ -23,7 +23,7 @@ public class Memory_Canvas : MonoBehaviour
     [SerializeField] private Canvas main_Canvas;
     [SerializeField] private GameObject gameSet_Panel; 
     [SerializeField] private GameObject memoryGame_Canvas;
-    [SerializeField] private Help_Canvas help_Canvas;
+    [SerializeField] private HelpScriptManager help_Canvas;
 
     [Header("개인 기록")] 
     [SerializeField] private Image profile_Image;

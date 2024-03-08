@@ -6,8 +6,8 @@ using TMPro;
 
 //Bg_Canvas에 들어가는 스크립트
 
-public class Help_Canvas : MonoBehaviour
-{
+public class HelpScriptManager : MonoBehaviour
+{ // Help Panel Script
     [Header("Main Canvas")]
     [SerializeField] private Canvas mainCanvas;
 
@@ -44,11 +44,6 @@ public class Help_Canvas : MonoBehaviour
     public int currentPage;
 
     #region Unity Callback
-
-    private void Start()
-    {
-        Init();
-    }
     private void OnEnable()
     {
 
@@ -72,11 +67,6 @@ public class Help_Canvas : MonoBehaviour
     #endregion
 
     #region Other Method
-    private void Init()
-    {   
-        help_Panel.SetActive(false); 
-    }
-
     //좌측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
     public void BackBtn_Clicked()
     {
@@ -113,7 +103,8 @@ public class Help_Canvas : MonoBehaviour
             AudioManager.instance.SetCommonAudioClip_SFX(3);
 
             help_Panel.SetActive(true);
-            bisHelpPanelOn = true;
+            // 활성화 전용
+            bisHelpPanelOn = true; 
             help_Btn.enabled = false;
             Back_Btn.enabled = false;
             currentPage = 1;

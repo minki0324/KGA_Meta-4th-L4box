@@ -106,5 +106,12 @@ public class MultiCanvas : MonoBehaviour
         SelectButton.SetActive(true);
         gameObject.SetActive(false);
     }
+
+    public void HelpPanelBackButton()
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+
+        HelpPanel.SetActive(false);
+    }
     #endregion
 }

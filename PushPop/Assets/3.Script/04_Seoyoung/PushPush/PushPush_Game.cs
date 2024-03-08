@@ -8,7 +8,7 @@ public class PushPush_Game : MonoBehaviour
 {
     [Header("ÆÐ³Î")]
     [SerializeField] private PushPush_Canvas pushpush_Canvas;
-    [SerializeField] private Help_Canvas help_Canvas;
+    [SerializeField] private HelpScriptManager help_Canvas;
     [SerializeField] private GameObject selectCategory_Panel;
     [SerializeField] private PuzzleLozic puzzleLozic_Panel;
     [SerializeField] private GameObject success_Panel;

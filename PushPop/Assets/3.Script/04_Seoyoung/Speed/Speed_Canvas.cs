@@ -25,7 +25,7 @@ public class Speed_Canvas : MonoBehaviour
 
     [Header("캔버스")]
     [SerializeField] private Canvas main_Canvas;
-    [SerializeField] private Help_Canvas help_Canvas;
+    [SerializeField] private HelpScriptManager help_Canvas;
 
     [Header("게임 오브젝트/프리팹")]
     [SerializeField] private GameObject Content;

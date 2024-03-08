@@ -50,18 +50,8 @@ public class MainCanvas : MonoBehaviour
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.PrintProfileList(profileCanvas.SelectScrollViewContent);
 
+        profileCanvas.BlockPanel.SetActive(true);
         profileCanvas.gameObject.SetActive(true);
-        profileCanvas.ExitButton.SetActive(true);
-
-        TitleText.SetActive(false);
-        OptionButton.SetActive(false);
-        ProfileButton.SetActive(false);
-        HomeButton.SetActive(false);
-        PushpushButton.SetActive(false);
-        SpeedButton.SetActive(false);
-        MemoryButton.SetActive(false);
-        MultiButton.SetActive(false);
-        NetworkButton.SetActive(false);
     }
 
     public void MusicOptionButton()
@@ -132,7 +122,6 @@ public class MainCanvas : MonoBehaviour
     public void TimeSettingBackButton()
     { // 게임 시간 조절 - 나가기
         AudioManager.instance.SetCommonAudioClip_SFX(3);
-
         GameManager.Instance.GameMode = GameMode.None;
         timeSettingPanel.SetActive(false);
     }
@@ -146,6 +135,12 @@ public class MainCanvas : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    public void MusicOptionBackButton()
+    { // 옵션 - 창 닫기
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        optionPanel.SetActive(false);
     }
     #endregion
 }
