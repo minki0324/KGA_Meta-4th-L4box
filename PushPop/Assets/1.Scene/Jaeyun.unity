@@ -24603,6 +24603,7 @@ MonoBehaviour:
   puzzle: {fileID: 0}
   frame: {fileID: 0}
   decoPanel: {fileID: 0}
+  stageTitle: {fileID: 0}
   pieceCount: 1
   pushCount: 0
 --- !u!1 &710880331
@@ -53254,6 +53255,7 @@ MonoBehaviour:
   multiGame: {fileID: 313937942}
   speedTimer: {fileID: 1185710473}
   pushPush: {fileID: 0}
+  Memory: {fileID: 0}
   bubbleCanvas: {fileID: 615755817}
   bubblePrefab: {fileID: 8925204162082192838, guid: b1233b5acd8a67a4b9328d6e3efeedfb, type: 3}
   bubbleObject: []
@@ -67846,6 +67848,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55f6a3c31ffda4b4eb2a78ce60d155eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 0}
   UID: 0
   SelectPlayer: 0
   ProfileName1P: 

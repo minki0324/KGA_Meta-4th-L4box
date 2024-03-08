@@ -96,11 +96,11 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
     { // Profile Add 하기 전 InputField에 저장된 이름을 변수에 저장해주는 Btn 연동 Method 
         // 각 조건들을 통과하면 (비속어, 초성, 글자수 제한 등) 등록 가능한 Name으로 판정하고 Profile Manager의 각 플레이어의 name 변수에 추가
 
-        for (int i = 0; i < DataManager2.instance.vulgarism_Arr.Length; i++)
+        for (int i = 0; i < DataManager.instance.vulgarism_Arr.Length; i++)
         { // 비속어 체크
-            if (inputProfileName.text.Contains(DataManager2.instance.vulgarism_Arr[i]))
+            if (inputProfileName.text.Contains(DataManager.instance.vulgarism_Arr[i]))
             {
-                if (DataManager2.instance.vulgarism_Arr[i] != string.Empty)
+                if (DataManager.instance.vulgarism_Arr[i] != string.Empty)
                 {
                     PrintErrorLog(nameErrorLog, "비속어는 포함시킬 수 없습니다.");
                     inputProfileName.text = String.Empty;  

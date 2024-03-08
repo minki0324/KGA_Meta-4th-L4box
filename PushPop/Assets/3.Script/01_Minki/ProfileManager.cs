@@ -92,11 +92,11 @@ public class ProfileManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    /*private void Start()
     {
         LoadOrCreateGUID();
-        PrintProfileList(canvas.profileParent, null);
-    }
+        PrintProfileList(canvas.profileParent);
+    }*/
     #endregion
 
     #region Other Method

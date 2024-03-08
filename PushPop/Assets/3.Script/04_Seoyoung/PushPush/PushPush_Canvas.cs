@@ -148,7 +148,7 @@ public class PushPush_Canvas : MonoBehaviour
 
             //텍스트 리스트 초기화
             categoryText_List.Add(categoryBtn_List[i].transform.GetChild(0).GetComponent<TMP_Text>());
-            categoryText_List[i].text = DataManager2.instance.categoryDict[int.Parse(categoryIcon_List[i].name)];
+            categoryText_List[i].text = DataManager.instance.categoryDict[int.Parse(categoryIcon_List[i].name)];
 
             //버튼 이벤트 초기화     
             int temp = i;
@@ -249,10 +249,10 @@ public class PushPush_Canvas : MonoBehaviour
             currentPage = 1;
 
             maxPage = moldIcon_List.Count;
-            selectedCategory_Text.text = DataManager2.instance.categoryDict[key];
+            selectedCategory_Text.text = DataManager.instance.categoryDict[key];
             //blurPanel.SetActive(true);
             selectedMoldIcon_Image.sprite = moldIcon_List[currentPage - 1];
-            selectedMoldIcon_Text.text = DataManager2.instance.iconDict[int.Parse(moldIcon_List[currentPage - 1].name)];
+            selectedMoldIcon_Text.text = DataManager.instance.iconDict[int.Parse(moldIcon_List[currentPage - 1].name)];
             Page_Text.text = $"{currentPage}/{maxPage}";
 
 
@@ -276,7 +276,7 @@ public class PushPush_Canvas : MonoBehaviour
             currentPage += 1;
 
             selectedMoldIcon_Image.sprite = moldIcon_List[currentPage - 1];
-            selectedMoldIcon_Text.text = DataManager2.instance.iconDict[int.Parse(moldIcon_List[currentPage - 1].name)];
+            selectedMoldIcon_Text.text = DataManager.instance.iconDict[int.Parse(moldIcon_List[currentPage - 1].name)];
             Page_Text.text = $"{currentPage}/{maxPage}";
         }
 
@@ -301,7 +301,7 @@ public class PushPush_Canvas : MonoBehaviour
             currentPage -= 1;
 
             selectedMoldIcon_Image.sprite = moldIcon_List[currentPage - 1];
-            selectedMoldIcon_Text.text = DataManager2.instance.iconDict[int.Parse(moldIcon_List[currentPage - 1].name)];
+            selectedMoldIcon_Text.text = DataManager.instance.iconDict[int.Parse(moldIcon_List[currentPage - 1].name)];
             Page_Text.text = $"{currentPage}/{maxPage}";
         }
 

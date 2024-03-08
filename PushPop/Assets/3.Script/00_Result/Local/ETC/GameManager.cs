@@ -285,7 +285,7 @@ public class GameManager : MonoBehaviour, IGameMode_
                         }
 
                         //출력
-                        pushpushScript.resultText.text = DataManager2.instance.iconDict[pushPush.puzzle.currentPuzzle.PuzzleID];
+                        pushpushScript.resultText.text = DataManager.instance.iconDict[pushPush.puzzle.currentPuzzle.PuzzleID];
 
                         // List를 자동으로 먼저한 순서대로 담기게 해놨음
                         pushpushScript.resultImage.sprite = atlas.GetSprite(pushlist[0].spriteName.ToString());

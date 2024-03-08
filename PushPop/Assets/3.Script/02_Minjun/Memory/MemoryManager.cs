@@ -155,7 +155,7 @@ public class MemoryManager : MonoBehaviour, IGame
         {
             case "Retry": // 라이프소진, 클리어시 결과판넬에서 다시하기 눌렀을때
                 //점수 기록하기
-                Ranking.Instance.SetScore(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, Score);
+                //Ranking.Instance.SetScore(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, Score);
                 //다시시작
                 //다시시작할땐 OnEnable 호출안되서 수동으로 초기화 해줘야함
                 Gameinit();
@@ -163,7 +163,7 @@ public class MemoryManager : MonoBehaviour, IGame
                 break;
             case "End"://라이프소진, 클리어시 나가기 눌렀을때
                 //점수 기록하기
-                Ranking.Instance.SetScore(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, Score);
+                //Ranking.Instance.SetScore(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, Score);
                 //로비로나가기
                 StartCoroutine(ExitToLobby());
                 break;
@@ -196,7 +196,7 @@ public class MemoryManager : MonoBehaviour, IGame
     #region 게임종료시 ResultPanel 관련
     public void ResultPanelInit() //Result Panel 정보 Init
     {
-        profileImage.sprite = ProfileManager.Instance.CacheProfileImage;
+        // profileImage.sprite = ProfileManager.Instance.CacheProfileImage;
         profileName.text = ProfileManager.Instance.ProfileName1P;
         resultScore.text = $"{Score}";
         clearMessage = (int)Ranking.Instance.CompareRanking();
@@ -221,13 +221,13 @@ public class MemoryManager : MonoBehaviour, IGame
 
         GetComponent<Memory_Game>().GoOutBtn_Clicked();
     }
-    public void BlinkRePlay()
+    /*public void BlinkRePlay()
     {
         Score -= 300;
         ScoreText.text = $"점수 : {Score}";
         HintBtnActive();
         currentBoard.Blink(true);
-    }
+    }*/
     public void OnGameEnd()
     {
         profileImage.sprite = ProfileManager.Instance.CacheProfileImage1P;
