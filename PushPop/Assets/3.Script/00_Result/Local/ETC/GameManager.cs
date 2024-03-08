@@ -54,15 +54,15 @@ public class GameManager : MonoBehaviour, IGameMode_
     public GameMode GameMode = GameMode.None;
 
     [Header("ShutDown")]
-    public float ShutdownTimer = 3f;
-    public Coroutine ShutdownCoroutine = null;
-    public bool IsShutdown = false;
+    public float ShutdownTimer = 0f;
+    public bool InGame = false; // Shutdown setting 시 ture
+    public bool IsShutdown = false; // Shutdown End 시 ture
 
-    [Header("GameScript")]
+    [Header("Game Script")]
     public MultiManager multiGame = null;
     public Speed_Timer speedTimer = null;
     public PushPushManager pushPush;
-    public MemoryManager Memory;
+    public MemoryManager MemoryManager = null;
 
     // Bubble
     [Header("Bubble Info")]
@@ -114,6 +114,7 @@ public class GameManager : MonoBehaviour, IGameMode_
     public int boardName = 0; // mold name
     public int currentTime = 0;
     public Coroutine speedCreate = null;
+
     #region Unity Callback
     private void Awake()
     {
@@ -130,7 +131,10 @@ public class GameManager : MonoBehaviour, IGameMode_
     }
     private void Update()
     {
-        
+        if (InGame && !IsShutdown)
+        {
+            ShutdownTimerStart();
+        }
     }
     #endregion
 
@@ -146,22 +150,14 @@ public class GameManager : MonoBehaviour, IGameMode_
     }
 
     public void ShutdownTimerStart()
-    {
-        ShutdownCoroutine = StartCoroutine(ShutDownTimer_Co());
-    }
-
-    private IEnumerator ShutDownTimer_Co()
-    { // Shutdown Timer
-        ShutdownTimer *= 60f; // 1분
-        while (ShutdownTimer >= 0)
+    { // Game Time Setting End 시 InGame = true 되면서 호출
+        ShutdownTimer -= Time.deltaTime;
+        if (ShutdownTimer <= 0f)
         {
-            ShutdownTimer -= Time.deltaTime;
-            yield return null;
+            IsShutdown = true; // Shutdown panel active 이후에 false로
+            ShutdownTimer = 0f;
+            return;
         }
-
-        ShutdownTimer = 0f;
-        IsShutdown = true;
-        ShutdownCoroutine = null;
     }
 
     public void GameStart()

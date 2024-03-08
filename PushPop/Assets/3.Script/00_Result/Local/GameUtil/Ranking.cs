@@ -405,8 +405,8 @@ public class Ranking : MonoBehaviour
             {
                 if (currentGame.Player1PIndex == 0 && currentGame.Player2PIndex == 0)
                 { // 프로필 삭제 기록이 있는 경우, 칸 정리
-                    _winText[i].text = string.Empty;
-                    _loseText[i].text = string.Empty;
+                    _winText[i].text = "";
+                    _loseText[i].text = "";
                     _winImage[i].sprite = ProfileManager.Instance.NoneBackground;
                     _loseImage[i].sprite = ProfileManager.Instance.NoneBackground;
 
@@ -426,8 +426,8 @@ public class Ranking : MonoBehaviour
             }
             else
             {
-                _winText[i].text = string.Empty;
-                _loseText[i].text = string.Empty;
+                _winText[i].text = "";
+                _loseText[i].text = "";
                 _winImage[i].sprite = ProfileManager.Instance.NoneBackground;
                 _loseImage[i].sprite = ProfileManager.Instance.NoneBackground;
             }

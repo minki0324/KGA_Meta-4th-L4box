@@ -185,18 +185,7 @@ public class MultiManager : MonoBehaviour, IGame
         bottomWaterfall.SetActive(false);
 
         // coroutine 초기화
-        if (gameTimer.TimerCoroutine != null)
-        {
-            gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
-        }
-        if (upperBubbleCoroutine != null)
-        {
-            StopCoroutine(upperBubbleCoroutine);
-        }
-        if (resultCoroutine != null)
-        {
-            StopCoroutine(resultCoroutine);
-        }
+        StopAllCoroutines();
     }
 
     public void GameSetting()
@@ -216,7 +205,7 @@ public class MultiManager : MonoBehaviour, IGame
 
     public void GameStart()
     { // MultiCanvas에서 호출할 Game Start
-        readyGameCoroutine = StartCoroutine(GameStart_Co());
+        StartCoroutine(GameStart_Co());
     }
 
     public IEnumerator GameStart_Co()
@@ -234,7 +223,6 @@ public class MultiManager : MonoBehaviour, IGame
         yield return new WaitForSeconds(0.8f);
         multiCanvas.GameReadyPanel.SetActive(false);
 
-        readyGameCoroutine = null;
         GameReadyStart();
     }
 
@@ -271,20 +259,8 @@ public class MultiManager : MonoBehaviour, IGame
         AudioManager.instance.SetAudioClip_SFX(1, false);
         WaterfallAnimatorSet(playerTurn, true);
 
-        if (upperBubbleCoroutine != null)
-        {
-            StopCoroutine(upperBubbleCoroutine);
-        }
-        if (gameTimer.TimerCoroutine != null)
-        {
-            gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
-        }
-        if (readyGameCoroutine != null)
-        {
-            StopCoroutine(readyGameCoroutine);
-        }
-
-        resultCoroutine = StartCoroutine(Result_Co());
+        StopAllCoroutines();
+        StartCoroutine(Result_Co());
         isEndGame = true;
     }
 
@@ -306,7 +282,6 @@ public class MultiManager : MonoBehaviour, IGame
         Ranking.Instance.LoadVersusResult_Personal(winText, loseText, winProfileImage, loseProfileImage);
 
         // 결과창 출력
-        resultCoroutine = null;
         Time.timeScale = 0f;
         resultPanel.SetActive(true);
     }
@@ -319,7 +294,7 @@ public class MultiManager : MonoBehaviour, IGame
         PosSetting();
         TurnSetting();
 
-        // upperBubble 초기화 및 코루틴 재실행
+        // 남은 시간 Coroutine 돌고 있어야함, upperBubble 초기화 및 코루틴 재실행
         if (upperBubbleCoroutine != null)
         {
             StopCoroutine(upperBubbleCoroutine);
@@ -435,6 +410,7 @@ public class MultiManager : MonoBehaviour, IGame
 
         AudioManager.instance.SetAudioClip_SFX(0, false);
     }
+
     private int GetSpriteIndexByTimer(float timer)
     { // upperBubble sprite index return
         if (timer < 2) return 5;
@@ -498,16 +474,6 @@ public class MultiManager : MonoBehaviour, IGame
 
     public void ResultRestartButton()
     { // Result Panel - 다시하기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        Time.timeScale = 1f;
-
-        Init();
-        GameSetting();
-        GameStart();
-    }
-
-    public void ResultReStartButton()
-    {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         Time.timeScale = 1f;
 
