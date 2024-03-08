@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -30,6 +31,11 @@ public class MultiCanvas : MonoBehaviour
 
     [Header("Panel")]
     public GameObject HelpPanel = null;
+    public GameObject GameReadyPanel = null;
+
+    [Header("Game Ready Panel")]
+    public TMP_Text GameReadyPanelText = null; // warning, ready 공용
+
 
     #region Ready
     public void ProfileSelectButton()
@@ -53,7 +59,6 @@ public class MultiCanvas : MonoBehaviour
         // todo... gamereadypanel에 뜨도록 수정
         if (!ReadyProfileSetting.IsSelect)
         { // 플레이어 선택을 안했을 시
-            
             ProfileManager.Instance.PrintErrorLog(warningLog, "플레이어를 선택해주세요.");
             return;
         }
@@ -63,6 +68,13 @@ public class MultiCanvas : MonoBehaviour
         BackButton.SetActive(false);
         Ready.SetActive(false);
         multiManager.GameStart();
+    }
+
+    private IEnumerator NonePlayerSetting()
+    { // panel touch 시 바로 꺼지게 만들까 말까 ... todo
+        GameReadyPanelText.text = "플레이어를 선택해주세요.";
+        GameReadyPanel.SetActive(true);
+        yield return new WaitForSeconds(3f);
     }
     #endregion
     #region Side Panel

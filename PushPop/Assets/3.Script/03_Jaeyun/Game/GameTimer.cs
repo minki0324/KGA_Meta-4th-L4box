@@ -6,7 +6,7 @@ using TMPro;
 public class GameTimer : MonoBehaviour
 { // speed, multi game timer
     public TMP_Text TimerText = null;
-    public float CurrentTime = 0f; // 현재 시간
+    public float CurrentTime = 60f; // 현재 시간
     public bool TenCount = false; // 남은 시간이 10초 이하인지 체크
     public bool EndTimer = false;
     public Coroutine TimerCoroutine = null;
@@ -19,7 +19,8 @@ public class GameTimer : MonoBehaviour
         if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
         {
             // 난이도에 따라 또 나뉨
-            compareTime = 60f;
+            compareTime = 50f; // difficulty
+            compareTime = CurrentTime - compareTime;
             setSign = 1;
         }
         else
@@ -36,7 +37,7 @@ public class GameTimer : MonoBehaviour
         {
             CurrentTime += Time.deltaTime * setSign;
 
-            if (CurrentTime.Equals(compareTime))
+            if (CurrentTime <= compareTime)
             {
                 TimerText.color = TimerCountColorChange("#FF0000");
 
@@ -51,7 +52,7 @@ public class GameTimer : MonoBehaviour
             yield return null;
         }
 
-        CurrentTime = 0f;
+        CurrentTime = 0f; // 나중에 speed는 60f 50f 40f로 바꾸어줘야함
         EndTimer = true; // game end
         TimerCoroutine = null;
     }

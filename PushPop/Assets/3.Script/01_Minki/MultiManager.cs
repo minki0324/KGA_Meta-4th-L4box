@@ -19,13 +19,10 @@ public enum Turn
 /// </summary>
 public class MultiManager : MonoBehaviour, IGame
 { // multi game
-    [Header("Quit")]
-    [SerializeField] private Button[] quitButton;  // 나가기 버튼
+    [Header("Canvas")]
+    [SerializeField] private MultiCanvas multiCanvas = null;
 
     [Header("Panel")]
-    [SerializeField] private GameObject ready = null;
-    public GameObject GameReadyPanel = null;
-    public TMP_Text GameReadyPanelText = null; // ready and end 공용
     [SerializeField] private GameObject warningPanel = null;
     [SerializeField] private GameObject resultPanel = null;
 
@@ -36,19 +33,15 @@ public class MultiManager : MonoBehaviour, IGame
 
     [Header("Game Info")]
     [SerializeField] private Turn playerTurn = Turn.Turn1P; // 현재 턴 기준
-
-    // poplist 0일 때 턴 넘김
-    public List<GameObject> popList1P = new List<GameObject>(); // 1P 의 Pushpop button list -> object pooling 필요
-    public List<GameObject> popList2P = new List<GameObject>(); // 2P 의 Pushpop List
+    public List<GameObject> popButtonList1P = new List<GameObject>(); // 1P 의 Pushpop button list -> object pooling 필요
+    public List<GameObject> popButtonList2P = new List<GameObject>(); // 2P 의 Pushpop List
     [SerializeField] private SpriteAtlas boardSprite = null; // pushPop board sprite
     private Sprite[] sprites = null;   // atlas의 sprite들 배열
 
-    // bubble
-    private float upperTimer = 12f;
+    [Header("Bubble Info")]
+    private Vector2[] upperPos = { new Vector2(-500, 380), new Vector2(500, 380) }; // player1, player2의 위 bubble pos
+    private Vector2[] bottomPos = { new Vector2(-500, -100), new Vector2(500, -100) }; // player1, player2의 아래 bubble pos
     [SerializeField] private Transform[] boardTransform; // Pushpop Board가 소환될 Parent
-    [SerializeField] private Vector2[] upperPos = new Vector2[2]; // player1, player2의 위 bubble pos
-    [SerializeField] private Vector2[] bottomPos = new Vector2[2]; // player1, player2의 아래 bubble pos
-
     [SerializeField] private GameObject upperBubbleObject;    // 위 방울 오브젝트
     [SerializeField] private GameObject bottomBubbleObject;   // 아래 방울 오브젝트
     [SerializeField] private Image upperBubbleImage;
@@ -56,24 +49,28 @@ public class MultiManager : MonoBehaviour, IGame
     [SerializeField] private GameObject upperWaterfall;
     [SerializeField] private GameObject bottomWaterfall;
 
-    [SerializeField] private Sprite[] quitButtonSprite; //quit 스프라이트
-
-    [Header("Versus")] [Space(5)]
+    [Header("Game Result")]
     [SerializeField] private TMP_Text winText; // Result의 1개의 결과 Text
     [SerializeField] private TMP_Text loseText; // Result의 1개의 결과 Text
     [SerializeField] private Image winProfileImage; // Result의 1개의 결과 Image
     [SerializeField] private Image loseProfileImage; // Result의 1개의 결과 Image
+    private bool isEndGame = false;
 
     [Header("Timer")]
     [SerializeField] private GameTimer gameTimer = null;
+    private float upperTimer = 12f;
     private bool bNoTimePlaying = false;
+
+    [Header("Quit")]
+    [SerializeField] private Button[] quitButton;  // 나가기 버튼
+    [SerializeField] private Sprite[] quitButtonSprite; //quit 스프라이트
 
     // Waterfall 회전 변수
     private bool rotateDirection = true; // true면 회전 방향이 +, false면 회전 방향이 -
     private float rotationZ = 0f; // 현재 Z 축 회전 각도
-
     private Coroutine readyGameCoroutine = null; // 게임 시작 코루틴
     private Coroutine upperBubbleCoroutine = null; // 물 차오르는 코루틴
+    private Coroutine resultCoroutine = null;
 
     #region Unity Callback
     private void Awake()
@@ -88,6 +85,7 @@ public class MultiManager : MonoBehaviour, IGame
 
     private void Update()
     {
+        if (isEndGame) return;
         GameEnd();
     }
 
@@ -97,13 +95,8 @@ public class MultiManager : MonoBehaviour, IGame
     }
     #endregion
     #region Game Logic
-    /// <summary>
-    /// Multi게임 로직 반복 Method
-    /// </summary>
-   
-
     public void BottomBubbleTouch()
-    { // 밑에 큰 방울을 터치할 때마다 상단 방울의 시간이 줄어듬
+    { // Bottom Bubble, 밑에 큰 방울을 터치할 때마다 상단 방울의 시간이 줄어듦
         AudioManager.instance.SetCommonAudioClip_SFX(5);
         upperTimer -= 0.1f;
     }
@@ -155,6 +148,8 @@ public class MultiManager : MonoBehaviour, IGame
     #endregion
     public void Init()
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
+        resultPanel.SetActive(false);
+
         // timer setting
         gameTimer.TimerText.color = new Color(0, 0, 0, 1);
         gameTimer.TenCount = false;
@@ -163,16 +158,17 @@ public class MultiManager : MonoBehaviour, IGame
         gameTimer.CurrentTime = 60f;
         gameTimer.TimerText.text = $"{(int)gameTimer.CurrentTime}";
         bNoTimePlaying = false;
+        isEndGame = false;
 
         // pushpop setting
-        popList1P.Clear();
-        popList2P.Clear();
+        popButtonList1P.Clear();
+        popButtonList2P.Clear();
 
         // quit button setting
         quitButtonClick[(int)Player.Player1] = false;
         quitButtonClick[(int)Player.Player2] = false;
-        quitButton[(int)Player.Player1].interactable = true;
-        quitButton[(int)Player.Player2].interactable = true;
+        quitButton[(int)Player.Player1].GetComponent<Image>().sprite = quitButtonSprite[0];
+        quitButton[(int)Player.Player2].GetComponent<Image>().sprite = quitButtonSprite[0];
 
         // board object setting
         if (boardTransform[0].transform.childCount > 0)
@@ -187,21 +183,35 @@ public class MultiManager : MonoBehaviour, IGame
         // lose animation에서 true된 object 비활성화
         upperWaterfall.SetActive(false);
         bottomWaterfall.SetActive(false);
+
+        // coroutine 초기화
+        if (gameTimer.TimerCoroutine != null)
+        {
+            gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
+        }
+        if (upperBubbleCoroutine != null)
+        {
+            StopCoroutine(upperBubbleCoroutine);
+        }
+        if (resultCoroutine != null)
+        {
+            StopCoroutine(resultCoroutine);
+        }
     }
 
     public void GameSetting()
     { // OnEnable() bubble size, board size, pushpopbutton size, pushpop percentage, etc. setting 관련
         // AudioManager.instance.SetAudioClip_BGM(1);
-
         // 버튼 사이즈 설정
         PushPop.Instance.buttonSize = new Vector2(56.8f, 56.8f);
         PushPop.Instance.percentage = 0.476f;
         GameManager.Instance.BoardSize = new Vector2(500f, 500f);
 
-        // Player Turn, Bubble 위치 부여
-        playerTurn = (Turn)UnityEngine.Random.Range(0, 2); // 0일 때 1P 먼저 시작
-        bottomBubbleObject.transform.localPosition = bottomPos[(int)Turn.Turn2P];
-        upperBubbleObject.transform.localPosition = upperPos[(int)playerTurn];
+        // 프로필 세팅, 이미지 caching으로 바꿔줄 것, 처음 시작 시 1p imageMode = true, defaultIndex = 1일 때 boy로 뜸 왤까요... todo
+        SQL_Manager.instance.PrintProfileImage(profileImage[(int)Player.Player1], ProfileManager.Instance.PlayerInfo[(int)Player.Player1].imageMode, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+        SQL_Manager.instance.PrintProfileImage(profileImage[(int)Player.Player2], ProfileManager.Instance.PlayerInfo[(int)Player.Player2].imageMode, ProfileManager.Instance.PlayerInfo[(int)Player.Player2].playerIndex);
+        profileName[(int)Player.Player1].text = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName;
+        profileName[(int)Player.Player2].text = ProfileManager.Instance.PlayerInfo[(int)Player.Player2].profileName;
     }
 
     public void GameStart()
@@ -214,15 +224,15 @@ public class MultiManager : MonoBehaviour, IGame
         // Game Ready
         yield return new WaitForSeconds(0.5f);
         AudioManager.instance.SetCommonAudioClip_SFX(1);
-        GameReadyPanelText.text = "준비~";
-        GameReadyPanel.SetActive(true);
+        multiCanvas.GameReadyPanelText.text = "준비~";
+        multiCanvas.GameReadyPanel.SetActive(true);
 
         yield return new WaitForSeconds(2f);
         AudioManager.instance.SetCommonAudioClip_SFX(2);
-        GameReadyPanelText.text = "시작~";
+        multiCanvas.GameReadyPanelText.text = "시작~";
 
         yield return new WaitForSeconds(0.8f);
-        GameReadyPanel.SetActive(false);
+        multiCanvas.GameReadyPanel.SetActive(false);
 
         readyGameCoroutine = null;
         GameReadyStart();
@@ -234,30 +244,57 @@ public class MultiManager : MonoBehaviour, IGame
         upperBubbleCoroutine = StartCoroutine(UpperBubble_Co()); // upper bubble timer
         gameTimer.TimerStart(); // remaining timer
 
-        // 프로필 세팅, 이미지 caching으로 바꿔줄 것... todo
-        SQL_Manager.instance.PrintProfileImage(profileImage[(int)Player.Player1], ProfileManager.Instance.PlayerInfo[(int)Player.Player1].imageMode, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
-        SQL_Manager.instance.PrintProfileImage(profileImage[(int)Player.Player2], ProfileManager.Instance.PlayerInfo[(int)Player.Player2].imageMode, ProfileManager.Instance.PlayerInfo[(int)Player.Player2].playerIndex);
-        profileName[(int)Player.Player1].text = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName;
-        profileName[(int)Player.Player1].text = ProfileManager.Instance.PlayerInfo[(int)Player.Player2].profileName;
-
         // board pos setting
-        SetSpriteImage(boardTransform[0], popList1P);
-        SetSpriteImage(boardTransform[1], popList2P);
+        SetSpriteImage(boardTransform[0], popButtonList1P);
+        SetSpriteImage(boardTransform[1], popButtonList2P);
         boardTransform[0].transform.GetChild(0).transform.localPosition = bottomPos[0];
         boardTransform[1].transform.GetChild(0).transform.localPosition = bottomPos[1];
+
+        // Player Turn, Bubble 위치 부여
+        playerTurn = (Turn)UnityEngine.Random.Range(0, 2); // 0일 때 1P 먼저 시작
+        int randomIndex = playerTurn.Equals(Turn.Turn1P) ? (int)Turn.Turn2P : (int)Turn.Turn1P;
+        upperBubbleObject.transform.localPosition = upperPos[(int)playerTurn]; // 턴인 사람에게 줌
+        bottomBubbleObject.transform.localPosition = bottomPos[randomIndex]; // 턴 아닌 사람에게 줌
 
         TurnSetting();
     }
 
     public void GameEnd()
     {
-        if (popList1P.Count.Equals(0) || popList2P.Count.Equals(0))
+        if (!gameTimer.EndTimer) return; // timer 종료 시 gameTimer.EndTimer true
+        if (popButtonList1P.Count.Equals(0) || popButtonList2P.Count.Equals(0))
         {
             RepeatGameLogic();
             return;
         }
 
-        if (!gameTimer.EndTimer) return;
+        AudioManager.instance.SetAudioClip_SFX(1, false);
+        WaterfallAnimatorSet(playerTurn, true);
+
+        if (upperBubbleCoroutine != null)
+        {
+            StopCoroutine(upperBubbleCoroutine);
+        }
+        if (gameTimer.TimerCoroutine != null)
+        {
+            gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
+        }
+        if (readyGameCoroutine != null)
+        {
+            StopCoroutine(readyGameCoroutine);
+        }
+
+        resultCoroutine = StartCoroutine(Result_Co());
+        isEndGame = true;
+    }
+
+    private IEnumerator Result_Co()
+    { // 결과창 출력 코루틴
+        yield return new WaitForSeconds(2f); // waterfall animation 기다림 
+        WaterfallAnimatorSet(playerTurn, false);
+        
+        AudioManager.instance.Stop_SFX();
+        AudioManager.instance.SetCommonAudioClip_SFX(7);
 
         // 자신의 턴일 때 게임 종료 시 패배, 결과 저장
         Ranking.Instance.SetBombVersus(
@@ -266,23 +303,12 @@ public class MultiManager : MonoBehaviour, IGame
             ProfileManager.Instance.PlayerInfo[(int)Player.Player2].playerIndex,
             ProfileManager.Instance.PlayerInfo[(int)Player.Player2].profileName, !playerTurn.Equals(Turn.Turn1P)
             );
-
-        AudioManager.instance.SetAudioClip_SFX(1, false);
-        WaterfallAnimatorSet(playerTurn, true);
-        StartCoroutine(Result_Co());
-    }
-
-    private IEnumerator Result_Co()
-    { // 결과창 출력 코루틴
-        yield return new WaitForSeconds(2f); // waterfall animation 기다림 
-        WaterfallAnimatorSet(playerTurn, false);
+        Ranking.Instance.LoadVersusResult_Personal(winText, loseText, winProfileImage, loseProfileImage);
 
         // 결과창 출력
-        AudioManager.instance.Stop_SFX();
-        AudioManager.instance.SetCommonAudioClip_SFX(7);
-
+        resultCoroutine = null;
+        Time.timeScale = 0f;
         resultPanel.SetActive(true);
-        Ranking.Instance.LoadVersusResult_Personal(winText, loseText, winProfileImage, loseProfileImage);
     }
 
     #region Multi Game Setting
@@ -310,11 +336,11 @@ public class MultiManager : MonoBehaviour, IGame
         if (playerTurn.Equals(Turn.Turn1P))
         { // 1P 턴
             // 버튼 리스트 초기화 및 삭제 (추후 풀링으로 구현한다면 setactive false로 바꾸면 될듯)
-            popList2P.Clear();
+            popButtonList2P.Clear();
             Destroy(boardTransform[1].transform.GetChild(0).gameObject);    // 지금 오브젝트 풀링의 List를 받아올 수 없는 구조라서 일단 Destroy로 했음, 추후 수정해야함
 
             // Sprite 배열로 각 플레이어들에게 랜덤한 Sprite 부여 및 Pushpop 생성
-            SetSpriteImage(boardTransform[1], popList2P);
+            SetSpriteImage(boardTransform[1], popButtonList2P);
 
             // 새로운 sprite, popButton 포지션 설정
             boardTransform[1].transform.GetChild(1).transform.localPosition = bottomPos[1]; // Destroy한 객체는 다음 프레임에 삭제됨
@@ -324,11 +350,11 @@ public class MultiManager : MonoBehaviour, IGame
         else
         { // 2P 턴
             // 버튼 리스트 초기화 및 삭제 (추후 풀링으로 구현한다면 setactive false로 바꾸면 될듯)
-            popList1P.Clear();
+            popButtonList1P.Clear();
             Destroy(boardTransform[0].transform.GetChild(0).gameObject);
 
             // Sprite 배열로 각 플레이어들에게 랜덤한 Sprite 부여 및 Pushpop 생성
-            SetSpriteImage(boardTransform[0], popList1P);
+            SetSpriteImage(boardTransform[0], popButtonList1P);
 
             // 새로운 sprite, popButton 포지션 설정
             boardTransform[0].transform.GetChild(1).transform.localPosition = bottomPos[0];
@@ -341,26 +367,26 @@ public class MultiManager : MonoBehaviour, IGame
     { // 턴 아닌 플레이어의 PushPop button 클릭 비활성화
         if (playerTurn.Equals(Turn.Turn1P))
         { // 1P 턴
-            for (int i = 0; i < popList2P.Count; i++)
+            for (int i = 0; i < popButtonList2P.Count; i++)
             {
-                popList2P[i].GetComponent<Button>().interactable = false;
+                popButtonList2P[i].GetComponent<Button>().interactable = false;
             }
-            for (int i = 0; i < popList1P.Count; i++)
+            for (int i = 0; i < popButtonList1P.Count; i++)
             {
-                popList1P[i].GetComponent<Button>().interactable = true;
-                popList1P[i].GetComponent<PushPopButton>().player = 0;
+                popButtonList1P[i].GetComponent<Button>().interactable = true;
+                popButtonList1P[i].GetComponent<PushPopButton>().player = 0;
             }
         }
         else if (playerTurn.Equals(Turn.Turn2P))
         { // 2P 턴
-            for (int i = 0; i < popList1P.Count; i++)
+            for (int i = 0; i < popButtonList1P.Count; i++)
             {
-                popList1P[i].GetComponent<Button>().interactable = false;
+                popButtonList1P[i].GetComponent<Button>().interactable = false;
             }
-            for (int i = 0; i < popList2P.Count; i++)
+            for (int i = 0; i < popButtonList2P.Count; i++)
             {
-                popList2P[i].GetComponent<Button>().interactable = true;
-                popList2P[i].GetComponent<PushPopButton>().player = 1;
+                popButtonList2P[i].GetComponent<Button>().interactable = true;
+                popButtonList2P[i].GetComponent<PushPopButton>().player = 1;
             }
         }
     }
@@ -460,18 +486,31 @@ public class MultiManager : MonoBehaviour, IGame
     #endregion
     #region Result Panel
     public void ResultExitButton()
-    {
+    { // Result Panel - 나가기
         AudioManager.instance.SetCommonAudioClip_SFX(3);
+        Time.timeScale = 1f;
 
-        resultPanel.SetActive(false);
+        multiCanvas.Ready.SetActive(true);
+        multiCanvas.BackButton.SetActive(true);
+        multiCanvas.HelpButton.SetActive(true);
         gameObject.SetActive(false);
     }
 
     public void ResultRestartButton()
+    { // Result Panel - 다시하기
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        Time.timeScale = 1f;
+
+        Init();
+        GameSetting();
+        GameStart();
+    }
+
+    public void ResultReStartButton()
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
+        Time.timeScale = 1f;
 
-        resultPanel.SetActive(false);
         Init();
         GameSetting();
         GameStart();
@@ -481,6 +520,7 @@ public class MultiManager : MonoBehaviour, IGame
     public void QuitButton(int _player)
     { // 나가기 1P, 2P 버튼
         AudioManager.instance.SetCommonAudioClip_SFX(3);
+
         quitButtonClick[_player] = !quitButtonClick[_player];
         int spriteIndex = quitButtonClick[_player] ? 1 : 0; // 눌렸을 때 1, 눌리지 않았을 때 0
         quitButton[_player].GetComponent<Image>().sprite = quitButtonSprite[spriteIndex];
@@ -503,7 +543,9 @@ public class MultiManager : MonoBehaviour, IGame
         Time.timeScale = 1f;
 
         warningPanel.SetActive(false);
-        ready.SetActive(true);
+        multiCanvas.Ready.SetActive(true);
+        multiCanvas.BackButton.SetActive(true);
+        multiCanvas.HelpButton.SetActive(true);
         gameObject.SetActive(false);
     }
 
@@ -512,10 +554,12 @@ public class MultiManager : MonoBehaviour, IGame
         AudioManager.instance.SetCommonAudioClip_SFX(3);
 
         Time.timeScale = 1f;
-        quitButton[(int)Player.Player1].interactable = true;
-        quitButton[(int)Player.Player2].interactable = true;
 
-        ready.SetActive(true);
+        quitButtonClick[(int)Player.Player1] = false;
+        quitButtonClick[(int)Player.Player2] = false;
+        quitButton[(int)Player.Player1].GetComponent<Image>().sprite = quitButtonSprite[0];
+        quitButton[(int)Player.Player2].GetComponent<Image>().sprite = quitButtonSprite[0];
+
         warningPanel.SetActive(false);
     }
     #endregion

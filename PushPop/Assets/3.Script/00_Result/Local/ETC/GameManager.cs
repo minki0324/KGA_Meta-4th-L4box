@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour, IGameMode_
     public bool IsShutdown = false;
 
     [Header("GameScript")]
-    public MultiManager bombScript;
+    public MultiManager multiGame = null;
     public Speed_Timer speedTimer = null;
     public PushPushManager pushPush;
 
@@ -243,9 +243,9 @@ public class GameManager : MonoBehaviour, IGameMode_
         // button active check
         if (GameMode.Equals(GameMode.Multi))
         {
-            if (bombScript.popList1P.Count.Equals(0) || bombScript.popList2P.Count.Equals(0))
+            if (multiGame.popButtonList1P.Count.Equals(0) || multiGame.popButtonList2P.Count.Equals(0))
             {
-                bombScript.RepeatGameLogic();
+                multiGame.RepeatGameLogic();
                 return;
             }
         }

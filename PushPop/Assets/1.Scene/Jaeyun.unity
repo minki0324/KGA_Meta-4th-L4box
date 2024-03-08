@@ -11057,6 +11057,8 @@ RectTransform:
   - {fileID: 10243900}
   - {fileID: 906239927}
   - {fileID: 1185274075}
+  - {fileID: 1430546221}
+  - {fileID: 2012077600}
   - {fileID: 1065184733}
   m_Father: {fileID: 1457637501}
   m_RootOrder: 2
@@ -11078,12 +11080,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3b93406775c29d40ac597289d871c28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quitButton:
-  - {fileID: 2095790725}
-  - {fileID: 914505800}
-  ready: {fileID: 1317759486}
-  GameReadyPanel: {fileID: 1488364040}
-  GameReadyPanelText: {fileID: 1957250458}
+  multiCanvas: {fileID: 1457637505}
   warningPanel: {fileID: 1732976011}
   resultPanel: {fileID: 806619359}
   profileImage:
@@ -11093,18 +11090,12 @@ MonoBehaviour:
   - {fileID: 200109585}
   - {fileID: 440569447}
   playerTurn: 0
-  popList1P: []
-  popList2P: []
+  popButtonList1P: []
+  popButtonList2P: []
   boardSprite: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
   boardTransform:
   - {fileID: 678929093}
   - {fileID: 10243900}
-  upperPos:
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  bottomPos:
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
   upperBubbleObject: {fileID: 1185274074}
   bottomBubbleObject: {fileID: 906239926}
   upperBubbleImage: {fileID: 858794267}
@@ -11117,14 +11108,17 @@ MonoBehaviour:
   - {fileID: 21300000, guid: df8c9ca8870e2244fbcc116b419df9c7, type: 3}
   upperWaterfall: {fileID: 1430546220}
   bottomWaterfall: {fileID: 2012077599}
-  quitButtonSprite:
-  - {fileID: 21300000, guid: 0a5881dfad071694795a867cd8218059, type: 3}
-  - {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
   winText: {fileID: 213979912}
   loseText: {fileID: 1635748790}
   winProfileImage: {fileID: 2050704333}
   loseProfileImage: {fileID: 453111136}
   gameTimer: {fileID: 1514445333}
+  quitButton:
+  - {fileID: 2095790725}
+  - {fileID: 914505800}
+  quitButtonSprite:
+  - {fileID: 21300000, guid: 0a5881dfad071694795a867cd8218059, type: 3}
+  - {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
 --- !u!1 &314627180
 GameObject:
   m_ObjectHideFlags: 0
@@ -30877,8 +30871,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2012077600}
+  m_Children: []
   m_Father: {fileID: 313937941}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -30931,8 +30924,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Bomb, Assembly-CSharp
+      - m_Target: {fileID: 313937942}
+        m_TargetAssemblyTypeName: MultiManager, Assembly-CSharp
         m_MethodName: BottomBubbleTouch
         m_Mode: 1
         m_Arguments:
@@ -31444,9 +31437,9 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
-    m_DisabledSprite: {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
+    m_PressedSprite: {fileID: 21300000, guid: 906c21dd8aee25a4da4abbe18bceaa75, type: 3}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -35816,7 +35809,7 @@ RectTransform:
   - {fileID: 1985454873}
   - {fileID: 2122339913}
   m_Father: {fileID: 313937941}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -39542,7 +39535,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 858794265}
-  - {fileID: 1430546221}
   m_Father: {fileID: 313937941}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -48051,8 +48043,8 @@ RectTransform:
   m_Children:
   - {fileID: 392649153}
   - {fileID: 1391205569}
-  m_Father: {fileID: 1185274075}
-  m_RootOrder: 1
+  m_Father: {fileID: 313937941}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -48556,6 +48548,8 @@ MonoBehaviour:
   MultiGame: {fileID: 313937940}
   multiManager: {fileID: 313937942}
   HelpPanel: {fileID: 757051146}
+  GameReadyPanel: {fileID: 1488364040}
+  GameReadyPanelText: {fileID: 1957250458}
 --- !u!1 &1468796085
 GameObject:
   m_ObjectHideFlags: 0
@@ -50186,7 +50180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TimerText: {fileID: 1755494401}
-  CurrentTime: 0
+  CurrentTime: 60
   TenCount: 0
   EndTimer: 0
 --- !u!1 &1517353185
@@ -53257,7 +53251,7 @@ MonoBehaviour:
   GameMode: 4
   ShutdownTimer: 0
   IsShutdown: 0
-  bombScript: {fileID: 0}
+  multiGame: {fileID: 313937942}
   speedTimer: {fileID: 1185710473}
   pushPush: {fileID: 0}
   bubbleCanvas: {fileID: 615755817}
@@ -63719,8 +63713,8 @@ RectTransform:
   - {fileID: 23507993}
   - {fileID: 744636686}
   - {fileID: 509236251}
-  m_Father: {fileID: 906239927}
-  m_RootOrder: 0
+  m_Father: {fileID: 313937941}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -66097,9 +66091,9 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
-    m_DisabledSprite: {fileID: 21300000, guid: a7aa68f78b3f7eb45aacb0b3a66c8257, type: 3}
+    m_PressedSprite: {fileID: 21300000, guid: 906c21dd8aee25a4da4abbe18bceaa75, type: 3}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted

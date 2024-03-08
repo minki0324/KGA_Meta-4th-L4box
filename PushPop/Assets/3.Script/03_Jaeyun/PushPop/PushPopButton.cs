@@ -36,7 +36,6 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
     // Push Pop Button click method
     public void PushPopClick()
     {
-
         GameObject clickButton = this.gameObject;
         if (GameManager.Instance.GameMode.Equals(GameMode.PushPush))
         {
@@ -47,11 +46,11 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
         {
             if (player.Equals(0))
             { // 1P 소유 팝 버튼
-                GameManager.Instance.bombScript.popList1P.Remove(clickButton);
+                GameManager.Instance.multiGame.popButtonList1P.Remove(clickButton);
             }
             else if (player.Equals(1))
             { // 2P 소유 팝 버튼
-                GameManager.Instance.bombScript.popList2P.Remove(clickButton);
+                GameManager.Instance.multiGame.popButtonList2P.Remove(clickButton);
             }
         }
         if (clickButton.GetComponent<Button>().interactable)
