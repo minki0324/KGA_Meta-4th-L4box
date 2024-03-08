@@ -48,7 +48,7 @@ public class GameTimer : MonoBehaviour
                 }
             }
 
-            SetTIme();
+            SetTime();
             yield return null;
         }
 
@@ -57,7 +57,7 @@ public class GameTimer : MonoBehaviour
         TimerCoroutine = null;
     }
 
-    private void SetTIme()
+    private void SetTime()
     {
         if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
         {

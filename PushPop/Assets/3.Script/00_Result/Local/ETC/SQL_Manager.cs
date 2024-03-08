@@ -108,8 +108,8 @@ public class SQL_Manager : MonoBehaviour
 
             // if문에서 오류가 없이 지나왔다면 SQL 열어주기
             connection = new MySqlConnection(serverinfo);
-            Debug.Log($"SQL Awake : {connection.State}");
             connection.Open(); // 시도: 데이터베이스 연결
+            Debug.Log($"SQL Awake : {connection.State}");
            
         }
         catch (MySqlException ex) // MySQL 예외 처리
