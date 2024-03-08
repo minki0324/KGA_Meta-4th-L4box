@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour, IGameMode
     public Bomb bombScript;
     public Speed_Timer speedTimer = null;
     public PushPushManager pushPush;
+    public MemoryManager Memory;
 
     // Bubble
     [Header("Bubble Info")]
@@ -478,8 +479,8 @@ public class GameManager : MonoBehaviour, IGameMode
         _puzzle.GetComponent<Image>().raycastTarget = false;
         // _puzzle.GetComponent<RectTransform>().sizeDelta = BoardSize;
         //_puzzle.SetParent(bubble.transform);
-        bubble.touchCount = 1;
-        //bubble.touchCount = Random.Range(10, 21); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
+        //bubble.touchCount = 1;
+        bubble.touchCount = Random.Range(10, 21); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
     }
     #endregion
 

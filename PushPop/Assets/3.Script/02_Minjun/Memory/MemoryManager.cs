@@ -7,7 +7,7 @@ using TMPro;
 public class MemoryManager : MonoBehaviour
 {
     public static MemoryManager Instance;
-    [Header("판넬")]
+    [Header("Panel")]
     [SerializeField] public GameObject ResultPanel; //라이프소진 , AllClear시 뜨는 결과창
     [SerializeField] public GameObject WarngingPanel;   
     [SerializeField] private GameObject ReadyPanel;
@@ -50,25 +50,32 @@ public class MemoryManager : MonoBehaviour
     private void OnEnable()
     {
         //처음 Gameplay판넬 시작시 보드판소환(게임시작) 
+        Gameinit(); 
         GameManager.Instance.StartCoroutine(GameManager.Instance.GameReady_Co(ReadyPanel, ReadyPanel_Text));
     }
-    public void CreatBoard()
-    {//현재 스테이지에 맞는 보드판 소환
-        Instantiate(stages[currentStage - 1].board, SapwnPos.position, Quaternion.identity, gameObject.transform);
-    }
-    public MemoryStageData GetStage()
-    {//다른곳에서 현재스테이지 가져오기
-        return stages[currentStage - 1];
-    }
-    public void PlayStartPanel(string Text)
-    { //넣어준 매
-        StartAni.transform.GetChild(0).GetComponent<TMP_Text>().text = Text;
-        StartAni.SetTrigger("isStart");
-    }
+    #region 초기화 관련 메소드
+    public void ResetLife()
+    {
+        for (int i = 0; i < Heart.Length; i++)
+        {
+            if (!Heart[2 - i].activeSelf)
+            {
+                Heart[2 - i].SetActive(true);
+            }
+        }
+    } //게임끝났을때 라이프 초기화
+    public void ResetScore()
+    {
+        Score = 0;
+        ScoreText.text = $"점수 : {Score}";
+    } //게임끝났을때 스코어 초기화
     public void SetStageIndex()
     {
         StageText.text = $"{currentStage} 스테이지";
-    }
+    }  //스테이지 바뀔때 text 변경 
+    #endregion
+    #region 게임로직 관련 메소드
+ 
     public void LifeRemove()
     {
         for (int i = 0; i < Heart.Length; i++)
@@ -79,26 +86,15 @@ public class MemoryManager : MonoBehaviour
                 break;
             }
         }
-    }
-
-    public void ResetLife()
+    }  //틀렸을때 라이프 감소 메소드
+    public void AddScore(int _score)
     {
-        for (int i = 0; i < Heart.Length; i++)
-        {
-            if (!Heart[2 - i].activeSelf)
-            {
-                Heart[2 - i].SetActive(true);
-            }
-        }
-    }
-    public void AddScore()
-    {
-        Score += 100;
+        Score += _score;
         ScoreText.text = $"점수 : {Score}";
         HintBtnActive();
 
 
-    }
+    }//스코어 _score만큼 추가하고 text변경 메소드
     public void HintBtnActive()
     {//점수가 늘어나거나 줄어들때(힌트를 볼때) 버튼을 활성화 하거나 비활성화시킴.
         if (Score >= 300)
@@ -111,46 +107,69 @@ public class MemoryManager : MonoBehaviour
             //버튼 비활성화
             Hintbutton.interactable = false;
         }
-    }
-    public void ResetScore()
+    } // 점수변동 될때마다 불림. 점수에 따라 힌트 버튼 활성화변경
+    public void BlinkRePlay()
     {
-        Score = 0;
-        ScoreText.text = $"점수 : {Score}";
+        AddScore(-300); //300점 차감
+        HintBtnActive();
+        currentBoard.Blink(true);
+    } //힌트사용시 메소드
+
+    #endregion
+    #region 스테이지 시작 관련
+    public void PlayStartPanel(string Text) //스테이지 시작할때 멘트 .
+    { //넣어준 매
+        StartAni.transform.GetChild(0).GetComponent<TMP_Text>().text = Text;
+        StartAni.SetTrigger("isStart");
     }
-    #region 게임이 끝났을때 승리패배 or 포기
-    //Stage 단위 판단은 MemoryPushpop에 있음
-    public void onStageEnd(bool isRetry =false)
+    public void CreatBoard()
+    {//현재 스테이지에 맞는 보드판 소환
+        Instantiate(stages[currentStage - 1].board, SapwnPos.position, Quaternion.identity, gameObject.transform);
+        DebugLog.instance.Adding_Message("되는데? 짱인데~");
+    } // 게임시작 , 스테이지넘어갈때 새로운 PushPopBoard생성
+    public MemoryStageData GetStage()
+    {//다른곳에서 현재스테이지 가져오기
+        return stages[currentStage - 1];
+    } // PushPopBoard생성될때 현재 스테이지 관련 ScriptableObject 데이터 가져오기
+
+    #endregion
+    #region 게임종료 , 초기화 
+    public void GameEnd(string _string)
     {//ResultPanel 다시시작버튼  : 저장하고 다시시작
         Memory_Canvas canvas = transform.root.GetComponent<Memory_Canvas>();
 
         //현재보드 꺼주기
         Destroy(currentBoard.gameObject);
-        //stage초기화
-        currentStage = 1;
-        SetStageIndex();
-        //라이프초기화
-        Life = 3;
-        ResetLife();
-        //점수 기록하기
-        Ranking.Instance.SetScore(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, Score);
-        //스코어초기화
-        ResetScore();
+     
 
+        switch (_string)
+        {
+            case "Retry": // 라이프소진, 클리어시 결과판넬에서 다시하기 눌렀을때
+                //점수 기록하기
+                Ranking.Instance.SetScore(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, Score);
+                //다시시작
+                //다시시작할땐 OnEnable 호출안되서 수동으로 초기화 해줘야함
+                Gameinit();
+                GameManager.Instance.StartCoroutine(GameManager.Instance.GameReady_Co(ReadyPanel, ReadyPanel_Text));
+                break;
+            case "End"://라이프소진, 클리어시 나가기 눌렀을때
+                //점수 기록하기
+                Ranking.Instance.SetScore(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.ProfileIndex1P, Score);
+                //로비로나가기
+                StartCoroutine(ExitToLobby());
+                break;
+
+            case "GiveUp": // 게임도중 포기하고 나갔을때
+                //로비로나가기
+                StartCoroutine(ExitToLobby());
+                break;
+
+        }
         canvas.RankingLoad();
+    } //게임종료
+    public void Gameinit()
+    {
 
-        if (isRetry)
-        {//다시하기 버튼
-            GameManager.Instance.StartCoroutine(GameManager.Instance.GameReady_Co(ReadyPanel, ReadyPanel_Text));
-        }
-        else
-        {//나가기 버튼
-            StartCoroutine(ExitToLobby());
-        }
-    }
-    public void onStageFail(bool isGiveUp)
-    {//게임종료메소드 (포기) 게임도중 Back버튼 : 저장안되고 나가짐
-        //현재보드 꺼주기
-        Destroy(currentBoard.gameObject);
         //stage초기화
         currentStage = 1;
         SetStageIndex();
@@ -158,16 +177,29 @@ public class MemoryManager : MonoBehaviour
         //라이프초기화
         Life = 3;
         ResetLife();
-   
+
         //스코어초기화
         ResetScore();
+        HintBtnActive();
         Time.timeScale = 1f;
-        //메모리 로비로 나가기
-        StartCoroutine(ExitToLobby());
-        //SQL_Manager.instance.SQL_ProfileListSet()
+    } // 초기화
+    #endregion
+    #region 게임종료시 ResultPanel 관련
+    public void ResultPanelInit() //Result Panel 정보 Init
+    {
+        profileImage.sprite = ProfileManager.Instance.CacheProfileImage;
+        profileName.text = ProfileManager.Instance.ProfileName1P;
+        resultScore.text = $"{Score}";
+        clearMessage = (int)Ranking.Instance.CompareRanking();
+        resultMassage.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
+    } //
+    public void Result() //라이프소진 , 스테이지 올 클리어시 결과판넬 관련 메소드
+    {
+        ResultPanelInit();
+        AudioManager.instance.SetAudioClip_SFX(5, false);
+        ResultPanel.SetActive(true);
     }
     #endregion
-
     private IEnumerator ExitToLobby()
     {//로비나가기
         WarngingPanel.SetActive(false);
@@ -179,20 +211,7 @@ public class MemoryManager : MonoBehaviour
         Debug.Log("코루틴후");
 
         GetComponent<Memory_Game>().GoOutBtn_Clicked();
-    }
-    public void BlinkRePlay()
-    {
-        Score -= 300;
-        ScoreText.text = $"점수 : {Score}";
-        HintBtnActive();
-        currentBoard.Blink(true);
-    }
-    public void OnGameEnd()
-    {
-        profileImage.sprite = ProfileManager.Instance.CacheProfileImage;
-        profileName.text = ProfileManager.Instance.ProfileName1P;
-        resultScore.text = $"{Score}";
-        clearMessage = (int)Ranking.Instance.CompareRanking();
-        resultMassage.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
-    }
+    } //로비이동 코루틴
+
 }
+
