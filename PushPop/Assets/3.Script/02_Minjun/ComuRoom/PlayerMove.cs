@@ -6,21 +6,19 @@ using Mirror;
 public class PlayerMove : NetworkBehaviour 
 {
     //박물관에서 움직일 아바타 스크립트
-    [SerializeField]private Rigidbody2D rb;
-    [SerializeField]private float speed = 5; //아바타 이동속도
+    //[SerializeField]private Rigidbody2D rb;
+    [SerializeField]private float speed = 500; //아바타 이동속도
     private bool isMove; //올바른 조건의 터치 , 클릭 시 플레이어를 이동시키기 위한 bool
     private bool _isMouseStartUI;
     Vector2 touchPosition; // android 터치 , WIndow  클릭시 이동할 위치 저장( 플레이어를 이동시키기 위한 위치)
     private void Awake()
     {
-       
+        transform.SetParent(Emotion.instance.canvas.transform);
+        Debug.Log(transform.localScale);
     }
     private void Start()
     {
-        if (isLocalPlayer)
-        {
-            TryGetComponent(out rb);
-        }
+        transform.localScale = Vector3.one; //멋대로 스케일이 바껴서 그냥 1로 고정.
     }
     private void FixedUpdate()
     {
@@ -62,23 +60,22 @@ public class PlayerMove : NetworkBehaviour
             if (isMove)
             {
                 //이동코드
-                rb.position = Vector2.MoveTowards(rb.position, touchPosition, speed * Time.deltaTime);
+                transform.position = Vector2.MoveTowards(transform.position, touchPosition, speed * Time.deltaTime);
                 //목적지에 도착했을시 isMove =flase 할당후 이동 정지.
-                if (Vector2.Distance(rb.position, touchPosition) < 0.01f)
+                if (Vector2.Distance(transform.position, touchPosition) < 0.01f)
                 {
-                    rb.position = touchPosition;
+                    transform.position = touchPosition;
                     isMove = false;
                 }
             }
         }
         else
         { // window , editor
-            //마우스클릭하고 클릭위치가 UI가 아닐때
-      
+          //마우스클릭하고 클릭위치가 UI가 아닐때
             if ( Input.GetMouseButton(0) &&  !EventSystem.current.IsPointerOverGameObject())
                 {
                     //이동할위치저장
-                    touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    touchPosition = Input.mousePosition;
                     isMove = true;
                 }
        
@@ -86,11 +83,11 @@ public class PlayerMove : NetworkBehaviour
             if (isMove)
             {
                 //이동코드
-                rb.position = Vector2.MoveTowards(rb.position, touchPosition, speed * Time.deltaTime);
+                transform.position = Vector2.MoveTowards(transform.position, touchPosition, speed * Time.deltaTime);
                 //목적지에 도착했을시 isMove다시 false 
-                if (Vector2.Distance(rb.position, touchPosition) < 0.01f)
+                if (Vector2.Distance(transform.position, touchPosition) < 0.01f)
                 {
-                    rb.position = touchPosition;
+                    transform.position = touchPosition;
                     isMove = false;
                 }
             }
