@@ -60,18 +60,11 @@ public class AudioManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-    }
-
-    private void Start()
-    {
-       
         audioSource_arr = GetComponents<AudioSource>();
         audioSource_arr[1].clip = bgmClip_List[0];
         playingBgm = 0;
     }
-
     #endregion
-
 
     public void SetAudioClip_BGM(int index)
     {
