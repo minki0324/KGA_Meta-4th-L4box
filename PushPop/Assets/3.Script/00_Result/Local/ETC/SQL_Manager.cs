@@ -53,16 +53,14 @@ public class server_info
     }
 }
 
-public class FriendAndRequest
+public class FavoriteList
 {
-    public FriendAndRequest(List<int> friendIndex, List<int> requestIndex)
+    public FavoriteList(List<int> friendIndex)
     {
         FriendIndex = friendIndex;
-        RequestIndex = requestIndex;
     }
 
     public List<int> FriendIndex { get; private set; }
-    public List<int> RequestIndex { get; private set; }
 }
 #endregion
 
@@ -231,8 +229,8 @@ public class SQL_Manager : MonoBehaviour
     /// <param name="GUID"></param>
     public void SQL_AddUser(string GUID)
     {
-       /* try
-        {*/
+        try
+        {
             // 1. SQL 서버에 접속 되어 있는지 확인
             if (!ConnectionCheck(connection))
             {
@@ -263,13 +261,13 @@ public class SQL_Manager : MonoBehaviour
             }
             if (!reader.IsClosed) reader.Close();
             return; // 회원가입 성공
-       /* }
+        }
         catch (Exception e)
         {
             if (!reader.IsClosed) reader.Close();
             Debug.Log("SQL AddUser : " + e.Message);
             return;
-        }*/
+        }
     }
 
     /// <summary>
@@ -736,131 +734,69 @@ public class SQL_Manager : MonoBehaviour
     }
     #endregion
 
-    #region Friend
-    public void SQL_SearchProfile(string _name, GameObject _friendPanel)
-    { // 이름을 검색해서 해당 이름과 동일한 프로필 출력해주는 Method
+    #region Favorite
+    public FavoriteList SQL_ListUpFavorite(int _profileIndex)
+    { // 즐겨찾기 목록 ListUp하는 Method
         try
         {
             // 1. SQL 서버에 접속 되어 있는지 확인
             if (!ConnectionCheck(connection))
             {
-                return;
-            }
-            // Input에 입력한 name에 맞는 프로필을 검색
-            string select_cmd = $"SELECT FriendAndRequest, Profile_Index, UID FROM Friend WHERE Profile_Name = '{_name}';";
-            MySqlCommand selectcmd_ = new MySqlCommand(select_cmd, connection);
-            reader = selectcmd_.ExecuteReader();
-
-            List<FriendAndRequest> relationList = new List<FriendAndRequest>();
-            List<int> profileIndexList = new List<int>();
-            List<int> UIDList = new List<int>();
-
-            if (reader.HasRows)
-            { 
-                while(reader.Read())
-                { // 읽어온 데이터를 각각 리스트에 담아줌
-                    string friendinfo = reader.GetString("FriendAndRequest");
-                    FriendAndRequest friend = JsonUtility.FromJson<FriendAndRequest>(friendinfo);
-
-                    int profileIndex = reader.GetInt32("Profile_Index");
-                    int UID = reader.GetInt32("UID");
-
-                    relationList.Add(friend);
-                    profileIndexList.Add(profileIndex);
-                    UIDList.Add(UID);
-                }
-            }
-
-            for(int i = 0; i < relationList.Count; i++)
-            {
-                GameObject friendpanel = Instantiate(_friendPanel);
-                // 여기 밑에 프로필들 세팅 해주는 로직 추가
-            }
-            if (!reader.IsClosed) reader.Close();
-        }
-        catch(Exception e)
-        {
-            if (!reader.IsClosed) reader.Close();
-            Debug.Log("SQL SearchProfile : " + e.Message);
-        }
-    }
-
-    public void SQL_AddFriend(int _profileIndex, int _friendIndex)
-    { // 친구 추가 버튼 눌렀을 때, 수락 버튼 눌렀을 때 공용 Method
-        try
-        {
-            // 1. SQL 서버에 접속 되어 있는지 확인
-            if (!ConnectionCheck(connection))
-            {
-                return;
+                return null;
             }
 
             // 2. Profile 정보 받아오기
-            FriendAndRequest currentUserFriend = GetFriendData(_profileIndex);
-            FriendAndRequest targetUserFriend = GetFriendData(_friendIndex);
+            string select_cmd = string.Format(@"FavoriteList FROM Favorite WHERE Profile_Index='{0}';", _profileIndex);
+            MySqlCommand selectcmd_ = new MySqlCommand(select_cmd, connection);
+            reader = selectcmd_.ExecuteReader();
 
-            // 3. 각 Friend Class에 담긴 요청을 조회해서 해당 유저와 관계 정리
-            if (currentUserFriend.RequestIndex.Contains(_friendIndex))
-            { // 매개 변수로 받은 index가 요청 목록에 있다면 친구 수락 버튼을 눌렀을 때 case
-                AcceptFriendRequest(currentUserFriend, _profileIndex, _friendIndex);
-                return;
-            }
-            else if(targetUserFriend.RequestIndex.Contains(_profileIndex))
-            { // 이미 친구추가 요청된 사람
-                // 추후 이미 신청한 유저입니다. 등의 에러로그 띄우기 todo..
-                return;
-            }
-            else if(!targetUserFriend.RequestIndex.Contains(_profileIndex))
-            { // 해당 유저에게 나의 친구요청이 없으니 친구 추가 요청을 보낼 수 있음
-                targetUserFriend.RequestIndex.Add(_profileIndex);
-                UpdateFriendData(_friendIndex, JsonUtility.ToJson(targetUserFriend));
-            }
-            return; // 요청 or 친구 등록 성공
-        }
-        catch (Exception e)
-        {
-            Debug.Log("SQL AddFriend : " + e.Message);
-            return;
-        }
-    }
-
-    private FriendAndRequest GetFriendData(int profileIndex)
-    {
-        string selectCmd = $"SELECT FriendAndRequest FROM Friend WHERE Profile_Index = '{profileIndex}';";
-        MySqlCommand cmd = new MySqlCommand(selectCmd, connection);
-        using (MySqlDataReader reader = cmd.ExecuteReader())
-        {
             if (reader.HasRows)
             {
                 reader.Read();
-                string jsonData = reader.GetString("FriendAndRequest");
-                return JsonUtility.FromJson<FriendAndRequest>(jsonData);
+                string favoriteInfo = reader.GetString("FavoriteList");
+                FavoriteList favoriteLists = JsonUtility.FromJson<FavoriteList>(favoriteInfo);
+                if (!reader.IsClosed) reader.Close();
+                return favoriteLists; // 리스트 전달
+            }
+            else
+            {
+                if (!reader.IsClosed) reader.Close();
+                Debug.Log("Favorite List가 없습니다.");
+                return null;
             }
         }
-        return null;
-    }
-
-    private void AcceptFriendRequest(FriendAndRequest friend, int profileIndex, int friendIndex)
-    {
-        // 요청 리스트에서 지우고 친구 리스트에 추가
-        friend.RequestIndex.Remove(friendIndex);
-        friend.FriendIndex.Add(friendIndex);
-        UpdateFriendData(profileIndex, JsonUtility.ToJson(friend));
-
-        // 상대방 프로필 업데이트
-        FriendAndRequest friendProfile = GetFriendData(friendIndex);
-        if (friendProfile != null)
+        catch (Exception e)
         {
-            friendProfile.FriendIndex.Add(profileIndex);
-            UpdateFriendData(friendIndex, JsonUtility.ToJson(friendProfile));
+            Debug.Log("SQL ListUpFavorite : " + e.Message);
+            return null;
         }
     }
 
-    private void UpdateFriendData(int profileIndex, string jsonData)
+    public void SQL_UpdateFavoriteList(FavoriteList favoriteList, int _profileIndex)
     {
-        string updateCmd = $"UPDATE Friend SET FriendAndRequest = '{jsonData}' Profile_Index = '{profileIndex}';";
-        MySqlCommand cmd = new MySqlCommand(updateCmd, connection);
-        cmd.ExecuteNonQuery();
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+
+            string jsonFavorite = JsonUtility.ToJson(favoriteList);
+
+            string update_cmd = @"UPDATE Favorite SET FavoriteList = @FavoriteList WHERE Profile_Index = @ProfileIndex;";
+            MySqlCommand updatecmd_ = new MySqlCommand(update_cmd, connection);
+
+            // 파라미터 추가
+            updatecmd_.Parameters.AddWithValue("@FavoriteList", jsonFavorite);
+            updatecmd_.Parameters.AddWithValue("@ProfileIndex", _profileIndex);
+
+            updatecmd_.ExecuteNonQuery();
+        }
+        catch(Exception e)
+        {
+            Debug.Log("SQL UpdateFavoriteList" + e.Message);
+        }
     }
     #endregion
 

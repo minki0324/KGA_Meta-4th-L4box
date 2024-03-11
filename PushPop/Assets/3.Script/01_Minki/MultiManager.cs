@@ -64,6 +64,7 @@ public class MultiManager : MonoBehaviour, IGame
     [SerializeField] private GameTimer gameTimer = null;
     private float upperTimer = 12f;
     private bool bNoTimePlaying = false;
+    [SerializeField] private TMP_Text feverText = null;
 
     [Header("Quit")]
     [SerializeField] private Button[] quitButton;  // 나가기 버튼
@@ -233,6 +234,10 @@ public class MultiManager : MonoBehaviour, IGame
 
         // coroutine 초기화
         StopAllCoroutines();
+        if(gameTimer.TimerCoroutine != null)
+        {
+            gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
+        }
     }
 
     public void GameSetting()
@@ -307,6 +312,10 @@ public class MultiManager : MonoBehaviour, IGame
         WaterfallAnimatorSet(playerTurn, true);
 
         StopAllCoroutines();
+        if (gameTimer.TimerCoroutine != null)
+        {
+            gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
+        }
         StartCoroutine(Result_Co());
         isEndGame = true;
     }
@@ -314,8 +323,9 @@ public class MultiManager : MonoBehaviour, IGame
     private IEnumerator Result_Co()
     { // 결과창 출력 코루틴
         yield return new WaitForSeconds(2f); // waterfall animation 기다림 
+        AudioManager.instance.audioSource_arr[1].pitch = 1f;
         WaterfallAnimatorSet(playerTurn, false);
-        
+        feverText.gameObject.SetActive(false);
         AudioManager.instance.Stop_SFX();
         AudioManager.instance.SetCommonAudioClip_SFX(7);
 
@@ -447,6 +457,11 @@ public class MultiManager : MonoBehaviour, IGame
 
             float rotSpeed = gameTimer.TenCount ? 360f : 30f;
             float rotAngle = gameTimer.TenCount ? 360f : 15f;
+            AudioManager.instance.audioSource_arr[1].pitch = gameTimer.TenCount ? 1.5f : 1f;
+            if(gameTimer.TenCount)
+            {
+                feverText.gameObject.SetActive(true);
+            }
             // Z축 회전 처리
             if (rotateDirection)
             {
@@ -472,7 +487,7 @@ public class MultiManager : MonoBehaviour, IGame
 
         upperBubbleCoroutine = null;
         gameTimer.EndTimer = true; // 게임 종료
-
+        
         AudioManager.instance.SetAudioClip_SFX(0, false);
     }
 
@@ -491,7 +506,21 @@ public class MultiManager : MonoBehaviour, IGame
     public void BottomBubbleTouch()
     { // Bottom Bubble, 밑에 큰 방울을 터치할 때마다 상단 방울의 시간이 줄어듦
         AudioManager.instance.SetCommonAudioClip_SFX(5);
-        upperTimer -= 0.1f;
+        if(Application.platform == RuntimePlatform.Android)
+        {
+            if(Input.touchCount > 0)
+            {
+                for(int i = 0; i < Input.touchCount; i++)
+                {
+                    Touch touch = Input.GetTouch(i);
+                    if(touch.fingerId > 2)
+                    {
+                        return;
+                    }
+                    upperTimer -= 0.1f;
+                }
+            }
+        }
     }
     #endregion
     #region Waterfall Animation

@@ -245,7 +245,7 @@ public class ProfileCanvas : MonoBehaviour
 
             mainCanvas.CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
         }
-
+        ProfileManager.Instance.isImageSelect = false;
         BlockPanel.SetActive(false);
         CurrentProfile.SetActive(false);
         ExitButton.SetActive(false);
