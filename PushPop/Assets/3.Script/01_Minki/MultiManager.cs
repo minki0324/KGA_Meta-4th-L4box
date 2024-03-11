@@ -197,7 +197,7 @@ public class MultiManager : MonoBehaviour, IGame
         gameTimer.EndTimer = false;
         upperTimer = 12f;
         gameTimer.CurrentTime = 60f;
-        gameTimer.TimerText.text = $"{(int)gameTimer.CurrentTime}";
+        gameTimer.TimerText.text = $"남은시간\n{(int)gameTimer.CurrentTime}";
         bNoTimePlaying = false;
         isEndGame = false;
         isFever = false;

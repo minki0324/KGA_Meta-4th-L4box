@@ -9,7 +9,6 @@ public class MemoryCanvas : MonoBehaviour
     [SerializeField] private GameObject mainCanvas = null;
 
     [Header("Side Panel")]
-    public GameObject BackButton = null;
     public GameObject HelpButton = null;
 
     [Header("Ready")]
@@ -21,7 +20,6 @@ public class MemoryCanvas : MonoBehaviour
     [SerializeField] private MemoryManager memoryManager = null;
 
     [Header("Panel")]
-    public GameObject HintGuidePanel = null;
     public GameObject ResultPanel = null;
     public GameObject WarningPanel = null;
     public GameObject GameReadyPanel = null;
@@ -38,21 +36,29 @@ public class MemoryCanvas : MonoBehaviour
 
         MemoryGame.SetActive(true);
         HelpButton.SetActive(false);
-        BackButton.SetActive(false);
         Ready.SetActive(false);
+        memoryManager.BackButton.SetActive(true);
         memoryManager.GameStart();
     }
     #endregion
     #region Side Panel
-    public void MultiBackButton()
+    public void MemoryBackButton()
     { // 뒤로가기
         AudioManager.instance.SetCommonAudioClip_SFX(3);
-        ProfileManager.Instance.SelectPlayer = Player.Player1;
-        GameManager.Instance.GameMode = GameMode.None;
-        GameManager.Instance.InGame = false;
 
-        mainCanvas.gameObject.SetActive(true);
-        gameObject.SetActive(false);
+        if (Ready.activeSelf)
+        { // 대기 화면일 때
+            GameManager.Instance.GameMode = GameMode.None;
+            GameManager.Instance.InGame = false;
+
+            mainCanvas.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+        }
+        else
+        { // 게임 중일 때
+            Time.timeScale = 0f;
+            WarningPanel.SetActive(true);
+        }
     }
 
     public void HelpPanelButton()

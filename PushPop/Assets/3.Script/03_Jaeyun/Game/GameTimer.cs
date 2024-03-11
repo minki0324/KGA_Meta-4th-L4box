@@ -18,7 +18,7 @@ public class GameTimer : MonoBehaviour
         if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
         {
             // 난이도에 따라 또 나뉨
-            compareTime = 50f; // difficulty
+            compareTime = (float)GameManager.Instance.Difficulty;
             compareTime = CurrentTime - compareTime;
             setSign = 1;
         }
@@ -51,7 +51,7 @@ public class GameTimer : MonoBehaviour
             yield return null;
         }
 
-        CurrentTime = 0f; // 나중에 speed는 60f 50f 40f로 바꾸어줘야함
+        CurrentTime = 0f;
         EndTimer = true; // game end
     }
 
@@ -65,7 +65,7 @@ public class GameTimer : MonoBehaviour
         }
         else
         { // multi mode
-            TimerText.text = $"{string.Format("{0:0}", CurrentTime)}";
+            TimerText.text = $"남은시간\n{string.Format("{0:0}", CurrentTime)}";
         }
     }
 

@@ -3,17 +3,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum Difficult
-{
-    Easy = 60,
-    Normal = 50,
-    Hard = 40
-}
+
 
 public class Speed_Timer : MonoBehaviour
 {
     [Header("캔버스")]
-    [SerializeField] private Speed_Canvas speed_Canvas;
+    [SerializeField] private SelectListSetting speed_Canvas;
     [SerializeField] private HelpScriptManager help_Canvas;
 
     [Header("패널")]
@@ -25,7 +20,7 @@ public class Speed_Timer : MonoBehaviour
     public GameObject TimerObj;
     [SerializeField] private TMP_Text time_Text;
     public Slider time_Slider;
-    public Difficult difficult;
+    public Difficulty difficult;
 
     [Header("아이콘 이미지")]
     [SerializeField] private Image Mold_Image;
@@ -214,7 +209,7 @@ public class Speed_Timer : MonoBehaviour
         help_Canvas.gameObject.SetActive(true);
         help_Canvas.Button_Enable();
         SelectDifficulty_Panel.SetActive(true);
-        speed_Canvas.Enable_Objects();
+        // speed_Canvas.Enable_Objects();
         Warning_Panel.SetActive(false);
         resultPanel.SetActive(false);
         gameObject.SetActive(false);
@@ -236,7 +231,7 @@ public class Speed_Timer : MonoBehaviour
     public void Result()
     {
         int clearTitle;
-        resultImage.sprite = speed_Canvas.moldIcon;
+        resultImage.sprite = speed_Canvas.BoardIcon;
         resultTimer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
         bNoTimePlaying = false;
         AudioManager.instance.Stop_SFX();

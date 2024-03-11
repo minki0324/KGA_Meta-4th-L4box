@@ -13,6 +13,8 @@ public enum GameMode // GameMode
     Multi,
     None
 }
+
+
 #region Other Class
 public class PushPushObject
 {
@@ -114,6 +116,8 @@ public class GameManager : MonoBehaviour, IGameMode_
     public int boardName = 0; // mold name
     public int currentTime = 0;
     public Coroutine speedCreate = null;
+
+    public Difficulty Difficulty = Difficulty.Easy;
 
     #region Unity Callback
     private void Awake()

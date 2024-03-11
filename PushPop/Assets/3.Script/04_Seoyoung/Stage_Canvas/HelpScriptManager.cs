@@ -13,7 +13,7 @@ public class HelpScriptManager : MonoBehaviour
 
     [Header("캔버스")]
     [SerializeField] private PushPush_Canvas pushpush_Canvas;
-    [SerializeField] private Speed_Canvas speed_Canvas;
+    [SerializeField] private SelectListSetting speed_Canvas;
     [SerializeField] private Memory_Canvas memory_Canvas;
     [SerializeField] private MultiManager bomb_Canvas;
 
@@ -68,7 +68,7 @@ public class HelpScriptManager : MonoBehaviour
 
     #region Other Method
     //좌측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드
-    public void BackBtn_Clicked()
+    /*public void BackBtn_Clicked()
     {
         if(!bisHelpPanelOn)
         {
@@ -81,7 +81,7 @@ public class HelpScriptManager : MonoBehaviour
                     break;
 
                 case GameMode.Speed:
-                    speed_Canvas.BackBtn_Clicked();
+                    //speed_Canvas.BackBtn_Clicked();
                     break;
 
                 case GameMode.Memory:
@@ -93,10 +93,10 @@ public class HelpScriptManager : MonoBehaviour
                     break;
             }
         }
-    }
+    }*/
 
     //우측하단 도움말 버튼 눌리면 호출될 메소드
-    public void HelpBtn_Clicked()
+    /*public void HelpBtn_Clicked()
     {     
         if(!bisHelpPanelOn)
         {
@@ -129,10 +129,10 @@ public class HelpScriptManager : MonoBehaviour
                     break;
             }
         }
-    }
+    }*/
 
     //도움말 창의 x키(BackBtn) 눌리면 호출될 메소드
-    public void Help_BackBtn_Clicked()
+    /*public void Help_BackBtn_Clicked()
     {
         if(bisHelpPanelOn)
         {
@@ -161,7 +161,7 @@ public class HelpScriptManager : MonoBehaviour
                     break;
             }
         }
-    }
+    }*/
 
     //도움말 창의 Next(다음) 버튼 눌리면 호출될 메소드
     public void NextBtn_Clicked()
