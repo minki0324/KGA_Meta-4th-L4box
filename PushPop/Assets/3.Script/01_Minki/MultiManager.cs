@@ -35,12 +35,14 @@ public class MultiManager : MonoBehaviour, IGame
     [SerializeField] private Turn playerTurn = Turn.Turn1P; // 현재 턴 기준
     public List<GameObject> popButtonList1P = new List<GameObject>(); // 1P 의 Pushpop button list -> object pooling 필요
     public List<GameObject> popButtonList2P = new List<GameObject>(); // 2P 의 Pushpop List
-    [SerializeField] private SpriteAtlas boardSprite = null; // pushPop board sprite
-    private Sprite[] sprites = null;   // atlas의 sprite들 배열
+    [SerializeField] private List<Sprite> easyList = new List<Sprite>();
+    [SerializeField] private List<Sprite> normalList = new List<Sprite>();
+    [SerializeField] private List<Sprite> hardList = new List<Sprite>();
+    [SerializeField] private List<int> spriteList1P = new List<int>() { 0, 1, 2 };
+    [SerializeField] private List<int> spriteList2P = new List<int>() { 0, 1, 2 };
+    private bool isFever = false;
 
     [Header("Bubble Info")]
-    private Vector2[] upperPos = { new Vector2(-500, 380), new Vector2(500, 380) }; // player1, player2의 위 bubble pos
-    private Vector2[] bottomPos = { new Vector2(-500, -100), new Vector2(500, -100) }; // player1, player2의 아래 bubble pos
     [SerializeField] private Transform[] boardTransform; // Pushpop Board가 소환될 Parent
     [SerializeField] private GameObject upperBubbleObject;    // 위 방울 오브젝트
     [SerializeField] private GameObject bottomBubbleObject;   // 아래 방울 오브젝트
@@ -48,6 +50,8 @@ public class MultiManager : MonoBehaviour, IGame
     [SerializeField] private Sprite[] upperBubbleSprite; // upperBubble에 들어있는 물 이미지들의 배열
     [SerializeField] private GameObject upperWaterfall;
     [SerializeField] private GameObject bottomWaterfall;
+    private Vector2[] upperPos = { new Vector2(-500, 380), new Vector2(500, 380) }; // player1, player2의 위 bubble pos
+    private Vector2[] bottomPos = { new Vector2(-500, -100), new Vector2(500, -100) }; // player1, player2의 아래 bubble pos
 
     [Header("Game Result")]
     [SerializeField] private TMP_Text winText; // Result의 1개의 결과 Text
@@ -71,12 +75,9 @@ public class MultiManager : MonoBehaviour, IGame
     private Coroutine readyGameCoroutine = null; // 게임 시작 코루틴
     private Coroutine upperBubbleCoroutine = null; // 물 차오르는 코루틴
     private Coroutine resultCoroutine = null;
+    public Coroutine FeverCoroutine = null;
 
     #region Unity Callback
-    private void Awake()
-    {
-        GetBoardSprite();
-    }
 
     private void OnEnable()
     {
@@ -86,6 +87,10 @@ public class MultiManager : MonoBehaviour, IGame
     private void Update()
     {
         if (isEndGame) return;
+        if(gameTimer.TenCount && !isFever)
+        {
+            FeverCoroutine = StartCoroutine(FeverMode());
+        }
         GameEnd();
     }
 
@@ -94,26 +99,61 @@ public class MultiManager : MonoBehaviour, IGame
         Init();
     }
     #endregion
-    #region Game Logic
-    public void BottomBubbleTouch()
-    { // Bottom Bubble, 밑에 큰 방울을 터치할 때마다 상단 방울의 시간이 줄어듦
-        AudioManager.instance.SetCommonAudioClip_SFX(5);
-        upperTimer -= 0.1f;
-    }
-    #endregion
     #region BoardSprite Setting
-    public void GetBoardSprite()
-    { // 초기 Sprite 배열 세팅
-        Sprite[] tempSprites = new Sprite[boardSprite.spriteCount];
-        sprites = tempSprites;
-        boardSprite.GetSprites(sprites);
+    public void SpriteListSet()
+    { // 만약 모든 spriteList를 다 사용한 플레이어가 있다면 초기화
+        if(spriteList1P.Count.Equals(0))
+        {
+            for(int i = 0; i < 3; i++)
+            {
+                spriteList1P.Add(i);
+            }
+        }
+        if(spriteList2P.Count.Equals(0))
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                spriteList2P.Add(i);
+            }
+        }
     }
+    private Sprite GetSpriteName(int _player)
+    {
+        Sprite sprite;
+        if(!gameTimer.TenCount)
+        {
+            int randomList = -1;
+            // 스프라이트 리스트를 저장하는 변수
+            List<Sprite> playerSpriteList;
+            List<int> spriteList = _player.Equals(1) ? spriteList1P : spriteList2P;
 
-    private void SetSpriteImage(Transform _parent, List<GameObject> _popList) // object pooling... todo 
+            while (true)
+            {
+                randomList = UnityEngine.Random.Range(0, 3);
+                if (spriteList.Contains(randomList))
+                {
+                    break;
+                }
+            }
+            playerSpriteList = randomList == 0 ? easyList : randomList == 1 ? normalList : hardList;
+            spriteList.Remove(randomList);
+
+            // 선택된 플레이어 스프라이트 리스트에서 랜덤한 스프라이트를 선택
+            int randomIndex = UnityEngine.Random.Range(0, playerSpriteList.Count);
+            sprite = playerSpriteList[randomIndex];
+        }
+        else
+        {
+            int randomIndex = UnityEngine.Random.Range(0, easyList.Count);
+            sprite = easyList[randomIndex];
+        }
+        return sprite;
+    }
+    private void SetSpriteImage(Transform _parent, List<GameObject> _popList, int _player) // object pooling... todo 
     { // 매개변수를 이용해 각 Player의 Sprite와 PushPop Button 세팅
-        int randomIndex = UnityEngine.Random.Range(0, sprites.Length);
+        SpriteListSet();
 
-        Sprite sprite = sprites[randomIndex];
+        Sprite sprite = GetSpriteName(_player);
         PushPop.Instance.boardSprite = sprite;
         // Sprite 이름에서 "(Clone)" 부분을 제거
         string spriteName = sprite.name.Replace("(Clone)", "").Trim();
@@ -146,6 +186,7 @@ public class MultiManager : MonoBehaviour, IGame
         }
     }
     #endregion
+    #region Game Interface
     public void Init()
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
         resultPanel.SetActive(false);
@@ -159,10 +200,16 @@ public class MultiManager : MonoBehaviour, IGame
         gameTimer.TimerText.text = $"{(int)gameTimer.CurrentTime}";
         bNoTimePlaying = false;
         isEndGame = false;
+        isFever = false;
 
         // pushpop setting
         popButtonList1P.Clear();
         popButtonList2P.Clear();
+
+        // spriteList setting
+        spriteList1P.Clear();
+        spriteList2P.Clear();
+        SpriteListSet();
 
         // quit button setting
         quitButtonClick[(int)Player.Player1] = false;
@@ -192,8 +239,8 @@ public class MultiManager : MonoBehaviour, IGame
     { // OnEnable() bubble size, board size, pushpopbutton size, pushpop percentage, etc. setting 관련
         // AudioManager.instance.SetAudioClip_BGM(1);
         // 버튼 사이즈 설정
-        PushPop.Instance.buttonSize = new Vector2(56.8f, 56.8f);
-        PushPop.Instance.percentage = 0.476f;
+        PushPop.Instance.buttonSize = new Vector2(56.7f, 56.7f);
+        PushPop.Instance.percentage = 0.47f;
         GameManager.Instance.BoardSize = new Vector2(500f, 500f);
 
         // 프로필 세팅, 이미지 caching으로 바꿔줄 것, 처음 시작 시 1p imageMode = true, defaultIndex = 1일 때 boy로 뜸 왤까요... todo
@@ -233,8 +280,8 @@ public class MultiManager : MonoBehaviour, IGame
         gameTimer.TimerStart(); // remaining timer
 
         // board pos setting
-        SetSpriteImage(boardTransform[0], popButtonList1P);
-        SetSpriteImage(boardTransform[1], popButtonList2P);
+        SetSpriteImage(boardTransform[0], popButtonList1P, 1);
+        SetSpriteImage(boardTransform[1], popButtonList2P, 2);
         boardTransform[0].transform.GetChild(0).transform.localPosition = bottomPos[0];
         boardTransform[1].transform.GetChild(0).transform.localPosition = bottomPos[1];
 
@@ -285,7 +332,7 @@ public class MultiManager : MonoBehaviour, IGame
         Time.timeScale = 0f;
         resultPanel.SetActive(true);
     }
-
+    #endregion
     #region Multi Game Setting
     public void RepeatGameLogic()
     { // 남은 시간이 있고, 플레이어가 PushPop button을 다 눌렀을 때
@@ -299,7 +346,8 @@ public class MultiManager : MonoBehaviour, IGame
         {
             StopCoroutine(upperBubbleCoroutine);
         }
-        upperTimer = 12f;
+        // TenCount가 true면 10초 미만이 남은 상태로 피버모드 돌입
+        upperTimer = gameTimer.TenCount ? 8f : 12f;
         upperBubbleCoroutine = StartCoroutine(UpperBubble_Co());
     }
 
@@ -315,7 +363,7 @@ public class MultiManager : MonoBehaviour, IGame
             Destroy(boardTransform[1].transform.GetChild(0).gameObject);    // 지금 오브젝트 풀링의 List를 받아올 수 없는 구조라서 일단 Destroy로 했음, 추후 수정해야함
 
             // Sprite 배열로 각 플레이어들에게 랜덤한 Sprite 부여 및 Pushpop 생성
-            SetSpriteImage(boardTransform[1], popButtonList2P);
+            SetSpriteImage(boardTransform[1], popButtonList2P, 2);
 
             // 새로운 sprite, popButton 포지션 설정
             boardTransform[1].transform.GetChild(1).transform.localPosition = bottomPos[1]; // Destroy한 객체는 다음 프레임에 삭제됨
@@ -329,7 +377,7 @@ public class MultiManager : MonoBehaviour, IGame
             Destroy(boardTransform[0].transform.GetChild(0).gameObject);
 
             // Sprite 배열로 각 플레이어들에게 랜덤한 Sprite 부여 및 Pushpop 생성
-            SetSpriteImage(boardTransform[0], popButtonList1P);
+            SetSpriteImage(boardTransform[0], popButtonList1P, 1);
 
             // 새로운 sprite, popButton 포지션 설정
             boardTransform[0].transform.GetChild(1).transform.localPosition = bottomPos[0];
@@ -365,6 +413,21 @@ public class MultiManager : MonoBehaviour, IGame
             }
         }
     }
+
+    public IEnumerator FeverMode()
+    {
+        isFever = true;
+        Vector2 shakePos;
+        while(gameTimer.TenCount)
+        {
+            float shakePosX = UnityEngine.Random.Range(-5, 6);
+            float shakePosY = UnityEngine.Random.Range(-5, 6);
+            shakePos = new Vector2(shakePosX, shakePosY);
+            upperBubbleObject.transform.localPosition = upperPos[(int)playerTurn] + shakePos;
+            yield return null;
+        }
+        FeverCoroutine = null;
+    }
     #endregion
     #region UpperBubble
     private IEnumerator UpperBubble_Co()
@@ -382,19 +445,21 @@ public class MultiManager : MonoBehaviour, IGame
                 lastSpriteIndex = spriteIndex; // 마지막으로 변경된 스프라이트 인덱스 업데이트
             }
 
+            float rotSpeed = gameTimer.TenCount ? 360f : 30f;
+            float rotAngle = gameTimer.TenCount ? 360f : 15f;
             // Z축 회전 처리
             if (rotateDirection)
             {
-                rotationZ += Time.deltaTime * 30; // 속도 조절
-                if (rotationZ > 15)
+                rotationZ += Time.deltaTime * rotSpeed; // 속도 조절
+                if (rotationZ > rotAngle)
                 {
                     rotateDirection = !rotateDirection;
                 }
             }
             else
             {
-                rotationZ -= Time.deltaTime * 30; // 속도 조절
-                if (rotationZ < -15)
+                rotationZ -= Time.deltaTime * rotSpeed; // 속도 조절
+                if (rotationZ < -rotAngle)
                 {
                     rotateDirection = !rotateDirection;
                 }
@@ -413,12 +478,20 @@ public class MultiManager : MonoBehaviour, IGame
 
     private int GetSpriteIndexByTimer(float timer)
     { // upperBubble sprite index return
-        if (timer < 2) return 5;
-        if (timer < 4) return 4;
-        if (timer < 6) return 3;
-        if (timer < 8) return 2;
-        if (timer < 10) return 1;
+        float fever = gameTimer.TenCount ? 0.7f : 1f;
+        if (timer < 2 * fever) return 5;
+        if (timer < 4 * fever) return 4;
+        if (timer < 6 * fever) return 3;
+        if (timer < 8 * fever) return 2;
+        if (timer < 10 * fever) return 1;
         return 0; // Default sprite
+    }
+    #endregion
+    #region BottomBubble
+    public void BottomBubbleTouch()
+    { // Bottom Bubble, 밑에 큰 방울을 터치할 때마다 상단 방울의 시간이 줄어듦
+        AudioManager.instance.SetCommonAudioClip_SFX(5);
+        upperTimer -= 0.1f;
     }
     #endregion
     #region Waterfall Animation

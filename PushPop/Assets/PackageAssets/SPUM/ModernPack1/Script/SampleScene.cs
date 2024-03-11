@@ -25,7 +25,7 @@ public class SampleScene : MonoBehaviour
             }
         }
     }
-
+    //무브 스테이트 설정.
     public void SetMoveState (int num)
     {
         Debug.Log(num);
@@ -36,12 +36,12 @@ public class SampleScene : MonoBehaviour
         switch(num)
         {
             case 0:
-            _playerManagers._nowObj._charMS = 3f;
+            _playerManagers._nowObj._charMS = 500f;
             tAnim.SetFloat("RunNumber",0);
             break;
 
             case 1:
-            _playerManagers._nowObj._charMS = 6f;
+            _playerManagers._nowObj._charMS = 500f;
             tAnim.SetFloat("RunNumber",0.5f);
             break;
 
