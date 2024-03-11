@@ -206,9 +206,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1982998393}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: SelectMold_BackBtn_Clicked
+      - m_Target: {fileID: 747097066}
+        m_TargetAssemblyTypeName: MemoryCanvas, Assembly-CSharp
+        m_MethodName: HelpPanelBackButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4954,7 +4954,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 147524791}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 747097066}
+        m_TargetAssemblyTypeName: MemoryCanvas, Assembly-CSharp
+        m_MethodName: MultiBackButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &147524791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21187,61 +21199,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 563333646}
-        m_TargetAssemblyTypeName: PushPush_Result, Assembly-CSharp
-        m_MethodName: Success_BackBtn_Clicked
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1982998393}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: Enable_Objects
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 989560281}
-        m_TargetAssemblyTypeName: PuzzleLozic, Assembly-CSharp
-        m_MethodName: ClearPieceList
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 353874970}
-        m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
-        m_MethodName: BtnAllClear
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1982998393}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: GoOutBtn_Clicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -22784,15 +22748,15 @@ MonoBehaviour:
   BackButton: {fileID: 147524788}
   HelpButton: {fileID: 1667369874}
   Ready: {fileID: 1451424544}
-  ReadyProfileSetting: {fileID: 0}
+  ReadyProfileSetting: {fileID: 1451424546}
   MemoryGame: {fileID: 1934368165}
-  memoryManager: {fileID: 0}
+  memoryManager: {fileID: 1934368167}
   HintGuidePanel: {fileID: 408894354}
   ResultPanel: {fileID: 432947603}
   WarningPanel: {fileID: 131029961}
   GameReadyPanel: {fileID: 1430284101}
   HelpPanel: {fileID: 986984626}
-  GameReadyPanelText: {fileID: 0}
+  GameReadyPanelText: {fileID: 35825807}
 --- !u!114 &747097067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46373,13 +46337,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1982998393}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: CancelBtn_Clicked
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -51619,7 +51583,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1667369877}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 747097066}
+        m_TargetAssemblyTypeName: MemoryCanvas, Assembly-CSharp
+        m_MethodName: HelpPanelButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1667369877
 MonoBehaviour:
   m_ObjectHideFlags: 0
