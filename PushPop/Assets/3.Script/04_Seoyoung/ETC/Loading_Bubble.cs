@@ -58,7 +58,7 @@ public class Loading_Bubble : MonoBehaviour
                 }
                 else
                 {//처음 게임 시작할때 그 위치에서부터 코루틴 시작
-                    StartCoroutine(Loading_MoveUp_co());
+                    StartCoroutine(Main_MoveUp_co());
                     bisStart = false;
                 }
                 break;
@@ -87,10 +87,11 @@ public class Loading_Bubble : MonoBehaviour
         {
 
 
-            if (moveTime >= Random.Range(1, 3))
+            if (moveTime >= Random.Range(1f, 3f))
             {
                 upSpeed = Random.Range(2f, 5f);
                 moveRange = Random.Range(-3f, 3f);
+
                 moveTime = 0f;
             }
 
