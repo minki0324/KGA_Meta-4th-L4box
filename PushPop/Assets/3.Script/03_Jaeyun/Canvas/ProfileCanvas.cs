@@ -110,11 +110,7 @@ public class ProfileCanvas : MonoBehaviour
     public void ProfileIconSelectBackButton()
     { // 프로필 아이콘 선택 - 뒤로가기
         AudioManager.instance.SetCommonAudioClip_SFX(3);
-
-        if (ProfileManager.Instance.WarningCoroutine != null)
-        { // warning print coroutine stop
-            ProfileManager.Instance.StopCoroutine(ProfileManager.Instance.WarningCoroutine);
-        }
+        StopAllCoroutines();
 
         inputFieldCheck.WarningLog.gameObject.SetActive(false);
         CreateImage.SetActive(true);
@@ -204,11 +200,7 @@ public class ProfileCanvas : MonoBehaviour
     { // 이름 입력하기 - 뒤로가기
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
-
-        if (ProfileManager.Instance.WarningCoroutine != null)
-        { // warning print coroutine stop
-            ProfileManager.Instance.StopCoroutine(ProfileManager.Instance.WarningCoroutine);
-        }
+        StopAllCoroutines();
 
         if (!ProfileManager.Instance.isUpdate)
         { // 프로필 생성 시

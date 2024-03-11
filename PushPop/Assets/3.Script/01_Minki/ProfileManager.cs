@@ -75,8 +75,6 @@ public class ProfileManager : MonoBehaviour
     public string TempProfileName = string.Empty; // Profile 등록할 때 사용할 임시 ProfileName
     public bool TempImageMode = true; // profile 이미지 등록 시 true, 사진 찍기 시 false
 
-    public Coroutine WarningCoroutine = null; // 닉네임, 이미지 선택 체크 시 사용
-
     #region Unity Callback
     private void Awake()
     {
@@ -217,10 +215,6 @@ public class ProfileManager : MonoBehaviour
         { // 이미지 고르기 버튼 클릭 시
             if (!isImageSelect)
             { // 이미지 선택을 안했을 때
-                if (WarningCoroutine != null)
-                {
-                    StopCoroutine(WarningCoroutine);
-                }
                 PrintErrorLog(_nameLog, "이미지를 선택해주세요.");
 
                 return false;
@@ -244,74 +238,6 @@ public class ProfileManager : MonoBehaviour
                 return true;
             }
         }
-
-        /*
-        if (!isUpdate)
-        { // profile 생성 시
-            if (!_isIconMode)
-            { // 사진 찍기 버튼 눌렀을 때
-                //SetImageMode(_isFirstPlayer, false);
-                AddProfileImage();
-
-                return true;
-            }
-            else
-            { // 이미지 고르기 버튼 눌렀을 때
-                if (!isImageSelect)
-                { // 이미지 선택을 안했을 때
-                    if (WarningCoroutine != null)
-                    {
-                        StopCoroutine(WarningCoroutine);
-                    }
-                    PrintErrorLog(_nameLog, "이미지를 선택해주세요.");
-                    
-                    return false;
-                }
-                else
-                { // 선택한 이미지가 있을 때
-                    //SetImageMode(_isFirstPlayer, true);
-                    AddProfile(profileIndex, _isIconMode); // defaultimage add
-
-                    // 전달받은 profile Index로 Profile Image 설정
-                    SQL_Manager.instance.SQL_AddProfileImage(TempImageIndex, UID, TempUserIndex);
-                    return true;
-                }
-            }
-        }
-        else
-        { // profile 수정 시
-            if (!_isIconMode)
-            { // 사진찍기 모드 눌렀을 때
-                //SetImageMode(_isFirstPlayer, false);
-                AddProfileImage();
-
-                return true;
-            }
-            else if (_isIconMode)
-            { // 이미지 고르기 버튼 눌렀을 때
-                if (!isImageSelect)
-                { // 선택한 이미지가 없을 때
-                    if (WarningCoroutine != null)
-                    {
-                        StopCoroutine(WarningCoroutine);
-                    }
-                    PrintErrorLog(_nameLog, "이미지를 선택해주세요.");
-
-                    return false;
-                }
-                else
-                { // 선택한 이미지가 있을 때
-                    //SetImageMode(_isFirstPlayer, true);
-                    // 1P인지 2P인지 체크 후 Profile Image에 전달
-                    profileIndex = _isFirstPlayer ? FirstPlayerIndex : SecondPlayerIndex; // isfirstplayer gamemode로 설정 가능
-                    AddProfile(profileIndex, _isIconMode); // 프로필을 등록하고 Index 설정
-                    SQL_Manager.instance.SQL_UpdateProfile(profileIndex, TempProfileName, UID, TempImageIndex); // 전달받은 profile Index로 Profile Image 수정
-
-                    return true;
-                }
-            }
-        }
-        */
     }
 
     private void SetImageMode(bool isFirstPlayer, bool isImageMode)
@@ -379,11 +305,8 @@ public class ProfileManager : MonoBehaviour
     #region Warning Log Output
     public void PrintErrorLog(TMP_Text _warningLog, string _logText)
     { // InputField Check 후 Error Log 띄우는 method
-        if (WarningCoroutine != null)
-        {
-            StopCoroutine(WarningCoroutine);
-        }
-        WarningCoroutine = StartCoroutine(PrintWarningDialog_Co(_warningLog, _logText));
+        StopAllCoroutines();
+        StartCoroutine(PrintWarningDialog_Co(_warningLog, _logText));
     }
 
     private IEnumerator PrintWarningDialog_Co(TMP_Text _warningLog, string _logText)
@@ -394,7 +317,6 @@ public class ProfileManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
 
         _warningLog.gameObject.SetActive(false);
-        WarningCoroutine = null;
     }
     #endregion
 }

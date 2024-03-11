@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 
 public class MemoryPushpop : MonoBehaviour
-{
+{ // Memeory PushPop Button Prefabs
     private Image _myImage;
     public bool isCorrect;
     private Button button;
@@ -95,9 +95,8 @@ public class MemoryPushpop : MonoBehaviour
         if (MemoryManager.Instance.Life == 0)
         {//결과창호출
             //모든라이프가 소진해서 패배
-            MemoryManager.Instance.Result();
+            MemoryManager.Instance.GameEnd();
         }
-
     }
 
 
@@ -115,20 +114,20 @@ public class MemoryPushpop : MonoBehaviour
         memoryBoard.BtnAllStop(); //버튼동작정지
                 
         AudioManager.instance.SetAudioClip_SFX(4, false);
-        MemoryManager.Instance.PlayStartPanel("훌륭 해요!");//애니메이션 멘트재생
+        MemoryManager.Instance.PlayStartPanel("훌륭해요!");
         yield return new WaitForSeconds(2f);
-        MemoryManager.Instance.currentStage++; //스테이지 Index증가
-        Debug.Log(MemoryManager.Instance.currentStage);
+        MemoryManager.Instance.CurrentStage++; //스테이지 Index증가
+        Debug.Log(MemoryManager.Instance.CurrentStage);
         //준비된 스테이지 < 현재스테이지
-         if(MemoryManager.Instance.endStageIndex < MemoryManager.Instance.currentStage)
+         if(MemoryManager.Instance.EndStageIndex < MemoryManager.Instance.CurrentStage)
         {
             //결과창호출
             //모든스테이지 클리어 했을때
-            MemoryManager.Instance.Result();
+            //MemoryManager.Instance.Result();
             yield break;
         }
         Destroy(memoryBoard.gameObject); //현재보드 지우기
-        MemoryManager.Instance.SetStageIndex(); //스테이지 텍스트 문구변경
+        MemoryManager.Instance.StageText.text = $"{MemoryManager.Instance.CurrentStage} 단계";
 
         //다음스테이지?로이동(새로운보드 꺼내주기) manager에서 
         MemoryManager.Instance.CreatBoard();
@@ -144,7 +143,7 @@ public class MemoryPushpop : MonoBehaviour
     { //게임시작, 혹은 힌트버튼누를때 정답 버튼을 알려주는 메소드
         ani.SetTrigger("isBlink");
 
-        if (MemoryManager.Instance.currentStage % 5 != 0)
+        if (MemoryManager.Instance.CurrentStage % 5 != 0)
         {
             AudioManager.instance.SetAudioClip_SFX(2, false);
         }

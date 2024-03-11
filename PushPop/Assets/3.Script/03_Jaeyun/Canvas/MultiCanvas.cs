@@ -78,23 +78,12 @@ public class MultiCanvas : MonoBehaviour
     }
     #endregion
     #region Side Panel
-    public void HelpPanelButton()
-    { // 도움말
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-
-        HelpPanel.SetActive(true);
-    }
-
     public void MultiBackButton()
     { // 뒤로가기
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.SelectPlayer = Player.Player1;
         GameManager.Instance.GameMode = GameMode.None;
-
-        if (GameManager.Instance.ShutdownCoroutine != null)
-        {
-            GameManager.Instance.StopCoroutine(GameManager.Instance.ShutdownCoroutine);
-        }
+        GameManager.Instance.InGame = false;
 
         ReadyProfileSetting.IsSelect = false;
         ProfileSelectText.SetActive(true);
@@ -107,10 +96,15 @@ public class MultiCanvas : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public void HelpPanelButton()
+    { // 도움말
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        HelpPanel.SetActive(true);
+    }
+
     public void HelpPanelBackButton()
     {
         AudioManager.instance.SetCommonAudioClip_SFX(3);
-
         HelpPanel.SetActive(false);
     }
     #endregion

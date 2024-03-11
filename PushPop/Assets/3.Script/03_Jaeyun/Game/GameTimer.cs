@@ -9,7 +9,6 @@ public class GameTimer : MonoBehaviour
     public float CurrentTime = 60f; // 현재 시간
     public bool TenCount = false; // 남은 시간이 10초 이하인지 체크
     public bool EndTimer = false;
-    public Coroutine TimerCoroutine = null;
 
     private float compareTime = 0;
     private int setSign = 0;
@@ -28,7 +27,7 @@ public class GameTimer : MonoBehaviour
             compareTime = 10f;
             setSign = -1;
         }
-        TimerCoroutine = StartCoroutine(Timer_Co());
+        StartCoroutine(Timer_Co());
     }
 
     private IEnumerator Timer_Co()
@@ -54,7 +53,6 @@ public class GameTimer : MonoBehaviour
 
         CurrentTime = 0f; // 나중에 speed는 60f 50f 40f로 바꾸어줘야함
         EndTimer = true; // game end
-        TimerCoroutine = null;
     }
 
     private void SetTime()

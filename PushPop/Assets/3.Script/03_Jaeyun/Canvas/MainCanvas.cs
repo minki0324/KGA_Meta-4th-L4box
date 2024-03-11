@@ -115,6 +115,8 @@ public class MainCanvas : MonoBehaviour
                 break;
         }
 
+        GameManager.Instance.ShutdownTimer *= 60f;
+        GameManager.Instance.InGame = true;
         timeSettingPanel.SetActive(false);
         gameObject.SetActive(false);
     }
