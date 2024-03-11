@@ -21,7 +21,7 @@ public class CharacterSelection : NetworkBehaviour
     }
     private void Start()
     {
-        AvatarSpawner.instance.identity = identity;
+        AvatarManager.instance.identity = identity;
     }
     [Client]
     public void SelectCharacter(int _selectindex)

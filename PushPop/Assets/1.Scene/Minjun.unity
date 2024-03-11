@@ -14101,10 +14101,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7451f3ad8c9098b479a198926557b0a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameMode: 0
-  shutdownTimer: 0
-  isShutdown: 0
-  bombScript: {fileID: 0}
+  GameMode: 4
+  ShutdownTimer: 3
+  IsShutdown: 0
+  multiGame: {fileID: 0}
   speedTimer: {fileID: 1362194178}
   pushPush: {fileID: 1722141594}
   Memory: {fileID: 0}
@@ -15121,19 +15121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a04daa25f076b040b3c863e6e904f53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryDicts_List: []
-  scipts_List: []
-  iconDicts_List: []
-  helpScripts_List: []
-  badWord_Arr: []
-  vulgarism_Arr: []
-  categoryDict_fileName: category.json
-  iconDict_fileName: icon.json
-  helpScript_fileName: help.json
-  badWord_fileName: badword.json
-  vulgarism_fileName: vulgarism.json
-  Datapath: 
-  path: 
 --- !u!4 &503815430
 Transform:
   m_ObjectHideFlags: 0
@@ -20504,7 +20491,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &682645977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21843,17 +21830,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d1c2f7481d71974cb3e01b35bd8ff09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &728531315 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 728531315, guid: 35f0e7ca23966b7408a5d99e206dd904, type: 3}
-  m_PrefabInstance: {fileID: 1055929588}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aab4c8111b7c411b9b92cf3dbc5bd4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &736251235
@@ -31774,6 +31750,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1056543572, guid: 35f0e7ca23966b7408a5d99e206dd904, type: 3}
+      propertyPath: playerPrefab
+      value: 
+      objectReference: {fileID: 3208553545783850187, guid: a6404b432bf841e468bccc4f05fcb718, type: 3}
     - target: {fileID: 1584231244926160344, guid: 35f0e7ca23966b7408a5d99e206dd904, type: 3}
       propertyPath: m_Name
       value: Network_Manager
@@ -39745,9 +39725,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 728531315}
-        m_TargetAssemblyTypeName: Mirror.NetworkManager, Mirror
-        m_MethodName: OnStartClient
+      - m_Target: {fileID: 728531312}
+        m_TargetAssemblyTypeName: Connect_Network, Assembly-CSharp
+        m_MethodName: Start_Client
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -41993,99 +41973,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 171ae90e7d537e6469dd8169399cf24f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerImage1P: {fileID: 1579944847}
-  playerName1P: {fileID: 1456493966}
-  popList1P: []
-  inGameImage1P: {fileID: 1605465083}
-  inGameText1P: {fileID: 887998840}
-  playerImage2P: {fileID: 610289938}
-  tempPlayerImage2P: {fileID: 268153980}
-  playerName2P: {fileID: 1736377864}
-  tempPlayerName2P: {fileID: 11965890}
-  isSelect2P: 0
-  popList2P: []
-  inGameImage2P: {fileID: 248341772}
-  inGameText2P: {fileID: 45935721}
-  profilePanel: {fileID: 7821939632709582017, guid: 430151c1e98178042927bc315e867375, type: 3}
-  profileParent: {fileID: 1702421061}
-  profile2PName: 
-  profile2PInput: {fileID: 603508530}
-  iconPanel: {fileID: 595043346}
-  checkPanel: {fileID: 375374651}
-  imageIndex: 0
-  CaptureImage: {fileID: 0}
-  MainPanel: {fileID: 1375043748}
-  GamePanel: {fileID: 1658094499}
-  CreateNamePanel: {fileID: 1557997594}
-  CreateImagePanel: {fileID: 193567893}
-  SelectProfile: {fileID: 1467784640}
-  CurrentProfile: {fileID: 1875525557}
-  deletePanel: {fileID: 2025187032}
-  help_Canvas: {fileID: 1620062677}
-  main_Canvas: {fileID: 144625239}
-  WarningPanel: {fileID: 859693720}
-  nameErrorLog: {fileID: 1295401569}
-  imageLog: {fileID: 1743309796}
-  need2P: {fileID: 1784770409}
-  isStart: 0
-  turn: 0
-  atlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
-  sprites: []
-  upperTimer: 10
-  bottomTimer: 60
-  upperPos:
-  - {x: -500, y: 380}
-  - {x: 500, y: 380}
-  bottomPos:
-  - {x: -500, y: -100}
-  - {x: 500, y: -100}
-  upperBubble: {fileID: 583223725}
-  bottomBubble: {fileID: 1675531973}
-  Frame:
-  - {fileID: 743240167}
-  - {fileID: 1622026286}
-  waterfall: {fileID: 812334625}
-  timerText: {fileID: 1687270747}
-  upperBubbleSprite:
-  - {fileID: 21300000, guid: a1927ce4620d959468a86eeafe851e8a, type: 3}
-  - {fileID: 21300000, guid: c07ca9f1ebdf5664c9e817b1144a0ae6, type: 3}
-  - {fileID: 21300000, guid: f79993a68d000b84b9a631c8dea7b2ab, type: 3}
-  - {fileID: 21300000, guid: fede0d47f04fc704aaaf634321d5962a, type: 3}
-  - {fileID: 21300000, guid: 24228e6a6eec5b14d8e7399bc9f1b35d, type: 3}
-  - {fileID: 21300000, guid: df8c9ca8870e2244fbcc116b419df9c7, type: 3}
-  result: {fileID: 1646558988}
-  readyPanel: {fileID: 1138857877}
-  readyText: {fileID: 573481329}
-  upperBubble_Bomb: {fileID: 0}
-  bottomBubble_Bomb: {fileID: 0}
-  cameraManager: {fileID: 0}
-  profileBtn: {fileID: 418758385}
-  gameStartBtn: {fileID: 628962907}
-  quitNormal_Sprite: {fileID: 21300000, guid: 911e8d9d9bbc39f4ea7954285f69455d, type: 3}
-  quitPressed_Sprite: {fileID: 21300000, guid: a65cc37934fc43445ab82708cdffb866, type: 3}
-  quitBtn:
-  - {fileID: 1374489456}
-  - {fileID: 1439568484}
-  changeBtn: {fileID: 1885069521}
-  selectBtn: {fileID: 418758383}
-  player2PInfo: {fileID: 0}
-  winTexts:
-  - {fileID: 1538512354}
-  - {fileID: 112542386}
-  winText: {fileID: 1980635313}
-  loseTexts:
-  - {fileID: 1702764945}
-  - {fileID: 1192190444}
-  loseText: {fileID: 1023646964}
-  winProfileImages:
-  - {fileID: 1391470515}
-  - {fileID: 1156441152}
-  winProfileImage: {fileID: 964437706}
-  loseProfileImages:
-  - {fileID: 704478459}
-  - {fileID: 645151796}
-  loseProfileImage: {fileID: 1156514588}
-  bNoTimePlaying: 0
 --- !u!224 &1391957085
 RectTransform:
   m_ObjectHideFlags: 0
@@ -50145,7 +50032,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd9b8a6ad230c2246a13602ae7fa5cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  captureImage: {fileID: 0}
   profile: {fileID: 0}
   bomb: {fileID: 0}
 --- !u!1 &1646558988
@@ -53169,6 +53055,7 @@ MonoBehaviour:
   puzzle: {fileID: 1415984646}
   frame: {fileID: 1891312044}
   decoPanel: {fileID: 761843702}
+  stageTitle: {fileID: 0}
   pieceCount: 1
   pushCount: 0
 --- !u!1 &1722921899
