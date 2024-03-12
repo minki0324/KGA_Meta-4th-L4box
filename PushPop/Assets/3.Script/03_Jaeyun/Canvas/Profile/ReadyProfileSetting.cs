@@ -53,11 +53,10 @@ public class ReadyProfileSetting : MonoBehaviour
         profileImage1P.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
         profileName1P.text = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName;
 
-
         switch (GameManager.Instance.GameMode)
         {
             case GameMode.Speed:
-                PlayerScore = Ranking.Instance.LoadPersonalTimer(0); // todo.. 바꿔줄것
+                PlayerScore = Ranking.Instance.LoadPersonalTimer();
                 int min = PlayerScore % 60;
                 int sec = PlayerScore / 60;
                 profileScore.text = $"{string.Format("{0:00}", min)}:{ string.Format("{0:00}", sec)}";
@@ -77,33 +76,40 @@ public class ReadyProfileSetting : MonoBehaviour
 
     private void RankInfoSetting()
     { // 랭킹 세팅
-        List<Image[]> frameImage = new List<Image[]>(); // multi 때문에 List로 선언
+        List<Image[]> rankImage = new List<Image[]>(); // multi 때문에 List로 선언
+        List<Image[]> framImage = new List<Image[]>();
         switch (GameManager.Instance.GameMode)
         {
             case GameMode.Speed:
+                rankImage.Add(this.rankImage);
+                framImage.Add(rankFrameImage);
+                Ranking.Instance.LoadTimer(rankScoreText, this.rankImage, rankProfileName);
                 break;
             case GameMode.Memory:
-                frameImage.Add(rankImage);
-                Ranking.Instance.LoadScore(rankScoreText, rankImage, rankProfileName);
+                rankImage.Add(this.rankImage);
+                framImage.Add(rankFrameImage);
+                Ranking.Instance.LoadScore(rankScoreText, this.rankImage, rankProfileName);
                 break;
             case GameMode.Multi:
-                frameImage.Add(winLankImage); // frameImage 0
-                frameImage.Add(loseLankImage); // frameImgae 1
+                rankImage.Add(winLankImage); // frameImage 0
+                rankImage.Add(loseLankImage); // frameImgae 1
+                framImage.Add(winFrameImage);
+                framImage.Add(loseFrameImage);
                 Ranking.Instance.LoadVersusResult(winProfileName, loseProfileName, winLankImage, loseLankImage);
                 break;
         }
 
-        for (int i = 0; i < frameImage.Count; i++)
+        for (int i = 0; i < rankImage.Count; i++)
         { // multi mode count = 2, other mode = 1
-            for (int j = 0; j < frameImage[i].Length; j++)
+            for (int j = 0; j < rankImage[i].Length; j++)
             { // 기록이 없을 때 Frame Image 꺼두기
-                if (frameImage[i][j].sprite.Equals(ProfileManager.Instance.NoneBackground))
+                if (rankImage[i][j].sprite == null)
                 {
-                    frameImage[i][j].enabled = false;
+                    framImage[i][j].enabled = false;
                 }
                 else
                 {
-                    frameImage[i][j].enabled = true;
+                    framImage[i][j].enabled = true;
                 }
             }
         }
