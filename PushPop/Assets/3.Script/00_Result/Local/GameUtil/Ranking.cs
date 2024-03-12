@@ -193,10 +193,10 @@ public class Ranking : MonoBehaviour
     /// <summary>
     /// RankList에 담겨져 있는 Rank들을 상위 3개만 출력하도록 정렬 후 매개변수로 받은 Text, Image에 프로필과 함께 출력해주는 Method
     /// </summary>
-    /// <param name="_Score"></param>
+    /// <param name="_score"></param>
     /// <param name="_image"></param>
     /// <param name="_name"></param>
-    public void LoadScore(TMP_Text[] _Score, Image[] _image, TMP_Text[] _name)
+    public void LoadScore(TMP_Text[] _score, Image[] _image, TMP_Text[] _name)
     {
         SQL_Manager.instance.SQL_ProfileListSet();
         LoadRanking();
@@ -210,17 +210,17 @@ public class Ranking : MonoBehaviour
 
         for (int i = 0; i < topRanks.Count; i++)
         { // 선택된 상위 3개의 랭크에 대해 text 배열을 업데이트.
-            if (i < _Score.Length)
+            if (i < _score.Length)
             {
-                _Score[i].text = topRanks[i].score.ToString();
+                _score[i].text = topRanks[i].score.ToString();
             }
         }
 
-        for (int i = topRanks.Count; i < _Score.Length; i++)
+        for (int i = topRanks.Count; i < _score.Length; i++)
         { // 만약 상위 3위를 채우지 못한 경우, 남은 텍스트 요소를 비움.
-            _Score[i].text = "";
+            _score[i].text = "";
             _name[i].text = "";
-            _image[i].sprite = ProfileManager.Instance.NoneBackground;
+            _image[i].sprite = null;
         }
 
         for (int i = 0; i < SQL_Manager.instance.ProfileList.Count; i++)
@@ -258,21 +258,20 @@ public class Ranking : MonoBehaviour
     /// <param name="_timer"></param>
     /// <param name="_image"></param>
     /// <param name="_name"></param>
-    /// <param name="_spriteName"></param>
-    public void LoadTimer(TMP_Text[] _timer, Image[] _image, TMP_Text[] _name, int _spriteName)
+    public void LoadTimer(TMP_Text[] _timer, Image[] _image, TMP_Text[] _name)
     {
         SQL_Manager.instance.SQL_ProfileListSet();
         LoadRanking();
 
         // 특정 spriteName에 대한 모든 타이머 기록을 찾아서 정렬하고 상위 3개를 선택.
         var topRanks = rankList
-            .Where(r => r.spriteName.Contains(_spriteName)) // 먼저 spriteName을 포함하는 Rank만 필터링
+            .Where(r => r.spriteName.Contains(GameManager.Instance.CurrentIcon)) // 먼저 spriteName을 포함하는 Rank만 필터링
             .Select(r => new
             {
                 Rank = r,
-                Timer = r.timer[r.spriteName.IndexOf(_spriteName)] // 해당 spriteName에 해당하는 타이머만 선택
+                Timer = r.timer[r.spriteName.IndexOf(GameManager.Instance.CurrentIcon)] // 해당 spriteName에 해당하는 타이머만 선택
             })
-            .Where(x => x.Rank.spriteName.Contains(_spriteName))
+            .Where(x => x.Rank.spriteName.Contains(GameManager.Instance.CurrentIcon))
             .OrderBy(x => x.Timer)
             .Take(3)
             .ToList();
@@ -283,7 +282,7 @@ public class Ranking : MonoBehaviour
             {
                 for (int j = 0; j < topRanks[i].Rank.spriteName.Count; j++)
                 {
-                    if (topRanks[i].Rank.spriteName[j] == _spriteName)
+                    if (topRanks[i].Rank.spriteName[j] == GameManager.Instance.CurrentIcon)
                     {
                         int sec = topRanks[i].Timer % 60;    //60으로 나눈 나머지 = 초
                         int min = topRanks[i].Timer / 60;
@@ -292,7 +291,7 @@ public class Ranking : MonoBehaviour
                     }
                     else
                     {
-                        _image[i].sprite = ProfileManager.Instance.NoneBackground;
+                        _image[i].sprite = null;
                         _timer[i].text = "";
                         _name[i].text = "";
                     }
@@ -302,7 +301,7 @@ public class Ranking : MonoBehaviour
 
         for (int i = topRanks.Count; i < _timer.Length; i++)
         { // 만약 상위 3위를 채우지 못한 경우, 남은 텍스트 요소를 비움.
-            _image[i].sprite = ProfileManager.Instance.NoneBackground;
+            _image[i].sprite = null;
             _timer[i].text = "";
             _name[i].text = "";
         }
@@ -363,18 +362,18 @@ public class Ranking : MonoBehaviour
         _image.sprite = ProfileManager.Instance.CacheProfileImage1P;
     }
 
-    public int LoadPersonalTimer(int _spriteName)
+    public int LoadPersonalTimer()
     { // speed mode timer 불러옴
         SQL_Manager.instance.SQL_ProfileListSet();
         LoadRanking();
 
-        Rank userRecord = rankList.FirstOrDefault(r => r.index.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName) && r.spriteName.Contains(_spriteName));
+        Rank userRecord = rankList.FirstOrDefault(r => r.index.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName) && r.spriteName.Contains(GameManager.Instance.CurrentIcon));
 
         if (userRecord != null)
         { // 기록이 있을 때
             for (int i = 0; i < userRecord.spriteName.Count; i++)
             {
-                if (userRecord.spriteName[i].Equals(_spriteName))
+                if (userRecord.spriteName[i].Equals(GameManager.Instance.CurrentIcon))
                 {
                     return userRecord.timer[i];
                 }
@@ -408,8 +407,8 @@ public class Ranking : MonoBehaviour
                 { // 프로필 삭제 기록이 있는 경우, 칸 정리
                     _winText[i].text = "";
                     _loseText[i].text = "";
-                    _winImage[i].sprite = ProfileManager.Instance.NoneBackground;
-                    _loseImage[i].sprite = ProfileManager.Instance.NoneBackground;
+                    _winImage[i].sprite = null;
+                    _loseImage[i].sprite = null;
 
                 }
                 else if (currentGame.Result)
@@ -429,8 +428,8 @@ public class Ranking : MonoBehaviour
             {
                 _winText[i].text = "";
                 _loseText[i].text = "";
-                _winImage[i].sprite = ProfileManager.Instance.NoneBackground;
-                _loseImage[i].sprite = ProfileManager.Instance.NoneBackground;
+                _winImage[i].sprite = null;
+                _loseImage[i].sprite = null;
             }
         }
     }

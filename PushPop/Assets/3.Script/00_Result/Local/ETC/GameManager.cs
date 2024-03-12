@@ -65,6 +65,17 @@ public class GameManager : MonoBehaviour, IGameMode_
     public Speed_Timer speedTimer = null;
     public PushPushManager pushPush;
     public MemoryManager MemoryManager = null;
+    
+
+    [Header("Speed Game")]
+    public int CurrentIcon = 0; // 선택한 아이콘
+    public Difficulty Difficulty = Difficulty.Easy;
+
+    public int boardName = 0; // mold name
+    public int currentTime = 0;
+    public Coroutine speedCreate = null;
+
+
 
     // Bubble
     [Header("Bubble Info")]
@@ -113,11 +124,6 @@ public class GameManager : MonoBehaviour, IGameMode_
     [SerializeField] private Sprite[] btnSprites;
     public bool isStart = false;
   
-    public int boardName = 0; // mold name
-    public int currentTime = 0;
-    public Coroutine speedCreate = null;
-
-    public Difficulty Difficulty = Difficulty.Easy;
 
     #region Unity Callback
     private void Awake()
@@ -485,7 +491,7 @@ public class GameManager : MonoBehaviour, IGameMode_
 
     public void PrintSpeed(int _spriteName)
     {
-        Ranking.Instance.LoadTimer(printTimer, printImage, printName, _spriteName);
+        //Ranking.Instance.LoadTimer(printTimer, printImage, printName, _spriteName);
         Ranking.Instance.LoadTimer_Personal(printNamePersonal, printTimerPersonal, printImagePersonal, _spriteName);
     }
 

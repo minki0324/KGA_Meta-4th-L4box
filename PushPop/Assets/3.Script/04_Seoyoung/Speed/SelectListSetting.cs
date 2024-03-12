@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class SelectListSetting : MonoBehaviour
 { // category and select list 관리, pushpush, speed mode에서 사용
     public Sprite BoardIcon { get; private set; }
-    public int CurrentIcon = 0; // 선택한 아이콘
 
     [Header("Prefab")]
     [SerializeField] private GameObject selectIconObject = null;
@@ -100,7 +99,7 @@ public class SelectListSetting : MonoBehaviour
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         SelectIconInfo selectIconInfo = _selectIconButton.transform.parent.GetComponent<SelectIconInfo>();
 
-        CurrentIcon = _selectIcon;
+        GameManager.Instance.CurrentIcon = _selectIcon;
         selectIconImage.sprite = selectIconInfo.IconImage.sprite;
         selectIconText.text = selectIconInfo.IconText.text;
         BoardIcon = selectIconImage.sprite;
@@ -112,11 +111,11 @@ public class SelectListSetting : MonoBehaviour
     { // 다음 버튼
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         
-        if (CurrentIcon < iconButtonList.Count - 1)
+        if (GameManager.Instance.CurrentIcon < iconButtonList.Count - 1)
         {
-            CurrentIcon++;
+            GameManager.Instance.CurrentIcon++;
 
-            SelectIconInfo selectIconInfo = iconButtonList[CurrentIcon].transform.parent.GetComponent<SelectIconInfo>();
+            SelectIconInfo selectIconInfo = iconButtonList[GameManager.Instance.CurrentIcon].transform.parent.GetComponent<SelectIconInfo>();
             selectIconImage.sprite = selectIconInfo.IconImage.sprite;
             selectIconText.text = selectIconInfo.IconText.text;
             BoardIcon = selectIconImage.sprite;
@@ -127,11 +126,11 @@ public class SelectListSetting : MonoBehaviour
     { // 이전 버튼
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         
-        if (CurrentIcon > 0)
+        if (GameManager.Instance.CurrentIcon > 0)
         {
-            CurrentIcon--;
+            GameManager.Instance.CurrentIcon--;
 
-            SelectIconInfo selectIconInfo = iconButtonList[CurrentIcon].transform.parent.GetComponent<SelectIconInfo>();
+            SelectIconInfo selectIconInfo = iconButtonList[GameManager.Instance.CurrentIcon].transform.parent.GetComponent<SelectIconInfo>();
             selectIconImage.sprite = selectIconInfo.IconImage.sprite;
             selectIconText.text = selectIconInfo.IconText.text;
             BoardIcon = selectIconImage.sprite;
