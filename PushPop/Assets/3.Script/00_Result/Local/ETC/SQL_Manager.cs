@@ -11,6 +11,7 @@ using UnityEngine.UI;
 /// <summary>
 /// UID에 속해있는 Profile
 /// </summary>
+[System.Serializable]
 public class Profile
 {
     public string name { get; private set; }

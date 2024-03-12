@@ -263,6 +263,13 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             mainCanvas.CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
         }
         ProfileManager.Instance.isImageSelect = false;
+        for(int i = 0; i < SQL_Manager.instance.ProfileList.Count; i++)
+        {
+            if(SQL_Manager.instance.ProfileList[i].index.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex))
+            {
+                ProfileManager.Instance.myProfile = SQL_Manager.instance.ProfileList[i];
+            }
+        }
         BlockPanel.SetActive(false);
         CurrentProfile.SetActive(false);
         ExitButton.SetActive(false);

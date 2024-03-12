@@ -27,8 +27,7 @@ public class PlayerInfo
 public class ProfileManager : MonoBehaviour
 {
     public static ProfileManager Instance;
-    public NewProfileCanvas canvas;
-    public List<Profile> ddd;
+    public List<Profile> profileList;
     public Profile myProfile;
     [Header("UID")]
     [Space(5)]

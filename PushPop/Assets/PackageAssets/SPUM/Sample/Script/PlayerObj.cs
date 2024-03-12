@@ -39,12 +39,13 @@ public class PlayerObj : NetworkBehaviour
     // Update is called once per frame
     void Start()
     {
-        if (isLocalPlayer) { 
-        transform.position = Vector3.zero;
-        PlayerManager playerManager = FindObjectOfType<PlayerManager>();
-        playerManager.ConnectPrefabs = GetComponent<NetworkIdentity>();
-        playerManager._nowObj = this;
-            //SendProfile();
+        if (isLocalPlayer)
+        {
+            transform.position = Vector3.zero;
+            PlayerManager playerManager = FindObjectOfType<PlayerManager>();
+            playerManager.ConnectPrefabs = GetComponent<NetworkIdentity>();
+            playerManager._nowObj = this;
+            SendProfile();
         }
 
 
@@ -69,6 +70,16 @@ public class PlayerObj : NetworkBehaviour
         }
 
 
+    }
+
+    private void OnDestroy()
+    {
+        RemoveProfile();
+    }
+
+    private void OnApplicationQuit()
+    {
+        RemoveProfile();
     }
 
     void DoMove()
@@ -98,9 +109,17 @@ public class PlayerObj : NetworkBehaviour
     [Client]
     private void SendProfile()
     {
-        Profile profile = null; //여기에 자기프로필 추가
+        Profile profile = ProfileManager.Instance.myProfile;
         CMD_SendProfile(profile.name , profile.index , profile.imageMode , profile.defaultImage);
     }
+
+    [Client]
+    private void RemoveProfile()
+    {
+        Debug.Log("클라 들어옴?");
+        CMD_RemoveProfile(ProfileManager.Instance.myProfile.index);
+    }
+
     [Command]
     private void CMD_SendProfile(string profilename , int profileIndex , bool profileMode , int profileImage)
     {
@@ -114,10 +133,24 @@ public class PlayerObj : NetworkBehaviour
 
             TempModeIndex = 0;
         }
-        ProfileManager.Instance.ddd.Add(new Profile(profilename , profileIndex , TempModeIndex, profileImage));
-        for (int i = 0; i < ProfileManager.Instance.ddd.Count; i++)
+        ProfileManager.Instance.profileList.Add(new Profile(profilename , profileIndex , TempModeIndex, profileImage));
+        Debug.Log(ProfileManager.Instance.profileList.Count);
+        for (int i = 0; i < ProfileManager.Instance.profileList.Count; i++)
         {
-            Debug.Log(ProfileManager.Instance.ddd[i].name);
+            Debug.Log(ProfileManager.Instance.profileList[i].name);
+        }
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CMD_RemoveProfile(int profileIndex)
+    {
+        foreach (Profile profile in ProfileManager.Instance.profileList)
+        {
+            if (profile.index == profileIndex)
+            {
+                Debug.Log("CMD 들어옴?");
+                ProfileManager.Instance.profileList.Remove(profile);
+            }
         }
     }
 }
