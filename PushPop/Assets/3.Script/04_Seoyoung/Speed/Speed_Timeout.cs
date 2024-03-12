@@ -7,7 +7,7 @@ using TMPro;
 public class Speed_Timeout : MonoBehaviour
 {
     [SerializeField] private Canvas main_Canvas;
-    [SerializeField] private Speed_Canvas speed_Canvas;
+    [SerializeField] private SelectListSetting speed_Canvas;
 
 
     private RectTransform size;

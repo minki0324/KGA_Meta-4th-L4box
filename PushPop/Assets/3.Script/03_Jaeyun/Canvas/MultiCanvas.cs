@@ -104,7 +104,7 @@ public class MultiCanvas : MonoBehaviour
     }
 
     public void HelpPanelBackButton()
-    {
+    { // µµ¿ò¸» ´Ý±â
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         HelpPanel.SetActive(false);
     }

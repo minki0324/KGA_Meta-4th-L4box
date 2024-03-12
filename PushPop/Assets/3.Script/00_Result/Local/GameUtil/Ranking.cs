@@ -236,40 +236,20 @@ public class Ranking : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// RankList에 담겨 있는 본인의 기록을 조회하고, 기록이 있다면 rankList에 담긴 본인의 기록을 출력, 없다면 공백으로 출력
-    /// </summary>
-    /// <param name="_name"></param>
-    /// <param name="_Score"></param>
-    /// <param name="_image"></param>
-    public void LoadScore_Personal(TMP_Text _name, TMP_Text _Score, Image _image)
-    {
+    public int LoadPersonalScore()
+    { // memory mode score 불러옴
         SQL_Manager.instance.SQL_ProfileListSet();
         LoadRanking();
 
         // 게임매니저에 저장된 프로필 Infomation을 이용하여 rankList에 본인의 기록이 있는지 조회
-        var userRecord = rankList.FirstOrDefault(r => r.name == ProfileManager.Instance.ProfileName1P && r.index == ProfileManager.Instance.FirstPlayerIndex);
+        Rank userRecord = rankList.FirstOrDefault(r => r.name.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName) && r.index.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex));
 
         if (userRecord != null)
-        { // 사용자 기록이 있을 경우, 정보를 표시.
-            if (userRecord.score != 0)
-            {
-                _name.text = userRecord.name;
-                _Score.text = userRecord.score.ToString();
-            }
-            else if (userRecord.score == 0)
-            { // 사용자 기록이 없을 경우, 공백을 표시.
-                _name.text = userRecord.name;
-                _Score.text = "";
-            }
-        }
-        else
-        {
-            _name.text = ProfileManager.Instance.ProfileName1P;
-            _Score.text = "";
+        { // 기록이 있을 때
+            return userRecord.score;
         }
 
-        _image.sprite = ProfileManager.Instance.CacheProfileImage1P;
+        return 0;
     }
 
     /// <summary>
@@ -381,6 +361,27 @@ public class Ranking : MonoBehaviour
             _timer.text = "";
         }
         _image.sprite = ProfileManager.Instance.CacheProfileImage1P;
+    }
+
+    public int LoadPersonalTimer(int _spriteName)
+    { // speed mode timer 불러옴
+        SQL_Manager.instance.SQL_ProfileListSet();
+        LoadRanking();
+
+        Rank userRecord = rankList.FirstOrDefault(r => r.index.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName) && r.spriteName.Contains(_spriteName));
+
+        if (userRecord != null)
+        { // 기록이 있을 때
+            for (int i = 0; i < userRecord.spriteName.Count; i++)
+            {
+                if (userRecord.spriteName[i].Equals(_spriteName))
+                {
+                    return userRecord.timer[i];
+                }
+            }
+        }
+
+        return 0;
     }
 
     /// <summary>

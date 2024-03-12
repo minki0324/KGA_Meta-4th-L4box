@@ -12,14 +12,12 @@ public class MemoryManager : MonoBehaviour, IGame
 
     [Header("Panel")]
     [SerializeField] private GameObject resultPanel = null;
-    [SerializeField] private GameObject warngingPanel = null;   
+    [SerializeField] private GameObject warningPanel = null;   
     [SerializeField] private GameObject gameReadyPanel = null;
-    
-    [Header("Profile Info")]
-    [SerializeField] private TMP_Text profileName;
-    [SerializeField] private Image profileImage;
+    [SerializeField] public GameObject hintGuidePanel = null;
 
     [Header("Game Info")]
+    public TMP_Text StageText = null;
     [SerializeField] private Transform SapwnPos; // Board 생성 위치
     [SerializeField] private MemoryStageData[] stages; // Stage ScriptableObjects
     [SerializeField] private Animator stageStartImage = null; // animation 없어지면 gameObject로 받을 것... todo
@@ -30,26 +28,19 @@ public class MemoryManager : MonoBehaviour, IGame
     [HideInInspector] public int EndStageIndex = 0; // Stage 전체 개수
     [HideInInspector] public int Life = 3;
     [HideInInspector] public int Score = 0;
+    [SerializeField] private TMP_Text currentScoreText = null;
 
     [Header("Game Result")]
-    [SerializeField] private TMP_Text resultScoreText_del = null;
-    public TMP_Text StageText = null;
+    [SerializeField] private TMP_Text profileName = null;
+    [SerializeField] private Image profileImage = null;
     [SerializeField] private TMP_Text resultMassageText = null;
-    [SerializeField] private TMP_Text resultScoreText;
+    [SerializeField] private TMP_Text resultScoreText = null;
 
-    [SerializeField] private TMP_Text ReadyPanel_Text_del;
-
-    [Header("버튼")]
+    [Header("Button")]
+    public GameObject BackButton = null;
     [SerializeField] public Button Hintbutton;//힌트버튼
-    [SerializeField] public Button Backbutton;//뒤로가기버튼
-    [SerializeField] public Image hintbuttonIamge;//힌트버튼
-
-    [Header("로비OB")]
-    [SerializeField] private GameObject Lobby; //푸시푸시 스피드 메모리 선택창
-    [SerializeField] private Animator startAni; //게임시작 ,훌륭해요 재생해주는 판넬 Ani
 
     private int clearMessage;
-    private Coroutine readyGameCoroutine = null;
 
     private void Awake()
     {
@@ -68,6 +59,10 @@ public class MemoryManager : MonoBehaviour, IGame
     #region Game Interface
     public void Init()
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
+        // coroutine 초기화
+        StopAllCoroutines();
+        Destroy(CurrentBoard.gameObject);
+
         // life setting
         Life = 3;
         for (int i = 0; i < lifeObject.Length; i++)
@@ -84,16 +79,12 @@ public class MemoryManager : MonoBehaviour, IGame
 
         // socre setting
         Score = 0;
-        resultScoreText_del.text = $"{Score}";
-        HintButtonActive(); // hint button reset
-        
-        // coroutine 초기화
-        StopAllCoroutines();
+        currentScoreText.text = $"{Score}";
     }
 
     public void GameSetting()
     { // OnEnable() bubble size, board size, pushpopbutton size, pushpop percentage, etc. setting 관련
-        // Stage 시작 시 어느 스테이지부터 시작할지 추가된다면 필요
+        HintButtonActive(); // hint button Setting
     }
 
     public void GameStart()
@@ -106,8 +97,8 @@ public class MemoryManager : MonoBehaviour, IGame
       // ready
         yield return new WaitForSeconds(0.5f);
         AudioManager.instance.SetCommonAudioClip_SFX(1);
-        memoryCanvas.GameReadyPanelText.text = "준비~";
         memoryCanvas.GameReadyPanel.SetActive(true);
+        memoryCanvas.GameReadyPanelText.text = "준비~";
 
         yield return new WaitForSeconds(2f);
         AudioManager.instance.SetCommonAudioClip_SFX(2);
@@ -116,7 +107,6 @@ public class MemoryManager : MonoBehaviour, IGame
         yield return new WaitForSeconds(0.8f);
         memoryCanvas.GameReadyPanel.SetActive(false);
 
-        readyGameCoroutine = null;
         GameReadyStart();
     }
 
@@ -127,21 +117,13 @@ public class MemoryManager : MonoBehaviour, IGame
 
     public void GameEnd()
     {
-        StartCoroutine(Result_Co());
-    }
-
-    private IEnumerator Result_Co()
-    {
         AudioManager.instance.SetAudioClip_SFX(5, false);
-        // PlayStartPanel("게임 종료");
-
-        yield return new WaitForSeconds(2f); // animation
 
         // 게임 종료, 결과 저장
         Ranking.Instance.SetScore(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex, Score);
         profileImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
         profileName.text = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName;
-        resultScoreText.text = $"{Score}";
+        resultScoreText.text = $"{Score}점";
         clearMessage = (int)Ranking.Instance.CompareRanking(); // 점수 비교
         resultMassageText.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
 
@@ -163,7 +145,7 @@ public class MemoryManager : MonoBehaviour, IGame
 
     public void CreatBoard()
     { // 현재 스테이지에 맞는 보드판 소환
-        Instantiate(stages[CurrentStage - 1].board, SapwnPos.position, Quaternion.identity, gameObject.transform);
+        Instantiate(stages[CurrentStage - 1].board, SapwnPos.position, Quaternion.identity, SapwnPos.transform);
     }
 
     public MemoryStageData GetStage()
@@ -178,7 +160,7 @@ public class MemoryManager : MonoBehaviour, IGame
     #endregion
     #region Game Life, Score, Hint
     public void LifeRemove()
-    { // 틀렸을때 라이프 감소 메소드
+    { // 틀렸을때 라이프 감소
         for (int i = 0; i < lifeObject.Length; i++)
         {
             if (lifeObject[2 - i].activeSelf)
@@ -201,26 +183,28 @@ public class MemoryManager : MonoBehaviour, IGame
         }
     }
 
+    public void HintPanelActiveButton(bool _active)
+    { // 힌트 버튼, 힌트 - 나가기 버튼
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        hintGuidePanel.SetActive(_active);
+    }
+
     public void HintButtonBlinkRePlay()
-    { // 힌트 버튼, 힌트 사용
+    { // 힌트 버튼 - 힌트 사용
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        hintGuidePanel.SetActive(false);
+        
         AddScore(-300); //300점 차감
         HintButtonActive();
         CurrentBoard.Blink(true);
     }
 
     public void AddScore(int _score)
-    { // 스코어 _score만큼 추가하고 text변경 메소드
+    { // 스코어 _score만큼 추가하고 text 변경
         Score += _score;
-        resultScoreText_del.text = $"점수 : {Score}";
+        currentScoreText.text = $"{Score}";
         HintButtonActive();
     }
-    /*public void BlinkRePlay()
-    {
-        Score -= 300;
-        ScoreText.text = $"점수 : {Score}";
-        HintBtnActive();
-        currentBoard.Blink(true);
-    }*/
     #endregion
     #region Result Panel
     public void ResultExitButton()
@@ -228,22 +212,49 @@ public class MemoryManager : MonoBehaviour, IGame
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         AudioManager.instance.SetAudioClip_BGM(1);
         Time.timeScale = 1f;
-        // PlayStartPanel("게임 종료");
 
         memoryCanvas.Ready.SetActive(true);
-        memoryCanvas.BackButton.SetActive(true);
         memoryCanvas.HelpButton.SetActive(true);
+        BackButton.SetActive(true);
+        resultPanel.SetActive(false);
         gameObject.SetActive(false);
     }
 
     public void ResultRestartButton()
     { // Result Panel - 다시하기
         AudioManager.instance.SetCommonAudioClip_SFX(3);
+
+        resultPanel.SetActive(false);
         Time.timeScale = 1f;
 
         Init();
         GameSetting();
         GameStart();
+    }
+    #endregion
+    #region Warning Panel, BackButton
+    public void WarningPanelGoOutButton()
+    { // 나가기
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.instance.Stop_SFX();
+
+        Time.timeScale = 1f;
+
+        Init();
+        warningPanel.SetActive(false);
+        memoryCanvas.Ready.SetActive(true);
+        memoryCanvas.HelpButton.SetActive(true);
+        BackButton.SetActive(true);
+        gameObject.SetActive(false);
+    }
+
+    public void WarningPanelCancelButton()
+    { // 취소
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+
+        Time.timeScale = 1f;
+
+        warningPanel.SetActive(false);
     }
     #endregion
 }
