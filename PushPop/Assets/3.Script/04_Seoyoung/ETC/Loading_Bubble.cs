@@ -6,11 +6,11 @@ using UnityEngine.UI;
 
 //올라가는 버블
 public class Loading_Bubble : MonoBehaviour
-{  
+{
     RectTransform rectTransform;
 
-    MoveMode moveMode;
- 
+    public MoveMode moveMode;
+
     Vector2 randomPos;  //리스폰될 랜덤위치
     int randomSize; //리스폰될 때 정해질 랜덤사이즈 x,y 값
 
@@ -37,14 +37,13 @@ public class Loading_Bubble : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
         screenHeight = Camera.main.pixelHeight;
         screenWidth = Camera.main.pixelWidth;
-
-        moveMode = MoveMode.Main;
     }
 
 
     private void OnEnable()
     {
-        switch(moveMode)
+
+        switch (moveMode)
         {
             case MoveMode.Main:
                 bubbleSizeMin = 270;
@@ -54,19 +53,19 @@ public class Loading_Bubble : MonoBehaviour
                 {
                     randomPos = new Vector2(Random.Range(0, screenWidth), 0);
                     rectTransform.position = randomPos;
-                    StartCoroutine(Main_MoveUp_co());
                 }
                 else
-                {//처음 게임 시작할때 그 위치에서부터 코루틴 시작
-                    StartCoroutine(Main_MoveUp_co());
+                {//처음 게임 시작할때 그 위치에서부터 코루틴 시작           
                     bisStart = false;
                 }
+                StartCoroutine(Main_MoveUp_co());
                 break;
 
             case MoveMode.Loading:
-                randomPos = new Vector2(Random.Range(0, screenWidth), 0);
                 bubbleSizeMin = 100;
-                bubbleSizeMax = 300;
+                bubbleSizeMax = 400;
+
+                StartCoroutine(Loading_MoveUp_co());
                 break;
 
         }
@@ -85,8 +84,6 @@ public class Loading_Bubble : MonoBehaviour
 
         while (true)
         {
-
-
             if (moveTime >= Random.Range(1f, 3f))
             {
                 upSpeed = Random.Range(2f, 5f);
@@ -97,8 +94,8 @@ public class Loading_Bubble : MonoBehaviour
 
             if (sizeTime >= Random.Range(0.5f, 3f))
             {
-                sizeRandom =+ Random.Range(0.5f, 1f);
-                if (bisIncrease) bisIncrease = false;      
+                sizeRandom += Random.Range(0.5f, 1f);
+                if (bisIncrease) bisIncrease = false;
                 else bisIncrease = true;
 
                 sizeTime = 0f;
@@ -106,11 +103,11 @@ public class Loading_Bubble : MonoBehaviour
 
             if (bisIncrease)
             {//커지는 중이였으면 작아집시다             
-                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x - sizeRandom, rectTransform.sizeDelta.y - sizeRandom);      
+                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x - sizeRandom, rectTransform.sizeDelta.y - sizeRandom);
             }
             else
             {//작아지는 중이였으면 커집시다     
-                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x + sizeRandom, rectTransform.sizeDelta.y + sizeRandom);            
+                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x + sizeRandom, rectTransform.sizeDelta.y + sizeRandom);
             }
 
 
@@ -121,12 +118,12 @@ public class Loading_Bubble : MonoBehaviour
 
 
             //화면 벗어나면 끄기
-            if(rectTransform.position.x - (rectTransform.sizeDelta.x * 0.5) >= screenWidth || rectTransform.position.x + (rectTransform.sizeDelta.x * 0.5) <= 0)
+            if (rectTransform.position.x - (rectTransform.sizeDelta.x * 0.5) >= screenWidth || rectTransform.position.x + (rectTransform.sizeDelta.x * 0.5) <= 0)
             {
                 gameObject.SetActive(false);
             }
 
-            if(rectTransform.position.y - (rectTransform.sizeDelta.y *0.5) >= screenHeight)
+            if (rectTransform.position.y - (rectTransform.sizeDelta.y * 0.5) >= screenHeight)
             {
                 gameObject.SetActive(false);
             }
@@ -140,9 +137,60 @@ public class Loading_Bubble : MonoBehaviour
     }
     private IEnumerator Loading_MoveUp_co()
     {
+        float moveTime = 0f;
+        float sizeTime = 0f;
+
         while (true)
         {
+            if (moveTime >= Random.Range(1f, 3f))
+            {
+                upSpeed = Random.Range(7f, 15f);
+                moveRange = Random.Range(-3f, 3f);
 
+                moveTime = 0f;
+            }
+
+            if (sizeTime >= Random.Range(0.5f, 3f))
+            {
+                sizeRandom += Random.Range(0.1f, 0.3f);
+                if (bisIncrease) bisIncrease = false;
+                else bisIncrease = true;
+
+                sizeTime = 0f;
+            }
+
+
+            if (bisIncrease)
+            {//커지는 중이였으면 작아집시다             
+                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x - sizeRandom, rectTransform.sizeDelta.y - sizeRandom);
+            }
+            else
+            {//작아지는 중이였으면 커집시다     
+                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x + sizeRandom, rectTransform.sizeDelta.y + sizeRandom);
+            }
+
+            //위로 올라감
+            rectTransform.position = new Vector3(rectTransform.position.x, rectTransform.position.y + upSpeed, rectTransform.position.z);
+            //좌우로 방향 움직임
+            rectTransform.position = new Vector3(rectTransform.position.x + moveRange, rectTransform.position.y, rectTransform.position.z);
+
+
+
+            //화면 벗어나면 끄기
+            if (rectTransform.position.x - (rectTransform.sizeDelta.x * 0.5) >= screenWidth || rectTransform.position.x + (rectTransform.sizeDelta.x * 0.5) <= 0)
+            {
+                gameObject.SetActive(false);
+            }
+
+            if (rectTransform.position.y - (rectTransform.sizeDelta.y * 0.5) >= screenHeight)
+            {
+                gameObject.SetActive(false);
+            }
+
+
+            moveTime += Time.deltaTime;
+            sizeTime += Time.deltaTime;
+            yield return null;
         }
     }
 
