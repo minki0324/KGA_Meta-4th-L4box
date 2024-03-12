@@ -25323,17 +25323,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerScore: 0
   IsSelect: 0
-  profileImage1P: {fileID: 0}
-  profileName1P: {fileID: 0}
-  profileScore: {fileID: 0}
-  highRankFrameImage: {fileID: 0}
-  highRankProfileImage: {fileID: 0}
-  hightRankProfileNameText: {fileID: 0}
-  hightRankScoreText: {fileID: 0}
-  rankFrameImage: []
-  rankImage: []
-  rankProfileName: []
-  rankScoreText: []
+  profileImage1P: {fileID: 180881287}
+  profileName1P: {fileID: 266391906}
+  profileScore: {fileID: 1248295873}
+  rankFrameImage:
+  - {fileID: 2112599760}
+  - {fileID: 546344130}
+  - {fileID: 493837854}
+  rankImage:
+  - {fileID: 1705163197}
+  - {fileID: 1341565420}
+  - {fileID: 1621522201}
+  rankProfileName:
+  - {fileID: 1388441613}
+  - {fileID: 1776553291}
+  - {fileID: 1311615491}
+  rankScoreText:
+  - {fileID: 178151315}
+  - {fileID: 1971645699}
+  - {fileID: 1604037149}
   ProfileImage2P: {fileID: 0}
   ProfileName2P: {fileID: 0}
   winLankImage: []
@@ -28672,10 +28680,6 @@ MonoBehaviour:
   profileImage1P: {fileID: 1426595962}
   profileName1P: {fileID: 1099871304}
   profileScore: {fileID: 0}
-  highRankFrameImage: {fileID: 0}
-  highRankProfileImage: {fileID: 0}
-  hightRankProfileNameText: {fileID: 0}
-  hightRankScoreText: {fileID: 0}
   rankFrameImage: []
   rankImage: []
   rankProfileName: []
@@ -35335,10 +35339,6 @@ MonoBehaviour:
   profileImage1P: {fileID: 906469949}
   profileName1P: {fileID: 1716358567}
   profileScore: {fileID: 2101708150}
-  highRankFrameImage: {fileID: 0}
-  highRankProfileImage: {fileID: 0}
-  hightRankProfileNameText: {fileID: 0}
-  hightRankScoreText: {fileID: 0}
   rankFrameImage:
   - {fileID: 294525389}
   - {fileID: 1869211601}
@@ -56997,7 +56997,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentIcon: 0
-  speedCanvas: {fileID: 1214644974}
   selectIconObject: {fileID: 4741607185553568946, guid: 5b43dbe5357e43b468dd3240204d37b3, type: 3}
   categorySelectTitle: {fileID: 1119109721}
   selectCategoryScrollView: {fileID: 236027970}

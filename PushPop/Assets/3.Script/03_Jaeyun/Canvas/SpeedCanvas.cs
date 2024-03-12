@@ -35,7 +35,7 @@ public class SpeedCanvas : MonoBehaviour
     { // 난이도 버튼
         AudioManager.instance.SetAudioClip_BGM(1);
         AudioManager.instance.SetCommonAudioClip_SFX(3);
-        speedManager.Difficulty = (Difficulty)_difficulty;
+        GameManager.Instance.Difficulty = (Difficulty)_difficulty;
 
         SelectCategoryPanelScrollView.normalizedPosition = new Vector2(1f, 1f);
         SelectCategoryPanel.SetActive(true);

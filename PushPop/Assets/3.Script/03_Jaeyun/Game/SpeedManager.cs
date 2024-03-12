@@ -18,6 +18,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
     public void GameSetting()
     {
+        Difficulty = GameManager.Instance.Difficulty;
         switch (Difficulty)
         {
             case Difficulty.Easy:

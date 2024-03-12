@@ -237,7 +237,7 @@ public class Ranking : MonoBehaviour
     }
 
     public int LoadPersonalScore()
-    { // speed, memory mode score and timer 불러옴
+    { // memory mode score 불러옴
         SQL_Manager.instance.SQL_ProfileListSet();
         LoadRanking();
 
@@ -248,10 +248,8 @@ public class Ranking : MonoBehaviour
         { // 기록이 있을 때
             return userRecord.score;
         }
-        else
-        {
-            return 0;
-        }
+
+        return 0;
     }
 
     /// <summary>
@@ -363,6 +361,27 @@ public class Ranking : MonoBehaviour
             _timer.text = "";
         }
         _image.sprite = ProfileManager.Instance.CacheProfileImage1P;
+    }
+
+    public int LoadPersonalTimer(int _spriteName)
+    { // speed mode timer 불러옴
+        SQL_Manager.instance.SQL_ProfileListSet();
+        LoadRanking();
+
+        Rank userRecord = rankList.FirstOrDefault(r => r.index.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName) && r.spriteName.Contains(_spriteName));
+
+        if (userRecord != null)
+        { // 기록이 있을 때
+            for (int i = 0; i < userRecord.spriteName.Count; i++)
+            {
+                if (userRecord.spriteName[i].Equals(_spriteName))
+                {
+                    return userRecord.timer[i];
+                }
+            }
+        }
+
+        return 0;
     }
 
     /// <summary>

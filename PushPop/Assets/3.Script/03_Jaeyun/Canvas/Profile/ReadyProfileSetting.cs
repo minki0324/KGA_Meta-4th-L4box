@@ -19,14 +19,7 @@ public class ReadyProfileSetting : MonoBehaviour
     [SerializeField] private TMP_Text profileName1P = null;
     [SerializeField] private TMP_Text profileScore = null; // score & time
 
-    [Header("Only Speed Mode")]
-    [Header("High Score Info")] // only speed mode
-    [SerializeField] private Image highRankFrameImage = null;
-    [SerializeField] private Image highRankProfileImage = null;
-    [SerializeField] private TMP_Text hightRankProfileNameText = null;
-    [SerializeField] private TMP_Text hightRankScoreText = null;
-
-    [Header("Only Memory Mode")]
+    [Header("Only Speed, Memory Mode")]
     [Header("Rank Info")] // only memory mode
     [SerializeField] private Image[] rankFrameImage = null;
     [SerializeField] private Image[] rankImage = null;
@@ -59,16 +52,18 @@ public class ReadyProfileSetting : MonoBehaviour
         // 프로필 설정 1P
         profileImage1P.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
         profileName1P.text = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName;
-        PlayerScore = Ranking.Instance.LoadPersonalScore();
+
 
         switch (GameManager.Instance.GameMode)
         {
             case GameMode.Speed:
+                PlayerScore = Ranking.Instance.LoadPersonalTimer(0); // todo.. 바꿔줄것
                 int min = PlayerScore % 60;
                 int sec = PlayerScore / 60;
                 profileScore.text = $"{string.Format("{0:00}", min)}:{ string.Format("{0:00}", sec)}";
                 break;
             case GameMode.Memory:
+                PlayerScore = Ranking.Instance.LoadPersonalScore();
                 profileScore.text = $"{PlayerScore}점";
                 break;
         }
