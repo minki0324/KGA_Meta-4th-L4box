@@ -291,6 +291,9 @@ public class SQL_Manager : MonoBehaviour
 
             if (profileIndex > 0)
             {
+                string favorite_cmd = string.Format(@"INSERT INTO Favorite (UID, Profile_Index, FavoriteList) VALUES('{0}', '{1}', '{2}');", UID, profileIndex, null);
+                MySqlCommand favoritecmd_ = new MySqlCommand(favorite_cmd, connection);
+                favoritecmd_.ExecuteNonQuery();
                 return profileIndex; // 새로 생성된 프로필의 primary key 반환
             }
             else
@@ -802,7 +805,6 @@ public class SQL_Manager : MonoBehaviour
 
     public void PrintProfileImage(Image _profileImage, bool _imageMode, int _profileIndex)
     { // 프로필 인덱스에 따라 이미지 출력
-        int defaultImage = -1;
         if (_imageMode)
         { // 이미지 고르기 선택한 플레이어일 때
             for (int i = 0; i < ProfileList.Count; i++)

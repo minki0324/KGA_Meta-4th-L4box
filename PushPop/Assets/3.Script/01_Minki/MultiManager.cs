@@ -75,6 +75,7 @@ public class MultiManager : MonoBehaviour, IGame
     private float rotationZ = 0f; // 현재 Z 축 회전 각도
     private Coroutine readyGameCoroutine = null; // 게임 시작 코루틴
     private Coroutine upperBubbleCoroutine = null; // 물 차오르는 코루틴
+    private Coroutine bottomBubbleCoroutine = null; // 물 차오르는 코루틴
     private Coroutine resultCoroutine = null;
     public Coroutine FeverCoroutine = null;
 
@@ -505,22 +506,17 @@ public class MultiManager : MonoBehaviour, IGame
     #region BottomBubble
     public void BottomBubbleTouch()
     { // Bottom Bubble, 밑에 큰 방울을 터치할 때마다 상단 방울의 시간이 줄어듦
+        // 다중 입력 방지
+        if (bottomBubbleCoroutine != null) return;
+
         AudioManager.instance.SetCommonAudioClip_SFX(5);
-        if(Application.platform == RuntimePlatform.Android)
-        {
-            if(Input.touchCount > 0)
-            {
-                for(int i = 0; i < Input.touchCount; i++)
-                {
-                    Touch touch = Input.GetTouch(i);
-                    if(touch.fingerId > 2)
-                    {
-                        return;
-                    }
-                    upperTimer -= 0.1f;
-                }
-            }
-        }
+        bottomBubbleCoroutine = StartCoroutine(BottomBubbleTouch_Co());
+    }
+    private IEnumerator BottomBubbleTouch_Co()
+    {
+        yield return new WaitForSeconds(0.1f);
+        upperTimer -= 0.1f;
+        bottomBubbleCoroutine = null;
     }
     #endregion
     #region Waterfall Animation

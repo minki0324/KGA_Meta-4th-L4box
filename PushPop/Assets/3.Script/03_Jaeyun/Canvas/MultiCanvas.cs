@@ -63,6 +63,7 @@ public class MultiCanvas : MonoBehaviour
             return;
         }
 
+        SQL_Manager.instance.SQL_ProfileListSet();
         MultiGame.SetActive(true);
         HelpButton.SetActive(false);
         BackButton.SetActive(false);
