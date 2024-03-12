@@ -28,7 +28,8 @@ public class ProfileManager : MonoBehaviour
 {
     public static ProfileManager Instance;
     public NewProfileCanvas canvas;
-
+    public List<Profile> ddd;
+    public Profile myProfile;
     [Header("UID")]
     [Space(5)]
     private string uniqueID = string.Empty; // PlayerPrefs에 저장되는 고유 GUID;

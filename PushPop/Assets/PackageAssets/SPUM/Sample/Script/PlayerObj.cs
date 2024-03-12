@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Mirror;
 
 [System.Serializable]
 public class MyEvent : UnityEvent<PlayerObj.PlayerState>
@@ -10,7 +11,7 @@ public class MyEvent : UnityEvent<PlayerObj.PlayerState>
 }
 
 [ExecuteInEditMode]
-public class PlayerObj : MonoBehaviour
+public class PlayerObj : NetworkBehaviour
 {
     public SPUM_Prefabs _prefabs;
     public float _charMS;
@@ -38,11 +39,15 @@ public class PlayerObj : MonoBehaviour
     // Update is called once per frame
     void Start()
     {
-        if(_prefabs == null )
-        {
-            _prefabs = transform.GetChild(0).GetComponent<SPUM_Prefabs>();
+        if (isLocalPlayer) { 
+        transform.position = Vector3.zero;
+        PlayerManager playerManager = FindObjectOfType<PlayerManager>();
+        playerManager.ConnectPrefabs = GetComponent<NetworkIdentity>();
+        playerManager._nowObj = this;
+            //SendProfile();
         }
-        
+
+
         _stateChanged.AddListener(PlayStateAnimation);
 
 
@@ -89,5 +94,30 @@ public class PlayerObj : MonoBehaviour
         _goalPos = pos;
         _currentState = PlayerState.run;
         PlayStateAnimation(_currentState);
+    }
+    [Client]
+    private void SendProfile()
+    {
+        Profile profile = null; //여기에 자기프로필 추가
+        CMD_SendProfile(profile.name , profile.index , profile.imageMode , profile.defaultImage);
+    }
+    [Command]
+    private void CMD_SendProfile(string profilename , int profileIndex , bool profileMode , int profileImage)
+    {
+        int TempModeIndex;
+        if (profileMode)
+        {
+            TempModeIndex = 1;
+        }
+        else
+        {
+
+            TempModeIndex = 0;
+        }
+        ProfileManager.Instance.ddd.Add(new Profile(profilename , profileIndex , TempModeIndex, profileImage));
+        for (int i = 0; i < ProfileManager.Instance.ddd.Count; i++)
+        {
+            Debug.Log(ProfileManager.Instance.ddd[i].name);
+        }
     }
 }
