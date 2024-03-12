@@ -13,6 +13,8 @@ public class GameTimer : MonoBehaviour
     private float compareTime = 0;
     private int setSign = 0;
 
+    public Coroutine TimerCoroutine = null;
+
     public void TimerStart()
     { // StartCoroutine
         if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
@@ -27,7 +29,7 @@ public class GameTimer : MonoBehaviour
             compareTime = 10f;
             setSign = -1;
         }
-        StartCoroutine(Timer_Co());
+        TimerCoroutine = StartCoroutine(Timer_Co());
     }
 
     private IEnumerator Timer_Co()
@@ -53,6 +55,7 @@ public class GameTimer : MonoBehaviour
 
         CurrentTime = 0f;
         EndTimer = true; // game end
+        TimerCoroutine = null;
     }
 
     private void SetTime()

@@ -1,8 +1,9 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ProfileCanvas : MonoBehaviour
+public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 {
     [Header("Canvas")]
     [SerializeField] private MainCanvas mainCanvas = null;
@@ -49,6 +50,21 @@ public class ProfileCanvas : MonoBehaviour
 
         // audio PlayerPrefs setting ... todo
         AudioManager.instance.SetAudioClip_BGM(0);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.pointerPress != null && eventData.pointerPress.GetComponent<Button>() != null)
+        {
+            return;
+        }
+        else
+        {
+            if (ProfileIconSelect.activeSelf)
+            {
+                ProfileManager.Instance.isImageSelect = false;
+            }
+        }
     }
 
     #region Select
@@ -98,8 +114,9 @@ public class ProfileCanvas : MonoBehaviour
                 
                 CurrentProfile.SetActive(true);
             }
-
+            
             ProfileIconSelect.SetActive(false);
+            ProfileManager.Instance.isImageSelect = false;
         }
         else
         {
@@ -245,7 +262,7 @@ public class ProfileCanvas : MonoBehaviour
 
             mainCanvas.CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
         }
-
+        ProfileManager.Instance.isImageSelect = false;
         BlockPanel.SetActive(false);
         CurrentProfile.SetActive(false);
         ExitButton.SetActive(false);
@@ -305,4 +322,6 @@ public class ProfileCanvas : MonoBehaviour
         Application.Quit();
 #endif
     }
+
+ 
 }
