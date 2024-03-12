@@ -144,7 +144,7 @@ public class Loading_Bubble : MonoBehaviour
         {
             if (moveTime >= Random.Range(1f, 3f))
             {
-                upSpeed = Random.Range(7f, 15f);
+                upSpeed = Random.Range(10f, 25f);
                 moveRange = Random.Range(-3f, 3f);
 
                 moveTime = 0f;
