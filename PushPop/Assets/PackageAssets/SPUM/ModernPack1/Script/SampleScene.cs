@@ -36,12 +36,12 @@ public class SampleScene : MonoBehaviour
         switch(num)
         {
             case 0:
-            _playerManagers._nowObj._charMS = 500f;
+            _playerManagers._nowObj._charMS = 5f;
             tAnim.SetFloat("RunNumber",0);
             break;
 
             case 1:
-            _playerManagers._nowObj._charMS = 500f;
+            _playerManagers._nowObj._charMS = 8f;
             tAnim.SetFloat("RunNumber",0.5f);
             break;
 

@@ -36,6 +36,10 @@ public class SPUM_Prefabs : MonoBehaviour
     private void Awake() {
         // InitAnimPair();
     }
+    private void OnEnable()
+    {
+        transform.parent.GetComponent<PlayerObj>()._prefabs = this;
+    }
     private void Start() {
         UnitTypeChanged.AddListener(InitAnimPair);
     }

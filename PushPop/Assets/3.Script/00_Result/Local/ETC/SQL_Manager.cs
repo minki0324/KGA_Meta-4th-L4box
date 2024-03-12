@@ -80,7 +80,6 @@ public class SQL_Manager : MonoBehaviour
     public string DB_path = string.Empty;   // Json Path (DB)
     public int UID;                         
     public List<Profile> ProfileList = new List<Profile>();
-
     #region Unity Callback
     private void Awake()
     {
@@ -416,7 +415,7 @@ public class SQL_Manager : MonoBehaviour
                     int imageMode = reader.GetInt32("ImageMode");
                     int defaultImage = reader.IsDBNull(reader.GetOrdinal("DefaultIndex")) ? -1 : reader.GetInt32("DefaultIndex");
                     // 넘겨줄 리스트 Add해주기
-                    ProfileList.Add(new Profile(profileName, profileIndex, imageMode, defaultImage));
+                        ProfileList.Add(new Profile(profileName, profileIndex, imageMode, defaultImage));
                 }
                 if (!reader.IsClosed) reader.Close();
                 return;
