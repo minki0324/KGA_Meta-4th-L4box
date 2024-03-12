@@ -45,8 +45,7 @@ public class Loading_Bubble : MonoBehaviour
         
         switch (moveMode)
         {
-            case MoveMode.Main:
-        
+            case MoveMode.Main:        
                 bubbleSizeMin = 270;
                 bubbleSizeMax = 300;
 
@@ -63,8 +62,6 @@ public class Loading_Bubble : MonoBehaviour
                 break;
 
             case MoveMode.Loading:
-
-
                 bubbleSizeMin = 100;
                 bubbleSizeMax = 400;
 
@@ -97,7 +94,7 @@ public class Loading_Bubble : MonoBehaviour
 
             if (sizeTime >= Random.Range(0.5f, 3f))
             {
-                sizeRandom += Random.Range(0.5f, 1f);
+                sizeRandom = Random.Range(0.2f, 0.6f);
                 if (bisIncrease) bisIncrease = false;
                 else bisIncrease = true;
 
@@ -107,10 +104,20 @@ public class Loading_Bubble : MonoBehaviour
             if (bisIncrease)
             {//커지는 중이였으면 작아집시다             
                 rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x - sizeRandom, rectTransform.sizeDelta.y - sizeRandom);
+                if (rectTransform.sizeDelta.Equals(new Vector2(bubbleSizeMin, bubbleSizeMin)))
+                {
+                    bisIncrease = true;
+                    sizeTime = 0f;
+                }
             }
             else
             {//작아지는 중이였으면 커집시다     
                 rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x + sizeRandom, rectTransform.sizeDelta.y + sizeRandom);
+                if (rectTransform.sizeDelta.Equals(new Vector2(bubbleSizeMax, bubbleSizeMax)))
+                {
+                    bisIncrease = false;
+                    sizeTime = 0f;
+                }
             }
 
 

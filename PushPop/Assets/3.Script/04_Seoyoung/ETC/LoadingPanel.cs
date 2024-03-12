@@ -9,10 +9,6 @@ public class LoadingPanel : MonoBehaviour
     [SerializeField] private GameObject bubblePrefab;
     [SerializeField] private Loading_Bubble[] bubble_Array;
 
-    //그냥 전체 FADE용 배경
-    [SerializeField] private Image background;
-    private RectTransform background_Rect;
-
 
     //밑에서부터 FADE용 배경
     [SerializeField] private Image FadeBackground;
@@ -36,13 +32,13 @@ public class LoadingPanel : MonoBehaviour
         for (int i = 0; i < maxBubble; i++)
         {
             bubble_Array[i].moveMode = MoveMode.Loading;
-            bubble_Array[i].transform.position = new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), Random.Range(0f, 450f), 0f);
+            bubble_Array[i].transform.position = new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), Random.Range(-200f, 450f), 0f);
             bubble_Array[i].gameObject.SetActive(true);
         }
 
-        background.color = new Color(255f, 255f, 255f, 1f);
+      
         //StartCoroutine(Background_co());
-        StartCoroutine(BackgroundFade_co());
+        StartCoroutine(BackgroundFadeOut_co());
     }
 
     private void Update()
@@ -67,7 +63,6 @@ public class LoadingPanel : MonoBehaviour
     private void Init()
     {
         bubble_Array = new Loading_Bubble[maxBubble];
-        background_Rect = background.GetComponent<RectTransform>();
 
         for (int i = 0; i < maxBubble; i++)
         {
@@ -80,6 +75,38 @@ public class LoadingPanel : MonoBehaviour
         
     }
 
+
+    private IEnumerator BackgroundFadeOut_co()
+    {
+        yield return new WaitForSeconds(0.5f);
+        float visibility = 0.1f;
+        float cashing = 0.1f;
+        while(true)
+        {
+
+            if (visibility <= 0.35f)
+            {
+                visibility += 0.03f;
+                FadeBackground.material.SetFloat("_Visibility", visibility);
+                // yield return null;
+                yield return new WaitForSeconds(cashing);
+            }
+            else if (visibility > 0.3f && visibility < 5f)
+            {
+                visibility += 0.07f;
+                FadeBackground.material.SetFloat("_Visibility", visibility);
+                yield return null;
+            }
+            else
+            {
+                FadeBackground.material.SetFloat("_Visibility", 7f);
+                bisLoaded = true;
+                yield break;
+            }
+           
+            
+        }
+    }
 
     private IEnumerator BackgroundFade_co()
     {
@@ -100,21 +127,6 @@ public class LoadingPanel : MonoBehaviour
             //visibility -= Time.deltaTime;
             yield return null;
         }
-    }
-
-    private IEnumerator Background_co()
-    {
-        Color color = background.color;
-        while (color.a > 0f)
-        {
-            color.a -= Time.deltaTime / colorTime;
-            background.color = color;
-            //background_Rect.transform.position += new Vector3(0f, upSpeed, 0f);
-
-            yield return null;
-        }
-
-        bisLoaded = true;
     }
     #endregion
 }
