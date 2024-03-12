@@ -42,10 +42,11 @@ public class Loading_Bubble : MonoBehaviour
 
     private void OnEnable()
     {
-
+        
         switch (moveMode)
         {
             case MoveMode.Main:
+        
                 bubbleSizeMin = 270;
                 bubbleSizeMax = 300;
 
@@ -62,6 +63,8 @@ public class Loading_Bubble : MonoBehaviour
                 break;
 
             case MoveMode.Loading:
+
+
                 bubbleSizeMin = 100;
                 bubbleSizeMax = 400;
 

@@ -76,6 +76,8 @@ public class LoadingPanel : MonoBehaviour
             bub.SetActive(false);
             bubble_Array[i] = bub.GetComponent<Loading_Bubble>();
         }
+
+        
     }
 
 

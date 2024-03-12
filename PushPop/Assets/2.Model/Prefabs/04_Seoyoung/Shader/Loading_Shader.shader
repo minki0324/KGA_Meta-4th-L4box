@@ -30,6 +30,15 @@ Shader "UI/LoadingShader"
                 "LightMode" = "Universal2D"
             }
 
+        Stencil
+        {
+            Ref[_Stencil]
+            Comp NotEqual
+            Pass Replace
+        }
+
+
+
         // Render State
         Cull Off
     Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
