@@ -16,7 +16,7 @@ public class AudioManager : MonoBehaviour
 
     [Header("0 : 전체 / 1 : 배경 / 2 : 효과음")]
     [SerializeField]
-    private AudioSource[] audioSource_arr;
+    public AudioSource[] audioSource_arr;
 
     [SerializeField]
     private List<AudioClip> bgmClip_List;
