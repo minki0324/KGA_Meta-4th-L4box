@@ -39731,6 +39731,10 @@ MonoBehaviour:
   speedTimer: {fileID: 783137036}
   pushPush: {fileID: 0}
   MemoryManager: {fileID: 0}
+  CurrentIcon: 0
+  Difficulty: 50
+  boardName: 0
+  currentTime: 0
   bubbleCanvas: {fileID: 1885282151}
   bubblePrefab: {fileID: 8925204162082192838, guid: b1233b5acd8a67a4b9328d6e3efeedfb, type: 3}
   bubbleObject: []
@@ -39780,9 +39784,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1652f2efa5721a446892d51b273576dc, type: 3}
   - {fileID: 21300000, guid: 0607a023efa482e4d9055e78cf332f3d, type: 3}
   isStart: 0
-  boardName: 0
-  currentTime: 0
-  Difficulty: 50
 --- !u!4 &1175834500
 Transform:
   m_ObjectHideFlags: 0
@@ -44759,7 +44760,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2207fe8235348db4292945fe369a1cd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentIcon: 0
   selectIconObject: {fileID: 4741607185553568946, guid: 5b43dbe5357e43b468dd3240204d37b3, type: 3}
   categorySelectTitle: {fileID: 887775572}
   selectCategoryScrollView: {fileID: 1108976593}
@@ -54342,7 +54342,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1644448014}
         m_TargetAssemblyTypeName: MemoryCanvas, Assembly-CSharp
-        m_MethodName: MultiBackButton
+        m_MethodName: MemoryBackButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
