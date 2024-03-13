@@ -39,6 +39,8 @@ public class TitlePanel : MonoBehaviour
 
     [Header("ETC")]
     [SerializeField] private Button StartBtn;   //타이틀 패널의 버튼
+    int screenHeight;     //화면 세로 길이
+    int screenWidth;      //화면 가로 길이
 
     #region Unity Callback
 
@@ -54,9 +56,9 @@ public class TitlePanel : MonoBehaviour
 
     private void Update()
     {
-        for(int i =0; i<bubble_Array.Length; i++)
+        for (int i = 0; i < bubble_Array.Length; i++)
         {
-            if(!bubble_Array[i].gameObject.activeSelf)
+            if (!bubble_Array[i].gameObject.activeSelf)
             {
                 bubble_Array[i].gameObject.SetActive(true);
             }
@@ -69,12 +71,19 @@ public class TitlePanel : MonoBehaviour
 
     private void Init()
     {
+        //화면 크기(픽셀단위)초기화
+        screenHeight = Camera.main.pixelHeight;
+        screenWidth = Camera.main.pixelWidth;
+
         bubble_Array = new Loading_Bubble[maxBubble];
+
         for (int i = 0; i < maxBubble; i++)
         {
-            GameObject bub = Instantiate(bubblePrefab, new Vector3(Random.Range(100, Camera.main.pixelWidth - 100), Random.Range(100, Camera.main.pixelHeight - 100)), Quaternion.identity);
+            int rangeX = Random.Range(100, screenWidth - 100);
+            int rangeY = Random.Range(100, screenHeight - 100);
+            GameObject bub = Instantiate(bubblePrefab, new Vector3(rangeX, rangeY), Quaternion.identity);
             bub.transform.parent = Bubbles.transform;
-            bub.SetActive(true);
+
             bubble_Array[i] = bub.GetComponent<Loading_Bubble>();
             bubble_Array[i].moveMode = MoveMode.Main;
 
@@ -86,8 +95,12 @@ public class TitlePanel : MonoBehaviour
 
             bubble_Array[i].sizeRandomMin = sizeRandom_Min;
             bubble_Array[i].sizeRandomMax = sizeRandom_Max;
+            bubble_Array[i].gameObject.SetActive(true);
         }
+           
+
     }
+    
 
 
     private IEnumerator Init_co()
@@ -104,5 +117,5 @@ public class TitlePanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    #endregion
+#endregion
 }

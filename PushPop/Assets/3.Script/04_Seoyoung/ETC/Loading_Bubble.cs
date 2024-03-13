@@ -114,7 +114,13 @@ public class Loading_Bubble : MonoBehaviour
                 sizeTime = 0f;
             }
 
-          
+
+
+            //위로 올라감
+            rectTransform.position = new Vector3(rectTransform.position.x, rectTransform.position.y + upSpeed, rectTransform.position.z);
+            //좌우로 방향 움직임
+            rectTransform.position = new Vector3(rectTransform.position.x + moveRange, rectTransform.position.y, rectTransform.position.z);
+
 
 
             if (bisIncrease)
@@ -136,13 +142,6 @@ public class Loading_Bubble : MonoBehaviour
                     sizeTime = 0f;
                 }
             }
-
-
-            //위로 올라감
-            rectTransform.position = new Vector3(rectTransform.position.x, rectTransform.position.y + upSpeed, rectTransform.position.z);
-            //좌우로 방향 움직임
-            rectTransform.position = new Vector3(rectTransform.position.x + moveRange, rectTransform.position.y, rectTransform.position.z);
-
 
             //화면 벗어나면 게임오브젝트 끄기(완벽히 벗어난 경우 꺼짐)
             if (rectTransform.position.x - (rectTransform.sizeDelta.x * 0.5) >= screenWidth || rectTransform.position.x + (rectTransform.sizeDelta.x * 0.5) <= 0)
