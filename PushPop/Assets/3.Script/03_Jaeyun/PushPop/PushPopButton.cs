@@ -37,29 +37,33 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
     public void PushPopClick()
     {
         GameObject clickButton = this.gameObject;
-        if (GameManager.Instance.GameMode.Equals(GameMode.PushPush))
+        switch (GameManager.Instance.GameMode)
         {
-            GameManager.Instance.pushPush.pushCount++;
-            gameObject.GetComponent<Image>().raycastTarget = false;
+            case GameMode.PushPush:
+                GameManager.Instance.pushPush.pushCount++;
+                gameObject.GetComponent<Image>().raycastTarget = false;
+                break;
+            case GameMode.Speed:
+                break;
+            case GameMode.Multi:
+                if (player.Equals(0))
+                { // 1P ¼ÒÀ¯ ÆË ¹öÆ°
+                    GameManager.Instance.multiGame.popButtonList1P.Remove(clickButton);
+                }
+                else if (player.Equals(1))
+                { // 2P ¼ÒÀ¯ ÆË ¹öÆ°
+                    GameManager.Instance.multiGame.popButtonList2P.Remove(clickButton);
+                }
+                break;
         }
-        else if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
-        {
-            if (player.Equals(0))
-            { // 1P ¼ÒÀ¯ ÆË ¹öÆ°
-                GameManager.Instance.multiGame.popButtonList1P.Remove(clickButton);
-            }
-            else if (player.Equals(1))
-            { // 2P ¼ÒÀ¯ ÆË ¹öÆ°
-                GameManager.Instance.multiGame.popButtonList2P.Remove(clickButton);
-            }
-        }
+
         if (clickButton.GetComponent<Button>().interactable)
         {
             AudioManager.instance.SetCommonAudioClip_SFX(4);
-            GameManager.Instance.buttonActive--;
+            PushPop.Instance.ActivePosCount--;
             clickButton.GetComponent<Button>().interactable = false;
         }
-        GameManager.Instance.GameClear();
+        // GameManager.Instance.GameClear();
     }
 
 }

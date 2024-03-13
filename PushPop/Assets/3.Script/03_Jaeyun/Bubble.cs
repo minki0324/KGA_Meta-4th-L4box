@@ -47,11 +47,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
                 GameManager.Instance.pushPush.pieceCount++;
                 break;
             case GameMode.Speed:
-                GameManager.Instance.SpeedOnBubbleDestroy(); 
-                break;
-            case GameMode.Memory:
-                break;
-            case GameMode.Multi:
+                GameManager.Instance.OnDestroyBubble();
                 break;
         }
 
@@ -80,21 +76,16 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
             case GameMode.Speed:
                 SpeedMode(bubblePosition, touchPosition);
                 break;
-            case GameMode.Memory:
-                break;
-            case GameMode.Multi:
-                break;
         }
     }
 
-    public void BubbleSetting(Vector2 _puzzleSize, Vector2 _puzzlePos, Transform _puzzle, PuzzleObject _puzzleInfo)
+    public void BubbleSetting(Vector2 _puzzleSize, Vector2 _puzzlePos)
     { // GameManager에서 Mode 선택 시 Position 개수 만큼 호출되는 method
       // position setting
         bubbleRectTrans.anchoredPosition = _puzzlePos;
         // size setting
         float bigger = _puzzleSize.x > _puzzleSize.y ? _puzzleSize.x : _puzzleSize.y;
         puzzleSize = _puzzleSize;
-        puzzleObject = _puzzleInfo;
 
         if (gameMode.Equals(GameMode.PushPush))
         {

@@ -73,13 +73,9 @@ public class MultiManager : MonoBehaviour, IGame
     // Waterfall 회전 변수
     private bool rotateDirection = true; // true면 회전 방향이 +, false면 회전 방향이 -
     private float rotationZ = 0f; // 현재 Z 축 회전 각도
-    private Coroutine readyGameCoroutine = null; // 게임 시작 코루틴
     private Coroutine upperBubbleCoroutine = null; // 물 차오르는 코루틴
     private Coroutine bottomBubbleCoroutine = null; // 물 차오르는 코루틴
-    private Coroutine resultCoroutine = null;
     public Coroutine FeverCoroutine = null;
-
-    #region Unity Callback
 
     private void OnEnable()
     {
@@ -100,94 +96,6 @@ public class MultiManager : MonoBehaviour, IGame
     {
         Init();
     }
-    #endregion
-    #region BoardSprite Setting
-    public void SpriteListSet()
-    { // 만약 모든 spriteList를 다 사용한 플레이어가 있다면 초기화
-        if(spriteList1P.Count.Equals(0))
-        {
-            for(int i = 0; i < 3; i++)
-            {
-                spriteList1P.Add(i);
-            }
-        }
-        if(spriteList2P.Count.Equals(0))
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                spriteList2P.Add(i);
-            }
-        }
-    }
-    private Sprite GetSpriteName(int _player)
-    {
-        Sprite sprite;
-        if(!gameTimer.TenCount)
-        {
-            int randomList = -1;
-            // 스프라이트 리스트를 저장하는 변수
-            List<Sprite> playerSpriteList;
-            List<int> spriteList = _player.Equals(1) ? spriteList1P : spriteList2P;
-
-            while (true)
-            {
-                randomList = UnityEngine.Random.Range(0, 3);
-                if (spriteList.Contains(randomList))
-                {
-                    break;
-                }
-            }
-            playerSpriteList = randomList == 0 ? easyList : randomList == 1 ? normalList : hardList;
-            spriteList.Remove(randomList);
-
-            // 선택된 플레이어 스프라이트 리스트에서 랜덤한 스프라이트를 선택
-            int randomIndex = UnityEngine.Random.Range(0, playerSpriteList.Count);
-            sprite = playerSpriteList[randomIndex];
-        }
-        else
-        {
-            int randomIndex = UnityEngine.Random.Range(0, easyList.Count);
-            sprite = easyList[randomIndex];
-        }
-        return sprite;
-    }
-    private void SetSpriteImage(Transform _parent, List<GameObject> _popList, int _player) // object pooling... todo 
-    { // 매개변수를 이용해 각 Player의 Sprite와 PushPop Button 세팅
-        SpriteListSet();
-
-        Sprite sprite = GetSpriteName(_player);
-        PushPop.Instance.boardSprite = sprite;
-        // Sprite 이름에서 "(Clone)" 부분을 제거
-        string spriteName = sprite.name.Replace("(Clone)", "").Trim();
-
-        // 이름에서 숫자 부분만 추출하여 int로 변환
-        // 이 부분 Pushpop에서 생성하는 부분이랑 많이 꼬여있음...
-        if (int.TryParse(spriteName, out int spriteNumber))
-        {
-            GameManager.Instance.PushPopStage = spriteNumber;
-            PushPop.Instance.CreatePushPopBoard(_parent);
-            PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
-            PushPop.Instance.PushPopButtonSetting(PushPop.Instance.PopParent.transform);
-            for (int i = 0; i < PushPop.Instance.PopParent.transform.childCount; i++)
-            {
-                GameObject pop = PushPop.Instance.PopParent.transform.GetChild(i).gameObject;
-                _popList.Add(pop);
-            }
-            PushPop.Instance.pushPopBoardObject[0].transform.SetParent(_parent, false); // worldPositionStays를 false로 설정하여 로컬 위치 유지
-            GameObject temp = PushPop.Instance.pushPopBoardObject[0];
-            PushPop.Instance.pushPopBoardObject.Remove(temp);
-            Destroy(temp);
-            for (int i = 0; i < PushPop.Instance.activePos.Count; i++)
-            {
-                PushPop.Instance.activePos[i].SetActive(false);
-            }
-            PushPop.Instance.activePos.Clear();
-            PushPop.Instance.pushPopButton.Clear();
-            PushPop.Instance.pushPopBoardObject.Clear();
-            PushPop.Instance.pushPopBoardUIObject.Clear();
-        }
-    }
-    #endregion
     #region Game Interface
     public void Init()
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
@@ -198,8 +106,6 @@ public class MultiManager : MonoBehaviour, IGame
         gameTimer.TenCount = false;
         gameTimer.EndTimer = false;
         upperTimer = 12f;
-        gameTimer.CurrentTime = 60f;
-        gameTimer.TimerText.text = $"남은시간\n{(int)gameTimer.CurrentTime}";
         bNoTimePlaying = false;
         isEndGame = false;
         isFever = false;
@@ -243,11 +149,13 @@ public class MultiManager : MonoBehaviour, IGame
 
     public void GameSetting()
     { // OnEnable() bubble size, board size, pushpopbutton size, pushpop percentage, etc. setting 관련
-        // AudioManager.instance.SetAudioClip_BGM(1);
         // 버튼 사이즈 설정
-        PushPop.Instance.buttonSize = new Vector2(56.7f, 56.7f);
-        PushPop.Instance.percentage = 0.47f;
-        GameManager.Instance.BoardSize = new Vector2(500f, 500f);
+        PushPop.Instance.ButtonSize = new Vector2(56.7f, 56.7f);
+        PushPop.Instance.BoardSize = new Vector2(500f, 500f);
+        PushPop.Instance.Percentage = 0.47f;
+
+        gameTimer.CurrentTime = 60f;
+        gameTimer.TimerText.text = $"남은시간\n{(int)gameTimer.CurrentTime}";
 
         // 프로필 세팅, 이미지 caching으로 바꿔줄 것, 처음 시작 시 1p imageMode = true, defaultIndex = 1일 때 boy로 뜸 왤까요... todo
         SQL_Manager.instance.PrintProfileImage(profileImage[(int)Player.Player1], ProfileManager.Instance.PlayerInfo[(int)Player.Player1].imageMode, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
@@ -321,6 +229,8 @@ public class MultiManager : MonoBehaviour, IGame
         isEndGame = true;
     }
 
+
+
     private IEnumerator Result_Co()
     { // 결과창 출력 코루틴
         yield return new WaitForSeconds(2f); // waterfall animation 기다림 
@@ -342,6 +252,93 @@ public class MultiManager : MonoBehaviour, IGame
         // 결과창 출력
         Time.timeScale = 0f;
         resultPanel.SetActive(true);
+    }
+    #endregion
+    #region BoardSprite Setting
+    public void SpriteListSet()
+    { // 만약 모든 spriteList를 다 사용한 플레이어가 있다면 초기화
+        if(spriteList1P.Count.Equals(0))
+        {
+            for(int i = 0; i < 3; i++)
+            {
+                spriteList1P.Add(i);
+            }
+        }
+        if(spriteList2P.Count.Equals(0))
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                spriteList2P.Add(i);
+            }
+        }
+    }
+    private Sprite GetSpriteName(int _player)
+    {
+        Sprite sprite;
+        if(!gameTimer.TenCount)
+        {
+            int randomList = -1;
+            // 스프라이트 리스트를 저장하는 변수
+            List<Sprite> playerSpriteList;
+            List<int> spriteList = _player.Equals(1) ? spriteList1P : spriteList2P;
+
+            while (true)
+            {
+                randomList = UnityEngine.Random.Range(0, 3);
+                if (spriteList.Contains(randomList))
+                {
+                    break;
+                }
+            }
+            playerSpriteList = randomList == 0 ? easyList : randomList == 1 ? normalList : hardList;
+            spriteList.Remove(randomList);
+
+            // 선택된 플레이어 스프라이트 리스트에서 랜덤한 스프라이트를 선택
+            int randomIndex = UnityEngine.Random.Range(0, playerSpriteList.Count);
+            sprite = playerSpriteList[randomIndex];
+        }
+        else
+        {
+            int randomIndex = UnityEngine.Random.Range(0, easyList.Count);
+            sprite = easyList[randomIndex];
+        }
+        return sprite;
+    }
+    private void SetSpriteImage(Transform _parent, List<GameObject> _popList, int _player) // object pooling... todo 
+    { // 매개변수를 이용해 각 Player의 Sprite와 PushPop Button 세팅
+        SpriteListSet();
+
+        Sprite sprite = GetSpriteName(_player);
+        PushPop.Instance.BoardSprite = sprite;
+        // Sprite 이름에서 "(Clone)" 부분을 제거
+        string spriteName = sprite.name.Replace("(Clone)", "").Trim();
+
+        // 이름에서 숫자 부분만 추출하여 int로 변환
+        // 이 부분 Pushpop에서 생성하는 부분이랑 많이 꼬여있음...
+        if (int.TryParse(spriteName, out int spriteNumber))
+        {
+            GameManager.Instance.PushPopStage = spriteNumber;
+            PushPop.Instance.CreatePushPopBoard(_parent);
+            PushPop.Instance.CreateGrid(PushPop.Instance.PushPopBoardObject[0]);
+            PushPop.Instance.PushPopButtonSetting(PushPop.Instance.PopParent.transform);
+            for (int i = 0; i < PushPop.Instance.PopParent.transform.childCount; i++)
+            {
+                GameObject pop = PushPop.Instance.PopParent.transform.GetChild(i).gameObject;
+                _popList.Add(pop);
+            }
+            PushPop.Instance.PushPopBoardObject[0].transform.SetParent(_parent, false); // worldPositionStays를 false로 설정하여 로컬 위치 유지
+            GameObject temp = PushPop.Instance.PushPopBoardObject[0];
+            PushPop.Instance.PushPopBoardObject.Remove(temp);
+            Destroy(temp);
+            for (int i = 0; i < PushPop.Instance.activePos.Count; i++)
+            {
+                PushPop.Instance.activePos[i].SetActive(false);
+            }
+            PushPop.Instance.activePos.Clear();
+            PushPop.Instance.pushPopButton.Clear();
+            PushPop.Instance.PushPopBoardObject.Clear();
+            PushPop.Instance.PushPopBoardUIObject.Clear();
+        }
     }
     #endregion
     #region Multi Game Setting
