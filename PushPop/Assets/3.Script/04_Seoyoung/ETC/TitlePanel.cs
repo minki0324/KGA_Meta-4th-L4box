@@ -12,18 +12,39 @@ public enum MoveMode
 
 public class TitlePanel : MonoBehaviour
 {
+    [Header("캔버스")]
+    [SerializeField] private Canvas LoadingCanvas;
+    [SerializeField] private Canvas ParticleCanvas;
+
+    [Header("비눗방울 오브젝트 관련")]
     [SerializeField] private GameObject Bubbles;       //부모 오브젝트
     [SerializeField] private GameObject bubblePrefab;   //버블 프리팹
     [SerializeField] private Loading_Bubble[] bubble_Array; //오브젝트 풀링용
 
-    [SerializeField] private TMP_Text gameStartText;
-
+    [Header("비눗방울 최대 생성 갯수")]
     public int maxBubble = 5;
+
+    [Header("비눗방울 속도")]
+    public int upSpeed_Min = 2;
+    public int upSpeed_Max = 5;
+
+
+    [Header("비눗방울 좌우 속도")]
+    public float moveRange_Min;
+    public float moveRange_Max;
+
+    [Header("비눗방울 커지고 작아지는 정도")]
+    public float sizeRandom_Min;
+    public float sizeRandom_Max;
+
+  
     #region Unity Callback
 
     private void Start()
     {
         Init();
+        ParticleCanvas.gameObject.SetActive(true);
+      
     }
 
 
@@ -52,13 +73,23 @@ public class TitlePanel : MonoBehaviour
             bub.SetActive(true);
             bubble_Array[i] = bub.GetComponent<Loading_Bubble>();
             bubble_Array[i].moveMode = MoveMode.Main;
+
+            bubble_Array[i].upSpeedMin = upSpeed_Min;
+            bubble_Array[i].upSpeedMax = upSpeed_Max;
+
+            bubble_Array[i].moveRangeMin = moveRange_Min;
+            bubble_Array[i].moveRangeMax = moveRange_Max;
+
+            bubble_Array[i].sizeRandomMin = sizeRandom_Min;
+            bubble_Array[i].sizeRandomMax = sizeRandom_Max;
         }
     }
 
 
     public void StartGame()
     {
-        //로딩패널 켜기
+        LoadingCanvas.gameObject.SetActive(false);
+        LoadingCanvas.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
 

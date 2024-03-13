@@ -51,7 +51,7 @@ public class TouchManager : MonoBehaviour
     private void Awake()
     {
         //프레임 속도 고정
-        Application.targetFrameRate = 60;
+        //Application.targetFrameRate = 60;
 
     }
 

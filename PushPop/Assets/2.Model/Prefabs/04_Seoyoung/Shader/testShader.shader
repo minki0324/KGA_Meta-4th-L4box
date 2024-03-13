@@ -69,12 +69,6 @@ Shader "Unlit/testShader"
                     fixed4 col = tex2D(_MainTex, i.uv) * _TexTintColor;
                     //col.a = _Visibility;
                     col = lerp(_PlaneColor, col, col.a);
-                    // Fade out from as we pass the edge.
-                    // uv2.x stores a mapped UV that will be "1" at the beginning of the feathering.
-                    // We fade until we reach at the edge of the shortest UV mapping.
-                    // This is the remmaped UV value at the vertex.
-                    // We choose the shorted one so that ll edges will fade out completely.
-                    // See ARFeatheredPlaneMeshVisualizer.cs for more details.
                     col.a *= 1 - smoothstep(_Visibility, _ShortestUVMapping, i.uv2.y);
                     return col;
                 }
