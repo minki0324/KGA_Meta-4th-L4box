@@ -106,7 +106,7 @@ public class TitlePanel : MonoBehaviour
     private IEnumerator Init_co()
     {
        
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2.5f);
         StartBtn.interactable = true;
     }
 
