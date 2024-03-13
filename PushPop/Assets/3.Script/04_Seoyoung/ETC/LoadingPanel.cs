@@ -148,7 +148,7 @@ public class LoadingPanel : MonoBehaviour
     {
         float visibility = 0.1f;
         FadeBackground.material.SetFloat("_Visibility", visibility);
-        //yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
        
         float cashing = 0.1f;
         while(true)

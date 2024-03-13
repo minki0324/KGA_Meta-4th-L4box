@@ -36,8 +36,8 @@ public class Loading_Bubble : MonoBehaviour
 
     bool bisStart = true;   //게임 시작하자마자인지 판단
 
-    private int bubbleSizeMin;  //생성될 때 버블 최소크기
-    private int bubbleSizeMax;  //생성될 떄 버블 최대크기
+    public int bubbleSizeMin;  //생성될 때 버블 최소크기
+    public int bubbleSizeMax;  //생성될 떄 버블 최대크기
 
 
     #region Unity Callback
@@ -78,6 +78,7 @@ public class Loading_Bubble : MonoBehaviour
    
         randomSize = Random.Range(bubbleSizeMin, bubbleSizeMax);
         rectTransform.sizeDelta = new Vector2(randomSize, randomSize);
+        
 
         StartCoroutine(MoveUp_co());
 
@@ -113,23 +114,25 @@ public class Loading_Bubble : MonoBehaviour
                 sizeTime = 0f;
             }
 
+          
+
+
             if (bisIncrease)
             {//커지는 중이였으면 작아집시다             
                 rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x - sizeRandom, rectTransform.sizeDelta.y - sizeRandom);
-             
-                if (rectTransform.sizeDelta.Equals(new Vector2(bubbleSizeMin, bubbleSizeMin)))
+                if (rectTransform.sizeDelta.x <= bubbleSizeMin)
                 {   //최소크기가 되면 커지도록 변경
-                    bisIncrease = true;
+                    bisIncrease = false;
                     sizeTime = 0f;
                 }
             }
             else
             {//작아지는 중이였으면 커집시다     
                 rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x + sizeRandom, rectTransform.sizeDelta.y + sizeRandom);
-
-                if (rectTransform.sizeDelta.Equals(new Vector2(bubbleSizeMax, bubbleSizeMax)))
+              
+                if (rectTransform.sizeDelta.x >= bubbleSizeMax)
                 {   //최대크기가 되면 작아지도록 변경
-                    bisIncrease = false;
+                    bisIncrease = true;
                     sizeTime = 0f;
                 }
             }

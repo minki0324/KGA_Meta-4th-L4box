@@ -37,15 +37,19 @@ public class TitlePanel : MonoBehaviour
     public float sizeRandom_Min;
     public float sizeRandom_Max;
 
-  
+    [Header("ETC")]
+    [SerializeField] private Button StartBtn;   //타이틀 패널의 버튼
+
     #region Unity Callback
 
-    private void Start()
+    private void Awake()
     {
         Init();
         ParticleCanvas.gameObject.SetActive(true);
-      
+        StartBtn.interactable = false;
+        StartCoroutine(Init_co());
     }
+
 
 
     private void Update()
@@ -85,6 +89,13 @@ public class TitlePanel : MonoBehaviour
         }
     }
 
+
+    private IEnumerator Init_co()
+    {
+       
+        yield return new WaitForSeconds(1.5f);
+        StartBtn.interactable = true;
+    }
 
     public void StartGame()
     {
