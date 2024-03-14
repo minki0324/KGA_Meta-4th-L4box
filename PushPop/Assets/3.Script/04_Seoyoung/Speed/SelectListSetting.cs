@@ -16,21 +16,35 @@ public class SelectListSetting : MonoBehaviour
 
     [Header("Ready (Selected List Panel)")]
     public GameObject Ready = null;
+    [SerializeField] ReadyProfileSetting readyProfileSetting = null;
     [SerializeField] private TMP_Text selectCategory = null;
     [SerializeField] private Image selectIconImage = null;
     [SerializeField] private TMP_Text selectIconText = null;
     [SerializeField] private Button previousButton = null;
     [SerializeField] private Button nextButton = null;
 
-    [Header("Difficulty Icon List")]
+    [Header("Difficulty Icon List")] // spriteAtlas에서 가져올 것
     [SerializeField] private List<Sprite> easyIconList = null;
     [SerializeField] private List<Sprite> normalIconList = null;
     [SerializeField] private List<Sprite> hardIconList = null;
     private List<Button> iconButtonList = null;
 
+    [Header("Only PushPush Mode")]
+    [SerializeField] private TMP_Text pageText = null;
+    private int maxPage = 0; // category list count
+    private int currentPage = 1; // category list current count
+
     private void OnEnable()
     {
-        DifficultyBoardSetting();
+        switch (GameManager.Instance.GameMode)
+        {
+            case GameMode.PushPush:
+                CategoryIconSetting();
+                break;
+            case GameMode.Speed:
+                DifficultyBoardSetting();
+                break;
+        }
     }
     private void OnDisable()
     {
@@ -49,7 +63,27 @@ public class SelectListSetting : MonoBehaviour
     #region Difficulty Select, Category Select Panel
     private void CategoryIconSetting()
     {
+        maxPage = 1; 
+        pageText.text = $"{currentPage}/{maxPage}";
 
+        List<Sprite> selectList = null;
+        iconButtonList = new List<Button>();
+
+        for (int i = 0; i < selectList.Count; i++)
+        {
+            GameObject selectIcon = Instantiate(selectIconObject, selectCategoryScrollView.transform); // category prefab
+            SelectIconInfo selectIconInfo = selectIcon.transform.GetComponent<SelectIconInfo>();
+
+            iconButtonList.Add(selectIconInfo.IconButton); // button list
+            selectIconInfo.IconImage.sprite = selectList[i]; // sprite change
+            selectIconInfo.IconText.text = DataManager.instance.categoryDict[int.Parse(selectList[i].name)]; // sprite name key dictionary, 한글 텍스트 갖고오기
+        }
+
+        for (int i = 0; i < iconButtonList.Count; i++)
+        {
+            int index = i;
+            //iconButtonList[i].onClick.AddListener(delegate { CategoryIconButtonClick(iconButtonList[index].gameObject, index); });
+        }
     }
 
     private void DifficultyBoardSetting()
@@ -83,7 +117,7 @@ public class SelectListSetting : MonoBehaviour
 
             iconButtonList.Add(selectIconInfo.IconButton); // button list
             selectIconInfo.IconImage.sprite = selectList[i]; // sprite change
-            selectIconInfo.IconText.text = DataManager.instance.iconDict[int.Parse(selectList[i].name)]; // sprite name key dictionary
+            selectIconInfo.IconText.text = DataManager.instance.iconDict[int.Parse(selectList[i].name)]; // sprite name key dictionary, 한글 텍스트 갖고오기
         }
 
         for (int i = 0; i < iconButtonList.Count; i++)
@@ -99,10 +133,17 @@ public class SelectListSetting : MonoBehaviour
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         SelectIconInfo selectIconInfo = _selectIconButton.transform.parent.GetComponent<SelectIconInfo>();
 
-        GameManager.Instance.CurrentIcon = _selectIcon;
         selectIconImage.sprite = selectIconInfo.IconImage.sprite;
         selectIconText.text = selectIconInfo.IconText.text;
         BoardIcon = selectIconImage.sprite;
+        GameManager.Instance.CurrentIcon = _selectIcon;
+        GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
+
+        if (GameManager.Instance.GameMode.Equals(GameMode.PushPush))
+        {
+            currentPage = 1;
+            pageText.text = $"{currentPage}/{maxPage}";
+        }
 
         Ready.SetActive(true);
     }
@@ -119,6 +160,19 @@ public class SelectListSetting : MonoBehaviour
             selectIconImage.sprite = selectIconInfo.IconImage.sprite;
             selectIconText.text = selectIconInfo.IconText.text;
             BoardIcon = selectIconImage.sprite;
+            GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
+
+            switch (GameManager.Instance.GameMode)
+            {
+                case GameMode.PushPush:
+                    currentPage++;
+                    pageText.text = $"{currentPage}/{maxPage}";
+                    break;
+                case GameMode.Speed:
+                    readyProfileSetting.PlayerInfoSetting();
+                    readyProfileSetting.RankInfoSetting();
+                    break;
+            }
         }
     }
 
@@ -134,6 +188,19 @@ public class SelectListSetting : MonoBehaviour
             selectIconImage.sprite = selectIconInfo.IconImage.sprite;
             selectIconText.text = selectIconInfo.IconText.text;
             BoardIcon = selectIconImage.sprite;
+            GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
+
+            switch (GameManager.Instance.GameMode)
+            {
+                case GameMode.PushPush:
+                    currentPage--;
+                    pageText.text = $"{currentPage}/{maxPage}";
+                    break;
+                case GameMode.Speed:
+                    readyProfileSetting.PlayerInfoSetting();
+                    readyProfileSetting.RankInfoSetting();
+                    break;
+            }
         }
     }
     #endregion

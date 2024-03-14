@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +15,7 @@ public class SpeedCanvas : MonoBehaviour
     public GameObject HelpButton = null;
 
     [Header("Select Panel")]
-    [SerializeField] private SelectListSetting selectListSetting = null;
+    public SelectListSetting SelectListSetting = null;
     public GameObject SelectDifficultyPanel = null;
     public ScrollRect SelectCategoryPanelScrollView = null;
     public GameObject SelectCategoryPanel = null;
@@ -26,10 +27,14 @@ public class SpeedCanvas : MonoBehaviour
     public GameObject CountSlider = null;
 
     [Header("Panel")]
+    public GameObject Ready = null;
     public GameObject ResultPanel = null;
     public GameObject WarningPanel = null;
-    public GameObject GameReadyPanel = null;
     public GameObject HelpPanel = null;
+
+    [Header("Game Ready Panel")]
+    public GameObject GameReadyPanel = null;
+    public TMP_Text GameReadyPanelText = null;
 
     public void SelectDifficultyButton(int _difficulty)
     { // 난이도 버튼
@@ -46,12 +51,12 @@ public class SpeedCanvas : MonoBehaviour
     { // Ready - 게임 시작
         AudioManager.instance.SetCommonAudioClip_SFX(0);
         AudioManager.instance.SetAudioClip_BGM(3);
-        PushPop.Instance.boardSprite = selectListSetting.BoardIcon; // pushpop
+        PushPop.Instance.BoardSprite = SelectListSetting.BoardIcon; // pushpop
 
         SpeedGame.SetActive(true);
         SelectDifficultyPanel.SetActive(false);
         SelectCategoryPanel.SetActive(false);
-        selectListSetting.Ready.SetActive(false);
+        SelectListSetting.Ready.SetActive(false);
         HelpButton.SetActive(false);
         speedManager.GameStart();
     }
@@ -80,7 +85,7 @@ public class SpeedCanvas : MonoBehaviour
     public void ReadyPanelExitButton()
     { // Ready panel
         AudioManager.instance.SetCommonAudioClip_SFX(3);
-        selectListSetting.Ready.SetActive(false);
+        SelectListSetting.Ready.SetActive(false);
     }
 
     public void HelpPanelButton()

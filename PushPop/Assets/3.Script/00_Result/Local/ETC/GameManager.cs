@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -49,7 +50,7 @@ public class PuzzleObject
 }
 #endregion
 
-public class GameManager : MonoBehaviour, IGameMode_
+public class GameManager : MonoBehaviour
 {
     public static GameManager Instance = null;
 
@@ -68,14 +69,13 @@ public class GameManager : MonoBehaviour, IGameMode_
     
 
     [Header("Speed Game")]
-    public int CurrentIcon = 0; // 선택한 아이콘
+    public int CurrentIcon = 0; // 선택한 아이콘 리스트 순서
+    public int CurrentIconName = 0; // 선택한 아이콘 이름
     public Difficulty Difficulty = Difficulty.Easy;
 
     public int boardName = 0; // mold name
     public int currentTime = 0;
     public Coroutine speedCreate = null;
-
-
 
     // Bubble
     [Header("Bubble Info")]
@@ -104,8 +104,10 @@ public class GameManager : MonoBehaviour, IGameMode_
     private Coroutine timer = null;
     public int Score = 0;
     public float TimeScore = 0;
+    public int LiveBubbleCount = 0; // Bubble을 터트리지 않은 상태로 나갈 때 true, 터트리면 false
+    public Action OnDestroyBubble; // Bubble이 OnDestroy 했을 때
+    public Action GameEnd; // PushPop button
 
-    [Header("Speed Mode")]
     public float count = 0.25f;
     public Coroutine pushpushCreate_Co = null;
     public Coroutine slider_Co = null;
@@ -123,9 +125,7 @@ public class GameManager : MonoBehaviour, IGameMode_
     public bool backButtonClick = false;
     [SerializeField] private Sprite[] btnSprites;
     public bool isStart = false;
-  
 
-    #region Unity Callback
     private void Awake()
     {
         if (Instance == null)
@@ -146,9 +146,7 @@ public class GameManager : MonoBehaviour, IGameMode_
             ShutdownTimerStart();
         }
     }
-    #endregion
 
-    #region Other Method
     public void GameModeSetting(int _gameMode)
     { // game mode setting button click method
         GameMode = (GameMode)_gameMode;
@@ -182,14 +180,6 @@ public class GameManager : MonoBehaviour, IGameMode_
             case GameMode.PushPush:
                 PushPushMode();
                 break;
-            case GameMode.Speed:
-                SpeedMode();
-                break;
-            case GameMode.Memory:
-                break;
-            case GameMode.Multi:
-                BombMode();
-                break;
         }
     }
 
@@ -203,11 +193,11 @@ public class GameManager : MonoBehaviour, IGameMode_
         }
         
         // game start 문구 띄워주기, panel 다 막아버리면 될듯?
-        for (int i = 0; i < PushPop.Instance.pushPopBoardObject.Count; i++)
+        for (int i = 0; i < PushPop.Instance.PushPopBoardObject.Count; i++)
         {
-            Destroy(PushPop.Instance.pushPopBoardObject[i]);
+            Destroy(PushPop.Instance.PushPopBoardObject[i]);
         }
-        PushPop.Instance.pushPopBoardObject.Clear();
+        PushPop.Instance.PushPopBoardObject.Clear();
         AudioManager.instance.SetCommonAudioClip_SFX(1);
         _panel.SetActive(true);
         DialogManager.instance.Print_Dialog(text, "준비 ~");
@@ -321,12 +311,12 @@ public class GameManager : MonoBehaviour, IGameMode_
                         }
 
                         bubblePos.Clear(); // bubble transform mode에 따라 달라짐
-                        PushPop.Instance.PushPopClear();
+                        // PushPop.Instance.PushPopClear();
                     }
                     break;
 
                 case GameMode.Speed:
-                    if (speedTimer == null)
+                    /*if (speedTimer == null)
                     {
                         speedTimer = FindObjectOfType<Speed_Timer>();
                     }
@@ -350,14 +340,14 @@ public class GameManager : MonoBehaviour, IGameMode_
                         speedTimer.StopCoroutine(speedTimer.timer);
                         speedTimer.TimerObj.SetActive(false);
 
-                        Ranking.Instance.SetTimer(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.FirstPlayerIndex, int.Parse(PushPop.Instance.boardSprite.name), speedTimer.currentTime);
+                        Ranking.Instance.SetTimer(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.FirstPlayerIndex, int.Parse(PushPop.Instance.BoardSprite.name), speedTimer.currentTime);
                         speedTimer.resultPanel.SetActive(true);
                         speedTimer.Result();
                     }
                     else if (buttonActive == 0)
                     {
                         pushpushCreate_Co = StartCoroutine(SpeedCreate_Co());
-                    }
+                    }*/
                     break;
                 case GameMode.Multi:
 
@@ -369,30 +359,6 @@ public class GameManager : MonoBehaviour, IGameMode_
                 StopCoroutine(timer); // timer coroutine stop;
             }
         }
-    }
-
-    private IEnumerator SpeedCreate_Co()
-    {
-        BoardSize = new Vector2(700f, 700f);
-
-        // animation
-        Animator pushAni = PushPop.Instance.pushPopAni.GetComponent<Animator>();
-        pushAni.SetTrigger("Turning");
-        
-
-        yield return new WaitForSeconds(0.5f);
-        AudioManager.instance.SetAudioClip_SFX(0, false);
-        yield return new WaitForSeconds(1f);
-
-        PushPop.Instance.pushTurn = !PushPop.Instance.pushTurn;
-        bubblePos.Clear();
-        PushPop.Instance.PushPopClear();
-
-        // pushpop 생성, PushPop.Instance.pushTurn == false일 때 Rotate 180 돌려준 뒤에 add
-        PushPop.Instance.CreatePushPopBoard(PushPop.Instance.pushPopCanvas);
-        PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
-        PushPop.Instance.PushPopButtonSetting(PushPop.Instance.buttonCanvas);
-        buttonActive = PushPop.Instance.activePos.Count;
     }
 
     public void PushPushMode()
@@ -414,26 +380,26 @@ public class GameManager : MonoBehaviour, IGameMode_
         // puzzle position
         for (int i = 0; i < puzzleClass.Count; i++)
         {
-            CreateBubble(puzzleClass[i].puzzleArea, puzzleClass[i].puzzleCenter, puzzleClass[i].puzzleObject, puzzleClass[i]);
+            CreateBubble(puzzleClass[i].puzzleArea, puzzleClass[i].puzzleCenter, puzzleClass[i].puzzleObject);
         }
 
     }
 
     public void SpeedMode()
     { // speed mode start
-        PushPop.Instance.buttonSize = new Vector2(80f, 80f);
-        PushPop.Instance.percentage = 0.67f;
+        /*PushPop.Instance.ButtonSize = new Vector2(80f, 80f);
+        PushPop.Instance.Percentage = 0.67f;
         Ranking.Instance.SettingPreviousScore();
         // position count 한 개, 위치 가운데, scale 조정
         bubbleSize = 300f; // speed mode bubble size setting
         BoardSize = new Vector2(300f, 300f); // scale
 
         // bubble position
-        GameObject board = Instantiate(PushPop.Instance.boardPrefabUI, PushPop.Instance.pushPopCanvas); // image
-        board.GetComponent<Image>().sprite = PushPop.Instance.boardSprite;
+        GameObject board = Instantiate(PushPop.Instance.BoardPrefabUI, PushPop.Instance.pushPopCanvas); // image
+        board.GetComponent<Image>().sprite = PushPop.Instance.BoardSprite;
         board.GetComponent<RectTransform>().sizeDelta = BoardSize;
-        PushPop.Instance.pushPopBoardObject.Add(board);
-        CreateBubble(BoardSize, board.transform.localPosition, board, null);
+        PushPop.Instance.PushPopBoardObject.Add(board);
+        CreateBubble(BoardSize, board.transform.localPosition, board);*/
     }
 
     public void SpeedModePushPopCreate()
@@ -451,7 +417,7 @@ public class GameManager : MonoBehaviour, IGameMode_
         yield return new WaitForSeconds(1.5f);
 
         BoardSize = new Vector2(700f, 700f);
-        PushPop.Instance.CreateGrid(PushPop.Instance.pushPopBoardObject[0]);
+        PushPop.Instance.CreateGrid(PushPop.Instance.PushPopBoardObject[0]);
         PushPop.Instance.PushPopButtonSetting(PushPop.Instance.buttonCanvas);
         buttonActive = PushPop.Instance.activePos.Count;
     }
@@ -474,20 +440,19 @@ public class GameManager : MonoBehaviour, IGameMode_
         BoardSize = new Vector2(500f, 500f);
     }
 
-    private void CreateBubble(Vector2 _size, Vector2 _pos, GameObject _puzzle, PuzzleObject _puzzleInfo)
+    public void CreateBubble(Vector2 _size, Vector2 _pos, GameObject _puzzle)
     { // bubble size, pos, parent 상속 setting method
         GameObject bubbleObject = Instantiate(bubblePrefab, _puzzle.transform);
         Bubble bubble = bubbleObject.GetComponent<Bubble>();
 
         this.bubbleObject.Add(bubbleObject);
-        bubble.BubbleSetting(_size, _pos, _puzzle.transform, _puzzleInfo);
+        bubble.BubbleSetting(_size, _pos);
         _puzzle.GetComponent<Image>().raycastTarget = false;
         // _puzzle.GetComponent<RectTransform>().sizeDelta = BoardSize;
         //_puzzle.SetParent(bubble.transform);
         //bubble.touchCount = 1;
-        bubble.touchCount = Random.Range(10, 21); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
+        bubble.touchCount = UnityEngine.Random.Range(10, 21); // 2 ~ 9회, Mode별로 다르게 설정 ... todo touch count 바꿔줄 것
     }
-    #endregion
 
     public void PrintSpeed(int _spriteName)
     {

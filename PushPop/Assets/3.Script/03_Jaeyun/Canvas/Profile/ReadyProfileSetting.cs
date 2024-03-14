@@ -47,7 +47,7 @@ public class ReadyProfileSetting : MonoBehaviour
         RankInfoSetting();
     }
 
-    private void PlayerInfoSetting()
+    public void PlayerInfoSetting()
     { // 현재 프로필
         // 프로필 설정 1P
         profileImage1P.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
@@ -57,9 +57,9 @@ public class ReadyProfileSetting : MonoBehaviour
         {
             case GameMode.Speed:
                 PlayerScore = Ranking.Instance.LoadPersonalTimer();
-                int min = PlayerScore % 60;
-                int sec = PlayerScore / 60;
-                profileScore.text = $"{string.Format("{0:00}", min)}:{ string.Format("{0:00}", sec)}";
+                float sec = PlayerScore % 60; // 60으로 나눈 나머지 = 초
+                float min = PlayerScore / 60;
+                profileScore.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
                 break;
             case GameMode.Memory:
                 PlayerScore = Ranking.Instance.LoadPersonalScore();
@@ -74,7 +74,7 @@ public class ReadyProfileSetting : MonoBehaviour
         ProfileName2P.text = ProfileManager.Instance.PlayerInfo[(int)Player.Player2].profileName;
     }
 
-    private void RankInfoSetting()
+    public void RankInfoSetting()
     { // 랭킹 세팅
         List<Image[]> rankImage = new List<Image[]>(); // multi 때문에 List로 선언
         List<Image[]> framImage = new List<Image[]>();

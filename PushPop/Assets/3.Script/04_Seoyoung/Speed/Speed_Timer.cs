@@ -84,10 +84,10 @@ public class Speed_Timer : MonoBehaviour
         }
 
         // Back Method
-        if (PushPop.Instance.pushPopBoardObject.Count > 0)
+        if (PushPop.Instance.PushPopBoardObject.Count > 0)
         {
-            Destroy(PushPop.Instance.pushPopBoardObject[0]);
-            PushPop.Instance.pushPopBoardObject.Clear();
+            Destroy(PushPop.Instance.PushPopBoardObject[0]);
+            PushPop.Instance.PushPopBoardObject.Clear();
         }
 
         if (GameManager.Instance.bubbleObject.Count > 0)
@@ -177,16 +177,16 @@ public class Speed_Timer : MonoBehaviour
         AudioManager.instance.Stop_SFX();
 
         // Back Method
-        if (PushPop.Instance.pushPopBoardUIObject.Count > 0)
+        if (PushPop.Instance.PushPopBoardUIObject.Count > 0)
         {
-            Destroy(PushPop.Instance.pushPopBoardUIObject[0]);
-            PushPop.Instance.pushPopBoardUIObject.Clear();
+            Destroy(PushPop.Instance.PushPopBoardUIObject[0]);
+            PushPop.Instance.PushPopBoardUIObject.Clear();
         }
 
-        if (PushPop.Instance.pushPopBoardObject.Count > 0)
+        if (PushPop.Instance.PushPopBoardObject.Count > 0)
         {
-            Destroy(PushPop.Instance.pushPopBoardObject[0]);
-            PushPop.Instance.pushPopBoardObject.Clear();
+            Destroy(PushPop.Instance.PushPopBoardObject[0]);
+            PushPop.Instance.PushPopBoardObject.Clear();
         }
 
         if (GameManager.Instance.bubbleObject.Count > 0)

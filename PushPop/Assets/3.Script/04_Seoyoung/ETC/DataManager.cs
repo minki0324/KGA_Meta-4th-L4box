@@ -79,9 +79,11 @@ public class DataManager : MonoBehaviour
 
 
     //파일 이름 (이 친구들은 Assets/StreamingAssets 폴더에 미리 담겨져 있어야 합니다)
-    private string categoryDict_fileName = "category.json";
-    private string iconDict_fileName = "icon.json";
+    private string categoryDict_fileName = "category.json"; // only pushpush
+    private string iconDict_fileName = "icon.json"; // pushpush, speed
+    // help
     private string helpScript_fileName = "helpme.json";
+    // nickname
     private string badWord_fileName = "badword.json";
     private string vulgarism_fileName = "vulgarism.json";
 

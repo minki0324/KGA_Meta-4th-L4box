@@ -2013,57 +2013,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 961691451}
-        m_TargetAssemblyTypeName: PushPush_Result, Assembly-CSharp
-        m_MethodName: Success_BackBtn_Clicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1697738263}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: Enable_Objects
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1734511123}
-        m_TargetAssemblyTypeName: PuzzleLozic, Assembly-CSharp
-        m_MethodName: ClearPieceList
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 139298934}
-        m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
-        m_MethodName: BtnAllClear
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1697738263}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: GoOutBtn_Clicked
+      - m_Target: {fileID: 1503872621}
+        m_TargetAssemblyTypeName: SpeedManager, Assembly-CSharp
+        m_MethodName: WarningPanelGoOutButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2991,6 +2943,141 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 116774398}
   m_CullTransparentMesh: 1
+--- !u!1 &118278189
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 118278190}
+  - component: {fileID: 118278192}
+  - component: {fileID: 118278191}
+  m_Layer: 5
+  m_Name: Fever Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &118278190
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118278189}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 163122511}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &118278191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118278189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Fever
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: 0
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &118278192
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118278189}
+  m_CullTransparentMesh: 1
 --- !u!1 &123516929
 GameObject:
   m_ObjectHideFlags: 0
@@ -3193,7 +3280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55f6a3c31ffda4b4eb2a78ce60d155eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 0}
+  profileList: []
   UID: 0
   SelectPlayer: 0
   ProfileName1P: 
@@ -4853,7 +4940,7 @@ MonoBehaviour:
   winProfileImage: {fileID: 1635298284}
   loseProfileImage: {fileID: 1232081767}
   gameTimer: {fileID: 645875908}
-  feverText: {fileID: 0}
+  feverText: {fileID: 118278191}
   quitButton:
   - {fileID: 393349463}
   - {fileID: 819225753}
@@ -4881,6 +4968,7 @@ RectTransform:
   - {fileID: 984968724}
   - {fileID: 75730809}
   - {fileID: 99986675}
+  - {fileID: 118278190}
   m_Father: {fileID: 413569481}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5230,10 +5318,11 @@ MonoBehaviour:
   InGame: 0
   IsShutdown: 0
   multiGame: {fileID: 163122510}
-  speedTimer: {fileID: 1503872620}
+  speedTimer: {fileID: 0}
   pushPush: {fileID: 0}
   MemoryManager: {fileID: 0}
   CurrentIcon: 0
+  CurrentIconName: 0
   Difficulty: 50
   boardName: 0
   currentTime: 0
@@ -5256,6 +5345,7 @@ MonoBehaviour:
   finalCenter: {x: 0, y: 0}
   Score: 0
   TimeScore: 0
+  LiveBubbleCount: 0
   count: 0.25
   printName:
   - {fileID: 1388441613}
@@ -6329,18 +6419,21 @@ MonoBehaviour:
   PopParent: {fileID: 197995232}
   pushPopCanvas: {fileID: 1324717779}
   pushPopButtonPrefab: {fileID: 7161972215700324124, guid: 1381da20a7f6349438dc19f56e561b10, type: 3}
-  boardPrefabUI: {fileID: 6080136693297342902, guid: e2c99a2b45e46b34eb39a7934886813e, type: 3}
-  pushPopBoardUIObject: []
+  BoardPrefabUI: {fileID: 6080136693297342902, guid: e2c99a2b45e46b34eb39a7934886813e, type: 3}
+  BoardSize: {x: 0, y: 0}
+  BoardPos: {x: 0, y: 0}
+  PushPopBoardUIObject: []
   pushPopSpriteAtlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
   boardPrefab: {fileID: 3633448892475870983, guid: b42c40511bead9941bc7f9901e85999e, type: 3}
-  boardSprite: {fileID: 0}
-  pushPopBoardObject: []
+  BoardSprite: {fileID: 0}
+  PushPopBoardObject: []
   buttonCanvas: {fileID: 62303151}
-  percentage: 0.67
-  buttonSize: {x: 80, y: 80}
+  Percentage: 0
+  ButtonSize: {x: 0, y: 0}
   PosPrefab: {fileID: 4701027180370166461, guid: 908e83bf5cbab784199690367c9362ca, type: 3}
   pushPopButton: []
   activePos: []
+  ActivePosCount: 0
   pushPopBtnSprites:
   - {fileID: 21300000, guid: c4797b928419e844aaef5d3f039aa7f3, type: 3}
   - {fileID: 21300000, guid: b60bdd9bec74acf4f8af4ed562d149ac, type: 3}
@@ -6352,7 +6445,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1652f2efa5721a446892d51b273576dc, type: 3}
   - {fileID: 21300000, guid: 0607a023efa482e4d9055e78cf332f3d, type: 3}
   pushPopAni: {fileID: 0}
-  pushTurn: 1
+  Turning: 0
 --- !u!4 &197995234
 Transform:
   m_ObjectHideFlags: 0
@@ -9708,9 +9801,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1503872620}
-        m_TargetAssemblyTypeName: Speed_Timer, Assembly-CSharp
-        m_MethodName: GoOutBtn_Clicked
+      - m_Target: {fileID: 1503872621}
+        m_TargetAssemblyTypeName: SpeedManager, Assembly-CSharp
+        m_MethodName: ResultExitButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -39642,7 +39735,7 @@ MonoBehaviour:
   mainCanvas: {fileID: 26907700}
   BackButton: {fileID: 292263973}
   HelpButton: {fileID: 1389620137}
-  selectListSetting: {fileID: 1738012323}
+  SelectListSetting: {fileID: 1738012323}
   SelectDifficultyPanel: {fileID: 1127129992}
   SelectCategoryPanelScrollView: {fileID: 1452448484}
   SelectCategoryPanel: {fileID: 1738012321}
@@ -39650,10 +39743,12 @@ MonoBehaviour:
   SpeedGame: {fileID: 1503872616}
   Timer: {fileID: 1219719279}
   CountSlider: {fileID: 1680434268}
+  Ready: {fileID: 785141287}
   ResultPanel: {fileID: 1276528353}
   WarningPanel: {fileID: 1002311380}
-  GameReadyPanel: {fileID: 527958183}
   HelpPanel: {fileID: 1060717315}
+  GameReadyPanel: {fileID: 527958183}
+  GameReadyPanelText: {fileID: 1776251430}
 --- !u!114 &1214644975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43675,9 +43770,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Speed_Canvas, Assembly-CSharp
-        m_MethodName: RestartButton
+      - m_Target: {fileID: 1503872621}
+        m_TargetAssemblyTypeName: SpeedManager, Assembly-CSharp
+        m_MethodName: ResultRestartButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -48320,7 +48415,7 @@ GameObject:
   - component: {fileID: 1493021172}
   - component: {fileID: 1493021171}
   m_Layer: 5
-  m_Name: Select Board Panel
+  m_Name: Ready
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48885,7 +48980,6 @@ GameObject:
   - component: {fileID: 1503872618}
   - component: {fileID: 1503872617}
   - component: {fileID: 1503872621}
-  - component: {fileID: 1503872620}
   m_Layer: 5
   m_Name: Speed Game
   m_TagString: Untagged
@@ -48956,37 +49050,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1503872620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1503872616}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2c8f6f9667fbaf4da8a92692bda0239, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed_Canvas: {fileID: 0}
-  help_Canvas: {fileID: 578940783}
-  SelectDifficulty_Panel: {fileID: 1127129992}
-  Warning_Panel: {fileID: 0}
-  resultPanel: {fileID: 1276528353}
-  TimerObj: {fileID: 1219719279}
-  time_Text: {fileID: 999252273}
-  time_Slider: {fileID: 1680434270}
-  difficult: 0
-  Mold_Image: {fileID: 0}
-  Back_Btn: {fileID: 0}
-  resultImage: {fileID: 376949854}
-  resultTimer: {fileID: 1136526024}
-  resultLog: {fileID: 323264363}
-  resultTitle: {fileID: 575934320}
-  readyPanel: {fileID: 0}
-  readyText: {fileID: 0}
-  currentTime: 0
-  bNoTimePlaying: 0
 --- !u!114 &1503872621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48999,9 +49062,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a89709eadf4f33428485d785219b6b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedCanvas: {fileID: 1214644974}
+  resultPanel: {fileID: 1276528353}
+  warningPanel: {fileID: 1002311380}
   Difficulty: 50
   difficultyCount: 0
-  SelectImage: {fileID: 0}
+  boardTrans: {fileID: 1324717779}
+  buttonTrans: {fileID: 62303151}
+  resultImage: {fileID: 376949854}
+  resultMassageText: {fileID: 323264363}
+  resultScoreText: {fileID: 1136526024}
+  gameTimer: {fileID: 1219719283}
+  countSlider: {fileID: 1680434270}
 --- !u!1 &1504932993
 GameObject:
   m_ObjectHideFlags: 0
@@ -51347,6 +51419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DB_path: 
   UID: 0
+  ProfileList: []
 --- !u!4 &1562908347
 Transform:
   m_ObjectHideFlags: 0
@@ -56129,6 +56202,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1718604762}
+  - component: {fileID: 1718604763}
   m_Layer: 5
   m_Name: Select Category Panel
   m_TagString: Untagged
@@ -56157,6 +56231,32 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1718604763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718604761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2207fe8235348db4292945fe369a1cd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectIconObject: {fileID: 4741607185553568946, guid: 5b43dbe5357e43b468dd3240204d37b3, type: 3}
+  categorySelectTitle: {fileID: 1147860427}
+  selectCategoryScrollView: {fileID: 1201858628}
+  Ready: {fileID: 1493021169}
+  readyProfileSetting: {fileID: 0}
+  selectCategory: {fileID: 1484105068}
+  selectIconImage: {fileID: 1867867082}
+  selectIconText: {fileID: 1489753631}
+  previousButton: {fileID: 531529006}
+  nextButton: {fileID: 1490245669}
+  easyIconList: []
+  normalIconList: []
+  hardIconList: []
+  pageText: {fileID: 0}
 --- !u!1 &1720564453
 GameObject:
   m_ObjectHideFlags: 0
@@ -57006,6 +57106,7 @@ MonoBehaviour:
   categorySelectTitle: {fileID: 1119109721}
   selectCategoryScrollView: {fileID: 236027970}
   Ready: {fileID: 785141287}
+  readyProfileSetting: {fileID: 785141289}
   selectCategory: {fileID: 1558788387}
   selectIconImage: {fileID: 725413039}
   selectIconText: {fileID: 1545419553}
@@ -57113,6 +57214,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 4eef2efbb82dca54297dd14fee238f40, type: 3}
   - {fileID: 21300000, guid: e1ff9617fa46af4439b21d0e56bcb3f0, type: 3}
   - {fileID: 21300000, guid: 9e9088e203b921a4b8ed0f794e79adcb, type: 3}
+  pageText: {fileID: 0}
 --- !u!1 &1741373530
 GameObject:
   m_ObjectHideFlags: 0
@@ -67051,9 +67153,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1697738263}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: CancelBtn_Clicked
+      - m_Target: {fileID: 1503872621}
+        m_TargetAssemblyTypeName: SpeedManager, Assembly-CSharp
+        m_MethodName: WarningPanelCancelButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
