@@ -11,7 +11,9 @@ public class PlayerEmotionControl : NetworkBehaviour
     private WaitForSeconds waitTime = new WaitForSeconds(2);
     [SerializeField] private GameObject[] emojis; 
     private Coroutine emojiCo;
-
+    private Vector3 myScale;
+    private Vector3 myPos;
+    float tempScaleX;
     //이모션 사진 직접참조
     [SerializeField] private GameObject currentEmoji;
     void Start()
@@ -21,8 +23,8 @@ public class PlayerEmotionControl : NetworkBehaviour
         {
             Emotion.instance.playerEmotion = this;
         }
+
     }
-    
     public void EMotionChange(int index)
     {
         if(currentEmoji != null)

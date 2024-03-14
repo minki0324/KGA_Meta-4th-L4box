@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using Mirror;
 public class SPUM_Prefabs : MonoBehaviour
 {
     public float _version;
@@ -10,6 +11,7 @@ public class SPUM_Prefabs : MonoBehaviour
     public bool EditChk;
     public string _code;
     public Animator _anim;
+    public RuntimeAnimatorController _anicon;
     public bool _horse;
     public bool isRideHorse{
         get => _horse;
@@ -39,6 +41,9 @@ public class SPUM_Prefabs : MonoBehaviour
     private void OnEnable()
     {
         transform.parent.GetComponent<PlayerObj>()._prefabs = this;
+        //_anim= transform.GetChild(0).gameObject.AddComponent<Animator>();
+        //_anim.runtimeAnimatorController = _anicon;
+        //transform.parent.GetComponent<NetworkAnimator>().animator = _anim;
     }
     private void Start() {
         UnitTypeChanged.AddListener(InitAnimPair);
@@ -46,7 +51,6 @@ public class SPUM_Prefabs : MonoBehaviour
     // 이름으로 애니메이션 실행
     public void PlayAnimation(string name){
 
-        Debug.Log(name);
         
         // foreach (var animationName in _nameToHashPair)
         // {
