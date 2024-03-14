@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.U2D;
 using TMPro;
+using Mirror;
 
 /// <summary>
 /// Network Scene 통합 Manager Class
@@ -23,12 +24,12 @@ public class MoaMoaManager : MonoBehaviour
     private List<PushPushObject> pushObjs = new List<PushPushObject>(); // PushPushObject Class List
 
     [SerializeField] private GameObject MoaMoaPanel;
-    private CustomNetworkManager manager;
+    private NetworkManager manager;
 
     #region Unity Callback
     private void Awake()
     {
-        manager = FindObjectOfType<CustomNetworkManager>();
+        manager = FindObjectOfType<NetworkManager>();
     }
     #endregion
 
@@ -121,6 +122,7 @@ public class MoaMoaManager : MonoBehaviour
         //DB그대로 이동하게끔하기
         if (manager != null)
         {
+
             //로비이동
             manager.StopClient();
         }

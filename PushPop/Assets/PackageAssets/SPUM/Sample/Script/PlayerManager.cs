@@ -188,7 +188,7 @@ public class PlayerManager : NetworkBehaviour
     {//접속해있는 identity(플레이어프리팹)이 가지고있는 선택했던 avatarindex에맞게 avatar를 켜주는 작업.
         target.transform.GetChild(targetIndex).gameObject.SetActive(true);
     }
-    [Command]
+
     public void RemoveIdentityToList(NetworkIdentity identity)
     {
         playersAvatarIdentity.Remove(identity);

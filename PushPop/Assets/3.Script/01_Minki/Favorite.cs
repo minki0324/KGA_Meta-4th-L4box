@@ -98,6 +98,11 @@ public class Favorite : MonoBehaviour
                 GameObject profile = Instantiate(networkProfile);
                 profile.transform.SetParent(networkProfileParent);
 
+                // 포지션 세팅
+                profile.GetComponent<RectTransform>().transform.localScale = new Vector3(1, 1, 1);
+                Vector3 pos = profile.GetComponent<RectTransform>().transform.localPosition;
+                profile.GetComponent<RectTransform>().transform.localPosition = new Vector3(pos.x, pos.y, 0);
+
                 // 각 profilePanel이 들고있는 infomation을 세팅
                 NetworkProfileInfo network = profile.GetComponent<NetworkProfileInfo>();
                 network.profile = ConnectList[i];

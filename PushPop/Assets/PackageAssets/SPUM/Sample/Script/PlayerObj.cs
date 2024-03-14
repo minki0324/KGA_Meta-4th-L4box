@@ -80,13 +80,20 @@ public class PlayerObj : NetworkBehaviour
 
     private void OnDestroy()
     {
-        RemoveProfile();
-        RemoveServerList();
+        if (isServer && playerManager.playersAvatarIdentity.Contains(myIdentity))
+        {
+            Debug.Log("부름?");
+            playerManager.playersAvatarIdentity.Remove(myIdentity);
+        }
     }
 
     private void OnApplicationQuit()
     {
-        RemoveProfile();
+        if (isServer && playerManager.playersAvatarIdentity.Contains(myIdentity))
+        {
+            Debug.Log("부름? quit");
+            playerManager.playersAvatarIdentity.Remove(myIdentity);
+        }
     }
 
     void DoMove()
@@ -129,6 +136,13 @@ public class PlayerObj : NetworkBehaviour
     [Client]
     public void RemoveServerList()
     {
-        playerManager.RemoveIdentityToList(myIdentity);
+        Debug.Log("클라");
+        CMD_RemoveServerList(myIdentity);
+    }
+    [Command]
+    public void CMD_RemoveServerList(NetworkIdentity identity)
+    {
+        Debug.Log("커맨드");
+        playerManager.RemoveIdentityToList(identity);
     }
 }
