@@ -45,18 +45,15 @@ public class Loading_Bubble : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("Bubble Awake Begin" + upSpeed);
         upSpeed = 3;
         rectTransform = GetComponent<RectTransform>();
         screenHeight = Camera.main.pixelHeight;
         screenWidth = Camera.main.pixelWidth;
-        Debug.Log("Bubble Awake End" + upSpeed);
     }
 
 
     private void OnEnable()
     {
-        Debug.Log("Bubble OnEnable Begin" + upSpeed);
         switch (moveMode)
         {
             case MoveMode.Main:
@@ -85,7 +82,6 @@ public class Loading_Bubble : MonoBehaviour
         
 
         StartCoroutine(MoveUp_co());
-        Debug.Log("Bubble OnEnable End" + upSpeed);
     }
 
 

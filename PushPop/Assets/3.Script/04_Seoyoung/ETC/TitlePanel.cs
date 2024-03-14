@@ -47,28 +47,16 @@ public class TitlePanel : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("Title Awake Begin");
         Init();
         ParticleCanvas.gameObject.SetActive(true);
         StartBtn.interactable = false;
 
         StartCoroutine(Init_co());
-        Debug.Log("Title Awake End");
-    }
-
-    private void OnEnable()
-    {
-        //Debug.Log("Title OnEnable Begin");
-
-   
-        //Debug.Log("Title OnEnable End");
     }
 
     private void Start()
     {
-        Debug.Log("Title Start Begin");
         AudioManager.instance.SetAudioClip_BGM(0);
-        Debug.Log("Title Start End");
     }
 
 
@@ -117,11 +105,7 @@ public class TitlePanel : MonoBehaviour
 
             //bubble_Array[i].gameObject.SetActive(false);
             bubble_Array[i].gameObject.SetActive(true);
-            Debug.Log("Bubble" + i + "Creation End");
-
         }
-
-
     }
     
 

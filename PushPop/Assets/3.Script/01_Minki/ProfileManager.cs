@@ -293,7 +293,6 @@ public class ProfileManager : MonoBehaviour
     /// <returns></returns>
     public Sprite TextureToSprite(Texture2D texture)
     {
-        Debug.Log("텍스춰가 널이니 ? : " + texture);
         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
 
         return sprite;
