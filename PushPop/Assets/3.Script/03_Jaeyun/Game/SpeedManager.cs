@@ -20,7 +20,6 @@ public class SpeedManager : MonoBehaviour, IGame
     [SerializeField] private GameObject resultPanel = null;
     [SerializeField] private GameObject warningPanel = null;
 
-
     [Header("Game Info")]
     public Difficulty Difficulty = Difficulty.Easy;
     public float difficultyCount = 0;

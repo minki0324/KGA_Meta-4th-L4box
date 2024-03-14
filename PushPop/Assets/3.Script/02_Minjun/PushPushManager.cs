@@ -14,6 +14,17 @@ public class PushPushManager : MonoBehaviour, IGame
     public int pieceCount = 1; //버블터졋을때 중복호출을 방지하기위한 인덱스
     public int pushCount; //버튼눌렀을때 + 되는 카운트 pushCount == 버튼리스트.Count 비교해서 동일시 클리어 판정(GameManager)
     public event Action onPushPushGameEnd;
+
+    private void OnEnable()
+    {
+        GameSetting();
+    }
+
+    private void OnDisable()
+    {
+        Init();
+    }
+
     #region 푸시푸시게임 전체 콜백메소드 모음
 
     public void OnAllBubblesPopped() //버블이 모두 터지고 땅에닿았을때 불리는 메소드
@@ -57,9 +68,10 @@ public class PushPushManager : MonoBehaviour, IGame
     {
         decoPanel.SetActive(_bool);
     }
+
     public void Init()
-    {
-        throw new NotImplementedException();
+    { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
+
     }
     public void TitleSet(string _string)
     {
@@ -67,8 +79,8 @@ public class PushPushManager : MonoBehaviour, IGame
     }
 
     public void GameSetting()
-    {
-        throw new NotImplementedException();
+    { // OnEnable() bubble size, board size, pushpopbutton size, pushpop percentage, etc. setting 관련
+    
     }
 
     public void GameStart()

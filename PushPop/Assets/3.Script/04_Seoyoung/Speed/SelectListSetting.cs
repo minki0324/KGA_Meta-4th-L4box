@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 public class SelectListSetting : MonoBehaviour
@@ -23,16 +25,33 @@ public class SelectListSetting : MonoBehaviour
     [SerializeField] private Button previousButton = null;
     [SerializeField] private Button nextButton = null;
 
-    [Header("Difficulty Icon List")] // spriteAtlas에서 가져올 것
+    [Header("PushPush Icon List")] // sprite atlas로 바꿀 수 있다면... todo
+    private int maxPage = 0; // category list count
+    private int currentPage = 1; // category list current count
+    [SerializeField] private TMP_Text pageText = null;
+    [SerializeField] private List<Sprite> categoryIconList = null;
+    public List<Sprite> IconList10 = null;
+    public List<Sprite> IconList11 = null;
+    public List<Sprite> IconList12 = null;
+    public List<Sprite> IconList13 = null;
+    public List<Sprite> IconList14 = null;
+    public List<Sprite> IconList15 = null;
+    public List<Sprite> IconList16 = null;
+    public List<Sprite> IconList17 = null;
+    public List<Sprite> IconList18 = null;
+    public List<Sprite> IconList19 = null;
+
+    [Header("Speed Icon List")]
     [SerializeField] private List<Sprite> easyIconList = null;
     [SerializeField] private List<Sprite> normalIconList = null;
     [SerializeField] private List<Sprite> hardIconList = null;
-    private List<Button> iconButtonList = null;
 
-    [Header("Only PushPush Mode")]
-    [SerializeField] private TMP_Text pageText = null;
-    private int maxPage = 0; // category list count
-    private int currentPage = 1; // category list current count
+    private List<Button> iconButtonList = null; // select한 icon list
+
+    private void Awake()
+    {
+        IconListSetting();
+    }
 
     private void OnEnable()
     {
@@ -51,6 +70,13 @@ public class SelectListSetting : MonoBehaviour
         Init();
     }
 
+    private void IconListSetting()
+    {
+        for (int i = 10; i < 20; i++)
+        {
+        }
+    }
+
     private void Init()
     { // list 초기화
         for (int i = 0; i < selectCategoryScrollView.transform.childCount; i++)
@@ -64,9 +90,8 @@ public class SelectListSetting : MonoBehaviour
     private void CategoryIconSetting()
     {
         maxPage = 1; 
-        pageText.text = $"{currentPage}/{maxPage}";
 
-        List<Sprite> selectList = null;
+        List<Sprite> selectList = categoryIconList;
         iconButtonList = new List<Button>();
 
         for (int i = 0; i < selectList.Count; i++)
@@ -82,7 +107,8 @@ public class SelectListSetting : MonoBehaviour
         for (int i = 0; i < iconButtonList.Count; i++)
         {
             int index = i;
-            //iconButtonList[i].onClick.AddListener(delegate { CategoryIconButtonClick(iconButtonList[index].gameObject, index); });
+            Sprite sprite = iconButtonList[i].transform.GetComponent<Image>().sprite;
+            iconButtonList[i].onClick.AddListener(delegate { CategoryIconButtonClick(int.Parse(sprite.name)); });
         }
     }
 
@@ -128,6 +154,27 @@ public class SelectListSetting : MonoBehaviour
     }
     #endregion
     #region Selected List Panel (Ready)
+    private void CategoryIconButtonClick(int _selectList)
+    {
+        AudioManager.instance.SetCommonAudioClip_SFX(3);
+
+        List<Sprite> selectIcon = this.GetType().GetField($"IconList{_selectList}").GetValue(this) as List<Sprite>;
+        
+        categorySelectTitle.text = DataManager.instance.categoryDict[_selectList];
+        selectIconImage.sprite = selectIcon[0];
+        selectIconText.text = DataManager.instance.iconDict[int.Parse(selectIcon[0].name)];
+        BoardIcon = selectIconImage.sprite;
+        maxPage = selectIcon.Count;
+
+        if (GameManager.Instance.GameMode.Equals(GameMode.PushPush))
+        {
+            currentPage = 1;
+            pageText.text = $"{currentPage}/{maxPage}";
+        }
+
+        Ready.SetActive(true);
+    }
+
     private void CategoryIconButtonClick(GameObject _selectIconButton, int _selectIcon)
     { // 아이콘 눌렀을 때 호출되는 함수, Ready Active true
         AudioManager.instance.SetCommonAudioClip_SFX(3);
@@ -138,12 +185,6 @@ public class SelectListSetting : MonoBehaviour
         BoardIcon = selectIconImage.sprite;
         GameManager.Instance.CurrentIcon = _selectIcon;
         GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
-
-        if (GameManager.Instance.GameMode.Equals(GameMode.PushPush))
-        {
-            currentPage = 1;
-            pageText.text = $"{currentPage}/{maxPage}";
-        }
 
         Ready.SetActive(true);
     }
