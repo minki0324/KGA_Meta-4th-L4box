@@ -15,7 +15,6 @@ public class MainCanvas : MonoBehaviour
     public GameObject TitleText = null;
     public GameObject OptionButton = null;
     public GameObject ProfileButton = null;
-    public GameObject HomeButton = null;
 
     [Header("Profile")]
     public Image CaptureImage = null;
@@ -58,12 +57,6 @@ public class MainCanvas : MonoBehaviour
     { // Music Option 버튼, 소리 조절
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         optionPanel.SetActive(true);
-    }
-
-    public void HomeSiteButton()
-    { // 좌측 하단 버튼, 사이트로 이동
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        Application.OpenURL("https://www.l4box.com/");
     }
     #endregion
     #region TimeSetting Panel
