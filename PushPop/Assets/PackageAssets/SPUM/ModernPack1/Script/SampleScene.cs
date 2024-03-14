@@ -28,7 +28,6 @@ public class SampleScene : MonoBehaviour
     //무브 스테이트 설정.
     public void SetMoveState (int num)
     {
-        Debug.Log(num);
         if(_playerManagers._nowObj==null) return;
         _moveStateSave = num;
         Animator tAnim = _playerManagers._nowObj._prefabs._anim;

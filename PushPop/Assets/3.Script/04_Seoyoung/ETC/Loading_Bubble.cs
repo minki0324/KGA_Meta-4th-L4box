@@ -94,7 +94,7 @@ public class Loading_Bubble : MonoBehaviour
 
             if (sizeTime >= Random.Range(0.5f, 3f))
             {
-                sizeRandom += Random.Range(0.5f, 1f);
+                sizeRandom = Random.Range(0.5f, 1f);
                 if (bisIncrease) bisIncrease = false;
                 else bisIncrease = true;
 

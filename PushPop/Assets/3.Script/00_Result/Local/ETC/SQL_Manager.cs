@@ -11,7 +11,6 @@ using UnityEngine.UI;
 /// <summary>
 /// UID에 속해있는 Profile
 /// </summary>
-[System.Serializable]
 public class Profile
 {
     public string name { get; private set; }
@@ -23,11 +22,11 @@ public class Profile
     {
         this.name = name;
         this.index = index;
-        if(mode.Equals(0))
+        if (mode == 0)
         { // 사진 찍은 사람
             imageMode = false;
         }
-        else if(mode.Equals(1))
+        else if (mode == 1)
         { // default image 선택한 사람
             imageMode = true;
         }
@@ -61,7 +60,19 @@ public class FavoriteList
         FriendIndex = friendIndex;
     }
 
-    public List<int> FriendIndex { get; private set; }
+    public List<int> FriendIndex;
+}
+
+public class HeartAndLike
+{
+    public List<int> PressHeartProfileIndex;
+    public List<int> PressLikeProfileIndex;
+
+    public HeartAndLike(List<int> pressHeartProfileIndex, List<int> pressLikeProfileIndex)
+    {
+        PressHeartProfileIndex = pressHeartProfileIndex;
+        PressLikeProfileIndex = pressLikeProfileIndex;
+    }
 }
 #endregion
 
@@ -737,8 +748,96 @@ public class SQL_Manager : MonoBehaviour
     }
     #endregion
 
+    #region Network Connect
+    public void SQL_ConnectCheck(bool _connectType, int _profileIndex)
+    {
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+
+            if (!reader.IsClosed) reader.Close();
+            // 2. 매개변수로 받은 불값에 따라 본인의 접속 상태를 변경
+            string update_cmd = @"UPDATE Profile SET NetworkConnect = @networkConnect WHERE Profile_Index = @ProfileIndex;";
+            MySqlCommand updatecmd_ = new MySqlCommand(update_cmd, connection);
+
+            // 매개변수를 True로 넣으면 접속할 때, False로 넣으면 접속 해제할 때
+            string connect = _connectType ? "T" : "F";
+
+            // 파라미터 추가
+            updatecmd_.Parameters.AddWithValue("@networkConnect", connect);
+            updatecmd_.Parameters.AddWithValue("@ProfileIndex", _profileIndex);
+
+            updatecmd_.ExecuteNonQuery();
+        }
+        catch(Exception e)
+        {
+            if (!reader.IsClosed) reader.Close();
+            Debug.Log(e.Message);
+        }
+    }
+
+    public List<Profile> SQL_ConnectListSet(int _profileIndex)
+    {
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return null;
+            }
+            if (!reader.IsClosed) reader.Close();
+
+            List<Profile> connectedProfiles = new List<Profile>();
+
+            string select_cmd = string.Format(@"SELECT DISTINCT Profile.User_name, Profile.Profile_Index, Profile.ImageMode, Image.DefaultIndex 
+                                                                                          FROM Profile 
+                                                                                          INNER JOIN Image ON Profile.Profile_Index = Image.Profile_Index 
+                                                                                          WHERE NetworkConnect = '{0}';", "T");
+            MySqlCommand selectcmd_ = new MySqlCommand(select_cmd, connection);
+            reader = selectcmd_.ExecuteReader();
+
+            if(reader.HasRows)
+            {
+                while(reader.Read())
+                {
+                    string profileName = reader.GetString("User_name");
+                    int profileIndex = reader.GetInt32("Profile_Index");
+                    if (profileIndex == _profileIndex) continue;
+                    int imageMode = reader.GetInt32("ImageMode");
+                    int defaultImage = reader.IsDBNull(reader.GetOrdinal("DefaultIndex")) ? -1 : reader.GetInt32("DefaultIndex");
+                    // 넘겨줄 리스트 Add해주기
+                    connectedProfiles.Add(new Profile(profileName, profileIndex, imageMode, defaultImage));
+                }
+                if (!reader.IsClosed) reader.Close();
+                return connectedProfiles;
+            }
+            else
+            {
+                Debug.Log("접속 중인 유저가 없습니다.");
+                if (!reader.IsClosed) reader.Close();
+                return connectedProfiles;
+            }    
+        }
+        catch(Exception e)
+        {
+            if (!reader.IsClosed) reader.Close();
+            Debug.Log(e.Message);
+            return null;
+        }
+    }
+    #endregion
+
     #region Favorite
-    public FavoriteList SQL_ListUpFavorite(int _profileIndex)
+    /// <summary>
+    /// 즐겨찾기 리스트를 세팅하는 Method
+    /// </summary>
+    /// <param name="_profileIndex"></param>
+    /// <returns></returns>
+    public FavoriteList SQL_FavoriteListSet(int _profileIndex)
     { // 즐겨찾기 목록 ListUp하는 Method
         try
         {
@@ -747,9 +846,10 @@ public class SQL_Manager : MonoBehaviour
             {
                 return null;
             }
+            if (!reader.IsClosed) reader.Close();
 
             // 2. Profile 정보 받아오기
-            string select_cmd = string.Format(@"FavoriteList FROM Favorite WHERE Profile_Index='{0}';", _profileIndex);
+            string select_cmd = string.Format(@"SELECT FavoriteList FROM Favorite WHERE Profile_Index='{0}';", _profileIndex);
             MySqlCommand selectcmd_ = new MySqlCommand(select_cmd, connection);
             reader = selectcmd_.ExecuteReader();
 
@@ -770,11 +870,17 @@ public class SQL_Manager : MonoBehaviour
         }
         catch (Exception e)
         {
+            if (!reader.IsClosed) reader.Close();
             Debug.Log("SQL ListUpFavorite : " + e.Message);
             return null;
         }
     }
 
+    /// <summary>
+    /// 즐겨찾기 리스트를 업데이트 하는 Method
+    /// </summary>
+    /// <param name="favoriteList"></param>
+    /// <param name="_profileIndex"></param>
     public void SQL_UpdateFavoriteList(FavoriteList favoriteList, int _profileIndex)
     {
         try
@@ -784,9 +890,12 @@ public class SQL_Manager : MonoBehaviour
             {
                 return;
             }
+            if (!reader.IsClosed) reader.Close();
 
+            // 1. 받아온 FavoriteList를 string으로 변경
             string jsonFavorite = JsonUtility.ToJson(favoriteList);
 
+            // 2. SQL에 갱신된 즐겨찾기 목록 업데이트
             string update_cmd = @"UPDATE Favorite SET FavoriteList = @FavoriteList WHERE Profile_Index = @ProfileIndex;";
             MySqlCommand updatecmd_ = new MySqlCommand(update_cmd, connection);
 
@@ -795,12 +904,174 @@ public class SQL_Manager : MonoBehaviour
             updatecmd_.Parameters.AddWithValue("@ProfileIndex", _profileIndex);
 
             updatecmd_.ExecuteNonQuery();
+            if (!reader.IsClosed) reader.Close();
         }
         catch(Exception e)
         {
+            if (!reader.IsClosed) reader.Close();
             Debug.Log("SQL UpdateFavoriteList" + e.Message);
         }
     }
+    #endregion
+
+    #region Heart And Like
+    /// <summary>
+    /// 좋아요와 하트를 누른 프로필 인덱스 리스트들을 세팅하는 Method
+    /// </summary>
+    /// <param name="_profileIndex"></param>
+    /// <returns></returns>
+    public HeartAndLike SQL_HeartAndLikeListSet(int _profileIndex)
+    { // 즐겨찾기 목록 ListUp하는 Method
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return null;
+            }
+            if (!reader.IsClosed) reader.Close();
+
+            // 2. Profile 정보 받아오기
+            string select_cmd = string.Format(@"SELECT PressHeartAndLikeList FROM Profile WHERE Profile_Index='{0}';", _profileIndex);
+            MySqlCommand selectcmd_ = new MySqlCommand(select_cmd, connection);
+            reader = selectcmd_.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                reader.Read();
+                string heartAndLikeList = reader.GetString("PressHeartAndLikeList");
+                HeartAndLike heartAndLikeLists = JsonUtility.FromJson<HeartAndLike>(heartAndLikeList);
+                if (!reader.IsClosed) reader.Close();
+                return heartAndLikeLists; // 리스트 전달
+            }
+            else
+            {
+                if (!reader.IsClosed) reader.Close();
+                Debug.Log("HeartAndLikeList가 없습니다.");
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("SQL HeartAndLikeListSet : " + e.Message);
+            return null;
+        }
+    }
+
+    /// <summary>
+    ///  좋아요와 하트 버튼을 누른 프로필 인덱스를 업데이트하는 Method
+    /// </summary>
+    /// <param name="heartAndLikeList"></param>
+    /// <param name="_profileIndex"></param>
+    public void SQL_UpdateHeartAndLikeList(HeartAndLike heartAndLikeList, int _profileIndex)
+    {
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+            if (!reader.IsClosed) reader.Close();
+            string jsonHeartAndLike = JsonUtility.ToJson(heartAndLikeList);
+            string update_cmd = @"UPDATE Profile SET PressHeartAndLikeList = @PressHeartAndLikeList WHERE Profile_Index = @ProfileIndex;";
+            MySqlCommand updatecmd_ = new MySqlCommand(update_cmd, connection);
+
+            // 파라미터 추가
+            updatecmd_.Parameters.AddWithValue("@PressHeartAndLikeList", jsonHeartAndLike);
+            updatecmd_.Parameters.AddWithValue("@ProfileIndex", _profileIndex);
+
+            updatecmd_.ExecuteNonQuery();
+
+            if (!reader.IsClosed) reader.Close();
+        }
+        catch (Exception e)
+        {
+            if (!reader.IsClosed) reader.Close();
+            Debug.Log("SQL UpdateFavoriteList" + e.Message);
+            return;
+        }
+    }
+
+    public void SQL_UpdateHeartAndLikeCount(int _profileIndex, bool _isLikeButton)
+    {
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+            if (!reader.IsClosed) reader.Close();
+
+            // 2. Profile을 조회하여 Heart와 Like의 int 값을 받아옴
+
+            // 2. LikeCount 또는 HeartCount를 업데이트하는 쿼리 작성
+            string update_cmd = _isLikeButton ?
+                "UPDATE Profile SET LikeCount = LikeCount + 1 WHERE Profile_Index = @ProfileIndex;" :
+                "UPDATE Profile SET HeartCount = HeartCount + 1 WHERE Profile_Index = @ProfileIndex;";
+
+            MySqlCommand updatecmd_ = new MySqlCommand(update_cmd, connection);
+
+            // 파라미터 추가
+            updatecmd_.Parameters.AddWithValue("@ProfileIndex", _profileIndex);
+
+            // 쿼리 실행
+            updatecmd_.ExecuteNonQuery();
+
+            if (!reader.IsClosed) reader.Close();
+        }
+        catch (Exception e)
+        {
+            if (!reader.IsClosed) reader.Close();
+            Debug.Log("SQL UpdateHeartAndLikeCount : " + e.Message);
+            return;
+        }
+    }
+
+    /// <summary>
+    /// 현재 모아모아 창이 열려있는 profileindex의 좋아요와 하트 버튼의 개수를 갱신해주는 Method
+    /// </summary>
+    /// <param name="_profileIndex"></param>
+    /// <returns></returns>
+    public int[] SQL_HeartAndLikeCount(int _profileIndex)
+    {
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return null;
+            }
+            if (!reader.IsClosed) reader.Close();
+
+            // 2. Profile을 조회하여 Heart와 Like의 int 값을 받아옴
+            string select_cmd = string.Format(@"SELECT LikeCount, HeartCount FROM Profile WHERE Profile_Index='{0}';", _profileIndex);
+            MySqlCommand selectcmd_ = new MySqlCommand(select_cmd, connection);
+            reader = selectcmd_.ExecuteReader();
+
+            if (reader.Read())
+            {
+                int heart = reader.GetInt32("HeartCount");
+                int like = reader.GetInt32("LikeCount");
+
+                if (!reader.IsClosed) reader.Close();
+                return new int[2] { like, heart };
+            }
+            else
+            {
+                if (!reader.IsClosed) reader.Close();
+                return null;
+            }
+        }
+        catch(Exception e)
+        {
+            if (!reader.IsClosed) reader.Close();
+            Debug.Log("SQL HeartAndLikeCount : " + e.Message);
+            return null;
+        }
+    }
+
     #endregion
 
     public void PrintProfileImage(Image _profileImage, bool _imageMode, int _profileIndex)
