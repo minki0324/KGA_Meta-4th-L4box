@@ -12,7 +12,7 @@ public enum GameMode // GameMode
     Speed,
     Memory,
     Multi,
-    None
+    None,
 }
 
 

@@ -41,6 +41,7 @@ public class ProfileInfo : MonoBehaviour
         
         profileCanvas.BlockPanel.SetActive(true);
         profileCanvas.CurrentProfile.SetActive(true);
+        profileCanvas.BackButton.SetActive(false);
         profileCanvas.Select.SetActive(false);
     }
 

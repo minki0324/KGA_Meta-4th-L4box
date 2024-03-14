@@ -39,6 +39,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     [Header("Exit Button")]
     public GameObject ExitButton = null;
+    public GameObject BackButton = null;
 
     [Header("Delete Panel")]
     public GameObject DeletePanel = null;
@@ -253,7 +254,6 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             mainCanvas.TitleText.SetActive(true);
             mainCanvas.OptionButton.SetActive(true);
             mainCanvas.ProfileButton.SetActive(true);
-            mainCanvas.HomeButton.SetActive(true);
             mainCanvas.PushpushButton.SetActive(true);
             mainCanvas.SpeedButton.SetActive(true);
             mainCanvas.MemoryButton.SetActive(true);
@@ -273,6 +273,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         BlockPanel.SetActive(false);
         CurrentProfile.SetActive(false);
         ExitButton.SetActive(false);
+        BackButton.SetActive(true);
         Select.SetActive(true);
         gameObject.SetActive(false);
     }
@@ -292,13 +293,14 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         SelectScrollView.normalizedPosition = new Vector2(1f, 1f);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
-        if (!GameManager.Instance.GameMode.Equals(GameMode.Multi))
+        if (GameManager.Instance.GameMode.Equals(GameMode.None) && !mainCanvas.ProfileButton.activeSelf)
         {
             BlockPanel.SetActive(false);
             ExitButton.SetActive(true);
         }
 
         CurrentProfile.SetActive(false);
+        BackButton.SetActive(true);
         Select.SetActive(true);
     }
     #endregion
@@ -330,5 +332,8 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 #endif
     }
 
- 
+    public void ProfileBackButton()
+    {
+        gameObject.SetActive(false);
+    }
 }
