@@ -89,7 +89,6 @@ public class MultiManager : MonoBehaviour, IGame
         {
             FeverCoroutine = StartCoroutine(FeverMode());
         }
-        GameEnd();
     }
 
     private void OnDisable()
@@ -99,6 +98,7 @@ public class MultiManager : MonoBehaviour, IGame
     #region Game Interface
     public void Init()
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
+        GameManager.Instance.GameEnd -= GameEnd;
         resultPanel.SetActive(false);
 
         // timer setting
@@ -150,6 +150,7 @@ public class MultiManager : MonoBehaviour, IGame
     public void GameSetting()
     { // OnEnable() bubble size, board size, pushpopbutton size, pushpop percentage, etc. setting 관련
         // 버튼 사이즈 설정
+        GameManager.Instance.GameEnd += GameEnd;
         PushPop.Instance.ButtonSize = new Vector2(56.7f, 56.7f);
         PushPop.Instance.BoardSize = new Vector2(500f, 500f);
         PushPop.Instance.Percentage = 0.47f;
@@ -157,7 +158,6 @@ public class MultiManager : MonoBehaviour, IGame
         gameTimer.CurrentTime = 60f;
         gameTimer.TimerText.text = $"남은시간\n{(int)gameTimer.CurrentTime}";
 
-        // 프로필 세팅, 이미지 caching으로 바꿔줄 것, 처음 시작 시 1p imageMode = true, defaultIndex = 1일 때 boy로 뜸 왤까요... todo
         SQL_Manager.instance.PrintProfileImage(profileImage[(int)Player.Player1], ProfileManager.Instance.PlayerInfo[(int)Player.Player1].imageMode, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
         SQL_Manager.instance.PrintProfileImage(profileImage[(int)Player.Player2], ProfileManager.Instance.PlayerInfo[(int)Player.Player2].imageMode, ProfileManager.Instance.PlayerInfo[(int)Player.Player2].playerIndex);
         profileName[(int)Player.Player1].text = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName;
@@ -210,23 +210,25 @@ public class MultiManager : MonoBehaviour, IGame
 
     public void GameEnd()
     {
-        if (!gameTimer.EndTimer) return; // timer 종료 시 gameTimer.EndTimer true
         if (popButtonList1P.Count.Equals(0) || popButtonList2P.Count.Equals(0))
         {
+            if (gameTimer.EndTimer) // timer 종료 시 gameTimer.EndTimer true
+            {
+                AudioManager.instance.SetAudioClip_SFX(1, false);
+                WaterfallAnimatorSet(playerTurn, true);
+
+                StopAllCoroutines();
+                if (gameTimer.TimerCoroutine != null)
+                {
+                    gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
+                }
+                StartCoroutine(Result_Co());
+                isEndGame = true;
+                return;
+            }
+
             RepeatGameLogic();
-            return;
         }
-
-        AudioManager.instance.SetAudioClip_SFX(1, false);
-        WaterfallAnimatorSet(playerTurn, true);
-
-        StopAllCoroutines();
-        if (gameTimer.TimerCoroutine != null)
-        {
-            gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
-        }
-        StartCoroutine(Result_Co());
-        isEndGame = true;
     }
 
 

@@ -62,7 +62,7 @@ public class GameTimer : MonoBehaviour
     {
         if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
         {
-            float sec = CurrentTime % 60; //60으로 나눈 나머지 = 초
+            float sec = CurrentTime % 60; // 60으로 나눈 나머지 = 초
             float min = CurrentTime / 60;
             TimerText.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
         }

@@ -16,6 +16,7 @@ public class SelectListSetting : MonoBehaviour
 
     [Header("Ready (Selected List Panel)")]
     public GameObject Ready = null;
+    [SerializeField] ReadyProfileSetting readyProfileSetting = null;
     [SerializeField] private TMP_Text selectCategory = null;
     [SerializeField] private Image selectIconImage = null;
     [SerializeField] private TMP_Text selectIconText = null;
@@ -99,10 +100,11 @@ public class SelectListSetting : MonoBehaviour
         AudioManager.instance.SetCommonAudioClip_SFX(3);
         SelectIconInfo selectIconInfo = _selectIconButton.transform.parent.GetComponent<SelectIconInfo>();
 
-        GameManager.Instance.CurrentIcon = _selectIcon;
         selectIconImage.sprite = selectIconInfo.IconImage.sprite;
         selectIconText.text = selectIconInfo.IconText.text;
         BoardIcon = selectIconImage.sprite;
+        GameManager.Instance.CurrentIcon = _selectIcon;
+        GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
 
         Ready.SetActive(true);
     }
@@ -119,6 +121,10 @@ public class SelectListSetting : MonoBehaviour
             selectIconImage.sprite = selectIconInfo.IconImage.sprite;
             selectIconText.text = selectIconInfo.IconText.text;
             BoardIcon = selectIconImage.sprite;
+            GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
+
+            readyProfileSetting.PlayerInfoSetting();
+            readyProfileSetting.RankInfoSetting();
         }
     }
 
@@ -134,6 +140,10 @@ public class SelectListSetting : MonoBehaviour
             selectIconImage.sprite = selectIconInfo.IconImage.sprite;
             selectIconText.text = selectIconInfo.IconText.text;
             BoardIcon = selectIconImage.sprite;
+            GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
+
+            readyProfileSetting.PlayerInfoSetting();
+            readyProfileSetting.RankInfoSetting();
         }
     }
     #endregion

@@ -14,6 +14,7 @@ public class PushPop : MonoBehaviour
     public GameObject BoardPrefabUI = null; // PushPop Board Canvas Prefab
     private RectTransform boardSizeUI;
     public Vector2 BoardSize = Vector2.zero;
+    public Vector2 BoardPos = Vector2.zero;
     public List<GameObject> PushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
 
     [Header("PushPop GameObject")]
@@ -39,7 +40,7 @@ public class PushPop : MonoBehaviour
 
     public Sprite[] pushPopBtnSprites;
     public GameObject pushPopAni = null;
-    public bool Turning = true;
+    public bool Turning = false;
 
     private void Awake()
     {
@@ -88,10 +89,6 @@ public class PushPop : MonoBehaviour
     // Sprite 모양에 따른 Polygon collider setting
     public void CreatePushPopBoard(Transform parent)
     { // bomb mode일 때는 2회 호출
-        // sprite atlas setting
-        // spriteName = GameManager.Instance.PushPopStage;
-        // boardSprite = SpriteAtlas(spriteName.ToString());
-
         if (BoardSprite == null) return;
 
         // canvas setting
@@ -104,19 +101,22 @@ public class PushPop : MonoBehaviour
         boardSizeUI = pushPopBoard.GetComponent<RectTransform>();
         boardSizeUI.sizeDelta = BoardSize;
         PushPopBoardUIObject.Add(pushPopBoard);
+        PushPopBoardUIObject[0].transform.localPosition = BoardPos;
 
         // gameObject setting
         GameObject pushObject = Instantiate(boardPrefab);
         pushObject.GetComponent<SpriteRenderer>().sprite = BoardSprite;
+
         // size setting
         Rect boardRect = pushPopBoard.GetComponent<RectTransform>().rect;
         float scale = Mathf.Min(boardRect.width / BoardSprite.textureRect.size.x, boardRect.width / BoardSprite.textureRect.size.y) * 0.95f;
         pushObject.transform.localScale = new Vector3(scale, scale, 1f);
-        if (!Turning)
+        if (Turning)
         { // image flip
             boardSizeUI.localScale = new Vector3(-1, 1, 1);
             pushObject.transform.rotation = Quaternion.Euler(0, 180f, 0);
         }
+
         // polygon collider setting
         pushObject.AddComponent<PolygonCollider2D>();
         boardCollider = pushObject.GetComponent<PolygonCollider2D>();

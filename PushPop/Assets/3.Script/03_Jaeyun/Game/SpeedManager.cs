@@ -16,9 +16,6 @@ public class SpeedManager : MonoBehaviour, IGame
     [Header("Canvas")]
     [SerializeField] private SpeedCanvas speedCanvas = null;
 
-    [Header("Prefab")]
-    [SerializeField] private GameObject bubblePrefab = null;
-
     [Header("Panel")]
     [SerializeField] private GameObject resultPanel = null;
     [SerializeField] private GameObject warningPanel = null;
@@ -29,13 +26,12 @@ public class SpeedManager : MonoBehaviour, IGame
     public float difficultyCount = 0;
     [SerializeField] private Transform boardTrans = null;
     [SerializeField] private Transform buttonTrans = null;
-    private int activePopButton = 0;
     private GameObject touchBubble = null;
     private bool firstSetting = true;
     private Vector2[] bubblePos = { new Vector2(0f, 0f), new Vector2(0f, -20f)};
 
     [Header("Game Result")]
-    [SerializeField] private Image profileImage = null;
+    [SerializeField] private Image resultImage = null;
     [SerializeField] private TMP_Text resultMassageText = null;
     [SerializeField] private TMP_Text resultScoreText = null;
 
@@ -44,17 +40,10 @@ public class SpeedManager : MonoBehaviour, IGame
     [SerializeField] private Slider countSlider = null;
 
     private int clearMessage = 0;
-    private bool isEndGame = false;
 
     private void OnEnable()
     {
         GameSetting();
-    }
-
-    private void Update()
-    {
-        if (isEndGame) return;
-        GameEnd();
     }
 
     private void OnDisable()
@@ -66,16 +55,24 @@ public class SpeedManager : MonoBehaviour, IGame
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
         GameManager.Instance.OnDestroyBubble -= BubbleOnDestroy; // action 삭제
         GameManager.Instance.GameEnd -= GameEnd;
+        GameManager.Instance.LiveBubbleCount = 0;
+
         gameTimer.TimerText.color = new Color(0, 0, 0, 1);
         gameTimer.TenCount = false;
         gameTimer.EndTimer = false;
-        isEndGame = false;
+        countSlider.value = 0f;
 
         gameTimer.gameObject.SetActive(false);
         countSlider.gameObject.SetActive(false);
         firstSetting = true;
+
+        PushPop.Instance.BoardPos = Vector2.zero;
         PushPop.Instance.Turning = false;
         PushPop.Instance.Init();
+        if (touchBubble != null)
+        {
+            Destroy(touchBubble);
+        }
 
         StopAllCoroutines();
 
@@ -154,32 +151,31 @@ public class SpeedManager : MonoBehaviour, IGame
 
     public void GameEnd()
     {
-        if (!gameTimer.EndTimer) return;
         if (PushPop.Instance.ActivePosCount.Equals(0) && !firstSetting)
-        { // 게임 종료
-            if (countSlider.value >= 0.9f)
-            {
-                // Ranking.Instance. 랭킹 추가하기
-                profileImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
-                resultScoreText.text = $"{gameTimer.CurrentTime}";
-                clearMessage = (int)Ranking.Instance.CompareRanking(); // 점수 비교
-                resultMassageText.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
-
-                isEndGame = true;
-                resultPanel.SetActive(true);
-
-                Time.timeScale = 0f;
-                return;
+        {
+            if (!gameTimer.EndTimer)
+            { // timer true or countslider.value >= 0.9f일 경우 게임 종료
+                StartCoroutine(SpeedSlider_Co());
+                StartCoroutine(BoardCreate_Co());
             }
-            // repeat
-            StartCoroutine(BoardCreate_Co());
-            StartCoroutine(SpeedSlider_Co());
         }
     }
 
-    public void RepeatGameLogic()
+    public void GameEndSliderAfter()
     {
+        if (gameTimer.EndTimer || countSlider.value >= 0.9f)
+        {
+            Ranking.Instance.SetTimer(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex, int.Parse(speedCanvas.SelectListSetting.BoardIcon.name), (int)gameTimer.CurrentTime);
+            resultImage.sprite = speedCanvas.SelectListSetting.BoardIcon;
 
+            float sec = gameTimer.CurrentTime % 60;
+            float min = gameTimer.CurrentTime / 60;
+            resultScoreText.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+            clearMessage = (int)Ranking.Instance.CompareRanking(); // 점수 비교
+            resultMassageText.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
+
+            resultPanel.SetActive(true);
+        }
     }
 
     private void BoardInBubbleSetting()
@@ -188,11 +184,13 @@ public class SpeedManager : MonoBehaviour, IGame
         touchBubble.GetComponent<Image>().sprite = PushPop.Instance.BoardSprite;
         touchBubble.GetComponent<RectTransform>().sizeDelta = PushPop.Instance.BoardSize;
         GameManager.Instance.CreateBubble(PushPop.Instance.BoardSize, bubblePos[0], touchBubble); // board.transform.localPosition
+        GameManager.Instance.LiveBubbleCount++;
     }
 
     public void BubbleOnDestroy()
     { // Bubble OnDestroy 시 호출되는 method
         Destroy(touchBubble);
+        GameManager.Instance.LiveBubbleCount--;
         StartCoroutine(GameStart_Co());
     }
 
@@ -209,6 +207,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
         yield return new WaitForSeconds(0.7f);
 
+        PushPop.Instance.BoardPos = bubblePos[1];
         PushPop.Instance.CreatePushPopBoard(boardTrans);
         PushPop.Instance.CreateGrid(PushPop.Instance.PushPopBoardObject[0]);
         PushPop.Instance.PushPopButtonSetting(buttonTrans);
@@ -223,7 +222,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
     private IEnumerator SpeedSlider_Co()
     { // slider count
-        float duration = 1.4f;
+        float duration = 1f;
         float endValue = countSlider.value + difficultyCount;
         float elapsedTime = 0;
 
@@ -236,6 +235,7 @@ public class SpeedManager : MonoBehaviour, IGame
         }
 
         countSlider.value = endValue;
+        GameEndSliderAfter();
     }
     #region Result Panel
     public void ResultExitButton()
@@ -245,7 +245,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
         Time.timeScale = 1f;
 
-        speedCanvas.Ready.SetActive(true);
+        speedCanvas.SelectCategoryPanel.SetActive(true);
         speedCanvas.HelpButton.SetActive(true);
         speedCanvas.BackButton.SetActive(true);
         resultPanel.SetActive(false);
@@ -274,7 +274,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
         Init();
         warningPanel.SetActive(false);
-        speedCanvas.Ready.SetActive(true);
+        speedCanvas.SelectCategoryPanel.SetActive(true);
         speedCanvas.HelpButton.SetActive(true);
         speedCanvas.BackButton.SetActive(true);
         gameObject.SetActive(false);

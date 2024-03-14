@@ -265,13 +265,13 @@ public class Ranking : MonoBehaviour
 
         // 특정 spriteName에 대한 모든 타이머 기록을 찾아서 정렬하고 상위 3개를 선택.
         var topRanks = rankList
-            .Where(r => r.spriteName.Contains(GameManager.Instance.CurrentIcon)) // 먼저 spriteName을 포함하는 Rank만 필터링
+            .Where(r => r.spriteName.Contains(GameManager.Instance.CurrentIconName)) // 먼저 spriteName을 포함하는 Rank만 필터링
             .Select(r => new
             {
                 Rank = r,
-                Timer = r.timer[r.spriteName.IndexOf(GameManager.Instance.CurrentIcon)] // 해당 spriteName에 해당하는 타이머만 선택
+                Timer = r.timer[r.spriteName.IndexOf(GameManager.Instance.CurrentIconName)] // 해당 spriteName에 해당하는 타이머만 선택
             })
-            .Where(x => x.Rank.spriteName.Contains(GameManager.Instance.CurrentIcon))
+            .Where(x => x.Rank.spriteName.Contains(GameManager.Instance.CurrentIconName))
             .OrderBy(x => x.Timer)
             .Take(3)
             .ToList();
@@ -282,7 +282,7 @@ public class Ranking : MonoBehaviour
             {
                 for (int j = 0; j < topRanks[i].Rank.spriteName.Count; j++)
                 {
-                    if (topRanks[i].Rank.spriteName[j] == GameManager.Instance.CurrentIcon)
+                    if (topRanks[i].Rank.spriteName[j] == GameManager.Instance.CurrentIconName)
                     {
                         int sec = topRanks[i].Timer % 60;    //60으로 나눈 나머지 = 초
                         int min = topRanks[i].Timer / 60;
@@ -367,13 +367,13 @@ public class Ranking : MonoBehaviour
         SQL_Manager.instance.SQL_ProfileListSet();
         LoadRanking();
 
-        Rank userRecord = rankList.FirstOrDefault(r => r.index.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName) && r.spriteName.Contains(GameManager.Instance.CurrentIcon));
+        Rank userRecord = rankList.FirstOrDefault(r => r.index.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex) && r.spriteName.Contains(GameManager.Instance.CurrentIconName));
 
         if (userRecord != null)
         { // 기록이 있을 때
             for (int i = 0; i < userRecord.spriteName.Count; i++)
             {
-                if (userRecord.spriteName[i].Equals(GameManager.Instance.CurrentIcon))
+                if (userRecord.spriteName[i].Equals(GameManager.Instance.CurrentIconName))
                 {
                     return userRecord.timer[i];
                 }

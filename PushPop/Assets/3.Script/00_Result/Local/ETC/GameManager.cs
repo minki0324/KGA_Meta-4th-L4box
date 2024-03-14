@@ -50,7 +50,7 @@ public class PuzzleObject
 }
 #endregion
 
-public class GameManager : MonoBehaviour, IGameMode_
+public class GameManager : MonoBehaviour
 {
     public static GameManager Instance = null;
 
@@ -69,7 +69,8 @@ public class GameManager : MonoBehaviour, IGameMode_
     
 
     [Header("Speed Game")]
-    public int CurrentIcon = 0; // 선택한 아이콘
+    public int CurrentIcon = 0; // 선택한 아이콘 리스트 순서
+    public int CurrentIconName = 0; // 선택한 아이콘 이름
     public Difficulty Difficulty = Difficulty.Easy;
 
     public int boardName = 0; // mold name
@@ -103,8 +104,9 @@ public class GameManager : MonoBehaviour, IGameMode_
     private Coroutine timer = null;
     public int Score = 0;
     public float TimeScore = 0;
-    public Action OnDestroyBubble;
-    public Action GameEnd;
+    public int LiveBubbleCount = 0; // Bubble을 터트리지 않은 상태로 나갈 때 true, 터트리면 false
+    public Action OnDestroyBubble; // Bubble이 OnDestroy 했을 때
+    public Action GameEnd; // PushPop button
 
     public float count = 0.25f;
     public Coroutine pushpushCreate_Co = null;
@@ -177,14 +179,6 @@ public class GameManager : MonoBehaviour, IGameMode_
         {
             case GameMode.PushPush:
                 PushPushMode();
-                break;
-            case GameMode.Speed:
-                SpeedMode();
-                break;
-            case GameMode.Memory:
-                break;
-            case GameMode.Multi:
-                BombMode();
                 break;
         }
     }
@@ -367,30 +361,6 @@ public class GameManager : MonoBehaviour, IGameMode_
         }
     }
 
-    private IEnumerator SpeedCreate_Co()
-    {
-        BoardSize = new Vector2(700f, 700f);
-
-        // animation
-        Animator pushAni = PushPop.Instance.pushPopAni.GetComponent<Animator>();
-        pushAni.SetTrigger("Turning");
-        
-
-        yield return new WaitForSeconds(0.5f);
-        AudioManager.instance.SetAudioClip_SFX(0, false);
-        yield return new WaitForSeconds(1f);
-
-        PushPop.Instance.Turning = !PushPop.Instance.Turning;
-        bubblePos.Clear();
-        //PushPop.Instance.PushPopClear();
-
-        // pushpop 생성, PushPop.Instance.pushTurn == false일 때 Rotate 180 돌려준 뒤에 add
-        PushPop.Instance.CreatePushPopBoard(PushPop.Instance.pushPopCanvas);
-        PushPop.Instance.CreateGrid(PushPop.Instance.PushPopBoardObject[0]);
-        PushPop.Instance.PushPopButtonSetting(PushPop.Instance.buttonCanvas);
-        buttonActive = PushPop.Instance.activePos.Count;
-    }
-
     public void PushPushMode()
     {
         BoardSize = new Vector2(520f, 400f); // scale
@@ -417,7 +387,7 @@ public class GameManager : MonoBehaviour, IGameMode_
 
     public void SpeedMode()
     { // speed mode start
-        PushPop.Instance.ButtonSize = new Vector2(80f, 80f);
+        /*PushPop.Instance.ButtonSize = new Vector2(80f, 80f);
         PushPop.Instance.Percentage = 0.67f;
         Ranking.Instance.SettingPreviousScore();
         // position count 한 개, 위치 가운데, scale 조정
@@ -429,7 +399,7 @@ public class GameManager : MonoBehaviour, IGameMode_
         board.GetComponent<Image>().sprite = PushPop.Instance.BoardSprite;
         board.GetComponent<RectTransform>().sizeDelta = BoardSize;
         PushPop.Instance.PushPopBoardObject.Add(board);
-        CreateBubble(BoardSize, board.transform.localPosition, board);
+        CreateBubble(BoardSize, board.transform.localPosition, board);*/
     }
 
     public void SpeedModePushPopCreate()

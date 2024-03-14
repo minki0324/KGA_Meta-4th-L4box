@@ -47,6 +47,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler, IBubble
                 GameManager.Instance.pushPush.pieceCount++;
                 break;
             case GameMode.Speed:
+                if (GameManager.Instance.LiveBubbleCount.Equals(0)) return;
                 GameManager.Instance.OnDestroyBubble();
                 break;
         }

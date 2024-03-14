@@ -2013,57 +2013,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 961691451}
-        m_TargetAssemblyTypeName: PushPush_Result, Assembly-CSharp
-        m_MethodName: Success_BackBtn_Clicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1697738263}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: Enable_Objects
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1734511123}
-        m_TargetAssemblyTypeName: PuzzleLozic, Assembly-CSharp
-        m_MethodName: ClearPieceList
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 139298934}
-        m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
-        m_MethodName: BtnAllClear
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1697738263}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: GoOutBtn_Clicked
+      - m_Target: {fileID: 1503872621}
+        m_TargetAssemblyTypeName: SpeedManager, Assembly-CSharp
+        m_MethodName: WarningPanelGoOutButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5370,6 +5322,7 @@ MonoBehaviour:
   pushPush: {fileID: 0}
   MemoryManager: {fileID: 0}
   CurrentIcon: 0
+  CurrentIconName: 0
   Difficulty: 50
   boardName: 0
   currentTime: 0
@@ -5392,6 +5345,7 @@ MonoBehaviour:
   finalCenter: {x: 0, y: 0}
   Score: 0
   TimeScore: 0
+  LiveBubbleCount: 0
   count: 0.25
   printName:
   - {fileID: 1388441613}
@@ -6467,6 +6421,7 @@ MonoBehaviour:
   pushPopButtonPrefab: {fileID: 7161972215700324124, guid: 1381da20a7f6349438dc19f56e561b10, type: 3}
   BoardPrefabUI: {fileID: 6080136693297342902, guid: e2c99a2b45e46b34eb39a7934886813e, type: 3}
   BoardSize: {x: 0, y: 0}
+  BoardPos: {x: 0, y: 0}
   PushPopBoardUIObject: []
   pushPopSpriteAtlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
   boardPrefab: {fileID: 3633448892475870983, guid: b42c40511bead9941bc7f9901e85999e, type: 3}
@@ -6490,7 +6445,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1652f2efa5721a446892d51b273576dc, type: 3}
   - {fileID: 21300000, guid: 0607a023efa482e4d9055e78cf332f3d, type: 3}
   pushPopAni: {fileID: 0}
-  Turning: 1
+  Turning: 0
 --- !u!4 &197995234
 Transform:
   m_ObjectHideFlags: 0
@@ -9846,9 +9801,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Speed_Timer, Assembly-CSharp
-        m_MethodName: GoOutBtn_Clicked
+      - m_Target: {fileID: 1503872621}
+        m_TargetAssemblyTypeName: SpeedManager, Assembly-CSharp
+        m_MethodName: ResultExitButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -39780,7 +39735,7 @@ MonoBehaviour:
   mainCanvas: {fileID: 26907700}
   BackButton: {fileID: 292263973}
   HelpButton: {fileID: 1389620137}
-  selectListSetting: {fileID: 1738012323}
+  SelectListSetting: {fileID: 1738012323}
   SelectDifficultyPanel: {fileID: 1127129992}
   SelectCategoryPanelScrollView: {fileID: 1452448484}
   SelectCategoryPanel: {fileID: 1738012321}
@@ -43815,9 +43770,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Speed_Canvas, Assembly-CSharp
-        m_MethodName: RestartButton
+      - m_Target: {fileID: 1503872621}
+        m_TargetAssemblyTypeName: SpeedManager, Assembly-CSharp
+        m_MethodName: ResultRestartButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -49108,14 +49063,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedCanvas: {fileID: 1214644974}
-  bubblePrefab: {fileID: 8925204162082192838, guid: b1233b5acd8a67a4b9328d6e3efeedfb, type: 3}
   resultPanel: {fileID: 1276528353}
   warningPanel: {fileID: 1002311380}
   Difficulty: 50
   difficultyCount: 0
   boardTrans: {fileID: 1324717779}
   buttonTrans: {fileID: 62303151}
-  profileImage: {fileID: 376949854}
+  resultImage: {fileID: 376949854}
   resultMassageText: {fileID: 323264363}
   resultScoreText: {fileID: 1136526024}
   gameTimer: {fileID: 1219719283}
@@ -57125,6 +57079,7 @@ MonoBehaviour:
   categorySelectTitle: {fileID: 1119109721}
   selectCategoryScrollView: {fileID: 236027970}
   Ready: {fileID: 785141287}
+  readyProfileSetting: {fileID: 785141289}
   selectCategory: {fileID: 1558788387}
   selectIconImage: {fileID: 725413039}
   selectIconText: {fileID: 1545419553}
@@ -67170,9 +67125,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1697738263}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: CancelBtn_Clicked
+      - m_Target: {fileID: 1503872621}
+        m_TargetAssemblyTypeName: SpeedManager, Assembly-CSharp
+        m_MethodName: WarningPanelCancelButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -15,7 +15,7 @@ public class SpeedCanvas : MonoBehaviour
     public GameObject HelpButton = null;
 
     [Header("Select Panel")]
-    [SerializeField] private SelectListSetting selectListSetting = null;
+    public SelectListSetting SelectListSetting = null;
     public GameObject SelectDifficultyPanel = null;
     public ScrollRect SelectCategoryPanelScrollView = null;
     public GameObject SelectCategoryPanel = null;
@@ -51,12 +51,12 @@ public class SpeedCanvas : MonoBehaviour
     { // Ready - 게임 시작
         AudioManager.instance.SetCommonAudioClip_SFX(0);
         AudioManager.instance.SetAudioClip_BGM(3);
-        PushPop.Instance.BoardSprite = selectListSetting.BoardIcon; // pushpop
+        PushPop.Instance.BoardSprite = SelectListSetting.BoardIcon; // pushpop
 
         SpeedGame.SetActive(true);
         SelectDifficultyPanel.SetActive(false);
         SelectCategoryPanel.SetActive(false);
-        selectListSetting.Ready.SetActive(false);
+        SelectListSetting.Ready.SetActive(false);
         HelpButton.SetActive(false);
         speedManager.GameStart();
     }
@@ -85,7 +85,7 @@ public class SpeedCanvas : MonoBehaviour
     public void ReadyPanelExitButton()
     { // Ready panel
         AudioManager.instance.SetCommonAudioClip_SFX(3);
-        selectListSetting.Ready.SetActive(false);
+        SelectListSetting.Ready.SetActive(false);
     }
 
     public void HelpPanelButton()

@@ -63,7 +63,6 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
             PushPop.Instance.ActivePosCount--;
             clickButton.GetComponent<Button>().interactable = false;
         }
-        // GameManager.Instance.GameClear();
+        GameManager.Instance.GameEnd();
     }
-
 }
