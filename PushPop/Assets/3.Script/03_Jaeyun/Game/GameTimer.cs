@@ -21,7 +21,6 @@ public class GameTimer : MonoBehaviour
         {
             // 난이도에 따라 또 나뉨
             compareTime = (float)GameManager.Instance.Difficulty;
-            compareTime = CurrentTime - compareTime;
             setSign = 1;
         }
         else
@@ -34,18 +33,36 @@ public class GameTimer : MonoBehaviour
 
     private IEnumerator Timer_Co()
     {
-        while (CurrentTime >= 0f)
+        while (true)
         {
             CurrentTime += Time.deltaTime * setSign;
 
-            if (CurrentTime <= compareTime)
+            if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
             {
-                TimerText.color = TimerCountColorChange("#FF0000");
+                if (CurrentTime >= (float)GameManager.Instance.Difficulty + 10f) break;
+                if (CurrentTime >= (float)GameManager.Instance.Difficulty)
+                {
+                    TimerText.color = TimerCountColorChange("#FF0000");
 
-                if (!TenCount)
-                { // 10초 이하일 때 타이머 소리 한 번 재생
-                    TenCount = true;
-                    AudioManager.instance.SetAudioClip_SFX((int)GameManager.Instance.GameMode, true);
+                    if (!TenCount)
+                    { // 10초 이하일 때 타이머 소리 한 번 재생
+                        TenCount = true;
+                        AudioManager.instance.SetAudioClip_SFX((int)GameManager.Instance.GameMode, true);
+                    }
+                }
+            }
+            else
+            { // multi
+                if (CurrentTime <= 0f) break;
+                if (CurrentTime <= compareTime)
+                { 
+                    TimerText.color = TimerCountColorChange("#FF0000");
+
+                    if (!TenCount)
+                    { // 10초 이하일 때 타이머 소리 한 번 재생
+                        TenCount = true;
+                        AudioManager.instance.SetAudioClip_SFX((int)GameManager.Instance.GameMode, true);
+                    }
                 }
             }
 
@@ -53,7 +70,6 @@ public class GameTimer : MonoBehaviour
             yield return null;
         }
 
-        CurrentTime = 0f;
         EndTimer = true; // game end
         TimerCoroutine = null;
     }
@@ -62,9 +78,9 @@ public class GameTimer : MonoBehaviour
     {
         if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
         {
-            float sec = CurrentTime % 60; // 60으로 나눈 나머지 = 초
-            float min = CurrentTime / 60;
-            TimerText.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+            int sec = (int)CurrentTime % 60; // 60으로 나눈 나머지 = 초
+            int min = (int)CurrentTime / 60;
+            TimerText.text = $"{string.Format("{00:00}", min)}:{string.Format("{00:00}", sec)}";
         }
         else
         { // multi mode

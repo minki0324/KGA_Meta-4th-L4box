@@ -63,7 +63,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Script")]
     public MultiManager multiGame = null;
-    public Speed_Timer speedTimer = null;
     public PushPushManager pushPush;
     public MemoryManager MemoryManager = null;
     
@@ -203,13 +202,6 @@ public class GameManager : MonoBehaviour
         DialogManager.instance.Print_Dialog(text, "준비 ~");
         yield return new WaitForSeconds(2f);
 
-        if(GameMode == GameMode.Speed)
-        {
-            SpeedModePushPopCreate();
-            speedTimer.TimerObj.SetActive(true);
-            speedTimer.TimerStart();
-            speedTimer.time_Slider.gameObject.SetActive(true);
-        }
         AudioManager.instance.SetCommonAudioClip_SFX(2);
         DialogManager.instance.Print_Dialog(text, "시작 ~");
 
@@ -237,17 +229,6 @@ public class GameManager : MonoBehaviour
 
     public void GameClear()
     { // Game End 시 호출하는 method
-        // button active check
-        if (GameMode.Equals(GameMode.Multi))
-        {
-            if (multiGame.popButtonList1P.Count.Equals(0) || multiGame.popButtonList2P.Count.Equals(0))
-            {
-                multiGame.RepeatGameLogic();
-                return;
-            }
-        }
-        else
-        {
             switch (GameMode)
             {
                 case GameMode.PushPush:
@@ -314,50 +295,6 @@ public class GameManager : MonoBehaviour
                         // PushPop.Instance.PushPopClear();
                     }
                     break;
-
-                case GameMode.Speed:
-                    /*if (speedTimer == null)
-                    {
-                        speedTimer = FindObjectOfType<Speed_Timer>();
-                    }
-
-                    if (buttonActive == 0)
-                    {
-                        // button active false
-                        for (int i = 0; i < PushPop.Instance.buttonCanvas.childCount; i++)
-                        {
-                            PushPop.Instance.buttonCanvas.GetChild(i).gameObject.SetActive(false);
-                        }
-
-                        slider_Co = StartCoroutine(SpeedSlider_Co(speedTimer.time_Slider, count, 1.4f));
-                    }
-                    if (buttonActive == 0 && speedTimer.time_Slider.value + count >= 0.9f || speedTimer.currentTime.Equals((int)speedTimer.difficult))
-                    {
-                        // Game Clear
-                        bubblePos.Clear(); // bubble transform mode에 따라 달라짐
-                        PushPop.Instance.PushPopClear();
-                        currentTime = speedTimer.currentTime;
-                        speedTimer.StopCoroutine(speedTimer.timer);
-                        speedTimer.TimerObj.SetActive(false);
-
-                        Ranking.Instance.SetTimer(ProfileManager.Instance.ProfileName1P, ProfileManager.Instance.FirstPlayerIndex, int.Parse(PushPop.Instance.BoardSprite.name), speedTimer.currentTime);
-                        speedTimer.resultPanel.SetActive(true);
-                        speedTimer.Result();
-                    }
-                    else if (buttonActive == 0)
-                    {
-                        pushpushCreate_Co = StartCoroutine(SpeedCreate_Co());
-                    }*/
-                    break;
-                case GameMode.Multi:
-
-                    break;
-            }
-
-            if (timer != null)
-            {
-                StopCoroutine(timer); // timer coroutine stop;
-            }
         }
     }
 
@@ -383,61 +320,6 @@ public class GameManager : MonoBehaviour
             CreateBubble(puzzleClass[i].puzzleArea, puzzleClass[i].puzzleCenter, puzzleClass[i].puzzleObject);
         }
 
-    }
-
-    public void SpeedMode()
-    { // speed mode start
-        /*PushPop.Instance.ButtonSize = new Vector2(80f, 80f);
-        PushPop.Instance.Percentage = 0.67f;
-        Ranking.Instance.SettingPreviousScore();
-        // position count 한 개, 위치 가운데, scale 조정
-        bubbleSize = 300f; // speed mode bubble size setting
-        BoardSize = new Vector2(300f, 300f); // scale
-
-        // bubble position
-        GameObject board = Instantiate(PushPop.Instance.BoardPrefabUI, PushPop.Instance.pushPopCanvas); // image
-        board.GetComponent<Image>().sprite = PushPop.Instance.BoardSprite;
-        board.GetComponent<RectTransform>().sizeDelta = BoardSize;
-        PushPop.Instance.PushPopBoardObject.Add(board);
-        CreateBubble(BoardSize, board.transform.localPosition, board);*/
-    }
-
-    public void SpeedModePushPopCreate()
-    {
-        speedCreate = StartCoroutine(SpeedBoardStartCreate_Co());
-    }
-
-    private IEnumerator SpeedBoardStartCreate_Co()
-    { // bubble 터졌을 때
-        // pushpop 생성
-        BoardSize = new Vector2(700f, 700f);
-        BoardSizeGameObject = new Vector2(700f, 700f);
-        PushPop.Instance.CreatePushPopBoard(PushPop.Instance.pushPopCanvas);
-
-        yield return new WaitForSeconds(1.5f);
-
-        BoardSize = new Vector2(700f, 700f);
-        PushPop.Instance.CreateGrid(PushPop.Instance.PushPopBoardObject[0]);
-        PushPop.Instance.PushPopButtonSetting(PushPop.Instance.buttonCanvas);
-        buttonActive = PushPop.Instance.activePos.Count;
-    }
-
-    public void SpeedOnBubbleDestroy()
-    {
-        if(isStart)
-        {
-            StartCoroutine(GameReady_Co(speedTimer.readyPanel, speedTimer.readyText));
-        }
-    }
-
-    public void MemoryMode()
-    {
-        // pushpop button처럼 생성
-    }
-
-    public void BombMode()
-    {
-        BoardSize = new Vector2(500f, 500f);
     }
 
     public void CreateBubble(Vector2 _size, Vector2 _pos, GameObject _puzzle)
@@ -468,33 +350,5 @@ public class GameManager : MonoBehaviour
             printName[i].text = string.Empty;
             printImage[i].sprite = ProfileManager.Instance.NoneBackground;
         }
-    }
-
-    private IEnumerator SpeedSlider_Co(Slider slider, float amount, float duration)
-    {
-        // 시작 값과 목표 값 계산
-        float startValue = slider.value;
-        float endValue = startValue + amount;
-
-        // 경과 시간 추적
-        float elapsedTime = 0;
-
-        // 지정된 시간 동안 반복
-        while (elapsedTime < duration)
-        {
-            // 경과 시간에 따라 슬라이더 값을 변경
-            slider.value = Mathf.Lerp(startValue, endValue, elapsedTime / duration);
-
-            // 경과 시간 업데이트
-            elapsedTime += Time.deltaTime;
-
-            // 다음 프레임까지 대기
-            yield return null;
-        }
-
-        // 최종 값 설정 (목표 값에 정확히 맞추기 위함)
-        slider.value = endValue;
-
-        slider_Co = null;
     }
 }
