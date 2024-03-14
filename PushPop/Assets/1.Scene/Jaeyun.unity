@@ -48415,7 +48415,7 @@ GameObject:
   - component: {fileID: 1493021172}
   - component: {fileID: 1493021171}
   m_Layer: 5
-  m_Name: Select Board Panel
+  m_Name: Ready
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56202,6 +56202,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1718604762}
+  - component: {fileID: 1718604763}
   m_Layer: 5
   m_Name: Select Category Panel
   m_TagString: Untagged
@@ -56230,6 +56231,32 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1718604763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718604761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2207fe8235348db4292945fe369a1cd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectIconObject: {fileID: 4741607185553568946, guid: 5b43dbe5357e43b468dd3240204d37b3, type: 3}
+  categorySelectTitle: {fileID: 1147860427}
+  selectCategoryScrollView: {fileID: 1201858628}
+  Ready: {fileID: 1493021169}
+  readyProfileSetting: {fileID: 0}
+  selectCategory: {fileID: 1484105068}
+  selectIconImage: {fileID: 1867867082}
+  selectIconText: {fileID: 1489753631}
+  previousButton: {fileID: 531529006}
+  nextButton: {fileID: 1490245669}
+  easyIconList: []
+  normalIconList: []
+  hardIconList: []
+  pageText: {fileID: 0}
 --- !u!1 &1720564453
 GameObject:
   m_ObjectHideFlags: 0
@@ -57187,6 +57214,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 4eef2efbb82dca54297dd14fee238f40, type: 3}
   - {fileID: 21300000, guid: e1ff9617fa46af4439b21d0e56bcb3f0, type: 3}
   - {fileID: 21300000, guid: 9e9088e203b921a4b8ed0f794e79adcb, type: 3}
+  pageText: {fileID: 0}
 --- !u!1 &1741373530
 GameObject:
   m_ObjectHideFlags: 0

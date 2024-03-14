@@ -48,7 +48,7 @@ public class PushPush_Canvas : MonoBehaviour
     [SerializeField] private List<Button> categoryBtn_List;
 
     [Header("Category Icon List(Iamge & Text)")]
-    [SerializeField] private List<Sprite> categoryIcon_List;
+    [SerializeField] private List<Sprite> categoryIcon_List; // category image들어있음
     [SerializeField] private List<TMP_Text> categoryText_List;
 
    
@@ -81,7 +81,7 @@ public class PushPush_Canvas : MonoBehaviour
     private void Start()
     {
         Init();
-        maxPage = moldIcon_List.Count;
+        maxPage = moldIcon_List.Count; // page 넘겨줄 때 마다 update
     }
 
     private void OnEnable()
