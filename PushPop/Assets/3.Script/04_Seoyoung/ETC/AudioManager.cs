@@ -34,6 +34,9 @@ public class AudioManager : MonoBehaviour
     private List<AudioClip> bombSfxClip_List;
 
     [SerializeField]
+    private List<AudioClip> talkSfxClip_List;
+
+    [SerializeField]
     private List<AudioClip> commonSfxClip_List;
 
     [SerializeField]
@@ -141,6 +144,22 @@ public class AudioManager : MonoBehaviour
                     break;
             }
         }
+    }
+
+
+    public void SetTalkTalkAudioClic_SFX(int index, bool bLoop)
+    {
+        if (!bLoop)
+        {
+            audioSource_arr[2].PlayOneShot(talkSfxClip_List[index]);
+        }
+        else
+        {
+            audioSource_arr[2].clip = talkSfxClip_List[index];
+            audioSource_arr[2].Play();
+            audioSource_arr[2].loop = bLoop;
+        }
+
     }
 
     public void SetCommonAudioClip_SFX(int index)

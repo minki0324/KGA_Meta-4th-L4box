@@ -51,7 +51,7 @@ public class TouchManager : MonoBehaviour
     private void Awake()
     {
         //프레임 속도 고정
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 300;
 
     }
 
@@ -62,14 +62,14 @@ public class TouchManager : MonoBehaviour
     {
         //SetResolution();
         //RawImage의 텍스처 크기 변경
-        rawImage.texture.width = Screen.width;
-        rawImage.texture.height = Screen.height;
+        //rawImage.texture.width = Screen.width;
+        //rawImage.texture.height = Screen.height;
 
+        rawImage.texture.width = Camera.main.pixelWidth;
+        rawImage.texture.height = Camera.main.pixelHeight;
 
         Init();
-     //   StartCoroutine(Update_co());
-
-
+        
     }
 
     void Update()
@@ -80,20 +80,6 @@ public class TouchManager : MonoBehaviour
         }
     }
 
-    //public IEnumerator Update_co()
-    //{
-    //    while(true)
-    //    {
-    //        if (Input.touchCount > 0)
-    //        {
-    //            MultiTouchEvent_Independent();
-
-    //        }
-
-    //        yield return null;
-    //    }
-
-    //}
 
     #endregion
 
