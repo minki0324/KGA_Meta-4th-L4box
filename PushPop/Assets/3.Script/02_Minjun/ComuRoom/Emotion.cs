@@ -11,15 +11,8 @@ public class Emotion : NetworkBehaviour
     public Canvas canvas;
     public Transform spawnPoint;
     public PlayerEmotionControl playerEmotion;
-    private bool isExpend = true;
+    private bool isExpend = false;
     [SerializeField] private GameObject emojiPanel;
-    [SerializeField] private ScrollRect scrollRect;
-    [SerializeField] private GridLayoutGroup grid;
-    [SerializeField] private Button ExpendBtn;
-    private RectTransform emojiPanelRect;
-    private Vector3 DirUp = new Vector3(0, 0, -90);
-    private Vector3 DirDown = new Vector3(0, 0, 90);
-    private Vector2 BasicSize = new Vector2(0, -15f);
 
     public Sprite[] sprites;
     public Button[] emojiBtns;
@@ -29,7 +22,6 @@ public class Emotion : NetworkBehaviour
     }
     private void Start()
     {
-        emojiPanelRect =emojiPanel.GetComponent<RectTransform>();
         InitEmojiBtn();
     }
     [Client]
@@ -41,45 +33,8 @@ public class Emotion : NetworkBehaviour
 
     public void ExpandEmojiPanel()
     {
-
-        //        Vertical
-        //Fixed Column Count / 4
-        //veiwport 늘려주기 500
-        //화살표 아래방향
-        if (isExpend)
-        {
-            float size = 500f;
-            emojiPanelRect.sizeDelta = new Vector2(emojiPanelRect.sizeDelta.x, size);
-            ExpendBtn.transform.rotation = Quaternion.Euler(DirDown);
-            scrollRect.horizontal = false;
-            scrollRect.vertical = true;
-            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-            grid.constraintCount = 4;
-            //grid.transform.position = Vector2.zero;
-            grid.transform.localPosition = Vector2.zero;
-            Debug.Log(grid.transform.localPosition);
-        }
-        else
-        {
-            //        Horizontal
-            // Fixed Row Count / 1
-            //vewport는 평소 125
-            //화살표 위방향
-
-            float size = 125f;
-            //RectTransform temp = emojiPanelRect.rect;
-            //temp.height = size;
-            //grid.transform.position = Vector2.zero;
-            emojiPanelRect.sizeDelta = new Vector2(emojiPanelRect.sizeDelta.x, size);
-            ExpendBtn.transform.rotation = Quaternion.Euler(DirUp);
-            scrollRect.horizontal = true;
-            scrollRect.vertical = false;
-            grid.constraint = GridLayoutGroup.Constraint.FixedRowCount;
-            grid.constraintCount = 1;
-            grid.transform.localPosition = BasicSize;
-            Debug.Log(grid.transform.localPosition);
-        }
         isExpend = !isExpend;
+        emojiPanel.SetActive(isExpend);
     }
     private void InitEmojiBtn()
     {
