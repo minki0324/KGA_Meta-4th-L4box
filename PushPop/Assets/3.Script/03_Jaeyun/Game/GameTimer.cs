@@ -40,7 +40,7 @@ public class GameTimer : MonoBehaviour
             if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
             {
                 if (CurrentTime >= (float)GameManager.Instance.Difficulty + 10f) break;
-                if (CurrentTime >= compareTime)
+                if (CurrentTime >= (float)GameManager.Instance.Difficulty)
                 {
                     TimerText.color = TimerCountColorChange("#FF0000");
 
@@ -78,9 +78,9 @@ public class GameTimer : MonoBehaviour
     {
         if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
         {
-            float sec = CurrentTime % 60; // 60으로 나눈 나머지 = 초
-            float min = CurrentTime / 60;
-            TimerText.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+            int sec = (int)CurrentTime % 60; // 60으로 나눈 나머지 = 초
+            int min = (int)CurrentTime / 60;
+            TimerText.text = $"{string.Format("{00:00}", min)}:{string.Format("{00:00}", sec)}";
         }
         else
         { // multi mode

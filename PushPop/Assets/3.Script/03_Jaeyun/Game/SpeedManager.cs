@@ -177,8 +177,8 @@ public class SpeedManager : MonoBehaviour, IGame
             Ranking.Instance.SetTimer(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex, int.Parse(speedCanvas.SelectListSetting.BoardIcon.name), (int)gameTimer.CurrentTime);
             resultImage.sprite = speedCanvas.SelectListSetting.BoardIcon;
 
-            float sec = gameTimer.CurrentTime % 60f;
-            float min = gameTimer.CurrentTime / 60f;
+            int sec = (int)gameTimer.CurrentTime % 60;
+            int min = (int)gameTimer.CurrentTime / 60;
             resultScoreText.text = $"{string.Format("{00:00}", min)}:{string.Format("{00:00}", sec)}";
             clearMessage = (int)Ranking.Instance.CompareRanking(); // 점수 비교
             resultMassageText.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
