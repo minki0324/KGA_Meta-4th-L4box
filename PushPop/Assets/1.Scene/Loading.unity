@@ -7644,6 +7644,7 @@ MonoBehaviour:
   pushPush: {fileID: 0}
   MemoryManager: {fileID: 0}
   CurrentIcon: 0
+  CurrentIconName: 0
   Difficulty: 50
   boardName: 0
   currentTime: 0
@@ -7666,6 +7667,7 @@ MonoBehaviour:
   finalCenter: {x: 0, y: 0}
   Score: 0
   TimeScore: 0
+  LiveBubbleCount: 0
   count: 0.25
   printName:
   - {fileID: 1994835578}
@@ -33003,6 +33005,7 @@ MonoBehaviour:
   categorySelectTitle: {fileID: 0}
   selectCategoryScrollView: {fileID: 0}
   Ready: {fileID: 0}
+  readyProfileSetting: {fileID: 0}
   selectCategory: {fileID: 0}
   selectIconImage: {fileID: 0}
   selectIconText: {fileID: 0}
@@ -33011,6 +33014,7 @@ MonoBehaviour:
   easyIconList: []
   normalIconList: []
   hardIconList: []
+  pageText: {fileID: 0}
 --- !u!114 &938724394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33026,7 +33030,7 @@ MonoBehaviour:
   mainCanvas: {fileID: 1827050133}
   BackButton: {fileID: 454249401}
   HelpButton: {fileID: 57003944}
-  selectListSetting: {fileID: 0}
+  SelectListSetting: {fileID: 0}
   SelectDifficultyPanel: {fileID: 934677096}
   SelectCategoryPanelScrollView: {fileID: 0}
   SelectCategoryPanel: {fileID: 2111109349}
@@ -33034,10 +33038,12 @@ MonoBehaviour:
   SpeedGame: {fileID: 1370462249}
   Timer: {fileID: 1282919167}
   CountSlider: {fileID: 1268732333}
+  Ready: {fileID: 0}
   ResultPanel: {fileID: 128851487}
   WarningPanel: {fileID: 1292780202}
-  GameReadyPanel: {fileID: 1779866689}
   HelpPanel: {fileID: 2038507252}
+  GameReadyPanel: {fileID: 1779866689}
+  GameReadyPanelText: {fileID: 0}
 --- !u!114 &938724395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40200,7 +40206,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55f6a3c31ffda4b4eb2a78ce60d155eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profileList: []
   UID: 0
   SelectPlayer: 0
   ProfileName1P: 
@@ -59216,7 +59221,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DB_path: 
   UID: 0
-  ProfileList: []
 --- !u!4 &1742290393
 Transform:
   m_ObjectHideFlags: 0
@@ -61944,18 +61948,21 @@ MonoBehaviour:
   PopParent: {fileID: 1804762109}
   pushPopCanvas: {fileID: 203397451}
   pushPopButtonPrefab: {fileID: 7161972215700324124, guid: 1381da20a7f6349438dc19f56e561b10, type: 3}
-  boardPrefabUI: {fileID: 6080136693297342902, guid: e2c99a2b45e46b34eb39a7934886813e, type: 3}
-  pushPopBoardUIObject: []
+  BoardPrefabUI: {fileID: 0}
+  BoardSize: {x: 0, y: 0}
+  BoardPos: {x: 0, y: 0}
+  PushPopBoardUIObject: []
   pushPopSpriteAtlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
   boardPrefab: {fileID: 3633448892475870983, guid: b42c40511bead9941bc7f9901e85999e, type: 3}
-  boardSprite: {fileID: 0}
-  pushPopBoardObject: []
+  BoardSprite: {fileID: 0}
+  PushPopBoardObject: []
   buttonCanvas: {fileID: 564791897}
-  percentage: 0.67
-  buttonSize: {x: 80, y: 80}
+  Percentage: 0
+  ButtonSize: {x: 0, y: 0}
   PosPrefab: {fileID: 4701027180370166461, guid: 908e83bf5cbab784199690367c9362ca, type: 3}
   pushPopButton: []
   activePos: []
+  ActivePosCount: 0
   pushPopBtnSprites:
   - {fileID: 21300000, guid: c4797b928419e844aaef5d3f039aa7f3, type: 3}
   - {fileID: 21300000, guid: b60bdd9bec74acf4f8af4ed562d149ac, type: 3}
@@ -61967,7 +61974,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1652f2efa5721a446892d51b273576dc, type: 3}
   - {fileID: 21300000, guid: 0607a023efa482e4d9055e78cf332f3d, type: 3}
   pushPopAni: {fileID: 0}
-  pushTurn: 1
+  Turning: 0
 --- !u!4 &1804762111
 Transform:
   m_ObjectHideFlags: 0

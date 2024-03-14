@@ -49,7 +49,7 @@ public class TitlePanel : MonoBehaviour
     {
         Init();
         ParticleCanvas.gameObject.SetActive(true);
-        StartBtn.interactable = false;
+       // StartBtn.interactable = false;
 
         StartCoroutine(Init_co());
     }
@@ -115,18 +115,18 @@ public class TitlePanel : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         TitleTextAnimator.speed = 1;
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.3f);
         TitleTextAnimator.SetTrigger("PopPop");
 
-        yield return new WaitForSeconds(0.2f);
-        StartBtn.interactable = true;
+        //yield return new WaitForSeconds(0.2f);
+        //StartBtn.interactable = true;
     }
 
     public void StartGame()
     {
         AudioManager.instance.SetCommonAudioClip_SFX(2);
 
-        LoadingCanvas.gameObject.SetActive(false);
+        //LoadingCanvas.gameObject.SetActive(false);
         LoadingCanvas.gameObject.SetActive(true);
 
         for(int i = 0; i<maxBubble; i++)

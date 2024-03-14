@@ -35,11 +35,12 @@ public class LoadingPanel : MonoBehaviour
     [Header("ETC")]
     public bool bisLoaded = false;  //로딩일 때 Fade Background 다 올라갔을 때 true -> 비눗방울 생성 더이상 안되도록 함
     public bool isLoadingEnd = false;   //로딩이 끝났는가
+    bool bisStart = true;
     #region Unity Callback
     private void Awake()
     {
         Init();
-       //gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     private void OnEnable()
@@ -66,8 +67,17 @@ public class LoadingPanel : MonoBehaviour
             bubble_Array[i].gameObject.SetActive(true);
         }
 
+        if(!bisStart)
+        {
+            StartCoroutine(BackgroundFadeOut_co());
+        }
+        else
+        {
+            bisStart = false;
+            gameObject.SetActive(false);
+        }
 
-        StartCoroutine(BackgroundFadeOut_co());
+        
 
     }
 
