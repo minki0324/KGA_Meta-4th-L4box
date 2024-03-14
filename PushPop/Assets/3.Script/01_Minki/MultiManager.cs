@@ -77,6 +77,8 @@ public class MultiManager : MonoBehaviour, IGame
     private Coroutine bottomBubbleCoroutine = null; // 물 차오르는 코루틴
     public Coroutine FeverCoroutine = null;
 
+    private bool isGameStart = false;
+
     private void OnEnable()
     {
         GameSetting();
@@ -89,6 +91,7 @@ public class MultiManager : MonoBehaviour, IGame
         {
             FeverCoroutine = StartCoroutine(FeverMode());
         }
+        GameEnd();
     }
 
     private void OnDisable()
@@ -109,6 +112,7 @@ public class MultiManager : MonoBehaviour, IGame
         bNoTimePlaying = false;
         isEndGame = false;
         isFever = false;
+        isGameStart = false;
 
         // pushpop setting
         popButtonList1P.Clear();
@@ -198,6 +202,7 @@ public class MultiManager : MonoBehaviour, IGame
         SetSpriteImage(boardTransform[1], popButtonList2P, 2);
         boardTransform[0].transform.GetChild(0).transform.localPosition = bottomPos[0];
         boardTransform[1].transform.GetChild(0).transform.localPosition = bottomPos[1];
+        isGameStart = true;
 
         // Player Turn, Bubble 위치 부여
         playerTurn = (Turn)UnityEngine.Random.Range(0, 2); // 0일 때 1P 먼저 시작
@@ -210,23 +215,23 @@ public class MultiManager : MonoBehaviour, IGame
 
     public void GameEnd()
     {
-        if (popButtonList1P.Count.Equals(0) || popButtonList2P.Count.Equals(0))
+        if (gameTimer.EndTimer) // timer 종료 시 gameTimer.EndTimer true
         {
-            if (gameTimer.EndTimer) // timer 종료 시 gameTimer.EndTimer true
+            AudioManager.instance.SetAudioClip_SFX(1, false);
+            WaterfallAnimatorSet(playerTurn, true);
+
+            StopAllCoroutines();
+            if (gameTimer.TimerCoroutine != null)
             {
-                AudioManager.instance.SetAudioClip_SFX(1, false);
-                WaterfallAnimatorSet(playerTurn, true);
-
-                StopAllCoroutines();
-                if (gameTimer.TimerCoroutine != null)
-                {
-                    gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
-                }
-                StartCoroutine(Result_Co());
-                isEndGame = true;
-                return;
+                gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
             }
+            StartCoroutine(Result_Co());
+            isEndGame = true;
+            return;
+        }
 
+        if (isGameStart && (popButtonList1P.Count.Equals(0) || popButtonList2P.Count.Equals(0)))
+        {
             RepeatGameLogic();
         }
     }

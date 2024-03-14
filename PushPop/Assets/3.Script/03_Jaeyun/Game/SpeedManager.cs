@@ -40,10 +40,17 @@ public class SpeedManager : MonoBehaviour, IGame
     [SerializeField] private Slider countSlider = null;
 
     private int clearMessage = 0;
+    private bool isEndGame = false;
 
     private void OnEnable()
     {
         GameSetting();
+    }
+
+    private void Update()
+    {
+        if (isEndGame) return;
+        GameEndSliderAfter();
     }
 
     private void OnDisable()
@@ -65,6 +72,7 @@ public class SpeedManager : MonoBehaviour, IGame
         gameTimer.gameObject.SetActive(false);
         countSlider.gameObject.SetActive(false);
         firstSetting = true;
+        isEndGame = false;
 
         PushPop.Instance.BoardPos = Vector2.zero;
         PushPop.Instance.Turning = false;
@@ -165,12 +173,13 @@ public class SpeedManager : MonoBehaviour, IGame
     {
         if (gameTimer.EndTimer || countSlider.value >= 0.9f)
         {
+            isEndGame = true;
             Ranking.Instance.SetTimer(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex, int.Parse(speedCanvas.SelectListSetting.BoardIcon.name), (int)gameTimer.CurrentTime);
             resultImage.sprite = speedCanvas.SelectListSetting.BoardIcon;
 
-            float sec = gameTimer.CurrentTime % 60;
-            float min = gameTimer.CurrentTime / 60;
-            resultScoreText.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
+            float sec = gameTimer.CurrentTime % 60f;
+            float min = gameTimer.CurrentTime / 60f;
+            resultScoreText.text = $"{string.Format("{00:00}", min)}:{string.Format("{00:00}", sec)}";
             clearMessage = (int)Ranking.Instance.CompareRanking(); // 점수 비교
             resultMassageText.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
 
