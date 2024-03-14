@@ -14,7 +14,7 @@ public class Loading_Bubble : MonoBehaviour
     Vector2 randomPos;  //리스폰될 랜덤위치
     int randomSize; //리스폰될 때 정해질 랜덤사이즈 x,y 값
 
-    [SerializeField] private float upSpeed;  //비눗방울 올라가는 속도
+    public float upSpeed = 3;  //비눗방울 올라가는 속도
     public int upSpeedMin;        //로딩일 때 10, 메인일 때 2
     public int upSpeedMax;        //로딩일 때 25, 메인일 때 5
 
@@ -45,14 +45,18 @@ public class Loading_Bubble : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("Bubble Awake Begin" + upSpeed);
+        upSpeed = 3;
         rectTransform = GetComponent<RectTransform>();
         screenHeight = Camera.main.pixelHeight;
         screenWidth = Camera.main.pixelWidth;
+        Debug.Log("Bubble Awake End" + upSpeed);
     }
 
 
     private void OnEnable()
     {
+        Debug.Log("Bubble OnEnable Begin" + upSpeed);
         switch (moveMode)
         {
             case MoveMode.Main:
@@ -81,8 +85,10 @@ public class Loading_Bubble : MonoBehaviour
         
 
         StartCoroutine(MoveUp_co());
-
+        Debug.Log("Bubble OnEnable End" + upSpeed);
     }
+
+
     #endregion
 
     #region Other Method
@@ -94,6 +100,8 @@ public class Loading_Bubble : MonoBehaviour
 
         float moveTime = 0f;    //움직이는 방향, 올라가는속도 바꾸는 시간
         float sizeTime = 0f;    //커짐/작아짐 바꾸는 시간
+        upSpeed = Random.Range(upSpeedMin, upSpeedMax);
+        moveRange = Random.Range(moveRangeMin, moveRangeMax);
 
         while (true)
         {

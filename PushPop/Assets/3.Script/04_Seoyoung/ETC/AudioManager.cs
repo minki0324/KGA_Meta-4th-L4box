@@ -146,6 +146,22 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+
+    public void SetTalkTalkAudioClic_SFX(int index, bool bLoop)
+    {
+        if (!bLoop)
+        {
+            audioSource_arr[2].PlayOneShot(talkSfxClip_List[index]);
+        }
+        else
+        {
+            audioSource_arr[2].clip = talkSfxClip_List[index];
+            audioSource_arr[2].Play();
+            audioSource_arr[2].loop = bLoop;
+        }
+
+    }
+
     public void SetCommonAudioClip_SFX(int index)
     {
         audioSource_arr[2].PlayOneShot(commonSfxClip_List[index]);
