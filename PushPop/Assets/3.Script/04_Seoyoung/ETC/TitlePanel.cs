@@ -38,6 +38,7 @@ public class TitlePanel : MonoBehaviour
     public float sizeRandom_Max;
 
     [Header("ETC")]
+    [SerializeField] Animator TitleTextAnimator;
     [SerializeField] private Button StartBtn;   //타이틀 패널의 버튼
     int screenHeight;     //화면 세로 길이
     int screenWidth;      //화면 가로 길이
@@ -49,9 +50,14 @@ public class TitlePanel : MonoBehaviour
         Init();
         ParticleCanvas.gameObject.SetActive(true);
         StartBtn.interactable = false;
+        TitleTextAnimator.speed = 0f;
         StartCoroutine(Init_co());
     }
 
+    private void Start()
+    {
+        AudioManager.instance.SetAudioClip_BGM(0);
+    }
 
 
     private void Update()
@@ -105,15 +111,28 @@ public class TitlePanel : MonoBehaviour
 
     private IEnumerator Init_co()
     {
-       
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(0.4f);
+        TitleTextAnimator.speed = 1;
+
+        yield return new WaitForSeconds(2f);
+        TitleTextAnimator.SetTrigger("PopPop");
+
+        yield return new WaitForSeconds(0.2f);
         StartBtn.interactable = true;
     }
 
     public void StartGame()
     {
+        AudioManager.instance.SetCommonAudioClip_SFX(2);
+
         LoadingCanvas.gameObject.SetActive(false);
         LoadingCanvas.gameObject.SetActive(true);
+
+        for(int i = 0; i<maxBubble; i++)
+        {
+            Destroy(bubble_Array[i].gameObject);
+        }
+
         gameObject.SetActive(false);
     }
 

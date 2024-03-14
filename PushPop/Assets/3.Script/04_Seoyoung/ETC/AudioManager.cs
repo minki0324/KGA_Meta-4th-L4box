@@ -34,6 +34,9 @@ public class AudioManager : MonoBehaviour
     private List<AudioClip> bombSfxClip_List;
 
     [SerializeField]
+    private List<AudioClip> talkSfxClip_List;
+
+    [SerializeField]
     private List<AudioClip> commonSfxClip_List;
 
     [SerializeField]
