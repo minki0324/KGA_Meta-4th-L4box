@@ -168,7 +168,7 @@ public class HelpScriptManager : MonoBehaviour
     {     
         if(currentPage < maxPage)
         {
-            AudioManager.instance.SetCommonAudioClip_SFX(3);
+            AudioManager.Instance.SetCommonAudioClip_SFX(3);
             currentPage += 1;
             Help_Window();
 
@@ -189,7 +189,7 @@ public class HelpScriptManager : MonoBehaviour
     {
         if (currentPage > 1)
         {
-            AudioManager.instance.SetCommonAudioClip_SFX(3);
+            AudioManager.Instance.SetCommonAudioClip_SFX(3);
             currentPage -= 1;
             Help_Window();
 
@@ -218,13 +218,13 @@ public class HelpScriptManager : MonoBehaviour
 
             //푸시푸시모드 도움말
             case GameMode.PushPush:
-                maxPage = DataManager.instance.helpScripts_List[0].script.Count;
+                maxPage = DataManager.Instance.helpScripts_List[0].script.Count;
 
-                for(int i = 0; i < DataManager.instance.helpScripts_List[0].script.Count; i++)
+                for(int i = 0; i < DataManager.Instance.helpScripts_List[0].script.Count; i++)
                 {
-                    if(currentPage == DataManager.instance.helpScripts_List[0].script[i].pageNum)
+                    if(currentPage == DataManager.Instance.helpScripts_List[0].script[i].pageNum)
                     {
-                        help_Description.text = $"{currentPage}. {DataManager.instance.helpScripts_List[0].script[i].content}";
+                        help_Description.text = $"{currentPage}. {DataManager.Instance.helpScripts_List[0].script[i].content}";
                         help_Image.sprite = pushpushImage_List[i];
                     }
                 }
@@ -232,13 +232,13 @@ public class HelpScriptManager : MonoBehaviour
 
             //스피드 모드 도움말
             case GameMode.Speed:
-                maxPage = DataManager.instance.helpScripts_List[1].script.Count;
+                maxPage = DataManager.Instance.helpScripts_List[1].script.Count;
 
-                for (int i = 0; i < DataManager.instance.helpScripts_List[1].script.Count; i++)
+                for (int i = 0; i < DataManager.Instance.helpScripts_List[1].script.Count; i++)
                 {
-                    if (currentPage == DataManager.instance.helpScripts_List[1].script[i].pageNum)
+                    if (currentPage == DataManager.Instance.helpScripts_List[1].script[i].pageNum)
                     {
-                        help_Description.text = $"{currentPage}. {DataManager.instance.helpScripts_List[1].script[i].content}";
+                        help_Description.text = $"{currentPage}. {DataManager.Instance.helpScripts_List[1].script[i].content}";
                         help_Image.sprite = speedImage_List[i];
                     }
                 }
@@ -246,13 +246,13 @@ public class HelpScriptManager : MonoBehaviour
 
             //메모리 모드 도움말
             case GameMode.Memory:
-                maxPage = DataManager.instance.helpScripts_List[2].script.Count;
+                maxPage = DataManager.Instance.helpScripts_List[2].script.Count;
 
-                for (int i = 0; i < DataManager.instance.helpScripts_List[2].script.Count; i++)
+                for (int i = 0; i < DataManager.Instance.helpScripts_List[2].script.Count; i++)
                 {
-                    if (currentPage == DataManager.instance.helpScripts_List[2].script[i].pageNum)
+                    if (currentPage == DataManager.Instance.helpScripts_List[2].script[i].pageNum)
                     {
-                        help_Description.text = $"{currentPage}. {DataManager.instance.helpScripts_List[2].script[i].content}";
+                        help_Description.text = $"{currentPage}. {DataManager.Instance.helpScripts_List[2].script[i].content}";
                         help_Image.sprite = memoryImage_List[i];
                     }
                 }
@@ -260,13 +260,13 @@ public class HelpScriptManager : MonoBehaviour
 
             //2인모드 도움맒
             case GameMode.Multi:
-                maxPage = DataManager.instance.helpScripts_List[3].script.Count;
+                maxPage = DataManager.Instance.helpScripts_List[3].script.Count;
 
-                for (int i = 0; i < DataManager.instance.helpScripts_List[3].script.Count; i++)
+                for (int i = 0; i < DataManager.Instance.helpScripts_List[3].script.Count; i++)
                 {
-                    if (currentPage == DataManager.instance.helpScripts_List[3].script[i].pageNum)
+                    if (currentPage == DataManager.Instance.helpScripts_List[3].script[i].pageNum)
                     {
-                        help_Description.text = $"{currentPage}. {DataManager.instance.helpScripts_List[3].script[i].content}";
+                        help_Description.text = $"{currentPage}. {DataManager.Instance.helpScripts_List[3].script[i].content}";
                         help_Image.sprite = bombImage_List[i];
                     }
                 }

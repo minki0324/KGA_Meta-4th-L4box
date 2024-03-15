@@ -36,7 +36,7 @@ public class MainCanvas : MonoBehaviour
     #region Button Click Method
     public void GameModeButton(int _gameMode)
     { // Time Set Start
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         GameManager.Instance.GameMode = (GameMode)_gameMode;
         GameManager.Instance.ShutdownTimer = 3f;
 
@@ -46,7 +46,7 @@ public class MainCanvas : MonoBehaviour
 
     public void ProfileImageButton()
     { // Profile 이미지 클릭 시 프로필 선택으로 돌아감
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.PrintProfileList(profileCanvas.SelectScrollViewContent);
 
         profileCanvas.BlockPanel.SetActive(true);
@@ -55,14 +55,14 @@ public class MainCanvas : MonoBehaviour
 
     public void MusicOptionButton()
     { // Music Option 버튼, 소리 조절
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         optionPanel.SetActive(true);
     }
     #endregion
     #region TimeSetting Panel
     public void TimeSelectButton(int _time)
     { // 게임 시간 조절 - 지정 시간
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         GameManager.Instance.ShutdownTimer = _time;
         timeText.text = $"{string.Format("{0:0}", _time)}분";
@@ -70,7 +70,7 @@ public class MainCanvas : MonoBehaviour
 
     public void TimeSettingButton(bool _isPlus)
     { // 게임 시간 조절 - 조절 시간
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         if (_isPlus)
         { // Increase button
@@ -88,8 +88,8 @@ public class MainCanvas : MonoBehaviour
 
     public void TimeSettingEndButton()
     { // 게임 시간 조절 - 확인
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        AudioManager.instance.SetAudioClip_BGM(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetAudioClip_BGM(1);
 
         GameManager.Instance.ShutdownTimerStart();
         switch (GameManager.Instance.GameMode)
@@ -116,7 +116,7 @@ public class MainCanvas : MonoBehaviour
 
     public void TimeSettingBackButton()
     { // 게임 시간 조절 - 나가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         GameManager.Instance.GameMode = GameMode.None;
         timeSettingPanel.SetActive(false);
     }
@@ -124,7 +124,7 @@ public class MainCanvas : MonoBehaviour
     #region Music Option Setting Button
     public void GameQuitButton()
     { // 옵션 - 게임 종료
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -134,7 +134,7 @@ public class MainCanvas : MonoBehaviour
 
     public void MusicOptionBackButton()
     { // 옵션 - 창 닫기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         optionPanel.SetActive(false);
     }
     #endregion

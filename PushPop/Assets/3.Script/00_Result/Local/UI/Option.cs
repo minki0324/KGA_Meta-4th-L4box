@@ -82,9 +82,9 @@ public class Option : MonoBehaviour
 
 
         //오디오 믹서 기본 볼륨 조정
-        AudioManager.instance.audioMixer.SetFloat("Master", Master_Slider.value);
-        AudioManager.instance.audioMixer.SetFloat("BGM", BGM_Slider.value);
-        AudioManager.instance.audioMixer.SetFloat("SFX", SFX_Slider.value);
+        AudioManager.Instance.audioMixer.SetFloat("Master", Master_Slider.value);
+        AudioManager.Instance.audioMixer.SetFloat("BGM", BGM_Slider.value);
+        AudioManager.Instance.audioMixer.SetFloat("SFX", SFX_Slider.value);
 
 
         //볼륨값 변경 시 AddListener 추가
@@ -122,11 +122,11 @@ public class Option : MonoBehaviour
 
         if (volume == minSound)
         {
-            AudioManager.instance.audioMixer.SetFloat(soundtype, -80f);
+            AudioManager.Instance.audioMixer.SetFloat(soundtype, -80f);
         }
         else
         {
-            AudioManager.instance.audioMixer.SetFloat(soundtype, volume);
+            AudioManager.Instance.audioMixer.SetFloat(soundtype, volume);
         }
     }
     #endregion

@@ -62,6 +62,7 @@ public class SpeedManager : MonoBehaviour, IGame
         GameManager.Instance.OnDestroyBubble -= BubbleOnDestroy; // action 삭제
         GameManager.Instance.GameEnd -= GameEnd;
         GameManager.Instance.LiveBubbleCount = 0;
+        GameManager.Instance.bubbleObject.Clear();
 
         gameTimer.TimerText.color = new Color(0, 0, 0, 1);
         gameTimer.TenCount = false;
@@ -94,7 +95,7 @@ public class SpeedManager : MonoBehaviour, IGame
         GameManager.Instance.OnDestroyBubble += BubbleOnDestroy;
         GameManager.Instance.GameEnd += GameEnd;
 
-        Ranking.Instance.SettingPreviousScore(); // old score   
+        Ranking.Instance.SettingPreviousScore(); // old score
         PushPop.Instance.BoardSize = new Vector2(300f, 300f);
         PushPop.Instance.ButtonSize = new Vector2(80f, 80f);
         PushPop.Instance.Percentage = 0.67f;
@@ -132,13 +133,13 @@ public class SpeedManager : MonoBehaviour, IGame
 
         yield return new WaitForSeconds(0.5f);
 
-        AudioManager.instance.SetCommonAudioClip_SFX(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(1);
         speedCanvas.GameReadyPanel.SetActive(true);
         speedCanvas.GameReadyPanelText.text = "준비~";
 
         yield return new WaitForSeconds(2f);
 
-        AudioManager.instance.SetCommonAudioClip_SFX(2);
+        AudioManager.Instance.SetCommonAudioClip_SFX(2);
         speedCanvas.GameReadyPanelText.text = "시작!";
 
         yield return new WaitForSeconds(0.8f);
@@ -179,7 +180,7 @@ public class SpeedManager : MonoBehaviour, IGame
             int sec = (int)gameTimer.CurrentTime % 60;
             int min = (int)gameTimer.CurrentTime / 60;
             resultScoreText.text = $"{string.Format("{00:00}", min)}:{string.Format("{00:00}", sec)}";
-            clearMessage = (int)Ranking.Instance.CompareRanking(); // 점수 비교
+            clearMessage = (int)Ranking.Instance.CompareRanking((int)gameTimer.CurrentTime); // 점수 비교
             resultMassageText.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
 
             resultPanel.SetActive(true);
@@ -210,7 +211,7 @@ public class SpeedManager : MonoBehaviour, IGame
             BoardTurningAnimation();
             yield return new WaitForSeconds(0.5f);
 
-            AudioManager.instance.SetAudioClip_SFX(0, false);
+            AudioManager.Instance.SetAudioClip_SFX(0, false);
         }
 
         yield return new WaitForSeconds(0.7f);
@@ -248,8 +249,8 @@ public class SpeedManager : MonoBehaviour, IGame
     #region Result Panel
     public void ResultExitButton()
     { // Result Panel - 나가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        AudioManager.instance.SetAudioClip_BGM(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetAudioClip_BGM(1);
 
         Time.timeScale = 1f;
 
@@ -262,7 +263,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
     public void ResultRestartButton()
     { // Result Panel - 다시하기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         resultPanel.SetActive(false);
         Time.timeScale = 1f;
@@ -275,8 +276,8 @@ public class SpeedManager : MonoBehaviour, IGame
     #region Warning Panel
     public void WarningPanelGoOutButton()
     { // Warning panel - 나가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        AudioManager.instance.Stop_SFX();
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Stop_SFX();
 
         Time.timeScale = 1f;
 
@@ -290,7 +291,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
     public void WarningPanelCancelButton()
     { // Warning panel - 취소
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         Time.timeScale = 1f;
 

@@ -38,8 +38,8 @@ public class SpeedCanvas : MonoBehaviour
 
     public void SelectDifficultyButton(int _difficulty)
     { // 난이도 버튼
-        AudioManager.instance.SetAudioClip_BGM(1);
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetAudioClip_BGM(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         GameManager.Instance.Difficulty = (Difficulty)_difficulty;
 
         SelectCategoryPanelScrollView.normalizedPosition = new Vector2(1f, 1f);
@@ -49,8 +49,8 @@ public class SpeedCanvas : MonoBehaviour
 
     public void GameStartButton()
     { // Ready - 게임 시작
-        AudioManager.instance.SetCommonAudioClip_SFX(0);
-        AudioManager.instance.SetAudioClip_BGM(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(0);
+        AudioManager.Instance.SetAudioClip_BGM(3);
         PushPop.Instance.BoardSprite = SelectListSetting.BoardIcon; // pushpop
 
         SpeedGame.SetActive(true);
@@ -63,10 +63,12 @@ public class SpeedCanvas : MonoBehaviour
 
     public void SpeedBackButton()
     { // 뒤로가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         if (SelectDifficultyPanel.activeSelf)
         { // 난이도 선택 중일 때
-            AudioManager.instance.SetAudioClip_BGM(0);
+            AudioManager.Instance.SetAudioClip_BGM(0);
+            GameManager.Instance.GameMode = GameMode.None;
+            GameManager.Instance.InGame = false;
             mainCanvas.SetActive(true);
             gameObject.SetActive(false);
         }
@@ -84,19 +86,19 @@ public class SpeedCanvas : MonoBehaviour
 
     public void ReadyPanelExitButton()
     { // Ready panel
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         SelectListSetting.Ready.SetActive(false);
     }
 
     public void HelpPanelButton()
     { // 도움말
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         HelpPanel.SetActive(true);
     }
 
     public void HelpPanelBackButton()
     { // 도움말 닫기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         HelpPanel.SetActive(false);
     }
 }

@@ -84,6 +84,7 @@ public class MemoryManager : MonoBehaviour, IGame
 
     public void GameSetting()
     { // OnEnable() bubble size, board size, pushpopbutton size, pushpop percentage, etc. setting 관련
+        Ranking.Instance.SettingPreviousScore(); // old score
         HintButtonActive(); // hint button Setting
     }
 
@@ -96,12 +97,12 @@ public class MemoryManager : MonoBehaviour, IGame
     { // gameready coroutine -> gamestart 게임 시작 관련 코루틴
       // ready
         yield return new WaitForSeconds(0.5f);
-        AudioManager.instance.SetCommonAudioClip_SFX(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(1);
         memoryCanvas.GameReadyPanel.SetActive(true);
         memoryCanvas.GameReadyPanelText.text = "준비~";
 
         yield return new WaitForSeconds(2f);
-        AudioManager.instance.SetCommonAudioClip_SFX(2);
+        AudioManager.Instance.SetCommonAudioClip_SFX(2);
         memoryCanvas.GameReadyPanelText.text = "시작~";
 
         yield return new WaitForSeconds(0.8f);
@@ -117,14 +118,14 @@ public class MemoryManager : MonoBehaviour, IGame
 
     public void GameEnd()
     {
-        AudioManager.instance.SetAudioClip_SFX(5, false);
+        AudioManager.Instance.SetAudioClip_SFX(5, false);
 
         // 게임 종료, 결과 저장
         Ranking.Instance.SetScore(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex, Score);
         profileImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
         profileName.text = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName;
         resultScoreText.text = $"{Score}점";
-        clearMessage = (int)Ranking.Instance.CompareRanking(); // 점수 비교
+        clearMessage = (int)Ranking.Instance.CompareRanking(Score); // 점수 비교
         resultMassageText.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
 
         resultPanel.SetActive(true);
@@ -185,13 +186,13 @@ public class MemoryManager : MonoBehaviour, IGame
 
     public void HintPanelActiveButton(bool _active)
     { // 힌트 버튼, 힌트 - 나가기 버튼
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         hintGuidePanel.SetActive(_active);
     }
 
     public void HintButtonBlinkRePlay()
     { // 힌트 버튼 - 힌트 사용
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         hintGuidePanel.SetActive(false);
         
         AddScore(-300); //300점 차감
@@ -209,8 +210,8 @@ public class MemoryManager : MonoBehaviour, IGame
     #region Result Panel
     public void ResultExitButton()
     { // Result Panel - 나가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        AudioManager.instance.SetAudioClip_BGM(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetAudioClip_BGM(1);
         Time.timeScale = 1f;
 
         memoryCanvas.Ready.SetActive(true);
@@ -222,7 +223,7 @@ public class MemoryManager : MonoBehaviour, IGame
 
     public void ResultRestartButton()
     { // Result Panel - 다시하기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         resultPanel.SetActive(false);
         Time.timeScale = 1f;
@@ -235,8 +236,8 @@ public class MemoryManager : MonoBehaviour, IGame
     #region Warning Panel, BackButton
     public void WarningPanelGoOutButton()
     { // 나가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        AudioManager.instance.Stop_SFX();
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Stop_SFX();
 
         Time.timeScale = 1f;
 
@@ -250,7 +251,7 @@ public class MemoryManager : MonoBehaviour, IGame
 
     public void WarningPanelCancelButton()
     { // 취소
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         Time.timeScale = 1f;
 

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager instance = null;
+    public static AudioManager Instance = null;
 
 
     [Header("AudioMixer")]
@@ -53,9 +53,9 @@ public class AudioManager : MonoBehaviour
     #region Unity Callback
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else

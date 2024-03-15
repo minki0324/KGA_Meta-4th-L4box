@@ -6,7 +6,7 @@ public class PushPush_Result : MonoBehaviour
 {
     private void OnEnable()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(6);
+        AudioManager.Instance.SetCommonAudioClip_SFX(6);
     }
 
 }

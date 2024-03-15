@@ -96,9 +96,7 @@ public class Speed_Timer : MonoBehaviour
             GameManager.Instance.bubbleObject.Clear();
         }
 
-        GameManager.Instance.bubblePos.Clear(); // bubble transform mode에 따라 달라짐
         PushPop.Instance.PushPopClear();
-        GameManager.Instance.pushpushCreate_Co = null;
     }
 
     //타이머 코루틴
@@ -111,7 +109,6 @@ public class Speed_Timer : MonoBehaviour
         while (true)
         {
             currentTime += cashing;
-            GameManager.Instance.TimeScore = currentTime; // score 저장
             SetText();
 
             if (currentTime.Equals((int)difficult-10))
@@ -120,12 +117,12 @@ public class Speed_Timer : MonoBehaviour
                 if(!bNoTimePlaying)
                 {
                     bNoTimePlaying = true;
-                    AudioManager.instance.SetAudioClip_SFX(1, true);
+                    AudioManager.Instance.SetAudioClip_SFX(1, true);
                 }
             }
             if (currentTime.Equals((int)difficult))
             {
-                GameManager.Instance.GameClear();
+                // GameManager.Instance.GameClear();
                 yield break;
             }
             yield return new WaitForSeconds(cashing);
@@ -152,11 +149,11 @@ public class Speed_Timer : MonoBehaviour
 
     public void BackBtn_Clicked()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         if(bNoTimePlaying)
         {
-            AudioManager.instance.Pause_SFX(true);
+            AudioManager.Instance.Pause_SFX(true);
         }
 
         Time.timeScale = 0;
@@ -165,16 +162,11 @@ public class Speed_Timer : MonoBehaviour
 
     public void GoOutBtn_Clicked()
     {
-        GameManager.Instance.isStart = false;
-        if (GameManager.Instance.speedCreate != null)
-        {
-            GameManager.Instance.StopCoroutine(GameManager.Instance.speedCreate);
-        }
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        AudioManager.instance.SetAudioClip_BGM(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetAudioClip_BGM(1);
 
         Time.timeScale = 1;
-        AudioManager.instance.Stop_SFX();
+        AudioManager.Instance.Stop_SFX();
 
         // Back Method
         if (PushPop.Instance.PushPopBoardUIObject.Count > 0)
@@ -195,15 +187,10 @@ public class Speed_Timer : MonoBehaviour
             GameManager.Instance.bubbleObject.Clear();
         }
 
-        GameManager.Instance.bubblePos.Clear(); // bubble transform mode에 따라 달라짐
         PushPop.Instance.PushPopClear();
         if(timer != null)
         {
             StopCoroutine(timer);
-        }
-        if (GameManager.Instance.pushpushCreate_Co != null)
-        {
-            GameManager.Instance.StopCoroutine(GameManager.Instance.pushpushCreate_Co); // speed pushpop create 초기화
         }
 
         help_Canvas.gameObject.SetActive(true);
@@ -222,7 +209,7 @@ public class Speed_Timer : MonoBehaviour
 
         if(bNoTimePlaying)
         {
-            AudioManager.instance.Pause_SFX(false);
+            AudioManager.Instance.Pause_SFX(false);
         }
 
         Warning_Panel.SetActive(false);
@@ -234,21 +221,21 @@ public class Speed_Timer : MonoBehaviour
         resultImage.sprite = speed_Canvas.BoardIcon;
         resultTimer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
         bNoTimePlaying = false;
-        AudioManager.instance.Stop_SFX();
+        AudioManager.Instance.Stop_SFX();
 
         if (currentTime.Equals((int)difficult))
         {
             clearTitle = (int)ClearTitle.Fail;
-            AudioManager.instance.SetCommonAudioClip_SFX(8);
+            AudioManager.Instance.SetCommonAudioClip_SFX(8);
         }
         else
         {
-            clearTitle = (int)Ranking.Instance.CompareRanking();
-            AudioManager.instance.SetCommonAudioClip_SFX(7);
+            // clearTitle = (int)Ranking.Instance.CompareRanking();
+            AudioManager.Instance.SetCommonAudioClip_SFX(7);
         }
 
-        resultTitle.text = $"{Ranking.Instance.ResultDialog.title[clearTitle]}";
-        resultLog.text = $"{Ranking.Instance.ResultDialog.speedResult[clearTitle]}";
+        //resultTitle.text = $"{Ranking.Instance.ResultDialog.title[clearTitle]}";
+        //resultLog.text = $"{Ranking.Instance.ResultDialog.speedResult[clearTitle]}";
     }
     #endregion
 }

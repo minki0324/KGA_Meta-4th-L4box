@@ -63,7 +63,7 @@ public class MemoryPushpop : MonoBehaviour
     #region Correct, Incorrect
     private void Correct()
     { // 정답 시
-        AudioManager.instance.SetAudioClip_SFX(3, false);
+        AudioManager.Instance.SetAudioClip_SFX(3, false);
 
         // 점수 주기
         popButton.interactable = false; // 누른 버튼은 비활성화
@@ -76,7 +76,7 @@ public class MemoryPushpop : MonoBehaviour
     }
     private void Incorrect()
     { // 오답 시
-        AudioManager.instance.SetAudioClip_SFX(0, false);
+        AudioManager.Instance.SetAudioClip_SFX(0, false);
         PlayShakePush(); // ani
         MemoryManager.Instance.Life--;
         MemoryManager.Instance.LifeRemove();
@@ -90,7 +90,7 @@ public class MemoryPushpop : MonoBehaviour
     #region Stage Clear Method
     private IEnumerator StageClear_Co()
     { // Stage Clear
-        AudioManager.instance.SetAudioClip_SFX(4, false);
+        AudioManager.Instance.SetAudioClip_SFX(4, false);
         memoryBoard.ButtonAllStop(); // 버튼 동작 정지
         MemoryManager.Instance.PlayStartPanel("훌륭해요!");
 
@@ -116,11 +116,11 @@ public class MemoryPushpop : MonoBehaviour
         popButtonAnimation.SetTrigger("isBlink");
         if (memoryBoard.Stage.IsSpecialStage)
         { // 스페셜 스테이지일 때
-            AudioManager.instance.SetAudioClip_SFX(1, false);
+            AudioManager.Instance.SetAudioClip_SFX(1, false);
         }
         else
         { // 스페셜 스테이지가 아닐 때
-            AudioManager.instance.SetAudioClip_SFX(2, false);
+            AudioManager.Instance.SetAudioClip_SFX(2, false);
         }
     }
 

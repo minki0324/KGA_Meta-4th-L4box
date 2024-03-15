@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Reflection;
 using TMPro;
 using UnityEngine;
-using UnityEngine.U2D;
 using UnityEngine.UI;
 
 public class SelectListSetting : MonoBehaviour
@@ -30,6 +28,7 @@ public class SelectListSetting : MonoBehaviour
     private int currentPage = 1; // category list current count
     [SerializeField] private TMP_Text pageText = null;
     [SerializeField] private List<Sprite> categoryIconList = null;
+    private List<Sprite> selectIcon = null;
     public List<Sprite> IconList10 = null;
     public List<Sprite> IconList11 = null;
     public List<Sprite> IconList12 = null;
@@ -48,11 +47,6 @@ public class SelectListSetting : MonoBehaviour
 
     private List<Button> iconButtonList = null; // select한 icon list
 
-    private void Awake()
-    {
-        IconListSetting();
-    }
-
     private void OnEnable()
     {
         switch (GameManager.Instance.GameMode)
@@ -70,13 +64,6 @@ public class SelectListSetting : MonoBehaviour
         Init();
     }
 
-    private void IconListSetting()
-    {
-        for (int i = 10; i < 20; i++)
-        {
-        }
-    }
-
     private void Init()
     { // list 초기화
         for (int i = 0; i < selectCategoryScrollView.transform.childCount; i++)
@@ -89,7 +76,7 @@ public class SelectListSetting : MonoBehaviour
     #region Difficulty Select, Category Select Panel
     private void CategoryIconSetting()
     {
-        maxPage = 1; 
+        maxPage = 1;
 
         List<Sprite> selectList = categoryIconList;
         iconButtonList = new List<Button>();
@@ -101,7 +88,7 @@ public class SelectListSetting : MonoBehaviour
 
             iconButtonList.Add(selectIconInfo.IconButton); // button list
             selectIconInfo.IconImage.sprite = selectList[i]; // sprite change
-            selectIconInfo.IconText.text = DataManager.instance.categoryDict[int.Parse(selectList[i].name)]; // sprite name key dictionary, 한글 텍스트 갖고오기
+            selectIconInfo.IconText.text = DataManager.Instance.categoryDict[int.Parse(selectList[i].name)]; // sprite name key dictionary, 한글 텍스트 갖고오기
         }
 
         for (int i = 0; i < iconButtonList.Count; i++)
@@ -143,7 +130,7 @@ public class SelectListSetting : MonoBehaviour
 
             iconButtonList.Add(selectIconInfo.IconButton); // button list
             selectIconInfo.IconImage.sprite = selectList[i]; // sprite change
-            selectIconInfo.IconText.text = DataManager.instance.iconDict[int.Parse(selectList[i].name)]; // sprite name key dictionary, 한글 텍스트 갖고오기
+            selectIconInfo.IconText.text = DataManager.Instance.iconDict[int.Parse(selectList[i].name)]; // sprite name key dictionary, 한글 텍스트 갖고오기
         }
 
         for (int i = 0; i < iconButtonList.Count; i++)
@@ -156,28 +143,26 @@ public class SelectListSetting : MonoBehaviour
     #region Selected List Panel (Ready)
     private void CategoryIconButtonClick(int _selectList)
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
-        List<Sprite> selectIcon = this.GetType().GetField($"IconList{_selectList}").GetValue(this) as List<Sprite>;
-        
-        categorySelectTitle.text = DataManager.instance.categoryDict[_selectList];
+        selectIcon = this.GetType().GetField($"IconList{_selectList}").GetValue(this) as List<Sprite>;
+        categorySelectTitle.text = DataManager.Instance.categoryDict[_selectList];
         selectIconImage.sprite = selectIcon[0];
-        selectIconText.text = DataManager.instance.iconDict[int.Parse(selectIcon[0].name)];
+        selectIconText.text = DataManager.Instance.iconDict[int.Parse(selectIcon[0].name)];
         BoardIcon = selectIconImage.sprite;
+        GameManager.Instance.CurrentIcon = 0;
+        GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
+        
+        currentPage = 1;
         maxPage = selectIcon.Count;
-
-        if (GameManager.Instance.GameMode.Equals(GameMode.PushPush))
-        {
-            currentPage = 1;
-            pageText.text = $"{currentPage}/{maxPage}";
-        }
+        pageText.text = $"{currentPage}/{maxPage}";
 
         Ready.SetActive(true);
     }
 
     private void CategoryIconButtonClick(GameObject _selectIconButton, int _selectIcon)
     { // 아이콘 눌렀을 때 호출되는 함수, Ready Active true
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         SelectIconInfo selectIconInfo = _selectIconButton.transform.parent.GetComponent<SelectIconInfo>();
 
         selectIconImage.sprite = selectIconInfo.IconImage.sprite;
@@ -191,57 +176,77 @@ public class SelectListSetting : MonoBehaviour
 
     public void NextButton()
     { // 다음 버튼
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        
-        if (GameManager.Instance.CurrentIcon < iconButtonList.Count - 1)
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+
+        switch (GameManager.Instance.GameMode)
         {
-            GameManager.Instance.CurrentIcon++;
-
-            SelectIconInfo selectIconInfo = iconButtonList[GameManager.Instance.CurrentIcon].transform.parent.GetComponent<SelectIconInfo>();
-            selectIconImage.sprite = selectIconInfo.IconImage.sprite;
-            selectIconText.text = selectIconInfo.IconText.text;
-            BoardIcon = selectIconImage.sprite;
-            GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
-
-            switch (GameManager.Instance.GameMode)
-            {
-                case GameMode.PushPush:
+            case GameMode.PushPush:
+                if (GameManager.Instance.CurrentIcon < selectIcon.Count - 1)
+                {
+                    GameManager.Instance.CurrentIcon++;
                     currentPage++;
                     pageText.text = $"{currentPage}/{maxPage}";
-                    break;
-                case GameMode.Speed:
+
+                    selectIconImage.sprite = selectIcon[GameManager.Instance.CurrentIcon];
+                    selectIconText.text = DataManager.Instance.iconDict[int.Parse(selectIcon[GameManager.Instance.CurrentIcon].name)];
+                    BoardIcon = selectIconImage.sprite;
+
+                    GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
+                }
+                break;
+            case GameMode.Speed:
+                if (GameManager.Instance.CurrentIcon < iconButtonList.Count - 1)
+                {
+                    GameManager.Instance.CurrentIcon++;
+
+                    SelectIconInfo selectIconInfo = iconButtonList[GameManager.Instance.CurrentIcon].transform.parent.GetComponent<SelectIconInfo>();
+                    selectIconImage.sprite = selectIconInfo.IconImage.sprite;
+                    selectIconText.text = selectIconInfo.IconText.text;
+                    BoardIcon = selectIconImage.sprite;
+
+                    GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
                     readyProfileSetting.PlayerInfoSetting();
                     readyProfileSetting.RankInfoSetting();
-                    break;
-            }
+                }
+                break;
         }
     }
 
     public void PreviousButton()
     { // 이전 버튼
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        
-        if (GameManager.Instance.CurrentIcon > 0)
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+
+        switch (GameManager.Instance.GameMode)
         {
-            GameManager.Instance.CurrentIcon--;
-
-            SelectIconInfo selectIconInfo = iconButtonList[GameManager.Instance.CurrentIcon].transform.parent.GetComponent<SelectIconInfo>();
-            selectIconImage.sprite = selectIconInfo.IconImage.sprite;
-            selectIconText.text = selectIconInfo.IconText.text;
-            BoardIcon = selectIconImage.sprite;
-            GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
-
-            switch (GameManager.Instance.GameMode)
-            {
-                case GameMode.PushPush:
+            case GameMode.PushPush:
+                if (GameManager.Instance.CurrentIcon > 0)
+                {
+                    GameManager.Instance.CurrentIcon--;
                     currentPage--;
                     pageText.text = $"{currentPage}/{maxPage}";
-                    break;
-                case GameMode.Speed:
+
+                    selectIconImage.sprite = selectIcon[GameManager.Instance.CurrentIcon];
+                    selectIconText.text = DataManager.Instance.iconDict[int.Parse(selectIcon[GameManager.Instance.CurrentIcon].name)];
+                    BoardIcon = selectIconImage.sprite;
+
+                    GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
+                }
+                break;
+            case GameMode.Speed:
+                if (GameManager.Instance.CurrentIcon > 0)
+                {
+                    GameManager.Instance.CurrentIcon--;
+
+                    SelectIconInfo selectIconInfo = iconButtonList[GameManager.Instance.CurrentIcon].transform.parent.GetComponent<SelectIconInfo>();
+                    selectIconImage.sprite = selectIconInfo.IconImage.sprite;
+                    selectIconText.text = selectIconInfo.IconText.text;
+                    BoardIcon = selectIconImage.sprite;
+                    GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
+
                     readyProfileSetting.PlayerInfoSetting();
                     readyProfileSetting.RankInfoSetting();
-                    break;
-            }
+                }
+                break;
         }
     }
     #endregion

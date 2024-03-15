@@ -50,7 +50,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
         // audio PlayerPrefs setting ... todo
-        AudioManager.instance.SetAudioClip_BGM(0);
+        AudioManager.Instance.SetAudioClip_BGM(0);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -71,7 +71,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     #region Select
     public void ProfileCreateButton()
     { // 프로필 선택 창 - 프로필 생성
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.isUpdate = false;
 
         CreateName.SetActive(true);
@@ -80,7 +80,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void ProfileSelectDeleteButton()
     { // 프로필 선택 창 - 프로필 삭제
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         if (ProfileManager.Instance.ProfilePanelList.Count > 0)
         { // 프로필 리스트 출력
@@ -95,7 +95,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     #region Profile Icon Select
     public void ProfileIconSelectOkButton()
     { // 프로필 아이콘 선택 - 선택
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
         if (ProfileManager.Instance.ImageSet(true, true, ProfileManager.Instance.TempProfileName, ProfileManager.Instance.TempImageIndex, selectProfileIcon.WarningLog))
@@ -127,7 +127,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     }
     public void ProfileIconSelectBackButton()
     { // 프로필 아이콘 선택 - 뒤로가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         StopAllCoroutines();
 
         inputFieldCheck.WarningLog.gameObject.SetActive(false);
@@ -138,7 +138,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     #region Create Image
     public void CreateImageTakePictureButton()
     { // 프로필 이미지 등록 - 사진 찍기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         CreateImage.SetActive(false);
         ProfileManager.Instance.TempImageMode = false;
@@ -152,7 +152,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void CreateImageSelectImageButton()
     { // 프로필 이미지 등록 - 이미지 고르기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         
         ProfileManager.Instance.TempImageMode = true;
 
@@ -162,7 +162,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void CreateImageBackButton()
     { // 프로필 이미지 등록 - 뒤로가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         CreateName.SetActive(true);
         CreateImage.SetActive(false);
@@ -171,7 +171,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     #region Capture Check
     public void CaptureImageSelect()
     { // 사진 찍은 후 - 확인
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
         CaptureImage.sprite = null;
@@ -195,7 +195,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void AgainTakePicture()
     { // 사진 찍은 후 - 다시 찍기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         CaptureImage.sprite = null;
         SQL_Manager.instance.SQL_DeleteProfile(ProfileManager.Instance.TempUserIndex);
@@ -205,7 +205,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     #region Create Name
     public void CreateNameConfirmationButton()
     { // 이름 입력하기 - 이름 입력
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         if (inputFieldCheck.ProfileNameCheck())
         { // inputField에 입력된 단어에 비속어가 없을 때
@@ -216,7 +216,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void CreateNameBackButton()
     { // 이름 입력하기 - 뒤로가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
         StopAllCoroutines();
 
@@ -236,7 +236,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     #region Current Profile
     public void CurrentProfileSelectButton()
     { // 선택된 프로필 - 프로필 선택
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         if (!ProfileManager.Instance.isProfileSelected)
         {
             ProfileManager.Instance.isProfileSelected = true;
@@ -280,7 +280,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void CurrentProfileChangeButton()
     { // 선택된 프로필 - 수정
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.isUpdate = true;
 
         CurrentProfile.SetActive(false);
@@ -289,7 +289,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void CurrentProfileReturnButton()
     { // 선택된 프로필 - 뒤로가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         SelectScrollView.normalizedPosition = new Vector2(1f, 1f);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
@@ -307,7 +307,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     #region Delete Panel
     public void ProfileDeleteButton()
     { // 프로필 삭제 - 삭제
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         ProfileManager.Instance.DeleteProfile(ProfileManager.Instance.TempUserIndex);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
@@ -317,14 +317,14 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void ProfileDeleteReturnButton()
     { // 프로필 삭제 - 취소
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         DeletePanel.SetActive(false);
     }
     #endregion
     public void GameQuitButton()
     { // 게임 종료
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

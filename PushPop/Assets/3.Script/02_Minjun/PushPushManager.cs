@@ -1,18 +1,36 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class PushPushManager : MonoBehaviour, IGame
 { // pushpush game
-    public CustomPushpopManager custom;
-    public PuzzleLozic puzzle;
-    [SerializeField] FramePuzzle frame;
-    public GameObject decoPanel;
-    [SerializeField] private TMP_Text stageTitle;
-    public int pieceCount = 1; //버블터졋을때 중복호출을 방지하기위한 인덱스
-    public int pushCount; //버튼눌렀을때 + 되는 카운트 pushCount == 버튼리스트.Count 비교해서 동일시 클리어 판정(GameManager)
+    [Header("Canvas")]
+    [SerializeField] private PushPushCanvas pushpushCanvas = null;
+
+    [Header("Panel")]
+    [SerializeField] private GameObject resultPanel = null;
+    [SerializeField] private GameObject warningPanel = null;
+    [SerializeField] private GameObject decoPanel = null;
+    [SerializeField] private Button retryButton = null;
+
+    [Header("Game Info")]
+    public CustomPushpopManager customManager = null;
+    public PuzzleLozic puzzleManager = null;
+    [SerializeField] private TMP_Text stageTitle = null;
+    public bool isCustomMode = true;
+    [SerializeField] private FramePuzzle framePuzzle = null;
+
+    [Header("Game Result")]
+    [SerializeField] private Image resultImage = null;
+    [SerializeField] private TMP_Text resultMassageText = null;
+
+    [Header("PushPop Object")]
+    public Stack<GameObject> StackPops = new Stack<GameObject>(); //UI상 보이는 버튼담는 스택
+    [SerializeField] private FramePuzzle frame;
+    public int PushCount;
     public event Action onPushPushGameEnd;
 
     private void OnEnable()
@@ -25,73 +43,202 @@ public class PushPushManager : MonoBehaviour, IGame
         Init();
     }
 
-    #region 푸시푸시게임 전체 콜백메소드 모음
+    #region PushPush Next Method
+    public void OnAllBubblesPopped()
+    { // 버블이 모두 터지고 땅에 닿았을때 호출
+        customManager.StageTitle.text = "그림에 맞게 퍼즐을 맞춰 보세요!";
 
-    public void OnAllBubblesPopped() //버블이 모두 터지고 땅에닿았을때 불리는 메소드
-    {
-        puzzle.SettingGame();//퍼즐게임 시작
-        TitleSet("그림에 맞게 퍼즐을 맞춰 보세요!");
-        pieceCount = 1;
+        puzzleManager.SettingGame(); // puzzle mode start
+
+        GameManager.Instance.NextMode -= OnAllBubblesPopped;
+        GameManager.Instance.NextMode += OnPuzzleSolved;
     }
-    public void OnPuzzleSolved() //퍼즐을 모두 맞췄을때 불리는 메소드
-    {
-        AudioManager.instance.SetAudioClip_SFX(1, false);
-        TitleSet("내 마음대로 그림을 꾸며보자!");
-        DebugLog.instance.Adding_Message("재윤아 다했다고? 대박 최곤데?");
-        puzzle.successCount = 0;
-        DecoPanelSetActive(true);
-        puzzle.onPuzzleClear?.Invoke();
-        custom.gameObject.SetActive(true);
+
+    public void OnPuzzleSolved()
+    { // 퍼즐을 모두 맞췄을 때 호출
+        AudioManager.Instance.SetAudioClip_SFX(1, false);
+        customManager.StageTitle.text = "내 마음대로 그림을 꾸며보자!";
+
+        customManager.CustomMode.SetActive(true);
+        puzzleManager.DestroyChildren();
+        puzzleManager.CraetBoard();
+
+        GameManager.Instance.NextMode -= OnPuzzleSolved;
     }
-    public void OnCustomEndmethod() //커스텀하다가 다음으로 버튼 눌렀을때 불리는 메소드
-    {//다음으로 버튼에 onClick 참조되있음.
-        GameManager.Instance.GameClear();
-        TitleSet("모든 푸쉬팝을 눌러보자!");
-        DecoPanelSetActive(false);
-        custom.onCustomEnd?.Invoke();
-        frame._myImage.alphaHitTestMinimumThreshold = 0f;
+
+    public void OnCustomEndButton()
+    { // Custom mode - 다음으로
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        customManager.StageTitle.text = "모든 푸쉬팝을 눌러보자!";
+
+        // End Game
+        decoPanel.SetActive(false);
+        customManager.EndCustom();
+
+        frame.FrameImage.alphaHitTestMinimumThreshold = 0f;
     }
-    public void OnButtonAllPush() //커스텀 완료하고 모두 눌렀을때
-    {//버튼 모두 눌렀을때 자세한로직 GameManager GameClear에 있음.
-        pushCount = 0; //
-    }
+
     public void OnPushPushEnd() //푸시푸시가 모두 끝나고 초기화 할것들 모아둔 메소드
     {
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         GameManager.Instance.puzzleClass.Clear();
-        onPushPushGameEnd?.Invoke();
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-
+        customManager.ResetButton();
     }
     #endregion
 
-    public void DecoPanelSetActive(bool _bool)
-    {
-        decoPanel.SetActive(_bool);
-    }
-
     public void Init()
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
+        GameManager.Instance.GameEnd -= GameEnd;
+        GameManager.Instance.LiveBubbleCount = 0;
+        GameManager.Instance.bubbleObject.Clear();
+        PushPop.Instance.Init();
 
-    }
-    public void TitleSet(string _string)
-    {
-        stageTitle.text = _string;
+        puzzleManager.successCount = 0;
+
+        customManager.DestroyChildren();
+        StopAllCoroutines();
     }
 
     public void GameSetting()
     { // OnEnable() bubble size, board size, pushpopbutton size, pushpop percentage, etc. setting 관련
-    
+        GameManager.Instance.GameEnd += GameEnd;
+        GameManager.Instance.NextMode += OnAllBubblesPopped;
+        PushPop.Instance.BoardSize = new Vector2(520f, 400f);
+        PushPop.Instance.ButtonSize = new Vector2(80f, 80f);
+
+        puzzleManager.SettingPuzzleInfo();
+        customManager.StageTitle.text = "비눗방울을 터트려보세요!";
     }
 
     public void GameStart()
     {
-        throw new NotImplementedException();
+        StartCoroutine(GameStart_Co());
     }
 
     public IEnumerator GameStart_Co()
     {
+        yield return new WaitForSeconds(0.5f);
+
+        AudioManager.Instance.SetCommonAudioClip_SFX(1);
+        pushpushCanvas.GameReadyPanel.SetActive(true);
+        pushpushCanvas.GameReadyPanelText.text = "준비~";
+
+        yield return new WaitForSeconds(2f);
+
+        AudioManager.Instance.SetCommonAudioClip_SFX(2);
+        pushpushCanvas.GameReadyPanelText.text = "시작!";
+
+        yield return new WaitForSeconds(0.8f);
+
+        pushpushCanvas.GameReadyPanel.SetActive(false);
         // ready
-        throw new NotImplementedException();
+        GameReadyStart();
+    }
+
+    public void GameReadyStart()
+    {
+        puzzleManager.SettingPuzzlePos();
+    }
+
+    public void GameEnd()
+    { // popbutton click 시 호출
+        if (PushPop.Instance.pushPopButton.Count.Equals(PushPop.Instance.PushCount))
+        {
+            AudioManager.Instance.SetCommonAudioClip_SFX(6);
+            AudioManager.Instance.SetAudioClip_SFX(4, false);
+            PushPop.Instance.PushCount = 0;
+            PushPop.Instance.pushPopButton.Clear();
+
+            int[] spriteIndexs = new int[customManager.puzzleBoard.transform.childCount];
+            Vector2[] childPos = new Vector2[customManager.puzzleBoard.transform.childCount];
+            for (int i = 0; i < customManager.puzzleBoard.transform.childCount; i++)
+            {
+                PushPopButton pop = customManager.puzzleBoard.transform.GetChild(i).GetComponent<PushPopButton>();
+                spriteIndexs[i] = pop.spriteIndex;
+                childPos[i] = pop.transform.localPosition;
+            }
+
+            // Save
+            PushPushObject newPush = new PushPushObject(puzzleManager.CurrentPuzzle.PuzzleID, customManager.StackPops.Count, spriteIndexs, childPos);
+            string json = JsonUtility.ToJson(newPush);
+            SQL_Manager.instance.SQL_AddPushpush(json, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+
+            // Result Setting
+            List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+            customManager.ResultText.text = DataManager.Instance.iconDict[puzzleManager.CurrentPuzzle.PuzzleID];
+            customManager.ResultImage.sprite = DataManager.Instance.pushPopAtlas.GetSprite(pushlist[0].spriteName.ToString());
+            customManager.ResultImage.SetNativeSize();
+            customManager.ResultImage.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+
+            for (int i = 0; i < pushlist[0].childIndex; i++)
+            { // button setting
+                GameObject pop = Instantiate(PushPop.Instance.pushPopButtonPrefab, customManager.ResultImage.transform);
+                pop.GetComponent<Image>().sprite = customManager.pushPopButtonSprite[pushlist[0].childSpriteIndex[i]];
+                pop.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                pop.transform.localPosition = pushlist[0].childPosition[i];
+            }
+
+            // end setting
+            customManager.ResultImage.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+            for (int i = 0; i < customManager.puzzleBoard.transform.childCount; i++)
+            {
+                customManager.puzzleBoard.transform.GetChild(i).GetComponent<Button>().interactable = true;
+            }
+
+            resultPanel.SetActive(true);
+        }
+    }
+
+    #region Result Panel
+    public void ResultExitButton()
+    { // Result Panel - 나가기
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetAudioClip_BGM(1);
+
+        Time.timeScale = 1f;
+
+        pushpushCanvas.SelectCategoryPanel.SetActive(true);
+        pushpushCanvas.HelpButton.SetActive(true);
+        pushpushCanvas.BackButton.SetActive(true);
+        resultPanel.SetActive(false);
+        gameObject.SetActive(false);
+    }
+
+    public void ResultRestartButton()
+    { // Result Panel - 다시하기
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+
+        resultPanel.SetActive(false);
+        Time.timeScale = 1f;
+
+        Init();
+        GameSetting();
         GameStart();
     }
+    #endregion
+    #region Warning Panel
+    public void WarningPanelGoOutButton()
+    { // Warning panel - 나가기
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Stop_SFX();
+
+        Time.timeScale = 1f;
+
+        Init();
+        warningPanel.SetActive(false);
+        pushpushCanvas.SelectCategoryPanel.SetActive(true);
+        pushpushCanvas.HelpButton.SetActive(true);
+        pushpushCanvas.BackButton.SetActive(true);
+        gameObject.SetActive(false);
+    }
+
+    public void WarningPanelCancelButton()
+    { // Warning panel - 취소
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+
+        Time.timeScale = 1f;
+
+        warningPanel.SetActive(false);
+    }
+    #endregion
 }

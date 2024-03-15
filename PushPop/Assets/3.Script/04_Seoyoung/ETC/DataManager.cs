@@ -8,6 +8,7 @@ using System.Globalization;
 using LitJson;
 using UnityEngine.Networking;
 using Unity.VisualScripting.Antlr3.Runtime.Collections;
+using UnityEngine.U2D;
 
 #region ObjectClass
 
@@ -58,7 +59,9 @@ public class BadWord
 
 public class DataManager : MonoBehaviour
 {
-    public static DataManager instance = null;
+    public static DataManager Instance = null;
+
+    public SpriteAtlas pushPopAtlas = null;
 
     //µñ¼Å³Ê¸®¿ë
     public List<CategoryDict> categoryDicts_List = new List<CategoryDict>();
@@ -96,14 +99,14 @@ public class DataManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(instance);
+            Destroy(Instance);
         }
 
 

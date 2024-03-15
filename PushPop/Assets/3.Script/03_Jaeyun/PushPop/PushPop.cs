@@ -41,6 +41,7 @@ public class PushPop : MonoBehaviour
     public Sprite[] pushPopBtnSprites;
     public GameObject pushPopAni = null;
     public bool Turning = false;
+    public int PushCount = 0; // only pushpush mode, 버튼눌렀을때 + 되는 카운트, 버튼리스트.Count 비교해서 동일시 클리어 판정(GameManager)
 
     private void Awake()
     {

@@ -1206,6 +1206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ring: []
+  customPushpopManager: {fileID: 0}
 --- !u!114 &46367527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8807,7 +8808,6 @@ GameObject:
   - component: {fileID: 269346279}
   - component: {fileID: 269346278}
   - component: {fileID: 269346277}
-  - component: {fileID: 269346276}
   m_Layer: 5
   m_Name: Button (4)
   m_TagString: Untagged
@@ -8836,19 +8836,6 @@ RectTransform:
   m_AnchoredPosition: {x: 445, y: -80}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &269346276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 269346274}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e07ed1daa1de5b469a291a8b4f8d1aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ring: []
 --- !u!114 &269346277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8893,30 +8880,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CostomPushpopManager, Assembly-CSharp
-        m_MethodName: GetSpriteIndex
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 734374939}
         m_TargetAssemblyTypeName: CustomColorSet, Assembly-CSharp
         m_MethodName: ChildActive
@@ -10068,7 +10031,6 @@ GameObject:
   - component: {fileID: 301427253}
   - component: {fileID: 301427252}
   - component: {fileID: 301427251}
-  - component: {fileID: 301427250}
   m_Layer: 5
   m_Name: Button (1)
   m_TagString: Untagged
@@ -10097,19 +10059,6 @@ RectTransform:
   m_AnchoredPosition: {x: 175, y: -80}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &301427250
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 301427248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e07ed1daa1de5b469a291a8b4f8d1aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ring: []
 --- !u!114 &301427251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10154,30 +10103,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CostomPushpopManager, Assembly-CSharp
-        m_MethodName: GetSpriteIndex
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 734374939}
         m_TargetAssemblyTypeName: CustomColorSet, Assembly-CSharp
         m_MethodName: ChildActive
@@ -11342,6 +11267,8 @@ MonoBehaviour:
   mainCanvas: {fileID: 1218009845}
   BackButton: {fileID: 1089225651}
   HelpButton: {fileID: 1032993019}
+  pushpushManager: {fileID: 481302152}
+  SelectListSetting: {fileID: 569345573}
   PushpushGame: {fileID: 481302149}
   CustomMode: {fileID: 1524559483}
   SelectCategoryPanel: {fileID: 569345571}
@@ -11350,6 +11277,7 @@ MonoBehaviour:
   WarningPanel: {fileID: 2127679316}
   GameReadyPanel: {fileID: 2031769272}
   HelpPanel: {fileID: 165276624}
+  GameReadyPanelText: {fileID: 470251475}
 --- !u!114 &348456131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12753,21 +12681,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CostomPushpopManager, Assembly-CSharp
-        m_MethodName: BtnAllClear
+        m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
+        m_MethodName: ResetButton
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -14108,9 +14024,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: SelectMold_BackBtn_Clicked
+      - m_Target: {fileID: 348456130}
+        m_TargetAssemblyTypeName: PushPushCanvas, Assembly-CSharp
+        m_MethodName: ReadyPanelExitButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14736,26 +14652,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
-        m_MethodName: onCustomEndmethod
+      - m_Target: {fileID: 481302152}
+        m_TargetAssemblyTypeName: PushPushManager, Assembly-CSharp
+        m_MethodName: OnCustomEndButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -15508,9 +15412,8 @@ GameObject:
   - component: {fileID: 481302150}
   - component: {fileID: 481302155}
   - component: {fileID: 481302154}
-  - component: {fileID: 481302153}
-  - component: {fileID: 481302151}
   - component: {fileID: 481302152}
+  - component: {fileID: 481302151}
   m_Layer: 5
   m_Name: PushPush Game
   m_TagString: Untagged
@@ -15553,13 +15456,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffdf059670282104fa8b85965b4e8ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CustomMode: {fileID: 1524559483}
   pushPop: {fileID: 2804409159849094026, guid: c84c226c0b6b14b4bafe85eb215718fc, type: 3}
   RectPushPop: {fileID: 7161972215700324124, guid: 1381da20a7f6349438dc19f56e561b10, type: 3}
-  result: {fileID: 481551775}
-  resultText: {fileID: 1388474162}
-  resultImage: {fileID: 973781546}
+  StageTitle: {fileID: 1551709279}
+  ResultPanel: {fileID: 2102215180}
+  ResultText: {fileID: 1388474162}
+  ResultImage: {fileID: 973781546}
   puzzleBoard: {fileID: 1876634761}
-  btnSprites:
+  pushPopButtonSprite:
   - {fileID: 21300000, guid: c4797b928419e844aaef5d3f039aa7f3, type: 3}
   - {fileID: 21300000, guid: cf35119f7b53e1c419bb1c7cb3af6dda, type: 3}
   - {fileID: 21300000, guid: 16ae76088a3d7e147921f97b001083e6, type: 3}
@@ -15570,10 +15475,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c04363870dc953b4d991e02af07d773a, type: 3}
   - {fileID: 21300000, guid: 1652f2efa5721a446892d51b273576dc, type: 3}
   - {fileID: 21300000, guid: 0607a023efa482e4d9055e78cf332f3d, type: 3}
-  isCustomMode: 0
-  spriteIndex: 0
+  SpriteIndex: 0
   currentCreatIndex: 0
-  framePuzzle: {fileID: 0}
+  framePuzzle: {fileID: 1876634764}
 --- !u!114 &481302152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15586,36 +15490,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d154ae8ecb3a5b6498e9aaa1e392a774, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  custom: {fileID: 0}
-  puzzle: {fileID: 0}
-  frame: {fileID: 0}
-  decoPanel: {fileID: 0}
-  stageTitle: {fileID: 0}
-  pieceCount: 1
-  pushCount: 0
---- !u!114 &481302153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 481302149}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e015e968bab619409c879e51fde2a65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pushpush_Canvas: {fileID: 0}
-  help_Canvas: {fileID: 888996946}
-  selectCategory_Panel: {fileID: 677785080}
-  puzzleLozic_Panel: {fileID: 1081564064}
-  success_Panel: {fileID: 481551775}
-  backBtn: {fileID: 0}
-  Colorset_Panel: {fileID: 734374937}
-  colorButton_List: []
-  colorSprite_List:
-  - {fileID: 21300000, guid: c4797b928419e844aaef5d3f039aa7f3, type: 3}
-  Mold_Image: {fileID: 0}
+  pushpushCanvas: {fileID: 348456130}
+  resultPanel: {fileID: 2102215180}
+  warningPanel: {fileID: 2127679316}
+  decoPanel: {fileID: 1639401251}
+  retryButton: {fileID: 0}
+  customManager: {fileID: 481302151}
+  puzzleManager: {fileID: 1081564064}
+  stageTitle: {fileID: 1551709279}
+  isCustomMode: 0
+  framePuzzle: {fileID: 1876634764}
+  resultImage: {fileID: 973781546}
+  resultMassageText: {fileID: 1388474162}
+  frame: {fileID: 1876634764}
+  PushCount: 0
 --- !u!114 &481302154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15704,7 +15592,6 @@ GameObject:
   - component: {fileID: 481551776}
   - component: {fileID: 481551778}
   - component: {fileID: 481551777}
-  - component: {fileID: 481551779}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -15773,18 +15660,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 481551775}
   m_CullTransparentMesh: 1
---- !u!114 &481551779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 481551775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e22c27581103e82429c2bc2e454a5e3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &484630521
 GameObject:
   m_ObjectHideFlags: 0
@@ -17155,6 +17030,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0fe9a9d86631394191f0f1007721f85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pushPopAtlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
   categoryDicts_List: []
   scipts_List: []
   iconDicts_List: []
@@ -18589,7 +18465,6 @@ GameObject:
   m_Component:
   - component: {fileID: 569345572}
   - component: {fileID: 569345573}
-  - component: {fileID: 569345574}
   m_Layer: 5
   m_Name: Select Category Panel
   m_TagString: Untagged
@@ -18763,165 +18638,6 @@ MonoBehaviour:
   easyIconList: []
   normalIconList: []
   hardIconList: []
---- !u!114 &569345574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 569345571}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47a72668c9a91934f9df132f5f66f57f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  main_Canvas: {fileID: 1218009844}
-  help_Canvas: {fileID: 888996946}
-  selectCategory_Panel: {fileID: 677785080}
-  selectMold_Panel: {fileID: 56755386}
-  puzzle_Panel: {fileID: 1081564063}
-  pushpushGame_Panel: {fileID: 481302149}
-  Warning_Panel: {fileID: 1636650469}
-  bubblePanel: {fileID: 0}
-  readyPanel: {fileID: 2031769272}
-  selectCategory_ScrollView: {fileID: 440489997}
-  content_ScrollView: {fileID: 1223357685}
-  categoryIcon_Prefab: {fileID: 4741607185553568946, guid: 5b43dbe5357e43b468dd3240204d37b3, type: 3}
-  next_Btn: {fileID: 1205819992}
-  prievious_Btn: {fileID: 1777228633}
-  gameStart_Btn: {fileID: 860821566}
-  Back_Btn: {fileID: 431329879}
-  GameBack_Btn: {fileID: 0}
-  GoOut_Btn: {fileID: 0}
-  Cancle_Btn: {fileID: 0}
-  selectedCategory_Text: {fileID: 155896048}
-  selectedMoldIcon_Image: {fileID: 1812879846}
-  selectedMoldIcon_Text: {fileID: 494072227}
-  Page_Text: {fileID: 677435896}
-  ready_Text: {fileID: 470251475}
-  categoryBtn_List: []
-  categoryIcon_List:
-  - {fileID: 21300000, guid: 2ecd0254d7bb706408e617feb935950d, type: 3}
-  - {fileID: 21300000, guid: 1150bac1478c67140859fe7be70f93ec, type: 3}
-  - {fileID: 21300000, guid: f30bf4f1380aac445bc668b0203e24c9, type: 3}
-  - {fileID: 21300000, guid: b5c0ccc70bc927041a00b040cad07cb4, type: 3}
-  - {fileID: 21300000, guid: 029cc16fe854df54da1ecdfde4908e75, type: 3}
-  - {fileID: 21300000, guid: 72237c4d3a4be804999863dd751c60a2, type: 3}
-  - {fileID: 21300000, guid: cc54896625e5b7d4abe9baa7f7447057, type: 3}
-  - {fileID: 21300000, guid: 1809023542511a14d80e7f029f473da2, type: 3}
-  - {fileID: 21300000, guid: 40ace2c67e9720d41b2d58b6af15de73, type: 3}
-  - {fileID: 21300000, guid: 836fec0109d3e6f4a9843812fa9f64bc, type: 3}
-  categoryText_List: []
-  icon_List10:
-  - {fileID: 21300000, guid: 6b09030232ca04b4b87680520a1899a8, type: 3}
-  - {fileID: 21300000, guid: 911dac0445bc1b946b911d4b425e2305, type: 3}
-  - {fileID: 21300000, guid: 71ab9cdf53677ed429fa8ab407d0cb3a, type: 3}
-  - {fileID: 21300000, guid: 07189cd2e98b3334c85d97068d65b2a9, type: 3}
-  - {fileID: 21300000, guid: 737dcd599dec5fb479380c9533f04ad0, type: 3}
-  - {fileID: 21300000, guid: a98676b9ca533b1459c77f7a16f2d3c9, type: 3}
-  - {fileID: 21300000, guid: 4bac4569aabf0774faf785cfb80e876a, type: 3}
-  - {fileID: 21300000, guid: 08e7dc31d92e16b46a10af55ef3bf701, type: 3}
-  - {fileID: 21300000, guid: 5fc03abda1e462a40a175b8ea89b9f51, type: 3}
-  - {fileID: 21300000, guid: 248ad57062962384cb32653e82e6da13, type: 3}
-  - {fileID: 21300000, guid: 9022c220e266b474786284403e851745, type: 3}
-  - {fileID: 21300000, guid: a19f41502eceb9547af12fe7e6caccdc, type: 3}
-  - {fileID: 21300000, guid: 0346db21dcf5c6740afd3e70cd37cfec, type: 3}
-  - {fileID: 21300000, guid: 9eb0062aa36e1df408946e8693e30134, type: 3}
-  icon_List11:
-  - {fileID: 21300000, guid: ca8555143a3dae848a998dcb8c257a63, type: 3}
-  - {fileID: 21300000, guid: 0285757a46640704898200957bc330c1, type: 3}
-  - {fileID: 21300000, guid: c3308e86c1aa0964e8d85bff89885531, type: 3}
-  - {fileID: 21300000, guid: ddc08f85a3f3dc14e9545267afc19d19, type: 3}
-  - {fileID: 21300000, guid: acbd583bfa3808245adfb31d47f2e50b, type: 3}
-  - {fileID: 21300000, guid: 72737103b4218a347ad22017f1f7c6e8, type: 3}
-  - {fileID: 21300000, guid: 7e0c0096aaf8fb0489c64323dd57d3ca, type: 3}
-  - {fileID: 21300000, guid: dd05892bb6df36a45b536cda17981777, type: 3}
-  icon_List12:
-  - {fileID: 21300000, guid: 1a613f6d5e793184fb03194bfaff11ee, type: 3}
-  - {fileID: 21300000, guid: a474e1a6dd2f1a7438bd1475065d2a05, type: 3}
-  - {fileID: 21300000, guid: de6b3b136eb308d46a4278004a7cac7f, type: 3}
-  - {fileID: 21300000, guid: b61a5d283cae49d4d946daf1bb119694, type: 3}
-  - {fileID: 21300000, guid: 75b0b3f98e0fad24da936d58135491ad, type: 3}
-  - {fileID: 21300000, guid: 378e0f1a42bb65449b3a00228733c0f2, type: 3}
-  - {fileID: 21300000, guid: 8734def1c2a87ea4f8a0f94593a7cc4c, type: 3}
-  - {fileID: 21300000, guid: 8e75328b829e12a4793ba963aaad2674, type: 3}
-  icon_List13:
-  - {fileID: 21300000, guid: f6b0e9dbd5533534da4510104ec14c3d, type: 3}
-  - {fileID: 21300000, guid: f8e2a273ddc89374cb957ded63f57005, type: 3}
-  - {fileID: 21300000, guid: c743be0677fc5084c96e8a9be5a55f6e, type: 3}
-  - {fileID: 21300000, guid: eb7392e5ea8434248aea8acc5fba2148, type: 3}
-  - {fileID: 21300000, guid: 64d65b0692b6e5648a5ecb75ac59ceef, type: 3}
-  - {fileID: 21300000, guid: 13f3c639619e8ef4ba786588d235e698, type: 3}
-  icon_List14:
-  - {fileID: 21300000, guid: 160778ab526078b458f3c7bd5ae05605, type: 3}
-  - {fileID: 21300000, guid: aab2a87dee2520e45aacacdfc7d86dd5, type: 3}
-  - {fileID: 21300000, guid: b454ba0504a5eec428b7709574bbe7f0, type: 3}
-  - {fileID: 21300000, guid: b730365ed3401ba42869ab2a3b7be7cc, type: 3}
-  - {fileID: 21300000, guid: 64b6ac5b18febf648ae1c158269501ff, type: 3}
-  - {fileID: 21300000, guid: 05c5d82a427b00a499db04225c8a38be, type: 3}
-  - {fileID: 21300000, guid: 785c533b8f514c14c894342e4a33625e, type: 3}
-  - {fileID: 21300000, guid: 6665eb72ff3d62e41ab6dbbe6ec08a16, type: 3}
-  - {fileID: 21300000, guid: 04f4f97513956fe47ad7bd2b0fa47868, type: 3}
-  - {fileID: 21300000, guid: c6cabbb5dd669fc4dabf12354f331758, type: 3}
-  - {fileID: 21300000, guid: 3002c0887ca9a1d4683e2843e9d8b7d8, type: 3}
-  - {fileID: 21300000, guid: 52a79328a8a3f844180229c232e6aca8, type: 3}
-  - {fileID: 21300000, guid: 4dfc8eef44469134d9f94e3c2e70391d, type: 3}
-  - {fileID: 21300000, guid: 77ed99a9738995b43acf6d12fd2cac14, type: 3}
-  - {fileID: 21300000, guid: 7ccec5c35418a3745bec3eaef7eb863f, type: 3}
-  - {fileID: 21300000, guid: 4314420ae35f6e74395acffe3f9bc0d5, type: 3}
-  - {fileID: 21300000, guid: 949575a68712f7e46945c08e3d642386, type: 3}
-  - {fileID: 21300000, guid: c64bd7e1154792347b885572b2f4b9bc, type: 3}
-  - {fileID: 21300000, guid: bbd19fb39efaddb49bfa1098d66fb0d2, type: 3}
-  - {fileID: 21300000, guid: 782f5c47c37a19e4dbff84dc79dfcfd1, type: 3}
-  - {fileID: 21300000, guid: 3c2a1de78e505f84aa3369aa09ac6fb2, type: 3}
-  icon_List15:
-  - {fileID: 21300000, guid: 77dad0bb2509982468b8bb9726d7fd30, type: 3}
-  - {fileID: 21300000, guid: a79764fc08821c74f8f74329e2bdeb4c, type: 3}
-  icon_List16:
-  - {fileID: 21300000, guid: 98839432601a3e14caad079dc6f8ebe6, type: 3}
-  - {fileID: 21300000, guid: a968563179ab99440a0525a9ae8401a0, type: 3}
-  - {fileID: 21300000, guid: a0269fe9908955541a225eefd2313b2a, type: 3}
-  - {fileID: 21300000, guid: 876373e99dc0f2748b38c61b7404739b, type: 3}
-  - {fileID: 21300000, guid: 11bf46e863234da4e80a9a8c1d67b68f, type: 3}
-  - {fileID: 21300000, guid: 8a718f24328b2854594f7061d9fdaeea, type: 3}
-  - {fileID: 21300000, guid: 6cdaa36991de1db4ba19fccaf35ee4c2, type: 3}
-  - {fileID: 21300000, guid: cb264d0cee2502e499afc663452f588d, type: 3}
-  - {fileID: 21300000, guid: c05d629b194fbca49ab564455195e2f8, type: 3}
-  - {fileID: 21300000, guid: 31ec7ab5051d8584db8804c0437517c1, type: 3}
-  icon_List17:
-  - {fileID: 21300000, guid: 46f65be7b8676ea4d887a43f524dc857, type: 3}
-  - {fileID: 21300000, guid: ee07ebf388f88354da125d73859627fa, type: 3}
-  - {fileID: 21300000, guid: 32b222a5c01cd1043ac156a3947d2f47, type: 3}
-  - {fileID: 21300000, guid: 851af5c5797cdf540864d3f6f8fc09f4, type: 3}
-  - {fileID: 21300000, guid: ac65307b3afd3fa419e31e4cdca7ad2b, type: 3}
-  - {fileID: 21300000, guid: ced07537ed6024046b98be33ff712b0a, type: 3}
-  - {fileID: 21300000, guid: 94470855a4826d0429521d4950d34c3b, type: 3}
-  - {fileID: 21300000, guid: ba91603219b39894a94d80963776a378, type: 3}
-  - {fileID: 21300000, guid: cd66509155a9cdd45a8d9134113b8d03, type: 3}
-  - {fileID: 21300000, guid: 83d07cf0bb8b9764098881d06c60c797, type: 3}
-  - {fileID: 21300000, guid: 1c45c8630060edb45924cb3f5b6273fa, type: 3}
-  - {fileID: 21300000, guid: f1d0ad1e88912ca4d83d8d18e11a58a4, type: 3}
-  - {fileID: 21300000, guid: 57d78031252b90b4da1ff401f373c3b1, type: 3}
-  - {fileID: 21300000, guid: 9b41877afb8637e439f70646ef6d9263, type: 3}
-  - {fileID: 21300000, guid: 6f27ab1e64803f94ead35dd8ad39f166, type: 3}
-  - {fileID: 21300000, guid: 59bae417e63b7814686dfb723cc715ea, type: 3}
-  - {fileID: 21300000, guid: 06d58160c6ea03440b1db674c5cf64ff, type: 3}
-  icon_List18:
-  - {fileID: 21300000, guid: ccfb9fd53f34a884d8f545282b3095fc, type: 3}
-  - {fileID: 21300000, guid: c4cf12faa85b8d74abb909b3d5880439, type: 3}
-  - {fileID: 21300000, guid: 57caa5954faf3ae4890a7ba1472f6189, type: 3}
-  - {fileID: 21300000, guid: 068ee11667d09ed4ab0ee7a5a5e971a9, type: 3}
-  - {fileID: 21300000, guid: 4eef2efbb82dca54297dd14fee238f40, type: 3}
-  icon_List19:
-  - {fileID: 21300000, guid: 7d8e4ae37955d324aa108bf2c8cb29ed, type: 3}
-  - {fileID: 21300000, guid: f6a97fd5dce4ee645a3bd9bc87e02ee3, type: 3}
-  - {fileID: 21300000, guid: e1ff9617fa46af4439b21d0e56bcb3f0, type: 3}
-  - {fileID: 21300000, guid: a0c5ea2806bf16940904ac42aad92583, type: 3}
-  - {fileID: 21300000, guid: bb9ec9e2c4cfd99459a32b8b20e94764, type: 3}
-  - {fileID: 21300000, guid: ca00904b902f7f24b9ba39958a9ee2e4, type: 3}
-  - {fileID: 21300000, guid: 9e9088e203b921a4b8ed0f794e79adcb, type: 3}
-  moldIcon_List: []
-  puzzleLozic: {fileID: 1081564064}
 --- !u!1 &571955733
 GameObject:
   m_ObjectHideFlags: 0
@@ -19217,54 +18933,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481551779}
-        m_TargetAssemblyTypeName: PushPush_Result, Assembly-CSharp
-        m_MethodName: Success_BackBtn_Clicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 677785080}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 481302149}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: Enable_Objects
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1081564064}
         m_TargetAssemblyTypeName: PuzzleLozic, Assembly-CSharp
         m_MethodName: ClearPieceList
@@ -19288,78 +18956,6 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 481551775}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 578289925}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-        m_MethodName: set_interactable
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 888996945}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 888996946}
-        m_TargetAssemblyTypeName: Help_Canvas, Assembly-CSharp
-        m_MethodName: Button_Enable
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &578289926
 MonoBehaviour:
@@ -21026,7 +20622,7 @@ GameObject:
   m_Component:
   - component: {fileID: 620668272}
   m_Layer: 0
-  m_Name: ======================== (1)
+  m_Name: ========================
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23044,57 +22640,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481551779}
-        m_TargetAssemblyTypeName: PushPush_Result, Assembly-CSharp
-        m_MethodName: Success_BackBtn_Clicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: Enable_Objects
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1081564064}
-        m_TargetAssemblyTypeName: PuzzleLozic, Assembly-CSharp
-        m_MethodName: ClearPieceList
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
-        m_MethodName: BtnAllClear
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: GoOutBtn_Clicked
+      - m_Target: {fileID: 481302152}
+        m_TargetAssemblyTypeName: PushPushManager, Assembly-CSharp
+        m_MethodName: WarningPanelGoOutButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -25644,6 +25192,7 @@ MonoBehaviour:
   - {fileID: 1304474741}
   - {fileID: 1249096042}
   - {fileID: 1279902994}
+  customPushpopManager: {fileID: 481302151}
 --- !u!114 &734374940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25905,7 +25454,6 @@ GameObject:
   - component: {fileID: 743255270}
   - component: {fileID: 743255269}
   - component: {fileID: 743255268}
-  - component: {fileID: 743255267}
   m_Layer: 5
   m_Name: Button (3)
   m_TagString: Untagged
@@ -25934,19 +25482,6 @@ RectTransform:
   m_AnchoredPosition: {x: 355, y: -80}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &743255267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 743255265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e07ed1daa1de5b469a291a8b4f8d1aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ring: []
 --- !u!114 &743255268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25991,30 +25526,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CostomPushpopManager, Assembly-CSharp
-        m_MethodName: GetSpriteIndex
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 734374939}
         m_TargetAssemblyTypeName: CustomColorSet, Assembly-CSharp
         m_MethodName: ChildActive
@@ -27460,6 +26971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ring: []
+  customPushpopManager: {fileID: 0}
 --- !u!114 &770606716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28680,7 +28192,6 @@ GameObject:
   - component: {fileID: 805408682}
   - component: {fileID: 805408681}
   - component: {fileID: 805408680}
-  - component: {fileID: 805408679}
   m_Layer: 5
   m_Name: Button (7)
   m_TagString: Untagged
@@ -28709,19 +28220,6 @@ RectTransform:
   m_AnchoredPosition: {x: 265, y: -170}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &805408679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 805408677}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e07ed1daa1de5b469a291a8b4f8d1aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ring: []
 --- !u!114 &805408680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28766,30 +28264,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CostomPushpopManager, Assembly-CSharp
-        m_MethodName: GetSpriteIndex
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 7
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 734374939}
         m_TargetAssemblyTypeName: CustomColorSet, Assembly-CSharp
         m_MethodName: ChildActive
@@ -30640,9 +30114,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: GameStartBtn_Clicked
+      - m_Target: {fileID: 348456130}
+        m_TargetAssemblyTypeName: PushPushCanvas, Assembly-CSharp
+        m_MethodName: GameStartButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -31252,6 +30726,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 0607a023efa482e4d9055e78cf332f3d, type: 3}
   pushPopAni: {fileID: 0}
   Turning: 0
+  PushCount: 0
 --- !u!4 &873941251
 Transform:
   m_ObjectHideFlags: 0
@@ -33361,6 +32836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ring: []
+  customPushpopManager: {fileID: 0}
 --- !u!114 &922338887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36166,7 +35642,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1032993022}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 348456130}
+        m_TargetAssemblyTypeName: PushPushCanvas, Assembly-CSharp
+        m_MethodName: HelpPanelButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1032993022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38091,24 +37579,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af49695990fba6d41a1807c3c8075abc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PieceObject: {fileID: 4177616724507887598, guid: bbcc75845e42da4488e01883354fa2f5, type: 3}
-  FrameObject: {fileID: 8715378432437139663, guid: 0d6f6af36d3c04c4f9397a22ace772bd, type: 3}
-  PuzzleParent: {fileID: 1081564063}
-  FrameParent: {fileID: 209598422}
-  frampPos: {fileID: 966013798}
-  failPiecePos: {fileID: 336898731}
-  _piecePos: {x: 0, y: 0}
+  frameObject: {fileID: 8715378432437139663, guid: 0d6f6af36d3c04c4f9397a22ace772bd, type: 3}
+  pieceObject: {fileID: 4177616724507887598, guid: bbcc75845e42da4488e01883354fa2f5, type: 3}
   puzzles:
   - {fileID: 11400000, guid: 88468152508da5c4887c1a57a2a96d35, type: 2}
   - {fileID: 11400000, guid: bedaa8f39df9ee544b3341cdea76d02a, type: 2}
+  - {fileID: 11400000, guid: a022932372f521e49baec83bb9fd7dad, type: 2}
   - {fileID: 11400000, guid: 101253ea2aedf6d4bb7702a007ccc8d3, type: 2}
   - {fileID: 11400000, guid: 477ca134c32920645b060ea71485b9ac, type: 2}
-  - {fileID: 11400000, guid: a022932372f521e49baec83bb9fd7dad, type: 2}
-  currentPuzzle: {fileID: 0}
-  pieceList: []
+  puzzleTrans: {fileID: 209598423}
+  frameTrans: {fileID: 209598423}
+  framePos: {fileID: 966013798}
+  failPiecePos: {fileID: 336898731}
+  CurrentPuzzle: {fileID: 0}
   ClearCount: 0
   successCount: 0
-  atlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
 --- !u!224 &1081564065
 RectTransform:
   m_ObjectHideFlags: 0
@@ -38529,7 +38014,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1089225654}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 348456130}
+        m_TargetAssemblyTypeName: PushPushCanvas, Assembly-CSharp
+        m_MethodName: PushPushBackButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1089225654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39396,25 +38893,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CostomPushpopManager, Assembly-CSharp
-        m_MethodName: ReturnBtn
+        m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
+        m_MethodName: ReturnButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -42183,9 +41668,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: NextBtn_Clicked
+      - m_Target: {fileID: 569345573}
+        m_TargetAssemblyTypeName: SelectListSetting, Assembly-CSharp
+        m_MethodName: NextButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -43817,6 +43302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ring: []
+  customPushpopManager: {fileID: 0}
 --- !u!114 &1249096044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45133,6 +44619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ring: []
+  customPushpopManager: {fileID: 0}
 --- !u!114 &1279902997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45802,6 +45289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ring: []
+  customPushpopManager: {fileID: 0}
 --- !u!114 &1304474743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46738,6 +46226,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ring: []
+  customPushpopManager: {fileID: 0}
 --- !u!114 &1327733132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46942,7 +46431,6 @@ GameObject:
   - component: {fileID: 1329602145}
   - component: {fileID: 1329602144}
   - component: {fileID: 1329602143}
-  - component: {fileID: 1329602142}
   m_Layer: 5
   m_Name: Button (6)
   m_TagString: Untagged
@@ -46971,19 +46459,6 @@ RectTransform:
   m_AnchoredPosition: {x: 175, y: -170}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1329602142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1329602140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e07ed1daa1de5b469a291a8b4f8d1aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ring: []
 --- !u!114 &1329602143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47028,30 +46503,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CostomPushpopManager, Assembly-CSharp
-        m_MethodName: GetSpriteIndex
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 6
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 734374939}
         m_TargetAssemblyTypeName: CustomColorSet, Assembly-CSharp
         m_MethodName: ChildActive
@@ -48016,7 +47467,6 @@ GameObject:
   - component: {fileID: 1359246911}
   - component: {fileID: 1359246910}
   - component: {fileID: 1359246909}
-  - component: {fileID: 1359246908}
   m_Layer: 5
   m_Name: Button (5)
   m_TagString: Untagged
@@ -48045,19 +47495,6 @@ RectTransform:
   m_AnchoredPosition: {x: 85, y: -170}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1359246908
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1359246906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e07ed1daa1de5b469a291a8b4f8d1aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ring: []
 --- !u!114 &1359246909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48102,30 +47539,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CostomPushpopManager, Assembly-CSharp
-        m_MethodName: GetSpriteIndex
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 5
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 734374939}
         m_TargetAssemblyTypeName: CustomColorSet, Assembly-CSharp
         m_MethodName: ChildActive
@@ -49262,7 +48675,6 @@ GameObject:
   - component: {fileID: 1377798295}
   - component: {fileID: 1377798294}
   - component: {fileID: 1377798293}
-  - component: {fileID: 1377798292}
   m_Layer: 5
   m_Name: Button (9)
   m_TagString: Untagged
@@ -49291,19 +48703,6 @@ RectTransform:
   m_AnchoredPosition: {x: 445, y: -170}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1377798292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377798290}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e07ed1daa1de5b469a291a8b4f8d1aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ring: []
 --- !u!114 &1377798293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49348,30 +48747,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CostomPushpopManager, Assembly-CSharp
-        m_MethodName: GetSpriteIndex
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 9
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 734374939}
         m_TargetAssemblyTypeName: CustomColorSet, Assembly-CSharp
         m_MethodName: ChildActive
@@ -50940,9 +50315,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: SelectMold_BackBtn_Clicked
+      - m_Target: {fileID: 348456130}
+        m_TargetAssemblyTypeName: PushPushCanvas, Assembly-CSharp
+        m_MethodName: HelpPanelBackButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -53552,7 +52927,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1524559484
 RectTransform:
   m_ObjectHideFlags: 0
@@ -57123,6 +56498,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ring: []
+  customPushpopManager: {fileID: 0}
 --- !u!114 &1633080294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58253,7 +57629,6 @@ GameObject:
   - component: {fileID: 1664120271}
   - component: {fileID: 1664120270}
   - component: {fileID: 1664120269}
-  - component: {fileID: 1664120268}
   m_Layer: 5
   m_Name: Button (2)
   m_TagString: Untagged
@@ -58282,19 +57657,6 @@ RectTransform:
   m_AnchoredPosition: {x: 265, y: -80}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1664120268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1664120266}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e07ed1daa1de5b469a291a8b4f8d1aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ring: []
 --- !u!114 &1664120269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58339,30 +57701,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CostomPushpopManager, Assembly-CSharp
-        m_MethodName: GetSpriteIndex
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 734374939}
         m_TargetAssemblyTypeName: CustomColorSet, Assembly-CSharp
         m_MethodName: ChildActive
@@ -61010,7 +60348,6 @@ GameObject:
   - component: {fileID: 1761941934}
   - component: {fileID: 1761941933}
   - component: {fileID: 1761941932}
-  - component: {fileID: 1761941931}
   m_Layer: 5
   m_Name: Button (8)
   m_TagString: Untagged
@@ -61039,19 +60376,6 @@ RectTransform:
   m_AnchoredPosition: {x: 355, y: -170}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1761941931
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1761941929}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e07ed1daa1de5b469a291a8b4f8d1aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ring: []
 --- !u!114 &1761941932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61096,30 +60420,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CostomPushpopManager, Assembly-CSharp
-        m_MethodName: GetSpriteIndex
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 8
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 734374939}
         m_TargetAssemblyTypeName: CustomColorSet, Assembly-CSharp
         m_MethodName: ChildActive
@@ -61770,9 +61070,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: PreviousBtn_Clicked
+      - m_Target: {fileID: 569345573}
+        m_TargetAssemblyTypeName: SelectListSetting, Assembly-CSharp
+        m_MethodName: PreviousButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -62711,9 +62011,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PushPush_Canvas, Assembly-CSharp
-        m_MethodName: CancelBtn_Clicked
+      - m_Target: {fileID: 481302152}
+        m_TargetAssemblyTypeName: PushPushManager, Assembly-CSharp
+        m_MethodName: WarningPanelCancelButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -63948,7 +63248,6 @@ GameObject:
   - component: {fileID: 1848295198}
   - component: {fileID: 1848295197}
   - component: {fileID: 1848295196}
-  - component: {fileID: 1848295195}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -63977,19 +63276,6 @@ RectTransform:
   m_AnchoredPosition: {x: 85, y: -80}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1848295195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1848295193}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e07ed1daa1de5b469a291a8b4f8d1aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ring: []
 --- !u!114 &1848295196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64034,30 +63320,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CostomPushpopManager, Assembly-CSharp
-        m_MethodName: GetSpriteIndex
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 713598701}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: SetCommonAudioClip_SFX
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 734374939}
         m_TargetAssemblyTypeName: CustomColorSet, Assembly-CSharp
         m_MethodName: ChildActive
@@ -64720,7 +63982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2e84b7d82331244786c0f32159e1560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _myImage: {fileID: 0}
+  FrameImage: {fileID: 0}
 --- !u!114 &1876634765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67587,63 +66849,19 @@ MonoBehaviour:
   InGame: 0
   IsShutdown: 0
   multiGame: {fileID: 1708188286}
-  pushPush: {fileID: 0}
-  MemoryManager: {fileID: 0}
+  pushPush: {fileID: 481302152}
   CurrentIcon: 0
   CurrentIconName: 0
   Difficulty: 50
-  boardName: 0
-  currentTime: 0
-  bubbleCanvas: {fileID: 1081564063}
   bubblePrefab: {fileID: 8925204162082192838, guid: b1233b5acd8a67a4b9328d6e3efeedfb, type: 3}
   bubbleObject: []
-  bubbleSize: 0
-  pos:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  bubblePos: []
-  moldIcon: {fileID: 0}
   PushPopStage: 0
-  BoardSize: {x: 0, y: 0}
-  BoardSizeGameObject: {x: 0, y: 0}
   buttonActive: 0
   puzzleSize: {x: 0, y: 0}
   finalCenter: {x: 0, y: 0}
-  Score: 0
-  TimeScore: 0
+  IsCustomMode: 0
+  puzzleListCount: 0
   LiveBubbleCount: 0
-  count: 0.25
-  printName:
-  - {fileID: 708215382}
-  - {fileID: 0}
-  - {fileID: 0}
-  printTimer:
-  - {fileID: 1474604981}
-  - {fileID: 0}
-  - {fileID: 0}
-  printImage:
-  - {fileID: 1177140700}
-  - {fileID: 0}
-  - {fileID: 0}
-  printNamePersonal: {fileID: 1145219783}
-  printTimerPersonal: {fileID: 2046602407}
-  printImagePersonal: {fileID: 617611102}
-  atlas: {fileID: 4343727234628468602, guid: 227fd7933c3bbb0488e452d1554264d6, type: 2}
-  backButtonClick: 0
-  btnSprites:
-  - {fileID: 21300000, guid: c4797b928419e844aaef5d3f039aa7f3, type: 3}
-  - {fileID: 21300000, guid: cf35119f7b53e1c419bb1c7cb3af6dda, type: 3}
-  - {fileID: 21300000, guid: 16ae76088a3d7e147921f97b001083e6, type: 3}
-  - {fileID: 21300000, guid: 793ffa612b1b3de4996b7ebac0393def, type: 3}
-  - {fileID: 21300000, guid: 3afbf3e535d030047874f361fb7ec346, type: 3}
-  - {fileID: 21300000, guid: 39cdb9ff05036254493f8b78679c69a0, type: 3}
-  - {fileID: 21300000, guid: fd2b5a6b515861c4f980ebd7b7fdaad0, type: 3}
-  - {fileID: 21300000, guid: c04363870dc953b4d991e02af07d773a, type: 3}
-  - {fileID: 21300000, guid: 1652f2efa5721a446892d51b273576dc, type: 3}
-  - {fileID: 21300000, guid: 0607a023efa482e4d9055e78cf332f3d, type: 3}
-  isStart: 0
 --- !u!4 &1964842308
 Transform:
   m_ObjectHideFlags: 0
@@ -71399,6 +70617,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ring: []
+  customPushpopManager: {fileID: 0}
 --- !u!114 &2062592466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72971,6 +72190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ring: []
+  customPushpopManager: {fileID: 0}
 --- !u!114 &2119352309
 MonoBehaviour:
   m_ObjectHideFlags: 0

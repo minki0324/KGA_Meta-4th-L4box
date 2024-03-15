@@ -85,7 +85,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
     #region Other Method
     public void DeleteProfile()
     { // DeletePanel 속 Btn 연동 Method
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.DeleteProfile(ProfileManager.Instance.TempUserIndex);
         ProfileManager.Instance.PrintProfileList(profileParent);
         DeletePanel.SetActive(false);
@@ -96,11 +96,11 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
     { // Profile Add 하기 전 InputField에 저장된 이름을 변수에 저장해주는 Btn 연동 Method 
         // 각 조건들을 통과하면 (비속어, 초성, 글자수 제한 등) 등록 가능한 Name으로 판정하고 Profile Manager의 각 플레이어의 name 변수에 추가
 
-        for (int i = 0; i < DataManager.instance.vulgarism_Arr.Length; i++)
+        for (int i = 0; i < DataManager.Instance.vulgarism_Arr.Length; i++)
         { // 비속어 체크
-            if (inputProfileName.text.Contains(DataManager.instance.vulgarism_Arr[i]))
+            if (inputProfileName.text.Contains(DataManager.Instance.vulgarism_Arr[i]))
             {
-                if (DataManager.instance.vulgarism_Arr[i] != string.Empty)
+                if (DataManager.Instance.vulgarism_Arr[i] != string.Empty)
                 {
                     PrintErrorLog(nameErrorLog, "비속어는 포함시킬 수 없습니다.");
                     inputProfileName.text = String.Empty;  
@@ -216,7 +216,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
     #region Active
     public void SelectProfilePanelCreateBtn()
     { // Select Profile Panel 속 CreateBtn 연동 Method
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.isUpdate = false;
         CreateNamePanel.SetActive(true);
         if(!isLobby)
@@ -244,7 +244,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void CreateNamePanelBackBtn()
     { // Create Name Panel 속 BackBtn 연동 Method
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         CreateNamePanel.SetActive(false);
 
         // 로비에서는 본인의 Profile List를 제외하고 출력해야함
@@ -274,7 +274,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void CreateImagePanelIconBackBtn()
     { // Create Image Panel 속 Icon Panel의 BackBtn 연동 Method
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         iconPanel.SetActive(false);
 
         // 로비에서는 본인의 Profile List를 제외하고 출력해야함
@@ -283,7 +283,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void CreateImagePanelPictureConfirmBtn()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         CaptureImage.sprite = null;
         checkPanel.SetActive(false);
         createImagePanel.SetActive(false);
@@ -296,7 +296,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
         {
             ProfileManager.Instance.isProfileSelected = true;
         }
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         isLobby = true;
         GameModePanel.SetActive(true);
         MainButtonPanel.SetActive(true);
@@ -306,7 +306,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void CurrentProfilePanelChangeBtn()
     { // Current Profile Panel 속 ChangeBtn 연동 Method
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         ProfileManager.Instance.isUpdate = true;
 
@@ -316,7 +316,7 @@ public class NewProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void CurrentProfilePanelReturnBtn()
     { // Current Profile Panel 속 ReturnBtn 연동 Method
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         profileScrollView.normalizedPosition = new Vector2(1f, 1f);
         CurrentProfilePanel.SetActive(false);
