@@ -6786,8 +6786,6 @@ MonoBehaviour:
   moveRange_Max: 3
   sizeRandom_Min: 0.1
   sizeRandom_Max: 0.3
-  bisLoaded: 0
-  isLoadingEnd: 0
 --- !u!1 &207311234
 GameObject:
   m_ObjectHideFlags: 0
@@ -7640,7 +7638,6 @@ MonoBehaviour:
   InGame: 0
   IsShutdown: 0
   multiGame: {fileID: 28246087}
-  speedTimer: {fileID: 1370462253}
   pushPush: {fileID: 0}
   MemoryManager: {fileID: 0}
   CurrentIcon: 0
@@ -10996,6 +10993,7 @@ MonoBehaviour:
   ProfileImage: {fileID: 1789707470}
   ProfileText: {fileID: 1570100010}
   ExitButton: {fileID: 1828959138}
+  BackButton: {fileID: 0}
   DeletePanel: {fileID: 1540217771}
 --- !u!224 &317489695
 RectTransform:
@@ -54604,7 +54602,7 @@ GameObject:
   - component: {fileID: 1633276342}
   - component: {fileID: 1633276341}
   - component: {fileID: 1633276340}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: DragEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54676,8 +54674,8 @@ VFXRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 410250969
+  m_SortingLayer: -1
   m_SortingOrder: 0
 --- !u!2083052967 &1633276342
 VisualEffect:
@@ -56704,7 +56702,7 @@ GameObject:
   - component: {fileID: 1686218618}
   - component: {fileID: 1686218620}
   - component: {fileID: 1686218619}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: TouchEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56815,8 +56813,8 @@ VFXRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 410250969
+  m_SortingLayer: -1
   m_SortingOrder: 0
 --- !u!1 &1686263000
 GameObject:
@@ -62532,7 +62530,6 @@ MonoBehaviour:
   TitleText: {fileID: 1648033882}
   OptionButton: {fileID: 1825106551}
   ProfileButton: {fileID: 437459296}
-  HomeButton: {fileID: 816475056}
   CaptureImage: {fileID: 1400513136}
   PushpushButton: {fileID: 1764551214}
   SpeedButton: {fileID: 2118192536}

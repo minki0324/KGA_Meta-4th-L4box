@@ -33,6 +33,7 @@ public class TouchManager : MonoBehaviour
     // Coroutine touchTimer;
     [SerializeField] private Transform particleCanvas;  //터치&드래그 생성 시 상속될 오브젝트 Transform
     [SerializeField] private RawImage rawImage;     //EffectCamera가 촬영하는 RawImage 오브젝트
+    //[SerializeField] private Transform DragPoolPos;
 
     public int maxTouchCount = 10;      //최대 터치 허용 수
 
@@ -52,21 +53,26 @@ public class TouchManager : MonoBehaviour
     {
         //프레임 속도 고정
         Application.targetFrameRate = 300;
+        Screen.SetResolution(1920, 1080, false);
 
     }
 
 
 
+    private void OnEnable()
+    {
+        rawImage.texture.width = Camera.main.pixelWidth;
+        rawImage.texture.height = Camera.main.pixelHeight;
+    }
 
     void Start()
     {
         //SetResolution();
         //RawImage의 텍스처 크기 변경
-        //rawImage.texture.width = Screen.width;
-        //rawImage.texture.height = Screen.height;
+        //rawImage.texture.width = 5760;
+        //rawImage.texture.height = 3240;
 
-        rawImage.texture.width = Camera.main.pixelWidth;
-        rawImage.texture.height = Camera.main.pixelHeight;
+      
 
         Init();
         
@@ -226,6 +232,7 @@ public class TouchManager : MonoBehaviour
             //vfxEffect.transform.parent = particleCanvas;
 
             visualEffect_Pooling[CurrentCount] = vfxEffect.GetComponent<VisualEffect>();
+            //visualEffect_Pooling[CurrentCount].transform.parent = DragPoolPos;
             visualEffect_Pooling[CurrentCount].gameObject.SetActive(true);
             visualEffect_Pooling[CurrentCount].SendEvent("Click");
             CurrentCount += 1;

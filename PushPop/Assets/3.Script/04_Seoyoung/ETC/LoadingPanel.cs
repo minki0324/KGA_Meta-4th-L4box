@@ -33,9 +33,9 @@ public class LoadingPanel : MonoBehaviour
     public float sizeRandom_Max;
 
     [Header("ETC")]
-    public bool bisLoaded = false;  //로딩일 때 Fade Background 다 올라갔을 때 true -> 비눗방울 생성 더이상 안되도록 함
-    public bool isLoadingEnd = false;   //로딩이 끝났는가
-    bool bisStart = true;
+    private bool bisLoaded = false;  //로딩일 때 Fade Background 다 올라갔을 때 true -> 비눗방울 생성 더이상 안되도록 함
+    private bool isLoadingEnd = false;   //로딩이 끝났는가
+    private bool bisStart = true;
     #region Unity Callback
     private void Awake()
     {
@@ -47,7 +47,7 @@ public class LoadingPanel : MonoBehaviour
     {
         
         bisLoaded = false;
-        FadeBackground.material.SetFloat("_Visibility", 0.1f);
+        FadeBackground.material.SetFloat("_Visibility", 0.001f);
         ParticleCanvas.gameObject.SetActive(false);
 
         for (int i = 0; i < maxBubble; i++)
@@ -97,21 +97,9 @@ public class LoadingPanel : MonoBehaviour
 
     private void Update()
     {
-        if (!bisLoaded)
-        {
-            for (int i = 0; i < maxBubble; i++)
-            {
-                if (!bubble_Array[i].gameObject.activeSelf)
-                {
-                    bubble_Array[i].gameObject.SetActive(true);
-                    bubble_Array[i].transform.position = new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), -100f, 0f);
-                }
-            }
-        }
-        else
-        {
-            CheckBubbleEnd();
-        }
+        // BubblePooling();
+
+        CheckBubbleEnd();
     }
     #endregion
 
@@ -131,6 +119,25 @@ public class LoadingPanel : MonoBehaviour
         }
 
         
+    }
+
+    private void BubblePooling()
+    {//버블 계속 생산하는 코드
+        if (!bisLoaded)
+        {
+            for (int i = 0; i < maxBubble; i++)
+            {
+                if (!bubble_Array[i].gameObject.activeSelf)
+                {
+                    bubble_Array[i].gameObject.SetActive(true);
+                    bubble_Array[i].transform.position = new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), -100f, 0f);
+                }
+            }
+        }
+        else
+        {
+            CheckBubbleEnd();
+        }
     }
 
     private void CheckBubbleEnd()
@@ -156,26 +163,27 @@ public class LoadingPanel : MonoBehaviour
 
     private IEnumerator BackgroundFadeOut_co()
     {
-        float visibility = 0.1f;
+        float visibility = 0.001f;
         FadeBackground.material.SetFloat("_Visibility", visibility);
         yield return new WaitForSeconds(0.5f);
        
-        float cashing = 0.1f;
+        float cashing1 = 0.1f;
+        float cashing2= 0.05f;
         while(true)
         {
 
             if (visibility <= 0.35f)
             {
-                visibility += 0.03f;
+                visibility += 0.05f;
                 FadeBackground.material.SetFloat("_Visibility", visibility);
                 // yield return null;
-                yield return new WaitForSeconds(cashing);
+                yield return new WaitForSeconds(cashing1);
             }
-            else if (visibility > 0.3f && visibility < 5f)
+            else if (visibility > 0.3f && visibility < 4f)
             {
-                visibility += 0.1f;
+                visibility += 0.15f;
                 FadeBackground.material.SetFloat("_Visibility", visibility);
-                yield return null;
+                yield return new WaitForSeconds(cashing2);
             }
             else
             {
