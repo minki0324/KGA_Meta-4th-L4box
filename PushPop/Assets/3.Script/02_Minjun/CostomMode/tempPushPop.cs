@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHandler*/
+public class TempPushPop : MonoBehaviour
 {
     public bool isSet = false;
     public bool isTrigger = false;
-    public int creatIndex = 0;
+    public int createIndex = 0;
     public GameObject RectPush;
 
     private void OnEnable()
@@ -17,7 +17,7 @@ public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHa
        if (collision.CompareTag("PushPop") && !isSet && !isTrigger)
         {
             isTrigger = true;
-            if (creatIndex > collision.GetComponent<tempPushPop>().creatIndex )
+            if (createIndex > collision.GetComponent<TempPushPop>().createIndex)
             {
                 CheckOverlap();
             }
@@ -29,19 +29,13 @@ public class tempPushPop : MonoBehaviour/*, IPointerEnterHandler, IPointerExitHa
     }
 
     public void CheckOverlap()
-    {// °ãÄ¥ ½Ã
-
+    { // °ãÄ¥ ½Ã
         CustomPushpopManager stack = GameManager.Instance.pushPush.customManager;
         GameObject lastFakeStack = stack.StackFakePops.Pop();
-        
         Destroy(lastFakeStack);
 
         GameObject lastStack = stack.StackPops.Pop(); // ui gameobject
         PushPop.Instance.pushPopButton.Remove(RectPush);
         Destroy(lastStack);
-            //Destroy(RectPush);
-        
-      
     }
-  
 }

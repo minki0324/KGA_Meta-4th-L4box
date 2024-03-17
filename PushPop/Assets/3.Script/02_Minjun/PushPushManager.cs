@@ -31,7 +31,6 @@ public class PushPushManager : MonoBehaviour, IGame
     public Stack<GameObject> StackPops = new Stack<GameObject>(); //UI상 보이는 버튼담는 스택
     [SerializeField] private FramePuzzle frame;
     public int PushCount;
-    public event Action onPushPushGameEnd;
 
     private void OnEnable()
     {

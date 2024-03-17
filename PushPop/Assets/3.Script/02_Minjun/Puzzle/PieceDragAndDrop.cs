@@ -82,6 +82,4 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         pieceRectTrans.position = new Vector2(posX, posY);
     }
     #endregion
-
-
 }

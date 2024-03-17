@@ -15,7 +15,6 @@ public class PuzzleLozic : MonoBehaviour
     [Header("Puzzle Mode Info")] 
     [SerializeField] private List<Puzzle> puzzles = new List<Puzzle>(); // puzzle scriptableObject list
     [SerializeField] private Transform puzzleTrans = null; // puzzle이 생성되는 곳
-    [SerializeField] private Transform frameTrans = null; // position = framePos
     public Transform framePos;
     public Transform failPiecePos;
     private Vector2 piecePos = Vector2.zero;
@@ -85,7 +84,7 @@ public class PuzzleLozic : MonoBehaviour
 
     private void PuzzleInstantiate(GameObject _puzzle, Vector3 _position, Sprite _puzzleSprite, bool _isPiece)
     { // 퍼즐 생성
-        GameObject board = Instantiate(_puzzle, _position, Quaternion.identity, frameTrans);
+        GameObject board = Instantiate(_puzzle, _position, Quaternion.identity, puzzleTrans);
         PuzzleSpriteSetting(board, _puzzleSprite);
         pieceList.Add(board); // piceList 추가
         if (_isPiece)
@@ -121,13 +120,12 @@ public class PuzzleLozic : MonoBehaviour
     #endregion
     #region 퍼즐완성 콜백 메소드들
     public void DestroyChildren()
-    {//퍼즐을 완료했을때 생성되있던 퍼즐,프레임 삭제하기위한 메소드
-        // 퍼즐과 프레임이 이스크립트의 PuzzleParent에 상속되있기때문에 모두 제거.
-        if (puzzleTrans.GetChild(0).childCount > 0)
+    { // 퍼즐을 완료했을때 생성되있던 퍼즐,프레임 삭제하기위한 메소드
+        if (puzzleTrans.childCount > 0)
         {
-            foreach (Transform child in puzzleTrans.GetChild(0))
+            for (int i = 0; i < puzzleTrans.childCount; i++)
             {
-                Destroy(child.gameObject);
+                Destroy(puzzleTrans.GetChild(i).gameObject);
             }
         }
     }

@@ -12,6 +12,7 @@ public class CustomPushpopManager : MonoBehaviour
     [SerializeField] private GameObject pushPop; // OverLap검사하는 푸시팝(gameObject)
     [SerializeField] private GameObject RectPushPop; //UI 푸시팝
     public TMP_Text StageTitle = null;
+    public GameObject ReDecoButton = null;
 
     [Header("Result Panel")]
     public GameObject ResultPanel = null; 
@@ -29,24 +30,20 @@ public class CustomPushpopManager : MonoBehaviour
     public int currentCreatIndex = 0;
     [SerializeField] private FramePuzzle framePuzzle;
 
-    public void SetActiveCount()
-    {
-        GameManager.Instance.buttonActive = StackPops.Count;
-    }
-
-    #region 버튼 생성 메소드
-    // 클릭 or 터치시 메소드들
+    #region DecoPanel Button Method
     public void ClickDown()
-    {
-        selectPositon = Camera.main.ScreenToWorldPoint(Input.mousePosition); //카메라상의 좌표를 월드포지션으로구하기
-        //월드포지션에 push소환하기(Collider 검사해서 push버튼 겹치는지 확인하기위해)
+    { // button 생성
+        selectPositon = Camera.main.ScreenToWorldPoint(Input.mousePosition); // 터치 시 카메라 상의 좌표
+
+        // pushpop collider setting
         newPush = Instantiate(pushPop, selectPositon, Quaternion.identity);
-        newPush.transform.localScale = new Vector3(0.52f, 0.52f, 0.52f); // newRectPush비율에 맞게 설정해주세요 아래명시.
-        //UI상 위치에 push소환(실제로 보이는 push)
+        newPush.transform.localScale = new Vector3(0.52f, 0.52f, 0.52f); // newRectPush 비율에 맞게 설정
+        // pushpop button setting
         newRectPush = Instantiate(RectPushPop, Input.mousePosition, Quaternion.identity);
-        tempPushPop push = newPush.GetComponent<tempPushPop>(); // collider check GameObject
-        //푸시팝 overLap검사를 위한 버튼마다의 index 부여 == 버튼들끼리의 TriggerStay에서 겹쳤을때 index를 비교하여 먼저생성됬음을 판단함
-        push.creatIndex = currentCreatIndex;
+        TempPushPop push = newPush.GetComponent<TempPushPop>(); // collider check GameObject
+
+        // pushpop overLap 검사를 위한 버튼마다의 index 부여 index를 비교를 통해 생성 순서 판단
+        push.createIndex = currentCreatIndex;
         currentCreatIndex++;
         push.RectPush = newRectPush;
         PushPop.Instance.pushPopButton.Add(newRectPush);
@@ -58,13 +55,11 @@ public class CustomPushpopManager : MonoBehaviour
         pop.spriteIndex = SpriteIndex;
         // pushpop Btn Parent 설정
         newRectPush.transform.SetParent(puzzleBoard.transform);
-        newRectPush.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f); // 스케일 변경시 프리팹 Circle(콜라이더검사) 스케일도 바꾼 스케일의 1.3배로 바꿔주세요 
+        newRectPush.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f); // 스케일 변경시 프리팹 Circle(콜라이더검사) 스케일도 바꾼 스케일의 1.3배로 바꿔주세요
 
         AudioManager.Instance.SetAudioClip_SFX(3, false);
-
     }
-    #endregion
-    #region DecoPanel Button Method
+
     public void ReturnButton()
     { // 되돌리기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
@@ -81,15 +76,15 @@ public class CustomPushpopManager : MonoBehaviour
     { // 버튼 모두 지우기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         while (StackPops.Count > 0)
-        {
-            GameObject obj = StackPops.Pop(); // Queue에서 오브젝트를 하나씩 제거
-            Destroy(obj); // 해당 오브젝트를 파괴
-            PushPop.Instance.pushPopButton.Remove(obj);
+        { // ui button
+            GameObject button = StackPops.Pop();
+            Destroy(button);
+            PushPop.Instance.pushPopButton.Remove(button);
         }
         while (StackFakePops.Count > 0)
-        {
-            GameObject objs = StackFakePops.Pop();
-            Destroy(objs);
+        { // gameobject collider
+            GameObject collider = StackFakePops.Pop();
+            Destroy(collider);
         }
     }
 
@@ -97,7 +92,6 @@ public class CustomPushpopManager : MonoBehaviour
     { // 다시 꾸미기
         CustomMode.SetActive(true);
         StageTitle.text = "내 마음대로 그림을 꾸며보자!";
-        // enabled = true;
         GameManager.Instance.IsCustomMode = true;
         framePuzzle.ImageAlphaHitSet(0.1f);
         PushPop.Instance.PushCount = 0;
@@ -110,14 +104,19 @@ public class CustomPushpopManager : MonoBehaviour
 
     public void EndCustom()
     { // 데코 종료
-        // enabled = false;
         GameManager.Instance.IsCustomMode = false;
-        // 다.꾸 버튼 Active True
+        ReDecoButton.SetActive(true);
         framePuzzle.ImageAlphaHitSet(0f);
-        foreach (var btn in StackPops)
+        foreach (GameObject btn in StackPops)
         {
             btn.GetComponent<Image>().raycastTarget = true;
         }
+    }
+
+    public void ReDecorationButton()
+    {
+        ReDecoButton.SetActive(false);
+
     }
     #endregion
     public void DestroyChildren()

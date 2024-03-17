@@ -70,7 +70,6 @@ public class GameManager : MonoBehaviour
 
     [Header("PushPop Info")]
     public int PushPopStage = 0;
-    public int buttonActive = 0;
 
     [Header("Puzzle Info")]
     public Vector2 puzzleSize;
