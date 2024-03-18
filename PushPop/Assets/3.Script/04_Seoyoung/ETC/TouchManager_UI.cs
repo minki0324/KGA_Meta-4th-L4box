@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.VFX;
 
-//update-> coroutine으로 바꿀지 생각할 것
+//VFX Graph가 엘포박스 기기에서 작동하지 않아 UI로 만든 터치/드래그 이펙트..
 
-public class TouchManager : MonoBehaviour
+public class TouchManager_UI : MonoBehaviour
 {
     class TouchEvent
     { //터치이벤트 클래스 : 개별 터치 및 드래그 판정용
@@ -23,7 +21,7 @@ public class TouchManager : MonoBehaviour
     [SerializeField] private GameObject DragEffectPrefab;   //드래그했을 때 나오는 Visual Effect 프리팹
 
     [Header("List & Array")]
-    [SerializeField] private VisualEffect[] visualEffect_Pooling;    //드래그 시 생성되는 프리팹 오브젝트 풀링용 배열
+    [SerializeField] private GameObject[] TouchEffect_Pooling;    //드래그 시 생성되는 프리팹 오브젝트 풀링용 배열
 
     [SerializeField] private List<TouchEvent> touchEvent_List = new List<TouchEvent>();     //TouchEvent 담을 리스트
     [SerializeField] private List<Vector2> nowPos_List = new List<Vector2>();       //TouchEvent의 Touch.position을 담을 리스트
@@ -31,9 +29,8 @@ public class TouchManager : MonoBehaviour
 
     [Header("ETC")]
     // Coroutine touchTimer;
-    [SerializeField] private Transform particleCanvas;  //터치&드래그 생성 시 상속될 오브젝트 Transform
-    [SerializeField] private RawImage rawImage;     //EffectCamera가 촬영하는 RawImage 오브젝트
-    //[SerializeField] private Transform DragPoolPos;
+    [SerializeField] private Transform particleCanvas;
+    [SerializeField] private Transform DragEffectsObj; //터치&드래그 생성 시 상속될 오브젝트 Transform
 
     public int maxTouchCount = 10;      //최대 터치 허용 수
 
@@ -58,33 +55,9 @@ public class TouchManager : MonoBehaviour
     }
 
 
-
-    private void OnEnable()
-    {
-        rawImage.texture.width = Camera.main.pixelWidth;
-        rawImage.texture.height = Camera.main.pixelHeight;
-    }
-
     void Start()
     {
-        //SetResolution();
-        //RawImage의 텍스처 크기 변경
-        //rawImage.texture.width = 5760;
-        //rawImage.texture.height = 3240;
-
-        //VFX Graph 나타나는 사양되는지 확인하는 코드
-        // bool supported = SystemInfo.supportsComputeShaders && SystemInfo.maxComputeBufferInputsVertex != 0;
-
-        bool computeShaderSupporting = SystemInfo.supportsComputeShaders;
-        Debug.Log("Compute Shader is Supported : " + computeShaderSupporting);
-
-        //SSBO : Shader Storage Buffer Objects
-        bool SSBOSupporting = SystemInfo.maxComputeBufferInputsVertex != 0;
-        Debug.Log("SSBO is Supported :" + SSBOSupporting + SystemInfo.maxComputeBufferInputsVertex);
-
-
         Init();
-        
     }
 
     void Update()
@@ -101,7 +74,7 @@ public class TouchManager : MonoBehaviour
     #region Other Method
     private void Init()
     {//초기화 메소드      
-        visualEffect_Pooling = new VisualEffect[MaxCount];
+        TouchEffect_Pooling = new GameObject[MaxCount];
 
         for (int i = 0; i < 10; i++)
         {
@@ -111,43 +84,6 @@ public class TouchManager : MonoBehaviour
             Vector2 pos = new Vector2();
             nowPos_List.Add(pos);
         }
-
-
-        //for (int i = 0; i < MaxCount; i++)
-        //{//오브젝트 풀이 비어있으면 생성
-        //    GameObject vfxEffect = Instantiate(DragEffectPrefab, Vector3.zero, Quaternion.identity);
-        //    //vfxEffect.transform.parent = particleCanvas;
-
-        //    visualEffect_Pooling[i] = vfxEffect.GetComponent<VisualEffect>();
-        //    visualEffect_Pooling[i].gameObject.SetActive(false);
-        //    visualEffect_Pooling[i].SendEvent("Click");
-        //    // CurrentCount += 1;
-        //}
-    }
-
-    public void SetResolution()
-    {
-        int setWidth = 1920; // 사용자 설정 너비
-        int setHeight = 1080; // 사용자 설정 높이
-
-        int deviceWidth = Screen.width; // 기기 너비 저장
-        int deviceHeight = Screen.height; // 기기 높이 저장
-
-        Screen.SetResolution(setWidth, (int)(((float)deviceHeight / deviceWidth) * setWidth), true); // SetResolution 함수 제대로 사용하기
-
-        if ((float)setWidth / setHeight < (float)deviceWidth / deviceHeight) // 기기의 해상도 비가 더 큰 경우
-        {
-            float newWidth = ((float)setWidth / setHeight) / ((float)deviceWidth / deviceHeight); // 새로운 너비
-            Camera.main.rect = new Rect((1f - newWidth) / 2f, 0f, newWidth, 1f); // 새로운 Rect 적용
-        }
-        else // 게임의 해상도 비가 더 큰 경우
-        {
-            float newHeight = ((float)deviceWidth / deviceHeight) / ((float)setWidth / setHeight); // 새로운 높이
-            Camera.main.rect = new Rect(0f, (1f - newHeight) / 2f, 1f, newHeight); // 새로운 Rect 적용
-        }
-
-        rawImage.texture.width = (int)Camera.main.pixelRect.width;
-        rawImage.texture.height = (int)Camera.main.pixelRect.height;
     }
 
 
@@ -166,6 +102,9 @@ public class TouchManager : MonoBehaviour
                 {
                     case TouchPhase.Began:
                         nowPos_List[i] = touchEvent_List[i].touch.position;
+                      //  Vector2 localPoint;
+                        //RectTransformUtility.ScreenPointToLocalPointInRectangle(particleCanvas.GetComponent<RectTransform>(), touchEvent_List[i].touch.position, effectCamera, out localPoint);
+
                         TouchEffect_Multi(i);
                         break;
 
@@ -215,17 +154,11 @@ public class TouchManager : MonoBehaviour
 
     public void TouchEffect_Multi(int _index)
     {//터치 이펙트 생성 메소드 -> 얘도 풀링으로 할까요?
-        Vector3 worldPos = new Vector3();
 
-        worldPos = Camera.main.ScreenToWorldPoint(nowPos_List[_index]);
-        worldPos.z = 1;
-        GameObject vfxEffect = Instantiate(TouchEffectPrefab, worldPos, Quaternion.identity);
+        GameObject touchEffect = Instantiate(TouchEffectPrefab, nowPos_List[_index], Quaternion.identity);
+        touchEffect.transform.parent = DragEffectsObj;
 
-        //vfxEffect.transform.parent = particleCanvas;
-
-        vfxEffect.GetComponent<VisualEffect>().SendEvent("Click");
-     
-        Destroy(vfxEffect, 1.5f);
+        Destroy(touchEffect, 1f);
     }
 
     public void DragEffect_Multi(int _index)
@@ -237,13 +170,12 @@ public class TouchManager : MonoBehaviour
         //오브젝트 풀링
         if (CurrentCount < MaxCount)
         {//오브젝트 풀이 비어있으면 생성
-            GameObject vfxEffect = Instantiate(DragEffectPrefab, worldPos, Quaternion.identity);
-            //vfxEffect.transform.parent = particleCanvas;
+            GameObject touchEffect = Instantiate(DragEffectPrefab, nowPos_List[_index], Quaternion.identity);
 
-            visualEffect_Pooling[CurrentCount] = vfxEffect.GetComponent<VisualEffect>();
-            //visualEffect_Pooling[CurrentCount].transform.parent = DragPoolPos;
-            visualEffect_Pooling[CurrentCount].gameObject.SetActive(true);
-            visualEffect_Pooling[CurrentCount].SendEvent("Click");
+            TouchEffect_Pooling[CurrentCount] = touchEffect;
+            touchEffect.transform.parent = DragEffectsObj;
+            TouchEffect_Pooling[CurrentCount].gameObject.SetActive(true);
+
             CurrentCount += 1;
         }
         else
@@ -251,11 +183,10 @@ public class TouchManager : MonoBehaviour
             for (int i = 0; i < MaxCount; i++)
             {//오브젝트 풀이 가득 차있으면 풀링
 
-                if (!visualEffect_Pooling[i].gameObject.activeSelf)
+                if (!TouchEffect_Pooling[i].gameObject.activeSelf)
                 {//오브젝트가 꺼져있으면
-                    visualEffect_Pooling[i].gameObject.SetActive(true);
-                    visualEffect_Pooling[i].transform.position = worldPos;
-                    visualEffect_Pooling[i].SendEvent("Click");
+                    TouchEffect_Pooling[i].gameObject.SetActive(true);
+                    TouchEffect_Pooling[i].transform.position = nowPos_List[_index];
 
                     break;
                 }
@@ -267,27 +198,9 @@ public class TouchManager : MonoBehaviour
         createTime = 0f;
     }
 
-    public void DragEffect_Multi_NonePool(int _index)
-    {
-        Vector3 worldPos = new Vector3();
-        worldPos = Camera.main.ScreenToWorldPoint(nowPos_List[_index]);
-        worldPos.z = 1;
-
-        GameObject vfxEffect = Instantiate(DragEffectPrefab, worldPos, Quaternion.identity);
-
-        vfxEffect.GetComponent<VisualEffect>().SendEvent("Click");
-
-        Destroy(vfxEffect, 1.5f);
-        //드래그 이펙트 생성 쿨타임 초기화
-        bCanCreate = false;
-        createTime = 0f;
-
-        
-
-       
-    }
-
+    #endregion
 
 }
 
-    #endregion
+
+
