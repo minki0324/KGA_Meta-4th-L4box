@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -263,9 +264,9 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             mainCanvas.CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
         }
         ProfileManager.Instance.isImageSelect = false;
-        for(int i = 0; i < SQL_Manager.instance.ProfileList.Count; i++)
+        for (int i = 0; i < SQL_Manager.instance.ProfileList.Count; i++)
         {
-            if(SQL_Manager.instance.ProfileList[i].index.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex))
+            if (SQL_Manager.instance.ProfileList[i].index.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex))
             {
                 ProfileManager.Instance.myProfile = SQL_Manager.instance.ProfileList[i];
             }
@@ -276,6 +277,14 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         BackButton.SetActive(true);
         Select.SetActive(true);
         gameObject.SetActive(false);
+
+        GameManager.Instance.myMeomoryStageInfo =SavePoint.Instance.completedStageList.FirstOrDefault(stage => stage.profileName == ProfileManager.Instance.myProfile.name);
+        if(GameManager.Instance.myMeomoryStageInfo == null)
+        {
+            /*GameManager.Instance.myMeomoryStageInfo = 0;*/
+        }
+
+
     }
 
     public void CurrentProfileChangeButton()

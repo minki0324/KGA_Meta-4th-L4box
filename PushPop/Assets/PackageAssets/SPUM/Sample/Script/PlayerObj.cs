@@ -12,7 +12,7 @@ public class MyEvent : UnityEvent<PlayerObj.PlayerState>
 public class PlayerObj : NetworkBehaviour
 {
     private PlayerManager playerManager;
-    private NetworkIdentity myIdentity;
+    public NetworkIdentity myIdentity;
     public SPUM_Prefabs _prefabs;
     public NetworkAnimator netAni;
     public PlayerEmotionControl emotionControl;
@@ -51,7 +51,10 @@ public class PlayerObj : NetworkBehaviour
             transform.position = Vector3.zero;
             playerManager = FindObjectOfType<PlayerManager>();
             myIdentity = GetComponent<NetworkIdentity>();
-            Debug.Log("내 아이덴티티 : " + myIdentity);
+            if(myIdentity == null)
+            {
+                Debug.Log("NetworkIdentity가 존재하지않습니다. NetworkManager에 playerPrefab을 추가했는지 확인해주세요. 또는 NetworkIdentity 를 확인하세요.");
+            }
             playerManager.ConnectPrefabs = myIdentity;
             playerManager._nowObj = this;
         }
@@ -75,24 +78,6 @@ public class PlayerObj : NetworkBehaviour
             case PlayerState.run:
                 DoMove();
                 break;
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (isServer && playerManager.playersAvatarIdentity.Contains(myIdentity))
-        {
-            Debug.Log("부름?");
-            playerManager.playersAvatarIdentity.Remove(myIdentity);
-        }
-    }
-
-    private void OnApplicationQuit()
-    {
-        if (isServer && playerManager.playersAvatarIdentity.Contains(myIdentity))
-        {
-            Debug.Log("부름? quit");
-            playerManager.playersAvatarIdentity.Remove(myIdentity);
         }
     }
 
