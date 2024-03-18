@@ -72,7 +72,16 @@ public class TouchManager : MonoBehaviour
         //rawImage.texture.width = 5760;
         //rawImage.texture.height = 3240;
 
-      
+        //VFX Graph 나타나는 사양되는지 확인하는 코드
+        // bool supported = SystemInfo.supportsComputeShaders && SystemInfo.maxComputeBufferInputsVertex != 0;
+
+        bool computeShaderSupporting = SystemInfo.supportsComputeShaders;
+        Debug.Log("Compute Shader is Supported : " + computeShaderSupporting);
+
+        //SSBO : Shader Storage Buffer Objects
+        bool SSBOSupporting = SystemInfo.maxComputeBufferInputsVertex != 0;
+        Debug.Log("SSBO is Supported :" + SSBOSupporting + SystemInfo.maxComputeBufferInputsVertex);
+
 
         Init();
         
