@@ -34,8 +34,9 @@ public class TouchManager_UI : MonoBehaviour
 
     public int maxTouchCount = 10;      //최대 터치 허용 수
 
-    public float dragTime = 0.4f;   //드래그로 판정될 시간 변수
+    public float dragTime = 0.7f;   //드래그로 판정될 시간 변수
     private float touchTime = 0;    //터치 꾹 눌렀을 때 드래그로 판정되는 시간 측정용 변수
+    private float[] touchTime_arr;
 
     public float createCoolTime = 0.1f;  //프리팹 생성 쿨타임 변수
     private float createTime = 0;   //프리팹 생성 쿨타임 측정용 변수
@@ -75,6 +76,7 @@ public class TouchManager_UI : MonoBehaviour
     private void Init()
     {//초기화 메소드      
         TouchEffect_Pooling = new GameObject[MaxCount];
+        touchTime_arr = new float[MaxCount];
 
         for (int i = 0; i < 10; i++)
         {
@@ -83,6 +85,8 @@ public class TouchManager_UI : MonoBehaviour
 
             Vector2 pos = new Vector2();
             nowPos_List.Add(pos);
+
+            touchTime_arr[i] = 0f;
         }
     }
 
@@ -102,15 +106,15 @@ public class TouchManager_UI : MonoBehaviour
                 {
                     case TouchPhase.Began:
                         nowPos_List[i] = touchEvent_List[i].touch.position;
-                      //  Vector2 localPoint;
+                        //  Vector2 localPoint;
                         //RectTransformUtility.ScreenPointToLocalPointInRectangle(particleCanvas.GetComponent<RectTransform>(), touchEvent_List[i].touch.position, effectCamera, out localPoint);
 
                         TouchEffect_Multi(i);
                         break;
 
                     case TouchPhase.Stationary:
-                        touchTime += Time.deltaTime;
-                        if (touchTime > dragTime)
+                        touchTime_arr[i] += Time.deltaTime;
+                        if (touchTime_arr[i] > dragTime)
                         {
                             touchEvent_List[i].bisDrag = true;
                         }
@@ -137,7 +141,7 @@ public class TouchManager_UI : MonoBehaviour
 
                     case TouchPhase.Ended:
                         touchEvent_List[i].bisDrag = false;
-                        touchTime = 0f;
+                        touchTime_arr[i] = 0f;
                         createTime = 0f;
                         break;
                 }
@@ -201,6 +205,4 @@ public class TouchManager_UI : MonoBehaviour
     #endregion
 
 }
-
-
 

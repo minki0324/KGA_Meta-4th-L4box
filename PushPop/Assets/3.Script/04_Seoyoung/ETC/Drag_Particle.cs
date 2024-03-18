@@ -22,7 +22,7 @@ public class Drag_Particle : MonoBehaviour
 
         randomSize = Random.Range(sizeMin, sizeMax);
         rectTransform.localScale = new Vector3(randomSize, randomSize, randomSize);
-
+        rectTransform.rotation = new Quaternion(0f, 0f, Random.Range(0, 360), 1f);
         StartCoroutine(Destory_co());
     }
 
