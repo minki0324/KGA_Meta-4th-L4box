@@ -276,11 +276,11 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         Select.SetActive(true);
         gameObject.SetActive(false);
 
-        GameManager.Instance.myMeomoryStageInfo =SavePoint.Instance.completedStageList.FirstOrDefault(stage => stage.profileName == ProfileManager.Instance.myProfile.name);
+        /*GameManager.Instance.myMeomoryStageInfo =SavePoint.Instance.completedStageList.FirstOrDefault(stage => stage.profileName == ProfileManager.Instance.myProfile.name);
         if(GameManager.Instance.myMeomoryStageInfo == null)
         {
-            /*GameManager.Instance.myMeomoryStageInfo = 0;*/
-        }
+            *//*GameManager.Instance.myMeomoryStageInfo = 0;*//*
+        }*/
 
 
     }

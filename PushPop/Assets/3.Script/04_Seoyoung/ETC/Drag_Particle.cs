@@ -1,22 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Threading.Tasks;
-using System.Threading;
 
 public class Drag_Particle : MonoBehaviour
 {
-    //public int cashing = 1500;
+    RectTransform rectTransform;
+    [Header("드래그 이펙트 사라지는 시간")]
     public float cashing = 1.2f;
+
+    [Header("드래그 이펙트 크기 간격")]
+    public float sizeMin = 0.2f;
+    public float sizeMax = 0.7f;
+    private float randomSize;
+    private void Awake()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
 
     private void OnEnable()
     {
-         StartCoroutine(Destory_co());
-        //  Task.Run(() => Destroy_async());
-        //Destroy_async();
 
+        randomSize = Random.Range(sizeMin, sizeMax);
+        rectTransform.localScale = new Vector3(randomSize, randomSize, randomSize);
 
-      
+        StartCoroutine(Destory_co());
     }
 
     private IEnumerator Destory_co()
@@ -26,18 +33,4 @@ public class Drag_Particle : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    //async void Destroy_async()
-    //{
-    //    await Task.Run(() =>
-    //    {
-    //        Thread.Sleep(cashing);
-
-    //        Test_s();
-    //    });
-    //}
-
-    //public void Test_s()
-    //{
-    //    gameObject.SetActive(false);
-    //}
 }

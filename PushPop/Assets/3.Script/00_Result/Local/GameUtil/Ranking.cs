@@ -507,10 +507,16 @@ public class Ranking : MonoBehaviour
     { // speed, memory mode clear ½Ã
         // new score
         ClearTitle clearTitle = ClearTitle.Clear;
-
         if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
         {
-            clearTitle = previousScore > _currentScore ? ClearTitle.Better : ClearTitle.Clear;
+            if (_currentScore >= (int)GameManager.Instance.Difficulty)
+            {
+                clearTitle = ClearTitle.Fail;
+            }
+            else
+            {
+                clearTitle = previousScore > _currentScore ? ClearTitle.Better : ClearTitle.Clear;
+            }
         }
         else if (GameManager.Instance.GameMode.Equals(GameMode.Memory))
         {

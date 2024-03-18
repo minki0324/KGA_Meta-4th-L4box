@@ -29,6 +29,7 @@ public class SpeedManager : MonoBehaviour, IGame
     private Vector2[] bubblePos = { new Vector2(0f, 0f), new Vector2(0f, -20f) };
 
     [Header("Game Result")]
+    [SerializeField] private TMP_Text resultTitle = null;
     [SerializeField] private Image resultImage = null;
     [SerializeField] private TMP_Text resultMassageText = null;
     [SerializeField] private TMP_Text resultScoreText = null;
@@ -183,8 +184,12 @@ public class SpeedManager : MonoBehaviour, IGame
             int min = (int)gameTimer.CurrentTime / 60;
             resultScoreText.text = $"{string.Format("{00:00}", min)}:{string.Format("{00:00}", sec)}";
             clearMessage = (int)Ranking.Instance.CompareRanking((int)gameTimer.CurrentTime); // 점수 비교
-            resultMassageText.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
-            gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
+            resultTitle.text = Ranking.Instance.ResultDialog.title[clearMessage];
+            resultMassageText.text = Ranking.Instance.ResultDialog.speedResult[clearMessage];
+            if (gameTimer.TimerCoroutine != null)
+            {
+                gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
+            }
 
             resultPanel.SetActive(true);
         }
