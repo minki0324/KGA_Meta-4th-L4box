@@ -38,31 +38,40 @@ public class Favorite : MonoBehaviour
     private void Awake()
     {
         // 켜질때 기준으로 Favorite List를 SQL에서 받아와서 저장해놓고, Network를 나가거나 Application을 Quit할 때 다시 SQL에 저장
-        favoriteLists = SQL_Manager.instance.SQL_FavoriteListSet(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
-        if(favoriteLists != null && favoriteLists.FriendIndex == null)
+        if(ProfileManager.Instance.PlayerInfo[(int)Player.Player1] != null)
         {
-            favoriteLists = null;
+            favoriteLists = SQL_Manager.instance.SQL_FavoriteListSet(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+            if (favoriteLists != null && favoriteLists.FriendIndex == null)
+            {
+                favoriteLists = null;
+            }
+            infoText.text = $"나의 UID : {ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName}#{ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex}";
+            SQL_Manager.instance.SQL_ConnectCheck(true, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
         }
-        infoText.text = $"나의 UID : {ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName}#{ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex}";
-        SQL_Manager.instance.SQL_ConnectCheck(true, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
     }
 
     private void OnDestroy()
     {
-        // SQL에 favoriteList 저장하는 메소드 호출
-        SQL_Manager.instance.SQL_UpdateFavoriteList(favoriteLists, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+        if (ProfileManager.Instance.PlayerInfo[(int)Player.Player1] != null)
+        {
+            // SQL에 favoriteList 저장하는 메소드 호출
+            SQL_Manager.instance.SQL_UpdateFavoriteList(favoriteLists, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
 
-        // 네트워크 접속중인 기록을 false로 변경
-        SQL_Manager.instance.SQL_ConnectCheck(false, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+            // 네트워크 접속중인 기록을 false로 변경
+            SQL_Manager.instance.SQL_ConnectCheck(false, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+        }
     }
 
     private void OnApplicationQuit()
     {
-        // SQL에 favoriteList 저장하는 메소드 호출 
-        SQL_Manager.instance.SQL_UpdateFavoriteList(favoriteLists, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+        if (ProfileManager.Instance.PlayerInfo[(int)Player.Player1] != null)
+        {
+            // SQL에 favoriteList 저장하는 메소드 호출
+            SQL_Manager.instance.SQL_UpdateFavoriteList(favoriteLists, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
 
-        // 네트워크 접속중인 기록을 false로 변경
-        SQL_Manager.instance.SQL_ConnectCheck(false, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+            // 네트워크 접속중인 기록을 false로 변경
+            SQL_Manager.instance.SQL_ConnectCheck(false, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+        }
     }
     #endregion
 
@@ -132,6 +141,15 @@ public class Favorite : MonoBehaviour
             }
         }
     }
+
+    public void ReturnButton()
+    {
+        for (int i = 0; i < networkProfileParent.childCount; i++)
+        {
+            Destroy(networkProfileParent.GetChild(i).gameObject);
+        }
+        favoriteCanvasPanel.SetActive(false);
+    }
     #endregion
 
     #region Util Button
@@ -143,6 +161,7 @@ public class Favorite : MonoBehaviour
             {
                 // 검색 칸에 입력한 텍스트와 profile 네임이 같으면 최상단으로 오브젝트 순서 변경
                 isSearchProfile = true;
+                profilePanels[i].gameObject.transform.SetAsFirstSibling();
             }
         }
         if(!isSearchProfile)
@@ -154,7 +173,6 @@ public class Favorite : MonoBehaviour
             warningLogCoroutine = StartCoroutine(WarningLog());
         }
     }
-
     
     #endregion
     private IEnumerator WarningLog()

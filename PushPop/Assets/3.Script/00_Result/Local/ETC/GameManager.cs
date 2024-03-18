@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
-
+using Mirror;
 public enum GameMode // GameMode
 {
     PushPush = 0,
@@ -124,13 +124,12 @@ public class GameManager : MonoBehaviour
     public bool backButtonClick = false;
     [SerializeField] private Sprite[] btnSprites;
     public bool isStart = false;
-
+    public CompletedStage myMeomoryStageInfo;
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {

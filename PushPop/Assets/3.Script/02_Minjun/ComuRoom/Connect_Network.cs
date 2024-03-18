@@ -62,8 +62,9 @@ public class Connect_Network : MonoBehaviour
 
         if (Path.Equals(string.Empty))
         {
-            Path = Application.dataPath + "/License";
+            Path = Application.persistentDataPath + "/License";
         }
+        Debug.Log("패스 : " + Path);
         if (!File.Exists(Path)) //폴더 검사
         {
             Directory.CreateDirectory(Path);
@@ -73,8 +74,11 @@ public class Connect_Network : MonoBehaviour
             Default_Data(Path);
         }
         manager = GetComponent<NetworkManager>();
+        Debug.Log("매니저 : " + manager);
         kcp = (KcpTransport)manager.transport;
+        Debug.Log("kcp : " + kcp);
         type = License_type();
+        Debug.Log("타입 : " + type);
     }
 
     private void Start()
