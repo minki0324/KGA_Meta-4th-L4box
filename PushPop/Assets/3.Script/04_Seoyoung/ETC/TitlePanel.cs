@@ -56,7 +56,7 @@ public class TitlePanel : MonoBehaviour
 
     private void Start()
     {
-        AudioManager.instance.SetAudioClip_BGM(0);
+        AudioManager.Instance.SetAudioClip_BGM(0);
     }
 
 
@@ -124,7 +124,7 @@ public class TitlePanel : MonoBehaviour
 
     public void StartGame()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(2);
+        AudioManager.Instance.SetCommonAudioClip_SFX(2);
 
         //LoadingCanvas.gameObject.SetActive(false);
         LoadingCanvas.gameObject.SetActive(true);

@@ -40,7 +40,7 @@ public class PushPush_Game : MonoBehaviour
 
     public void BackBtn_Clicked()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         help_Canvas.gameObject.SetActive(true);
         selectCategory_Panel.SetActive(true);

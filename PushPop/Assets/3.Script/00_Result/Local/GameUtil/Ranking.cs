@@ -468,20 +468,19 @@ public class Ranking : MonoBehaviour
 
     public void SettingPreviousScore()
     { // old score setting, game start ½Ã load
-
-        int index = GameManager.Instance.boardName;
+        int index = GameManager.Instance.CurrentIconName;
         int scoreIndex = 0;
-        Rank userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.FirstPlayerIndex && r.spriteName.Contains(index));
+        Rank userRecord = null;
 
-        if (userRecord == null)
-        {
-            previousScore = 0;
-            return;
-        }
         switch (GameManager.Instance.GameMode)
         {
             case GameMode.Speed:
-                userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.FirstPlayerIndex && r.spriteName.Contains(index));
+                userRecord = rankList.FirstOrDefault(r => r.index.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex) && r.spriteName.Contains(index));
+                if (userRecord == null)
+                {
+                    previousScore = 0;
+                    return;
+                }
                 for (int i = 0; i < userRecord.spriteName.Count; i++)
                 {
                     if (index.Equals(userRecord.spriteName[i]))
@@ -490,39 +489,32 @@ public class Ranking : MonoBehaviour
                         break;
                     }
                 }
-                break;
-            case GameMode.Memory:
-                userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.FirstPlayerIndex);
-                break;
-        }
-
-
-        switch (GameManager.Instance.GameMode)
-        {
-            case GameMode.Speed:
                 previousScore = userRecord.timer[scoreIndex];
                 break;
             case GameMode.Memory:
+                userRecord = rankList.FirstOrDefault(r => r.index.Equals(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex));
+                if (userRecord == null)
+                {
+                    previousScore = 0;
+                    return;
+                }
                 previousScore = userRecord.score;
                 break;
         }
     }
 
-    public ClearTitle CompareRanking()
+    public ClearTitle CompareRanking(int _currentScore)
     { // speed, memory mode clear ½Ã
         // new score
         ClearTitle clearTitle = ClearTitle.Clear;
-        int currentScore = 0;
 
         if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
         {
-            currentScore = GameManager.Instance.currentTime;
-            clearTitle = previousScore > currentScore ? ClearTitle.Better : ClearTitle.Clear;
+            clearTitle = previousScore > _currentScore ? ClearTitle.Better : ClearTitle.Clear;
         }
         else if (GameManager.Instance.GameMode.Equals(GameMode.Memory))
         {
-            currentScore = MemoryManager.Instance.Score;
-            clearTitle = previousScore < currentScore ? ClearTitle.Better : ClearTitle.Clear;
+            clearTitle = previousScore < _currentScore ? ClearTitle.Better : ClearTitle.Clear;
         }
 
         return clearTitle;

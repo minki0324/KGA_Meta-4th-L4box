@@ -63,7 +63,6 @@ public class MultiManager : MonoBehaviour, IGame
     [Header("Timer")]
     [SerializeField] private GameTimer gameTimer = null;
     private float upperTimer = 12f;
-    private bool bNoTimePlaying = false;
     [SerializeField] private TMP_Text feverText = null;
 
     [Header("Quit")]
@@ -109,7 +108,6 @@ public class MultiManager : MonoBehaviour, IGame
         gameTimer.TenCount = false;
         gameTimer.EndTimer = false;
         upperTimer = 12f;
-        bNoTimePlaying = false;
         isEndGame = false;
         isFever = false;
         isGameStart = false;
@@ -177,12 +175,12 @@ public class MultiManager : MonoBehaviour, IGame
     { // gameready coroutine -> gamestart 게임 시작 관련 코루틴
         // Game Ready
         yield return new WaitForSeconds(0.5f);
-        AudioManager.instance.SetCommonAudioClip_SFX(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(1);
         multiCanvas.GameReadyPanelText.text = "준비~";
         multiCanvas.GameReadyPanel.SetActive(true);
 
         yield return new WaitForSeconds(2f);
-        AudioManager.instance.SetCommonAudioClip_SFX(2);
+        AudioManager.Instance.SetCommonAudioClip_SFX(2);
         multiCanvas.GameReadyPanelText.text = "시작~";
 
         yield return new WaitForSeconds(0.8f);
@@ -217,7 +215,7 @@ public class MultiManager : MonoBehaviour, IGame
     {
         if (gameTimer.EndTimer) // timer 종료 시 gameTimer.EndTimer true
         {
-            AudioManager.instance.SetAudioClip_SFX(1, false);
+            AudioManager.Instance.SetAudioClip_SFX(1, false);
             WaterfallAnimatorSet(playerTurn, true);
 
             StopAllCoroutines();
@@ -241,11 +239,11 @@ public class MultiManager : MonoBehaviour, IGame
     private IEnumerator Result_Co()
     { // 결과창 출력 코루틴
         yield return new WaitForSeconds(2f); // waterfall animation 기다림 
-        AudioManager.instance.audioSource_arr[1].pitch = 1f;
+        AudioManager.Instance.audioSource_arr[1].pitch = 1f;
         WaterfallAnimatorSet(playerTurn, false);
         feverText.gameObject.SetActive(false);
-        AudioManager.instance.Stop_SFX();
-        AudioManager.instance.SetCommonAudioClip_SFX(7);
+        AudioManager.Instance.Stop_SFX();
+        AudioManager.Instance.SetCommonAudioClip_SFX(7);
 
         // 자신의 턴일 때 게임 종료 시 패배, 결과 저장
         Ranking.Instance.SetBombVersus(
@@ -368,8 +366,7 @@ public class MultiManager : MonoBehaviour, IGame
 
     private void PosSetting()
     { // 턴 넘어갔을 때 각 포지션들 설정하는 Method
-        AudioManager.instance.SetAudioClip_SFX(2, false);
-        bNoTimePlaying = false;
+        AudioManager.Instance.SetAudioClip_SFX(2, false);
 
         if (playerTurn.Equals(Turn.Turn1P))
         { // 1P 턴
@@ -462,7 +459,7 @@ public class MultiManager : MonoBehaviour, IGame
 
             float rotSpeed = gameTimer.TenCount ? 360f : 30f;
             float rotAngle = gameTimer.TenCount ? 360f : 15f;
-            AudioManager.instance.audioSource_arr[1].pitch = gameTimer.TenCount ? 1.5f : 1f;
+            AudioManager.Instance.audioSource_arr[1].pitch = gameTimer.TenCount ? 1.5f : 1f;
             if(gameTimer.TenCount)
             {
                 feverText.gameObject.SetActive(true);
@@ -493,7 +490,7 @@ public class MultiManager : MonoBehaviour, IGame
         upperBubbleCoroutine = null;
         gameTimer.EndTimer = true; // 게임 종료
         
-        AudioManager.instance.SetAudioClip_SFX(0, false);
+        AudioManager.Instance.SetAudioClip_SFX(0, false);
     }
 
     private int GetSpriteIndexByTimer(float timer)
@@ -513,7 +510,7 @@ public class MultiManager : MonoBehaviour, IGame
         // 다중 입력 방지
         if (bottomBubbleCoroutine != null) return;
 
-        AudioManager.instance.SetCommonAudioClip_SFX(5);
+        AudioManager.Instance.SetCommonAudioClip_SFX(5);
         bottomBubbleCoroutine = StartCoroutine(BottomBubbleTouch_Co());
     }
     private IEnumerator BottomBubbleTouch_Co()
@@ -565,7 +562,8 @@ public class MultiManager : MonoBehaviour, IGame
     #region Result Panel
     public void ResultExitButton()
     { // Result Panel - 나가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Stop_SFX();
         Time.timeScale = 1f;
 
         multiCanvas.Ready.SetActive(true);
@@ -576,7 +574,8 @@ public class MultiManager : MonoBehaviour, IGame
 
     public void ResultRestartButton()
     { // Result Panel - 다시하기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Pause_SFX(false);
         Time.timeScale = 1f;
 
         Init();
@@ -587,7 +586,7 @@ public class MultiManager : MonoBehaviour, IGame
     #region Quit And Warning Panel
     public void QuitButton(int _player)
     { // 나가기 1P, 2P 버튼
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         quitButtonClick[_player] = !quitButtonClick[_player];
         int spriteIndex = quitButtonClick[_player] ? 1 : 0; // 눌렸을 때 1, 눌리지 않았을 때 0
@@ -597,7 +596,7 @@ public class MultiManager : MonoBehaviour, IGame
             Time.timeScale = 0f;
             if (gameTimer.TenCount)
             {
-                AudioManager.instance.Pause_SFX(true);
+                AudioManager.Instance.Pause_SFX(true);
             }
             warningPanel.SetActive(true);
         }
@@ -605,8 +604,8 @@ public class MultiManager : MonoBehaviour, IGame
 
     public void WarningPanelGoOutButton()
     { // 나가기 1P, 2P 둘다 눌렀을 때 - 나가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        AudioManager.instance.Stop_SFX();
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Stop_SFX();
 
         Time.timeScale = 1f;
 
@@ -619,7 +618,8 @@ public class MultiManager : MonoBehaviour, IGame
 
     public void WarningPanelCancelButton()
     { // 나가기 1P, 2P 둘다 눌렀을 때 - 취소
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Pause_SFX(false);
 
         Time.timeScale = 1f;
 

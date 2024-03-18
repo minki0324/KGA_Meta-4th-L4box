@@ -8,6 +8,7 @@ using System.Globalization;
 using LitJson;
 using UnityEngine.Networking;
 using Unity.VisualScripting.Antlr3.Runtime.Collections;
+using UnityEngine.U2D;
 
 #region ObjectClass
 
@@ -58,7 +59,9 @@ public class BadWord
 
 public class DataManager : MonoBehaviour
 {
-    public static DataManager instance = null;
+    public static DataManager Instance = null;
+
+    public SpriteAtlas pushPopAtlas = null;
 
     //딕셔너리용
     public List<CategoryDict> categoryDicts_List = new List<CategoryDict>();
@@ -96,14 +99,14 @@ public class DataManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(instance);
+            Destroy(Instance);
         }
 
 
@@ -121,7 +124,6 @@ public class DataManager : MonoBehaviour
         Read_Icon();    //몰드 아이콘 이름 정보 -> 딕셔너리(숫자, 한글)
         Read_BadWord();     //비속어 1
         Read_Vulgarism();   //비속어 2
-
     }
 
     #endregion
@@ -319,8 +321,6 @@ public class DataManager : MonoBehaviour
 
             byte[] data = reader.bytes;
             string resultData = System.Text.Encoding.UTF8.GetString(data);
-
-            //File.WriteAllBytes(realPath, reader.bytes);
 
             File.WriteAllText(realPath, resultData);
         }

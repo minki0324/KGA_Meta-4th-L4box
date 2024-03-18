@@ -95,27 +95,27 @@ public class Set_Time : MonoBehaviour
 
     public void IncreaseTimeBtn_Clicked()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         time += 60;
         Calculate_Time();
     }
 
     public void DecreaseTimeBtn_Clicked()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         time -= 60;
         Calculate_Time();
     }
 
     public void ConfirmBtn_Clicked()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         GameManager.Instance.ShutdownTimer = time;
         if (GameManager.Instance.GameMode.Equals(GameMode.PushPush))
         { // 푸시푸시 시작
             pushpushMode_Canvas.SetActive(true);
             help_Canvas.SetActive(true);
-            GameManager.Instance.pushPush.TitleSet("비눗방울을 터트려보세요!");
+            // GameManager.Instance.pushPush.TitleSet("비눗방울을 터트려보세요!");
             help_Canvas.transform.SetParent(pushpushMode_Canvas.transform);
             help_Canvas.transform.SetSiblingIndex(3);
         }
@@ -139,7 +139,7 @@ public class Set_Time : MonoBehaviour
 
     public void BackBtnClicked()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         gameObject.SetActive(false);
     }
 

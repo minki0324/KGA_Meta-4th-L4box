@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +19,6 @@ public class SpeedManager : MonoBehaviour, IGame
     [SerializeField] private GameObject resultPanel = null;
     [SerializeField] private GameObject warningPanel = null;
 
-
     [Header("Game Info")]
     public Difficulty Difficulty = Difficulty.Easy;
     public float difficultyCount = 0;
@@ -28,7 +26,7 @@ public class SpeedManager : MonoBehaviour, IGame
     [SerializeField] private Transform buttonTrans = null;
     private GameObject touchBubble = null;
     private bool firstSetting = true;
-    private Vector2[] bubblePos = { new Vector2(0f, 0f), new Vector2(0f, -20f)};
+    private Vector2[] bubblePos = { new Vector2(0f, 0f), new Vector2(0f, -20f) };
 
     [Header("Game Result")]
     [SerializeField] private Image resultImage = null;
@@ -63,6 +61,7 @@ public class SpeedManager : MonoBehaviour, IGame
         GameManager.Instance.OnDestroyBubble -= BubbleOnDestroy; // action 삭제
         GameManager.Instance.GameEnd -= GameEnd;
         GameManager.Instance.LiveBubbleCount = 0;
+        GameManager.Instance.bubbleObject.Clear();
 
         gameTimer.TimerText.color = new Color(0, 0, 0, 1);
         gameTimer.TenCount = false;
@@ -95,7 +94,7 @@ public class SpeedManager : MonoBehaviour, IGame
         GameManager.Instance.OnDestroyBubble += BubbleOnDestroy;
         GameManager.Instance.GameEnd += GameEnd;
 
-        Ranking.Instance.SettingPreviousScore(); // old score   
+        Ranking.Instance.SettingPreviousScore(); // old score
         PushPop.Instance.BoardSize = new Vector2(300f, 300f);
         PushPop.Instance.ButtonSize = new Vector2(80f, 80f);
         PushPop.Instance.Percentage = 0.67f;
@@ -133,13 +132,13 @@ public class SpeedManager : MonoBehaviour, IGame
 
         yield return new WaitForSeconds(0.5f);
 
-        AudioManager.instance.SetCommonAudioClip_SFX(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(1);
         speedCanvas.GameReadyPanel.SetActive(true);
         speedCanvas.GameReadyPanelText.text = "준비~";
 
         yield return new WaitForSeconds(2f);
 
-        AudioManager.instance.SetCommonAudioClip_SFX(2);
+        AudioManager.Instance.SetCommonAudioClip_SFX(2);
         speedCanvas.GameReadyPanelText.text = "시작!";
 
         yield return new WaitForSeconds(0.8f);
@@ -173,6 +172,9 @@ public class SpeedManager : MonoBehaviour, IGame
     {
         if (gameTimer.EndTimer || countSlider.value >= 0.9f)
         {
+            AudioManager.Instance.SetCommonAudioClip_SFX(6);
+            AudioManager.Instance.Stop_SFX();
+
             isEndGame = true;
             Ranking.Instance.SetTimer(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex, int.Parse(speedCanvas.SelectListSetting.BoardIcon.name), (int)gameTimer.CurrentTime);
             resultImage.sprite = speedCanvas.SelectListSetting.BoardIcon;
@@ -180,8 +182,9 @@ public class SpeedManager : MonoBehaviour, IGame
             int sec = (int)gameTimer.CurrentTime % 60;
             int min = (int)gameTimer.CurrentTime / 60;
             resultScoreText.text = $"{string.Format("{00:00}", min)}:{string.Format("{00:00}", sec)}";
-            clearMessage = (int)Ranking.Instance.CompareRanking(); // 점수 비교
+            clearMessage = (int)Ranking.Instance.CompareRanking((int)gameTimer.CurrentTime); // 점수 비교
             resultMassageText.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
+            gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
 
             resultPanel.SetActive(true);
         }
@@ -207,14 +210,35 @@ public class SpeedManager : MonoBehaviour, IGame
     {
         if (!firstSetting)
         {
-            PushPop.Instance.Init();
+            for (int i = 0; i < PushPop.Instance.PushPopBoardObject.Count; i++)
+            {
+                Destroy(PushPop.Instance.PushPopBoardObject[i]);
+            }
+            PushPop.Instance.PushPopBoardObject.Clear();
+            if (!PushPop.Instance.activePos.Count.Equals(0))
+            {
+                for (int i = 0; i < PushPop.Instance.activePos.Count; i++)
+                {
+                    PushPop.Instance.activePos[i].SetActive(false);
+                }
+                PushPop.Instance.activePos.Clear();
+            }
+            for (int i = 0; i < PushPop.Instance.pushPopButton.Count; i++)
+            {
+                PushPop.Instance.pushPopButton[i].SetActive(false);
+            }
+
             BoardTurningAnimation();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
 
-            AudioManager.instance.SetAudioClip_SFX(0, false);
+            for (int i = 0; i < PushPop.Instance.PushPopBoardUIObject.Count; i++)
+            {
+                Destroy(PushPop.Instance.PushPopBoardUIObject[i]);
+            }
+            PushPop.Instance.PushPopBoardUIObject.Clear();
+
+            AudioManager.Instance.SetAudioClip_SFX(0, false);
         }
-
-        yield return new WaitForSeconds(0.7f);
 
         PushPop.Instance.BoardPos = bubblePos[1];
         PushPop.Instance.CreatePushPopBoard(boardTrans);
@@ -226,7 +250,8 @@ public class SpeedManager : MonoBehaviour, IGame
 
     private void BoardTurningAnimation()
     {
-        
+        Animator boardAni = PushPop.Instance.PushPopBoardUIObject[0].GetComponent<Animator>();
+        boardAni.SetTrigger("Turning");
     }
 
     private IEnumerator SpeedSlider_Co()
@@ -249,8 +274,9 @@ public class SpeedManager : MonoBehaviour, IGame
     #region Result Panel
     public void ResultExitButton()
     { // Result Panel - 나가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        AudioManager.instance.SetAudioClip_BGM(1);
+        AudioManager.Instance.SetAudioClip_BGM(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Stop_SFX();
 
         Time.timeScale = 1f;
 
@@ -263,7 +289,8 @@ public class SpeedManager : MonoBehaviour, IGame
 
     public void ResultRestartButton()
     { // Result Panel - 다시하기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Stop_SFX();
 
         resultPanel.SetActive(false);
         Time.timeScale = 1f;
@@ -276,8 +303,9 @@ public class SpeedManager : MonoBehaviour, IGame
     #region Warning Panel
     public void WarningPanelGoOutButton()
     { // Warning panel - 나가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        AudioManager.instance.Stop_SFX();
+        AudioManager.Instance.SetAudioClip_BGM(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Stop_SFX();
 
         Time.timeScale = 1f;
 
@@ -291,7 +319,8 @@ public class SpeedManager : MonoBehaviour, IGame
 
     public void WarningPanelCancelButton()
     { // Warning panel - 취소
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Pause_SFX(false);
 
         Time.timeScale = 1f;
 

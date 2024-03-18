@@ -9,20 +9,13 @@ public class MemoryPushpop : MonoBehaviour
     [SerializeField] private Button popButton;
     [SerializeField] private Animator popButtonAnimation;
     public bool IsCorrect = false; // 정답이면 true 아니면 false
-    private void Awake()
-    {
-        
-    }
 
     private void OnEnable()
     {
         popButtonImage.alphaHitTestMinimumThreshold = 0.1f; // Sprite에서 Alpha 값이 0.1 이하 일시 인식하지 않게함
         memoryBoard = transform.parent.GetComponent<MemoryBoard>();
     }
-    private void Start()
-    {
-        
-    }
+
     #region OnClick Method
     public void MemoryPopButtonClick()
     { // prefab onclick method
@@ -63,8 +56,7 @@ public class MemoryPushpop : MonoBehaviour
     #region Correct, Incorrect
     private void Correct()
     { // 정답 시
-        AudioManager.instance.SetAudioClip_SFX(3, false);
-
+        AudioManager.Instance.SetAudioClip_SFX(3, false);
         // 점수 주기
         popButton.interactable = false; // 누른 버튼은 비활성화
         memoryBoard.CurrentCorrectCount++; // 정답 카운트 증가
@@ -76,13 +68,14 @@ public class MemoryPushpop : MonoBehaviour
     }
     private void Incorrect()
     { // 오답 시
-        AudioManager.instance.SetAudioClip_SFX(0, false);
+        AudioManager.Instance.SetAudioClip_SFX(0, false);
         PlayShakePush(); // ani
         MemoryManager.Instance.Life--;
         MemoryManager.Instance.LifeRemove();
 
         if (MemoryManager.Instance.Life.Equals(0))
         { // 라이프 모두 소진 시 게임 종료
+            AudioManager.Instance.SetAudioClip_SFX(5, false);
             MemoryManager.Instance.GameEnd();
         }
     }
@@ -90,7 +83,7 @@ public class MemoryPushpop : MonoBehaviour
     #region Stage Clear Method
     private IEnumerator StageClear_Co()
     { // Stage Clear
-        AudioManager.instance.SetAudioClip_SFX(4, false);
+        AudioManager.Instance.SetAudioClip_SFX(4, false);
         memoryBoard.ButtonAllStop(); // 버튼 동작 정지
         MemoryManager.Instance.PlayStartPanel("훌륭해요!");
 
@@ -102,6 +95,7 @@ public class MemoryPushpop : MonoBehaviour
             MemoryManager.Instance.GameEnd();
             yield break;
         }
+
         Destroy(memoryBoard.gameObject); // 현재 스테이지 보드 지우기
         MemoryManager.Instance.StageText.text = $"{MemoryManager.Instance.CurrentStage} 단계";
 
@@ -116,11 +110,11 @@ public class MemoryPushpop : MonoBehaviour
         popButtonAnimation.SetTrigger("isBlink");
         if (memoryBoard.Stage.IsSpecialStage)
         { // 스페셜 스테이지일 때
-            AudioManager.instance.SetAudioClip_SFX(1, false);
+            AudioManager.Instance.SetAudioClip_SFX(1, false);
         }
         else
         { // 스페셜 스테이지가 아닐 때
-            AudioManager.instance.SetAudioClip_SFX(2, false);
+            AudioManager.Instance.SetAudioClip_SFX(2, false);
         }
     }
 

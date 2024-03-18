@@ -91,7 +91,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144083f40fe44584fa45588c2d82f59a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _myImage: {fileID: 5664669589769050586}
+  PieceImage: {fileID: 5664669589769050586}
+  pieceRectTrans: {fileID: 7658273714464268299}
+  canvasGroup: {fileID: 6305297396907938608}
 --- !u!114 &-988349607845755168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,9 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1d5a624d4aea514da401aabca818829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGround: 0
-  speed: 5
-  index: 1
 --- !u!225 &6305297396907938608
 CanvasGroup:
   m_ObjectHideFlags: 0

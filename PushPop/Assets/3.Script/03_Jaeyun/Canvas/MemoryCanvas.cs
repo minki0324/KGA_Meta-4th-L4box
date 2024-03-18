@@ -31,8 +31,8 @@ public class MemoryCanvas : MonoBehaviour
     #region Ready
     public void GameStartButton()
     { // 대기 - 게임 시작
-        AudioManager.instance.SetCommonAudioClip_SFX(0);
-        AudioManager.instance.SetAudioClip_BGM(5);
+        AudioManager.Instance.SetAudioClip_BGM(4);
+        AudioManager.Instance.SetCommonAudioClip_SFX(0);
 
         MemoryGame.SetActive(true);
         HelpButton.SetActive(false);
@@ -44,10 +44,11 @@ public class MemoryCanvas : MonoBehaviour
     #region Side Panel
     public void MemoryBackButton()
     { // 뒤로가기
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         if (Ready.activeSelf)
         { // 대기 화면일 때
+            AudioManager.Instance.SetAudioClip_BGM(0);
             GameManager.Instance.GameMode = GameMode.None;
             GameManager.Instance.InGame = false;
 
@@ -56,6 +57,7 @@ public class MemoryCanvas : MonoBehaviour
         }
         else
         { // 게임 중일 때
+            AudioManager.Instance.SetAudioClip_BGM(1);
             Time.timeScale = 0f;
             WarningPanel.SetActive(true);
         }
@@ -63,13 +65,13 @@ public class MemoryCanvas : MonoBehaviour
 
     public void HelpPanelButton()
     { // 도움말
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         HelpPanel.SetActive(true);
     }
 
     public void HelpPanelBackButton()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         HelpPanel.SetActive(false);
     }
     #endregion

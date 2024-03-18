@@ -14,7 +14,7 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
         switch (GameManager.Instance.GameMode)
         {
             case GameMode.PushPush:
-                GameManager.Instance.pushPush.custom.StackPops.Push(gameObject);
+                PushPop.Instance.StackPops.Push(gameObject);
                 break;
             case GameMode.Memory:
                 break;
@@ -40,7 +40,7 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
         switch (GameManager.Instance.GameMode)
         {
             case GameMode.PushPush:
-                GameManager.Instance.pushPush.pushCount++;
+                PushPop.Instance.PushCount++;
                 gameObject.GetComponent<Image>().raycastTarget = false;
                 break;
             case GameMode.Speed:
@@ -59,10 +59,11 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
 
         if (clickButton.GetComponent<Button>().interactable)
         {
-            AudioManager.instance.SetCommonAudioClip_SFX(4);
+            AudioManager.Instance.SetCommonAudioClip_SFX(4);
             PushPop.Instance.ActivePosCount--;
             clickButton.GetComponent<Button>().interactable = false;
         }
-        GameManager.Instance.GameEnd();
+        
+        GameManager.Instance.GameEnd?.Invoke();
     }
 }

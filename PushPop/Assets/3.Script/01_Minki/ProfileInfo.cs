@@ -16,7 +16,7 @@ public class ProfileInfo : MonoBehaviour
 
     public void Join()
     { // Profile Select 했을 시 선택된 프로필로 이동, 선택한 프로필 저장
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         profileCanvas = FindObjectOfType<ProfileCanvas>();
 
         Player player = ProfileManager.Instance.SelectPlayer;
@@ -48,7 +48,7 @@ public class ProfileInfo : MonoBehaviour
     // 선택한 버튼의 name, UID GameManager에 넘겨주면서 삭제 확인 PopUp창 켜주는 Method
     public void DeleteInfo()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         profileCanvas = FindObjectOfType<ProfileCanvas>();
 
         ProfileManager.Instance.TempProfileName = SQL_Manager.instance.ProfileList[ReceiveIndex()].name; // 왜 넘겨주는 지 모르겠음 ... todo
