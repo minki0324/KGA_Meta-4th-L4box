@@ -24,7 +24,7 @@ public class CustomPushpopManager : MonoBehaviour
     public TMP_Text ResultText = null;
     public Image ResultImage = null;
 
-    [Header("PushPopObject")] 
+    [Header("PushPop Object")] 
     private GameObject newPush; //현재 소환중인 푸시팝
     private GameObject newRectPush;//현재 소환중인 푸시팝
     public GameObject puzzleBoard; //생성된 버튼 상속해주는 GameObject
@@ -41,6 +41,8 @@ public class CustomPushpopManager : MonoBehaviour
     #region DecoPanel Button Method
     public void ClickDown()
     { // button 생성
+        AudioManager.Instance.SetAudioClip_SFX(3, false);
+
         selectPositon = Camera.main.ScreenToWorldPoint(Input.mousePosition); // 터치 시 카메라 상의 좌표
 
         // pushpop collider setting
@@ -65,8 +67,6 @@ public class CustomPushpopManager : MonoBehaviour
         // pushpop Btn Parent 설정
         newRectPush.transform.SetParent(puzzleBoard.transform);
         newRectPush.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f); // 스케일 변경시 프리팹 Circle(콜라이더검사) 스케일도 바꾼 스케일의 1.3배로 바꿔주세요
-
-        AudioManager.Instance.SetAudioClip_SFX(3, false);
     }
 
     public void ReturnButton()
@@ -113,6 +113,7 @@ public class CustomPushpopManager : MonoBehaviour
 
     public void RetryCustom()
     { // 다시 꾸미기
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         GameManager.Instance.IsCustomMode = true;
         DecoPanel.SetActive(true);
         ReDecoButton.SetActive(false);

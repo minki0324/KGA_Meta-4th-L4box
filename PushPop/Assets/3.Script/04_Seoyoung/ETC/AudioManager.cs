@@ -66,6 +66,7 @@ public class AudioManager : MonoBehaviour
         audioSource_arr = GetComponents<AudioSource>();
         audioSource_arr[1].clip = bgmClip_List[0];
         playingBgm = 0;
+        SetAudioClip_BGM(0);
     }
     #endregion
 
@@ -84,9 +85,6 @@ public class AudioManager : MonoBehaviour
             playingBgm = index;
             stopMusic = StartCoroutine(BGM_Fade(playingBgm));
         }
-        //audioSource_arr[1].clip = bgmClip_List[index];
-        //audioSource_arr[1].Play();
-        //audioSource_arr[1].loop = true;
     }
 
     public void SetAudioClip_SFX(int index, bool bLoop)
@@ -96,23 +94,17 @@ public class AudioManager : MonoBehaviour
             switch (GameManager.Instance.GameMode)
             {
                 case GameMode.PushPush:
-
                     audioSource_arr[2].PlayOneShot(pushSfxClip_List[index]);
                     break;
-
                 case GameMode.Speed:
                     audioSource_arr[2].PlayOneShot(speedSfxClip_List[index]);
                     break;
-
                 case GameMode.Memory:
                     audioSource_arr[2].PlayOneShot(memorySfxClip_List[index]);
                     break;
-
                 case GameMode.Multi:
                     audioSource_arr[2].PlayOneShot(bombSfxClip_List[index]);
                     break;
-
-
             }
         }
         else
@@ -124,19 +116,16 @@ public class AudioManager : MonoBehaviour
                     audioSource_arr[2].Play();
                     audioSource_arr[2].loop = bLoop;
                     break;
-
                 case GameMode.Speed:
                     audioSource_arr[2].clip = speedSfxClip_List[index];
                     audioSource_arr[2].Play();
                     audioSource_arr[2].loop = bLoop;
                     break;
-
                 case GameMode.Memory:
                     audioSource_arr[2].clip = memorySfxClip_List[index];
                     audioSource_arr[2].Play();
                     audioSource_arr[2].loop = bLoop;
                     break;
-
                 case GameMode.Multi:
                     audioSource_arr[2].clip = bombSfxClip_List[index];
                     audioSource_arr[2].Play();
@@ -178,7 +167,6 @@ public class AudioManager : MonoBehaviour
             audioSource_arr[2].Pause();
         else
             audioSource_arr[2].UnPause();
-
     }
 
     public IEnumerator BGM_Fade(int index)
@@ -200,9 +188,7 @@ public class AudioManager : MonoBehaviour
             audioSource_arr[1].volume -= (Time.deltaTime / fadeTime);
             yield return null;
         }
-
-    
-
+        
         while (true)
         {
             if(audioSource_arr[1].volume >= 1f)
@@ -216,9 +202,6 @@ public class AudioManager : MonoBehaviour
             yield return null;
         }
 
-  
         yield break;
-
     }
-
 }

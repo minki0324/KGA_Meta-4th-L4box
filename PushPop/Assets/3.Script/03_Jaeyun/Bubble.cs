@@ -76,7 +76,6 @@ public class Bubble : MonoBehaviour, IPointerDownHandler
         TouchCount--;
         if (TouchCount <= 0)
         {
-            AudioManager.Instance.SetAudioClip_SFX(4, false);
             GameManager.Instance.bubbleObject.Remove(gameObject);
             Destroy(gameObject);
         }

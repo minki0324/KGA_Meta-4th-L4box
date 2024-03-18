@@ -88,8 +88,8 @@ public class MainCanvas : MonoBehaviour
 
     public void TimeSettingEndButton()
     { // 게임 시간 조절 - 확인
-        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         AudioManager.Instance.SetAudioClip_BGM(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         GameManager.Instance.ShutdownTimerStart();
         switch (GameManager.Instance.GameMode)

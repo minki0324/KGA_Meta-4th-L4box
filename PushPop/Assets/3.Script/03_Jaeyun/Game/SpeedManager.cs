@@ -173,6 +173,9 @@ public class SpeedManager : MonoBehaviour, IGame
     {
         if (gameTimer.EndTimer || countSlider.value >= 0.9f)
         {
+            AudioManager.Instance.SetCommonAudioClip_SFX(6);
+            AudioManager.Instance.Stop_SFX();
+
             isEndGame = true;
             Ranking.Instance.SetTimer(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex, int.Parse(speedCanvas.SelectListSetting.BoardIcon.name), (int)gameTimer.CurrentTime);
             resultImage.sprite = speedCanvas.SelectListSetting.BoardIcon;
@@ -249,8 +252,9 @@ public class SpeedManager : MonoBehaviour, IGame
     #region Result Panel
     public void ResultExitButton()
     { // Result Panel - 나가기
-        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         AudioManager.Instance.SetAudioClip_BGM(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Stop_SFX();
 
         Time.timeScale = 1f;
 
@@ -264,6 +268,7 @@ public class SpeedManager : MonoBehaviour, IGame
     public void ResultRestartButton()
     { // Result Panel - 다시하기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Stop_SFX();
 
         resultPanel.SetActive(false);
         Time.timeScale = 1f;
@@ -276,6 +281,7 @@ public class SpeedManager : MonoBehaviour, IGame
     #region Warning Panel
     public void WarningPanelGoOutButton()
     { // Warning panel - 나가기
+        AudioManager.Instance.SetAudioClip_BGM(1);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         AudioManager.Instance.Stop_SFX();
 
@@ -292,6 +298,7 @@ public class SpeedManager : MonoBehaviour, IGame
     public void WarningPanelCancelButton()
     { // Warning panel - 취소
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Pause_SFX(false);
 
         Time.timeScale = 1f;
 

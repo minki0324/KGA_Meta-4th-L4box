@@ -42,7 +42,6 @@ public class MultiCanvas : MonoBehaviour
     { // 프로필 - 프로필 선택, 변경
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.SelectPlayer = Player.Player2;
-        ReadyProfileSetting.IsSelect = true;
         ProfileManager.Instance.PrintProfileList(profileCanvas.SelectScrollViewContent);
 
         SelectButton.SetActive(false);
@@ -53,11 +52,11 @@ public class MultiCanvas : MonoBehaviour
 
     public void GameStartButton()
     { // 대기 - 게임 시작
-        AudioManager.Instance.SetCommonAudioClip_SFX(0);
         AudioManager.Instance.SetAudioClip_BGM(5);
+        AudioManager.Instance.SetCommonAudioClip_SFX(0);
 
         // todo... gamereadypanel에 뜨도록 수정
-        if (!ReadyProfileSetting.IsSelect)
+        if (!ProfileManager.Instance.IsSelect)
         { // 플레이어 선택을 안했을 시
             ProfileManager.Instance.PrintErrorLog(warningLog, "플레이어를 선택해주세요.");
             return;
@@ -87,7 +86,7 @@ public class MultiCanvas : MonoBehaviour
         GameManager.Instance.GameMode = GameMode.None;
         GameManager.Instance.InGame = false;
 
-        ReadyProfileSetting.IsSelect = false;
+        ProfileManager.Instance.IsSelect = false;
         ProfileSelectText.SetActive(true);
         MaskImage.SetActive(false);
         ReadyProfileSetting.ProfileName2P.gameObject.SetActive(false);

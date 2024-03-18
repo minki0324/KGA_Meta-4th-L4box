@@ -194,7 +194,6 @@ public class Speed_Timer : MonoBehaviour
         }
 
         help_Canvas.gameObject.SetActive(true);
-        help_Canvas.Button_Enable();
         SelectDifficulty_Panel.SetActive(true);
         // speed_Canvas.Enable_Objects();
         Warning_Panel.SetActive(false);

@@ -38,7 +38,6 @@ public class SpeedCanvas : MonoBehaviour
 
     public void SelectDifficultyButton(int _difficulty)
     { // 난이도 버튼
-        AudioManager.Instance.SetAudioClip_BGM(1);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         GameManager.Instance.Difficulty = (Difficulty)_difficulty;
 
@@ -49,8 +48,8 @@ public class SpeedCanvas : MonoBehaviour
 
     public void GameStartButton()
     { // Ready - 게임 시작
-        AudioManager.Instance.SetCommonAudioClip_SFX(0);
         AudioManager.Instance.SetAudioClip_BGM(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(0);
         PushPop.Instance.BoardSprite = SelectListSetting.BoardIcon; // pushpop
 
         SpeedGame.SetActive(true);
@@ -79,6 +78,7 @@ public class SpeedCanvas : MonoBehaviour
         }
         else if (SpeedGame.activeSelf)
         { // 게임 중일 때
+            AudioManager.Instance.SetAudioClip_BGM(1);
             Time.timeScale = 0f;
             WarningPanel.SetActive(true);
         }

@@ -147,7 +147,6 @@ public class PushPushManager : MonoBehaviour, IGame
         if (PushPop.Instance.pushPopButton.Count.Equals(PushPop.Instance.PushCount))
         {
             AudioManager.Instance.SetCommonAudioClip_SFX(6);
-            AudioManager.Instance.SetAudioClip_SFX(4, false);
             PushPop.Instance.PushCount = 0;
             PushPop.Instance.pushPopButton.Clear();
 
@@ -194,8 +193,8 @@ public class PushPushManager : MonoBehaviour, IGame
     #region Result Panel
     public void ResultExitButton()
     { // Result Panel - 나가기
-        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         AudioManager.Instance.SetAudioClip_BGM(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         Time.timeScale = 1f;
 
@@ -221,8 +220,8 @@ public class PushPushManager : MonoBehaviour, IGame
     #region Warning Panel
     public void WarningPanelGoOutButton()
     { // Warning panel - 나가기
+        AudioManager.Instance.SetAudioClip_BGM(1);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        AudioManager.Instance.Stop_SFX();
 
         Time.timeScale = 1f;
 

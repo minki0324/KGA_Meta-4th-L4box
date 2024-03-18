@@ -80,7 +80,7 @@ public class PushPush_Canvas : MonoBehaviour
 
     private void Start()
     {
-        Init();
+        // Init();
         maxPage = moldIcon_List.Count; // page 넘겨줄 때 마다 update
     }
 
@@ -127,7 +127,7 @@ public class PushPush_Canvas : MonoBehaviour
 
 
 
-    private void Init()
+  /*  private void Init()
     {
         categoryBtn_List = new List<Button>();
         moldIcon_List = new List<Sprite>();
@@ -157,9 +157,9 @@ public class PushPush_Canvas : MonoBehaviour
         }
 
     }
-
+*/
     //카테고리 아이콘(버튼) 클릭 시 호출되는 메소드
-    public void CategoryIcon_Clicked(int key)
+  /*  public void CategoryIcon_Clicked(int key)
     {
         if (!help_Canvas.bisHelpPanelOn)
         {     
@@ -259,12 +259,9 @@ public class PushPush_Canvas : MonoBehaviour
             //버튼 enable = false 함수
             Disable_Objects();
 
-            help_Canvas.Back_Btn.interactable = false;
-            help_Canvas.Help_Btn.interactable = false;
-
         }
 
-    }
+    }*/
 
     //몰드 선택 패널에서 다음 버튼을 클릭 시 호출되는 메소드
     public void NextBtn_Clicked()
@@ -349,22 +346,19 @@ public class PushPush_Canvas : MonoBehaviour
     //몰드 선택 패널에서 x버튼을 누르면 호출되는 메소드
     public void SelectMold_BackBtn_Clicked()
     {
-        if (!help_Canvas.bisHelpPanelOn)
+       /* if (!help_Canvas.bisHelpPanelOn)
         {
             //버튼 enable = true 함수
             Enable_Objects();
 
             AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
-            help_Canvas.Back_Btn.interactable = true;
-            help_Canvas.Help_Btn.interactable = true;
-
             selectMold_Panel.SetActive(false);
             moldIcon_List.Clear();
             next_Btn.enabled = true;
             Back_Btn.enabled = true;
         }
-
+*/
     }
 
     //좌측 하단 뒤로가기 버튼 클릭 시 호출되는 메소드

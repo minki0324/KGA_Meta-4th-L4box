@@ -29,7 +29,6 @@ public class PuzzleLozic : MonoBehaviour
     // public SpriteAtlas atlas;
     public List<PuzzleObject> puzzleList = new List<PuzzleObject>(); // 생성된 puzzle
 
-
     public bool CheckDistance(Vector3 _currentPosition)
     { // 퍼즐을 놓았을때 맞춰야하는 위치와 현재위치 비교
         if (Vector3.Distance(_currentPosition, framePos.position) < puzzleJudgmentDistance)
@@ -101,7 +100,6 @@ public class PuzzleLozic : MonoBehaviour
 
     public void SettingGame()
     { // puzzle mode 진입
-        Debug.Log(pieceList.Count);
         for (int i = 0; i < pieceList.Count; i++)
         { // 막은 클릭 초기화
             PieceDragAndDrop dragAndDrop = pieceList[i].GetComponent<PieceDragAndDrop>();

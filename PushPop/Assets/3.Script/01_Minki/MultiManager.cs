@@ -63,7 +63,6 @@ public class MultiManager : MonoBehaviour, IGame
     [Header("Timer")]
     [SerializeField] private GameTimer gameTimer = null;
     private float upperTimer = 12f;
-    private bool bNoTimePlaying = false;
     [SerializeField] private TMP_Text feverText = null;
 
     [Header("Quit")]
@@ -109,7 +108,6 @@ public class MultiManager : MonoBehaviour, IGame
         gameTimer.TenCount = false;
         gameTimer.EndTimer = false;
         upperTimer = 12f;
-        bNoTimePlaying = false;
         isEndGame = false;
         isFever = false;
         isGameStart = false;
@@ -369,7 +367,6 @@ public class MultiManager : MonoBehaviour, IGame
     private void PosSetting()
     { // 턴 넘어갔을 때 각 포지션들 설정하는 Method
         AudioManager.Instance.SetAudioClip_SFX(2, false);
-        bNoTimePlaying = false;
 
         if (playerTurn.Equals(Turn.Turn1P))
         { // 1P 턴
@@ -566,6 +563,7 @@ public class MultiManager : MonoBehaviour, IGame
     public void ResultExitButton()
     { // Result Panel - 나가기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Stop_SFX();
         Time.timeScale = 1f;
 
         multiCanvas.Ready.SetActive(true);
@@ -577,6 +575,7 @@ public class MultiManager : MonoBehaviour, IGame
     public void ResultRestartButton()
     { // Result Panel - 다시하기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Pause_SFX(false);
         Time.timeScale = 1f;
 
         Init();
@@ -620,6 +619,7 @@ public class MultiManager : MonoBehaviour, IGame
     public void WarningPanelCancelButton()
     { // 나가기 1P, 2P 둘다 눌렀을 때 - 취소
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.Pause_SFX(false);
 
         Time.timeScale = 1f;
 

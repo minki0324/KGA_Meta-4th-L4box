@@ -13,6 +13,7 @@ public class SelectListSetting : MonoBehaviour
     [Header("Category Select Panel")]
     [SerializeField] private TMP_Text categorySelectTitle = null;
     [SerializeField] private GameObject selectCategoryScrollView = null;
+    [SerializeField] private ScrollRect selectRect;
 
     [Header("Ready (Selected List Panel)")]
     public GameObject Ready = null;
@@ -49,6 +50,7 @@ public class SelectListSetting : MonoBehaviour
 
     private void OnEnable()
     {
+
         switch (GameManager.Instance.GameMode)
         {
             case GameMode.PushPush:
@@ -66,6 +68,7 @@ public class SelectListSetting : MonoBehaviour
 
     private void Init()
     { // list √ ±‚»≠
+        selectRect.normalizedPosition = new Vector2(1f, 1f);
         for (int i = 0; i < selectCategoryScrollView.transform.childCount; i++)
         {
             Destroy(selectCategoryScrollView.transform.GetChild(i).gameObject);
@@ -152,7 +155,7 @@ public class SelectListSetting : MonoBehaviour
         BoardIcon = selectIconImage.sprite;
         GameManager.Instance.CurrentIcon = 0;
         GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
-        
+
         currentPage = 1;
         maxPage = selectIcon.Count;
         pageText.text = $"{currentPage}/{maxPage}";

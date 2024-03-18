@@ -31,8 +31,8 @@ public class MemoryCanvas : MonoBehaviour
     #region Ready
     public void GameStartButton()
     { // 대기 - 게임 시작
+        AudioManager.Instance.SetAudioClip_BGM(4);
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
-        AudioManager.Instance.SetAudioClip_BGM(5);
 
         MemoryGame.SetActive(true);
         HelpButton.SetActive(false);
@@ -57,6 +57,7 @@ public class MemoryCanvas : MonoBehaviour
         }
         else
         { // 게임 중일 때
+            AudioManager.Instance.SetAudioClip_BGM(1);
             Time.timeScale = 0f;
             WarningPanel.SetActive(true);
         }

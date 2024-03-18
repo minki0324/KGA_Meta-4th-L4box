@@ -48,9 +48,6 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     {
         ProfileManager.Instance.LoadOrCreateGUID();
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
-
-        // audio PlayerPrefs setting ... todo
-        AudioManager.Instance.SetAudioClip_BGM(0);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -245,6 +242,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
         {
             multiCanvas.ReadyProfileSetting.SelectPlayerInfoSetting(); // 2P Profile Setting
+            ProfileManager.Instance.IsSelect = true;
             multiCanvas.ProfileSelectText.SetActive(false);
             multiCanvas.MaskImage.SetActive(true);
             multiCanvas.ReadyProfileSetting.ProfileName2P.gameObject.SetActive(true);
@@ -298,9 +296,12 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             BlockPanel.SetActive(false);
             ExitButton.SetActive(true);
         }
+        else
+        {
+            BackButton.SetActive(true);
+        }
 
         CurrentProfile.SetActive(false);
-        BackButton.SetActive(true);
         Select.SetActive(true);
     }
     #endregion

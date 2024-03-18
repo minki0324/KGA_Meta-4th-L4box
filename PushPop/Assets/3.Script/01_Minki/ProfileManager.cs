@@ -53,6 +53,7 @@ public class ProfileManager : MonoBehaviour
     public int DefaultImage2P = 0; // 2P Profile DefaultImage Index
     public bool IsImageMode2P = false; // false = 사진찍기, true = 이미지 선택
     public Sprite CacheProfileImage2P = null;
+    public bool IsSelect = false;
 
     [Header("Profile Component")]
     [Space(5)]

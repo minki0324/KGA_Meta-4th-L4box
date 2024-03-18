@@ -124,7 +124,6 @@ public class DataManager : MonoBehaviour
         Read_Icon();    //몰드 아이콘 이름 정보 -> 딕셔너리(숫자, 한글)
         Read_BadWord();     //비속어 1
         Read_Vulgarism();   //비속어 2
-
     }
 
     #endregion
@@ -322,8 +321,6 @@ public class DataManager : MonoBehaviour
 
             byte[] data = reader.bytes;
             string resultData = System.Text.Encoding.UTF8.GetString(data);
-
-            //File.WriteAllBytes(realPath, reader.bytes);
 
             File.WriteAllText(realPath, resultData);
         }

@@ -31,6 +31,7 @@ public class PushPushCanvas : MonoBehaviour
 
     public void GameStartButton()
     {
+        AudioManager.Instance.SetAudioClip_BGM(3);
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
 
         SelectCategoryPanel.SetActive(false);
@@ -52,6 +53,7 @@ public class PushPushCanvas : MonoBehaviour
         }
         else if (PushpushGame.activeSelf)
         { // 게임 중일 때
+            AudioManager.Instance.SetAudioClip_BGM(1);
             Time.timeScale = 0f;
             WarningPanel.SetActive(true);
         }

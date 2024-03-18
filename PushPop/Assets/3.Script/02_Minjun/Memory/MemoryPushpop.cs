@@ -9,20 +9,13 @@ public class MemoryPushpop : MonoBehaviour
     [SerializeField] private Button popButton;
     [SerializeField] private Animator popButtonAnimation;
     public bool IsCorrect = false; // 정답이면 true 아니면 false
-    private void Awake()
-    {
-        
-    }
 
     private void OnEnable()
     {
         popButtonImage.alphaHitTestMinimumThreshold = 0.1f; // Sprite에서 Alpha 값이 0.1 이하 일시 인식하지 않게함
         memoryBoard = transform.parent.GetComponent<MemoryBoard>();
     }
-    private void Start()
-    {
-        
-    }
+
     #region OnClick Method
     public void MemoryPopButtonClick()
     { // prefab onclick method
@@ -64,7 +57,6 @@ public class MemoryPushpop : MonoBehaviour
     private void Correct()
     { // 정답 시
         AudioManager.Instance.SetAudioClip_SFX(3, false);
-
         // 점수 주기
         popButton.interactable = false; // 누른 버튼은 비활성화
         memoryBoard.CurrentCorrectCount++; // 정답 카운트 증가
@@ -83,6 +75,7 @@ public class MemoryPushpop : MonoBehaviour
 
         if (MemoryManager.Instance.Life.Equals(0))
         { // 라이프 모두 소진 시 게임 종료
+            AudioManager.Instance.SetAudioClip_SFX(5, false);
             MemoryManager.Instance.GameEnd();
         }
     }
@@ -102,6 +95,7 @@ public class MemoryPushpop : MonoBehaviour
             MemoryManager.Instance.GameEnd();
             yield break;
         }
+
         Destroy(memoryBoard.gameObject); // 현재 스테이지 보드 지우기
         MemoryManager.Instance.StageText.text = $"{MemoryManager.Instance.CurrentStage} 단계";
 

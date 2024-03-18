@@ -118,8 +118,6 @@ public class MemoryManager : MonoBehaviour, IGame
 
     public void GameEnd()
     {
-        AudioManager.Instance.SetAudioClip_SFX(5, false);
-
         // 게임 종료, 결과 저장
         Ranking.Instance.SetScore(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex, Score);
         profileImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;

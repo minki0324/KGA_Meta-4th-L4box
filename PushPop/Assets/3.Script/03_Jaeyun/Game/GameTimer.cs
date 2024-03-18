@@ -47,7 +47,7 @@ public class GameTimer : MonoBehaviour
                     if (!TenCount)
                     { // 10초 이하일 때 타이머 소리 한 번 재생
                         TenCount = true;
-                        AudioManager.Instance.SetAudioClip_SFX((int)GameManager.Instance.GameMode, true);
+                        AudioManager.Instance.SetAudioClip_SFX((int)GameMode.Speed, true);
                     }
                 }
             }
@@ -61,7 +61,7 @@ public class GameTimer : MonoBehaviour
                     if (!TenCount)
                     { // 10초 이하일 때 타이머 소리 한 번 재생
                         TenCount = true;
-                        AudioManager.Instance.SetAudioClip_SFX((int)GameManager.Instance.GameMode, true);
+                        AudioManager.Instance.SetAudioClip_SFX((int)GameMode.Multi, true);
                     }
                 }
             }
