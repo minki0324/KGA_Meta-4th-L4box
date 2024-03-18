@@ -41,6 +41,10 @@ public class PlayerManager : NetworkBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
+        NetworkServer.OnDisconnectedEvent += (NetworkConnectionToClient) =>
+        {
+            ServerListReset();
+        };
     }
     void Start()
     {
@@ -137,9 +141,20 @@ public class PlayerManager : NetworkBehaviour
     {
         //ConnectPrefabs.gameObject.transform.GetChild(index).gameObject.SetActive(true);
         CMD_SetPlayer(index,ConnectPrefabs);
-        Debug.Log("클라 id : "+ ConnectPrefabs.netId);
         ConnectPrefabs.GetComponent<PlayerObj>().avatarIndex = index;
         HideAvatar(false);
+    }
+    
+    public void ServerListReset()
+    {
+        foreach (var playerIden in playersAvatarIdentity)
+        {
+            if (playerIden == null)
+            {
+                Debug.Log(playerIden);
+                playersAvatarIdentity.Remove(playerIden);
+            }
+        }
     }
     [Command(requiresAuthority = false)]
     private void CMD_SetPlayer(int index ,NetworkIdentity identity)
@@ -152,27 +167,24 @@ public class PlayerManager : NetworkBehaviour
     }
     public IEnumerator SyncDelay(int index,NetworkIdentity identity)
     {
-      
+     
+       
         identity.GetComponent<PlayerObj>().avatarIndex = index;
         playersAvatarIdentity.Add(identity);
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.5f);  
         RPC_SetPlayer(playersAvatarIdentity, identity ,index);
     }
     [ClientRpc]
     private void RPC_SetPlayer(List<NetworkIdentity> identities , NetworkIdentity targetClient ,int index)
     {
-        Debug.Log("RPC본인 ID : " + ConnectPrefabs.netId);
-        Debug.Log("서버에서보낸 ID : " + targetClient.netId);
         if (targetClient.netId == ConnectPrefabs.netId)
         {//새로들어온 클라이언트는 기존 들어와 있던 클라이언트들의 아바타 활성화해주기(본인포함)
             AllPlayerActive(identities);
-            Debug.Log("들어온본인");
         }
         else
         {//들어온 클라이언트를 제외한 나머지 클라한테는 새로 들어온 클라이언트의 아바타 활성화 해주기
             int targetAvatarIndex = targetClient.GetComponent<PlayerObj>().avatarIndex;
             ActiveOnAvatar(targetClient.gameObject, targetAvatarIndex);
-            Debug.Log("들어온사람을 제외한 사람들");
         }
         for (int i = 0; i < targetClient.transform.childCount; i++)
         {
@@ -206,4 +218,5 @@ public class PlayerManager : NetworkBehaviour
             ActiveOnAvatar(player.gameObject, playerAvatarIndex);
         }
     }
+ 
 }

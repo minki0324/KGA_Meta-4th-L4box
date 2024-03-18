@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
-
+using Mirror;
 public enum GameMode // GameMode
 {
     PushPush = 0,
@@ -82,13 +82,13 @@ public class GameManager : MonoBehaviour
     public Action NextMode;
     public Action OnDestroyBubble; // Bubble이 OnDestroy 했을 때
     public Action GameEnd; // PushPop button
-
+    public CompletedStage myMeomoryStageInfo;
+    
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {

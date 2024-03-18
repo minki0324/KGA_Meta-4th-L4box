@@ -41,7 +41,7 @@ public class MemoryManager : MonoBehaviour, IGame
     [SerializeField] public Button Hintbutton;//힌트버튼
 
     private int clearMessage;
-
+    public bool isSave = true;
     private void Awake()
     {
         Instance = this;
@@ -118,6 +118,11 @@ public class MemoryManager : MonoBehaviour, IGame
 
     public void GameEnd()
     {
+        if (isSave)
+        {
+            isSave = false;
+            SavePoint.Instance.SetStage(ProfileManager.Instance.myProfile.name, ProfileManager.Instance.myProfile.index, CurrentStage - 1);
+        }
         // 게임 종료, 결과 저장
         Ranking.Instance.SetScore(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex, Score);
         profileImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
@@ -125,7 +130,7 @@ public class MemoryManager : MonoBehaviour, IGame
         resultScoreText.text = $"{Score}점";
         clearMessage = (int)Ranking.Instance.CompareRanking(Score); // 점수 비교
         resultMassageText.text = Ranking.Instance.ResultDialog.memoryResult[clearMessage];
-
+        isSave = true;
         resultPanel.SetActive(true);
         Time.timeScale = 0f;
     }
@@ -172,7 +177,7 @@ public class MemoryManager : MonoBehaviour, IGame
 
     public void HintButtonActive()
     { // 점수 변동 시 점수에 따라 힌트 버튼 활성화 변경
-        if (Score >= 300)
+        if (Score >= 800)
         { // 버튼 활성화
             Hintbutton.interactable = true;
         }
@@ -193,9 +198,16 @@ public class MemoryManager : MonoBehaviour, IGame
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         hintGuidePanel.SetActive(false);
         
-        AddScore(-300); //300점 차감
+        AddScore(-800); //800점 차감
         HintButtonActive();
         CurrentBoard.Blink(true);
+
+        if (isSave)
+        {
+            isSave = false;
+            SavePoint.Instance.SetStage(ProfileManager.Instance.myProfile.name, ProfileManager.Instance.myProfile.index, CurrentStage - 1);
+        }
+
     }
 
     public void AddScore(int _score)
