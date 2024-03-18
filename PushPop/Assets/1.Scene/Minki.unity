@@ -1706,9 +1706,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1516527049}
-        m_TargetAssemblyTypeName: Mirror.NetworkManager, Mirror
-        m_MethodName: StartServer
+      - m_Target: {fileID: 1516527050}
+        m_TargetAssemblyTypeName: Connect_Network, Assembly-CSharp
+        m_MethodName: Start_Server
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -26368,7 +26368,7 @@ GameObject:
   m_Component:
   - component: {fileID: 753402305}
   m_Layer: 0
-  m_Name: ======================== (1)
+  m_Name: ========================
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52826,8 +52826,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d1c2f7481d71974cb3e01b35bd8ff09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 1
-  ServerIP: 127.0.0.1
+  type: 2
+  ServerIP: 3.34.94.209
 --- !u!4 &1516527051
 Transform:
   m_ObjectHideFlags: 0
