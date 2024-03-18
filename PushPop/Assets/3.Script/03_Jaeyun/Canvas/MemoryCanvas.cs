@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MemoryCanvas : MonoBehaviour
 {
@@ -28,6 +29,10 @@ public class MemoryCanvas : MonoBehaviour
     [Header("Game Ready Panel")]
     public TMP_Text GameReadyPanelText = null;
 
+
+    [Header("Continue")]
+   
+    public Button[] stagebtns;
     #region Ready
     public void GameStartButton()
     { // 대기 - 게임 시작
@@ -39,6 +44,42 @@ public class MemoryCanvas : MonoBehaviour
         Ready.SetActive(false);
         memoryManager.BackButton.SetActive(true);
         memoryManager.GameStart();
+    }
+    public void ContinueBtn()
+    {
+        try
+        {
+            memoryManager.saveStage = GameManager.Instance.myMeomoryStageInfo.saveStageIndex;
+        }
+        catch (System.Exception)
+        {
+            Debug.Log("처음게임하는경우 saveStage : 0");
+            memoryManager.saveStage = 1;
+        }
+        int activebtnCount = memoryManager.saveStage / 5 ;
+        for (int i = 0; i < activebtnCount; i++)
+        {
+            stagebtns[i].interactable = true;
+        }
+
+    }
+
+    public void ExitContinuePanel()
+    {
+        //버튼모두 disable
+        //currentStage = 0
+        for (int i = 0; i < stagebtns.Length; i++)
+        {
+            if (stagebtns[i].interactable)
+            {
+                stagebtns[i].interactable = false;
+            }
+        }
+        memoryManager.CurrentStage = 1;
+    }
+    public void SelectContinueStage(int stage)
+    {
+        memoryManager.CurrentStage = stage;
     }
     #endregion
     #region Side Panel

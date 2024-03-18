@@ -40,7 +40,10 @@ public class MemoryManager : MonoBehaviour, IGame
     public GameObject BackButton = null;
     [SerializeField] public Button Hintbutton;//힌트버튼
 
+    public int saveStage;
+
     private int clearMessage;
+   
     public bool isSave = true;
     private void Awake()
     {
@@ -75,7 +78,7 @@ public class MemoryManager : MonoBehaviour, IGame
 
         // stage setting
         CurrentStage = 1;
-        StageText.text = $"{CurrentStage} 단계";
+      
 
         // socre setting
         Score = 0;
@@ -86,6 +89,7 @@ public class MemoryManager : MonoBehaviour, IGame
     { // OnEnable() bubble size, board size, pushpopbutton size, pushpop percentage, etc. setting 관련
         Ranking.Instance.SettingPreviousScore(); // old score
         HintButtonActive(); // hint button Setting
+        StageText.text = $"{CurrentStage} 단계";
     }
 
     public void GameStart()
@@ -243,7 +247,7 @@ public class MemoryManager : MonoBehaviour, IGame
         GameStart();
     }
     #endregion
-    #region Warning Panel, BackButton
+    #region Warning Panel, BackButton , ContinueBtn
     public void WarningPanelGoOutButton()
     { // 나가기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
@@ -267,6 +271,9 @@ public class MemoryManager : MonoBehaviour, IGame
 
         warningPanel.SetActive(false);
     }
+
+   
     #endregion
+
 }
 

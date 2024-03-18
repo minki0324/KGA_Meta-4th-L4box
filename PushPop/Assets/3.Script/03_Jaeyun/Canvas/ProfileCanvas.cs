@@ -45,6 +45,8 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     [Header("Delete Panel")]
     public GameObject DeletePanel = null;
 
+    [Header("MemoryManager")]
+    [SerializeField] private MemoryManager memoryManager;
     private void Start()
     {
         ProfileManager.Instance.LoadOrCreateGUID();
@@ -276,11 +278,14 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         Select.SetActive(true);
         gameObject.SetActive(false);
 
-        /*GameManager.Instance.myMeomoryStageInfo =SavePoint.Instance.completedStageList.FirstOrDefault(stage => stage.profileName == ProfileManager.Instance.myProfile.name);
-        if(GameManager.Instance.myMeomoryStageInfo == null)
+        try
         {
-            *//*GameManager.Instance.myMeomoryStageInfo = 0;*//*
-        }*/
+        GameManager.Instance.myMeomoryStageInfo = SavePoint.Instance.completedStageList.FirstOrDefault(stage => stage.profileName == ProfileManager.Instance.myProfile.name);
+        }
+        catch (System.Exception)
+        {
+            MemoryManager.Instance.CurrentStage= 1;
+        }
 
 
     }
