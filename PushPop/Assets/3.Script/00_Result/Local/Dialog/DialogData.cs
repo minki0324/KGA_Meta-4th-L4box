@@ -6,6 +6,6 @@ using UnityEngine;
 public class DialogData : ScriptableObject
 {
     public string[] title;
-    public string[] speedResult;
-    public string[] memoryResult;
+    [TextArea] public string[] speedResult;
+    [TextArea] public string[] memoryResult;
 }
