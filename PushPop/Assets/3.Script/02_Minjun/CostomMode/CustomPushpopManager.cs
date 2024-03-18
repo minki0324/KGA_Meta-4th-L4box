@@ -7,12 +7,17 @@ using UnityEngine.UI;
 public class CustomPushpopManager : MonoBehaviour
 {
     [Header("Custom Mode")]
+    [SerializeField] private PuzzleLozic puzzleMode = null; 
     public GameObject CustomMode = null;
     private Vector3 selectPositon; //카메라에서보이는 world 포지션 저장할 Vector
     [SerializeField] private GameObject pushPop; // OverLap검사하는 푸시팝(gameObject)
-    [SerializeField] private GameObject RectPushPop; //UI 푸시팝
+    [SerializeField] private GameObject RectPushPop; // UI 푸시팝
     public TMP_Text StageTitle = null;
     public GameObject ReDecoButton = null;
+    public GameObject DecoPanel = null;
+
+    [SerializeField] private RectTransform customAreaRectTrans = null;
+    private float customPosX = 0f;
 
     [Header("Result Panel")]
     public GameObject ResultPanel = null; 
@@ -22,13 +27,16 @@ public class CustomPushpopManager : MonoBehaviour
     [Header("PushPopObject")] 
     private GameObject newPush; //현재 소환중인 푸시팝
     private GameObject newRectPush;//현재 소환중인 푸시팝
-    public Stack<GameObject> StackPops = new Stack<GameObject>(); //UI상 보이는 버튼담는 스택
-    public Stack<GameObject> StackFakePops = new Stack<GameObject>(); //OverLap 검사를 하기위한 gameObject 스택
     public GameObject puzzleBoard; //생성된 버튼 상속해주는 GameObject
     public Sprite[] pushPopButtonSprite; //color 바꾸기위한 배열
     public int SpriteIndex = 0;
     public int currentCreatIndex = 0;
     [SerializeField] private FramePuzzle framePuzzle;
+
+    private void Awake()
+    {
+        customPosX = customAreaRectTrans.localPosition.x;
+    }
 
     #region DecoPanel Button Method
     public void ClickDown()
@@ -53,6 +61,7 @@ public class CustomPushpopManager : MonoBehaviour
         popImage.sprite = pushPopButtonSprite[SpriteIndex]; // 현재 설정한 스프라이트 이미지로 설정
         PushPopButton pop = newRectPush.GetComponent<PushPopButton>();
         pop.spriteIndex = SpriteIndex;
+
         // pushpop Btn Parent 설정
         newRectPush.transform.SetParent(puzzleBoard.transform);
         newRectPush.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f); // 스케일 변경시 프리팹 Circle(콜라이더검사) 스케일도 바꾼 스케일의 1.3배로 바꿔주세요
@@ -63,10 +72,10 @@ public class CustomPushpopManager : MonoBehaviour
     public void ReturnButton()
     { // 되돌리기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        if (StackFakePops.Count.Equals(0)) return;
-        GameObject lastFakeStack = StackFakePops.Pop();
+        if (PushPop.Instance.StackFakePops.Count.Equals(0)) return;
+        GameObject lastFakeStack = PushPop.Instance.StackFakePops.Pop();
         Destroy(lastFakeStack);
-        GameObject lastStack = StackPops.Pop();
+        GameObject lastStack = PushPop.Instance.StackPops.Pop();
         Destroy(lastStack);
 
         PushPop.Instance.pushPopButton.Remove(lastStack);
@@ -75,27 +84,45 @@ public class CustomPushpopManager : MonoBehaviour
     public void ResetButton()
     { // 버튼 모두 지우기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        while (StackPops.Count > 0)
+        ResetStack();
+    }
+
+    public void CustomModeInit()
+    {
+        ResetStack();
+        customAreaRectTrans.localPosition = new Vector3(customPosX, customAreaRectTrans.localPosition.y, customAreaRectTrans.localPosition.z);
+        ReDecoButton.SetActive(false);
+        DecoPanel.SetActive(true);
+        CustomMode.SetActive(false);
+    }
+
+    private void ResetStack()
+    { // button 삭제
+        while (PushPop.Instance.StackPops.Count > 0)
         { // ui button
-            GameObject button = StackPops.Pop();
+            GameObject button = PushPop.Instance.StackPops.Pop();
             Destroy(button);
             PushPop.Instance.pushPopButton.Remove(button);
         }
-        while (StackFakePops.Count > 0)
+        while (PushPop.Instance.StackFakePops.Count > 0)
         { // gameobject collider
-            GameObject collider = StackFakePops.Pop();
+            GameObject collider = PushPop.Instance.StackFakePops.Pop();
             Destroy(collider);
         }
     }
 
     public void RetryCustom()
     { // 다시 꾸미기
-        CustomMode.SetActive(true);
-        StageTitle.text = "내 마음대로 그림을 꾸며보자!";
         GameManager.Instance.IsCustomMode = true;
+        DecoPanel.SetActive(true);
+        ReDecoButton.SetActive(false);
+        StageTitle.text = "내 마음대로 그림을 꾸며보자!";
         framePuzzle.ImageAlphaHitSet(0.1f);
+        ResetStack();
         PushPop.Instance.PushCount = 0;
-        foreach (var btn in StackPops)
+        customAreaRectTrans.localPosition = new Vector3(customPosX, customAreaRectTrans.localPosition.y, customAreaRectTrans.localPosition.z);
+
+        foreach (GameObject btn in PushPop.Instance.StackPops)
         {
             btn.GetComponent<Button>().interactable = true;
             btn.GetComponent<Image>().raycastTarget = false;
@@ -105,25 +132,16 @@ public class CustomPushpopManager : MonoBehaviour
     public void EndCustom()
     { // 데코 종료
         GameManager.Instance.IsCustomMode = false;
+        DecoPanel.SetActive(false);
         ReDecoButton.SetActive(true);
         framePuzzle.ImageAlphaHitSet(0f);
-        foreach (GameObject btn in StackPops)
+
+        customAreaRectTrans.localPosition = new Vector3(0f, customAreaRectTrans.localPosition.y, customAreaRectTrans.localPosition.z);
+
+        foreach (GameObject btn in PushPop.Instance.StackPops)
         {
             btn.GetComponent<Image>().raycastTarget = true;
         }
     }
-
-    public void ReDecorationButton()
-    {
-        ReDecoButton.SetActive(false);
-
-    }
     #endregion
-    public void DestroyChildren()
-    { // 생성된 버튼 삭제
-        foreach (Transform child in puzzleBoard.transform)
-        {
-            Destroy(child.gameObject);
-        }
-    }
 }

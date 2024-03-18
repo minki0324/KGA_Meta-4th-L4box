@@ -48,6 +48,7 @@ public class MemoryCanvas : MonoBehaviour
 
         if (Ready.activeSelf)
         { // 대기 화면일 때
+            AudioManager.Instance.SetAudioClip_BGM(0);
             GameManager.Instance.GameMode = GameMode.None;
             GameManager.Instance.InGame = false;
 

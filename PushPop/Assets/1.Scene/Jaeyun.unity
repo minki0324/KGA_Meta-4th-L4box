@@ -11222,7 +11222,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &348456129
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15457,10 +15457,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffdf059670282104fa8b85965b4e8ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  puzzleMode: {fileID: 1081564064}
   CustomMode: {fileID: 1524559483}
   pushPop: {fileID: 2804409159849094026, guid: c84c226c0b6b14b4bafe85eb215718fc, type: 3}
   RectPushPop: {fileID: 7161972215700324124, guid: 1381da20a7f6349438dc19f56e561b10, type: 3}
   StageTitle: {fileID: 1551709279}
+  ReDecoButton: {fileID: 1339460525}
+  DecoPanel: {fileID: 1639401251}
+  customAreaRectTrans: {fileID: 1620109439}
   ResultPanel: {fileID: 2102215180}
   ResultText: {fileID: 1388474162}
   ResultImage: {fileID: 973781546}
@@ -15494,12 +15498,9 @@ MonoBehaviour:
   pushpushCanvas: {fileID: 348456130}
   resultPanel: {fileID: 2102215180}
   warningPanel: {fileID: 2127679316}
-  decoPanel: {fileID: 1639401251}
-  retryButton: {fileID: 0}
   customManager: {fileID: 481302151}
   puzzleManager: {fileID: 1081564064}
   stageTitle: {fileID: 1551709279}
-  isCustomMode: 0
   framePuzzle: {fileID: 1876634764}
   resultImage: {fileID: 973781546}
   resultMassageText: {fileID: 1388474162}
@@ -17074,7 +17075,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &508693706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18934,21 +18935,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1081564064}
-        m_TargetAssemblyTypeName: PuzzleLozic, Assembly-CSharp
-        m_MethodName: ClearPieceList
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 481302151}
-        m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
-        m_MethodName: BtnAllClear
+      - m_Target: {fileID: 481302152}
+        m_TargetAssemblyTypeName: PushPushManager, Assembly-CSharp
+        m_MethodName: ResultExitButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -21005,9 +20994,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -4, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &652423551
 MonoBehaviour:
@@ -26632,9 +26621,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -4, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &763596633
 MonoBehaviour:
@@ -32597,7 +32586,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -33784,7 +33773,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 5, y: -5}
   m_SizeDelta: {x: 5, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -34141,6 +34130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 966013798}
+  - component: {fileID: 966013800}
   m_Layer: 0
   m_Name: PuzzleFramePosition
   m_TagString: Untagged
@@ -34168,6 +34158,14 @@ RectTransform:
   m_AnchoredPosition: {x: -350, y: -60}
   m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &966013800
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966013797}
+  m_CullTransparentMesh: 1
 --- !u!1 &968819310
 GameObject:
   m_ObjectHideFlags: 0
@@ -37728,7 +37726,7 @@ MonoBehaviour:
   failPiecePos: {fileID: 336898731}
   CurrentPuzzle: {fileID: 0}
   ClearCount: 0
-  successCount: 0
+  SuccessCount: 0
 --- !u!224 &1081564065
 RectTransform:
   m_ObjectHideFlags: 0
@@ -46721,10 +46719,10 @@ RectTransform:
   m_Father: {fileID: 1081564065}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1336020541
 GameObject:
@@ -46943,7 +46941,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1339460528}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 481302151}
+        m_TargetAssemblyTypeName: CustomPushpopManager, Assembly-CSharp
+        m_MethodName: RetryCustom
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1339460528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66479,7 +66489,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -400}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1950277023
 MonoBehaviour:
@@ -67113,11 +67123,9 @@ MonoBehaviour:
   bubblePrefab: {fileID: 8925204162082192838, guid: b1233b5acd8a67a4b9328d6e3efeedfb, type: 3}
   bubbleObject: []
   PushPopStage: 0
-  buttonActive: 0
   puzzleSize: {x: 0, y: 0}
   finalCenter: {x: 0, y: 0}
   IsCustomMode: 0
-  puzzleListCount: 0
   LiveBubbleCount: 0
 --- !u!4 &1964842308
 Transform:

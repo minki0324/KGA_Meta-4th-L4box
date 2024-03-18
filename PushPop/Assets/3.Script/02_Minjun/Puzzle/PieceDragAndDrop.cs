@@ -51,7 +51,7 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         { // fit clear
             AudioManager.Instance.SetAudioClip_SFX(2, false);
             pieceRectTrans.position = puzzleLozic.framePos.position; // 프레임 위치로 보정
-            puzzleLozic.successCount++;
+            puzzleLozic.SuccessCount++;
             canvasGroup.alpha = 1f;
             canvasGroup.blocksRaycasts = false;
 
@@ -64,7 +64,7 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
     #region Puzzle Clear and Fail
     private bool StageClear()
     { // 퍼즐 맞춘지 체크
-        if (puzzleLozic.successCount.Equals(puzzleLozic.ClearCount))
+        if (puzzleLozic.SuccessCount.Equals(puzzleLozic.ClearCount))
         { // Clear
             return true;
         }

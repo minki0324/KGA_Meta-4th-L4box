@@ -45,6 +45,9 @@ public class PushPushCanvas : MonoBehaviour
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         if (SelectCategoryPanel.activeSelf)
         { // 카테고리 선택 중일 때
+            AudioManager.Instance.SetAudioClip_BGM(0);
+            GameManager.Instance.GameMode = GameMode.None;
+            mainCanvas.gameObject.SetActive(true);
             gameObject.SetActive(false);
         }
         else if (PushpushGame.activeSelf)

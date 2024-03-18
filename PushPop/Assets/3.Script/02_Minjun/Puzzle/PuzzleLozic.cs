@@ -20,23 +20,18 @@ public class PuzzleLozic : MonoBehaviour
     private Vector2 piecePos = Vector2.zero;
 
     public Puzzle CurrentPuzzle; // Player가 고른 퍼즐 종류
-    private List<GameObject> pieceList = new List<GameObject>();
+    private List<GameObject> pieceList = new List<GameObject>(); // 생성된 조각
     private float puzzleJudgmentDistance = 60f; // 퍼즐 판정 거리.
     public int ClearCount=0; //맞춰야하는 퍼즐 갯수
-    public int successCount= 0; //맞춘 갯수
+    public int SuccessCount= 0; //맞춘 갯수
 
     //public Action onPuzzleClear; //퍼즐을 모두 맞췄을때 부르는 콜백이벤트
     // public SpriteAtlas atlas;
     public List<PuzzleObject> puzzleList = new List<PuzzleObject>(); // 생성된 puzzle
 
-    private void Awake()
-    {
-        /*onPuzzleClear += DestroyChildren; // 퍼즐완료시 프레임 , 피스들 모두삭제
-        onPuzzleClear += CraetBoard; // 완성된 퍼즐보드 생산*/
-    }
 
     public bool CheckDistance(Vector3 _currentPosition)
-    {//퍼즐을 놓았을때 맞춰야하는 위치와 현재위치 비교
+    { // 퍼즐을 놓았을때 맞춰야하는 위치와 현재위치 비교
         if (Vector3.Distance(_currentPosition, framePos.position) < puzzleJudgmentDistance)
         {
             return true;
@@ -73,7 +68,6 @@ public class PuzzleLozic : MonoBehaviour
             piecePos = new Vector2(X, Y);
             PuzzleInstantiate(pieceObject, piecePos, CurrentPuzzle.sprites[i], true); // puzzle 생성
         }
-        GameManager.Instance.puzzleListCount = puzzleList.Count;
 
         for (int i = 0; i < puzzleList.Count; i++)
         { // bubble 생성
@@ -107,6 +101,7 @@ public class PuzzleLozic : MonoBehaviour
 
     public void SettingGame()
     { // puzzle mode 진입
+        Debug.Log(pieceList.Count);
         for (int i = 0; i < pieceList.Count; i++)
         { // 막은 클릭 초기화
             PieceDragAndDrop dragAndDrop = pieceList[i].GetComponent<PieceDragAndDrop>();
@@ -136,8 +131,6 @@ public class PuzzleLozic : MonoBehaviour
         frameImage.sprite = DataManager.Instance.pushPopAtlas.GetSprite(CurrentPuzzle.PuzzleID.ToString()); //퍼즐 사진넣기
         frameImage.SetNativeSize();
         frameImage.alphaHitTestMinimumThreshold = 0.1f;
-        //커스텀모드 활성화
-        // GameManager.Instance.pushPush.customManager.enabled = true;
         GameManager.Instance.IsCustomMode = true;
     }
     #endregion
@@ -186,7 +179,6 @@ public class PuzzleLozic : MonoBehaviour
         Vector2 finalCenter = new Vector2(center.x - spriteCenter.x, center.y - spriteCenter.y);
         PuzzleObject puzzleObj = new PuzzleObject(puzzle, sprite, Area, finalCenter);
 
-        // GameManager.Instance.puzzleClass.Add(obj);
         puzzleList.Add(puzzleObj);
         puzzle.GetComponent<PuzzlePiece>().Puzzle = puzzleObj;
     }
@@ -194,6 +186,8 @@ public class PuzzleLozic : MonoBehaviour
     public void PuzzleModeInit()
     {
         pieceList.Clear();
+        puzzleList.Clear();
+        SuccessCount = 0;
         DestroyChildren();
     }
 }

@@ -17,9 +17,12 @@ public class PushPop : MonoBehaviour
     public Vector2 BoardPos = Vector2.zero;
     public List<GameObject> PushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
 
+    [Header("PushPush")]
+    public Stack<GameObject> StackPops = new Stack<GameObject>(); // UI상 보이는 버튼담는 스택
+    public Stack<GameObject> StackFakePops = new Stack<GameObject>(); // OverLap 검사를 하기위한 gameObject 스택
+
     [Header("PushPop GameObject")]
     [SerializeField] private SpriteAtlas pushPopSpriteAtlas; // pushPop Atlas 참조
-    private int spriteName; // stage에 따라 달라짐
     public GameObject boardPrefab = null; // PushPop Prefab
     public Sprite BoardSprite = null;
     private Vector3 boardObjectSize;

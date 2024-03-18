@@ -14,7 +14,7 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
         switch (GameManager.Instance.GameMode)
         {
             case GameMode.PushPush:
-                GameManager.Instance.pushPush.customManager.StackPops.Push(gameObject);
+                PushPop.Instance.StackPops.Push(gameObject);
                 break;
             case GameMode.Memory:
                 break;

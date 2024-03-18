@@ -81,6 +81,7 @@ public class MultiCanvas : MonoBehaviour
     #region Side Panel
     public void MultiBackButton()
     { // 뒤로가기
+        AudioManager.Instance.SetAudioClip_BGM(0);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.SelectPlayer = Player.Player1;
         GameManager.Instance.GameMode = GameMode.None;

@@ -13,14 +13,11 @@ public class PushPushManager : MonoBehaviour, IGame
     [Header("Panel")]
     [SerializeField] private GameObject resultPanel = null;
     [SerializeField] private GameObject warningPanel = null;
-    [SerializeField] private GameObject decoPanel = null;
-    [SerializeField] private Button retryButton = null;
 
     [Header("Game Info")]
     public CustomPushpopManager customManager = null;
     public PuzzleLozic puzzleManager = null;
     [SerializeField] private TMP_Text stageTitle = null;
-    public bool isCustomMode = true;
     [SerializeField] private FramePuzzle framePuzzle = null;
 
     [Header("Game Result")]
@@ -71,7 +68,12 @@ public class PushPushManager : MonoBehaviour, IGame
         customManager.StageTitle.text = "모든 푸쉬팝을 눌러보자!";
 
         // End Game
-        decoPanel.SetActive(false);
+        if (PushPop.Instance.StackPops.Count.Equals(0))
+        {
+            GameEnd();
+            return;
+        }
+
         customManager.EndCustom();
 
         frame.FrameImage.alphaHitTestMinimumThreshold = 0f;
@@ -80,21 +82,22 @@ public class PushPushManager : MonoBehaviour, IGame
     public void OnPushPushEnd() //푸시푸시가 모두 끝나고 초기화 할것들 모아둔 메소드
     {
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        GameManager.Instance.puzzleClass.Clear();
-        customManager.ResetButton();
     }
     #endregion
 
     public void Init()
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         GameManager.Instance.GameEnd -= GameEnd;
+        GameManager.Instance.NextMode = null;
         GameManager.Instance.LiveBubbleCount = 0;
         GameManager.Instance.bubbleObject.Clear();
+        GameManager.Instance.IsCustomMode = false;
+
         PushPop.Instance.Init();
+        customManager.CustomModeInit();
+        puzzleManager.PuzzleModeInit();
 
-        puzzleManager.successCount = 0;
-
-        customManager.DestroyChildren();
         StopAllCoroutines();
     }
 
@@ -158,7 +161,7 @@ public class PushPushManager : MonoBehaviour, IGame
             }
 
             // Save
-            PushPushObject newPush = new PushPushObject(puzzleManager.CurrentPuzzle.PuzzleID, customManager.StackPops.Count, spriteIndexs, childPos);
+            PushPushObject newPush = new PushPushObject(puzzleManager.CurrentPuzzle.PuzzleID, PushPop.Instance.StackPops.Count, spriteIndexs, childPos);
             string json = JsonUtility.ToJson(newPush);
             SQL_Manager.instance.SQL_AddPushpush(json, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
 
@@ -224,6 +227,7 @@ public class PushPushManager : MonoBehaviour, IGame
         Time.timeScale = 1f;
 
         Init();
+
         warningPanel.SetActive(false);
         pushpushCanvas.SelectCategoryPanel.SetActive(true);
         pushpushCanvas.HelpButton.SetActive(true);

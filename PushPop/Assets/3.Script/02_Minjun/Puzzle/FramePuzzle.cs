@@ -5,9 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class FramePuzzle : MonoBehaviour,  IPointerDownHandler 
-{//버튼설치하는 보드판 스크립트.
- //보드판 위에서만 클릭 or 다운 하게끔함
-
+{ //버튼설치하는 보드판 스크립트.
+    //보드판 위에서만 클릭 or 다운 하게끔함
     public Image FrameImage;
 
     void Start()
