@@ -35,7 +35,7 @@ public class PlayerManager : NetworkBehaviour
 
     public BoxCollider2D AvatarBoundary;
     public Camera OverUICamera;
-    public bool _isMovePause = true;
+    //public bool _isMovePause = true;
     public bool _generate;
     public bool isMouseOnUI;
     // Start is called before the first frame update
@@ -60,7 +60,7 @@ public class PlayerManager : NetworkBehaviour
             _generate = false;
         }
 
-        if(Input.GetMouseButtonDown(0) && !_isMovePause && !EventSystem.current.IsPointerOverGameObject())
+        if(Input.GetMouseButtonDown(0) /*&& !_isMovePause */&& !EventSystem.current.IsPointerOverGameObject())
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
@@ -130,11 +130,11 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    public void HideAvatar(bool isHide)
-    {
-        _isMovePause = isHide;
-        OverUICamera.gameObject.SetActive(!isHide);
-    }
+    //public void HideAvatar(bool isHide)
+    //{
+    //    _isMovePause = isHide;
+    //    OverUICamera.gameObject.SetActive(!isHide);
+    //}
 
     [Client]
     public void SetPlayer(int index)
@@ -142,7 +142,7 @@ public class PlayerManager : NetworkBehaviour
         //ConnectPrefabs.gameObject.transform.GetChild(index).gameObject.SetActive(true);
         CMD_SetPlayer(index,ConnectPrefabs);
         ConnectPrefabs.GetComponent<PlayerObj>().avatarIndex = index;
-        HideAvatar(false);
+        //HideAvatar(false);
     }
     
     public void ServerListReset()

@@ -8,6 +8,7 @@ public class MemoryCanvas : MonoBehaviour
 {
     [Header("Canvas")]
     [SerializeField] private GameObject mainCanvas = null;
+    [SerializeField] private LoadingPanel loadingCanvas = null;
 
     [Header("Side Panel")]
     public GameObject HelpButton = null;
@@ -39,6 +40,7 @@ public class MemoryCanvas : MonoBehaviour
         AudioManager.Instance.SetAudioClip_BGM(4);
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
 
+        loadingCanvas.gameObject.SetActive(true);
         MemoryGame.SetActive(true);
         HelpButton.SetActive(false);
         Ready.SetActive(false);
@@ -93,6 +95,7 @@ public class MemoryCanvas : MonoBehaviour
             GameManager.Instance.GameMode = GameMode.None;
             GameManager.Instance.InGame = false;
 
+            loadingCanvas.gameObject.SetActive(true);
             mainCanvas.gameObject.SetActive(true);
             gameObject.SetActive(false);
         }

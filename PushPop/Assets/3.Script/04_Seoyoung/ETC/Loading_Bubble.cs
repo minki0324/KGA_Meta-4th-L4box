@@ -38,8 +38,7 @@ public class Loading_Bubble : MonoBehaviour
 
     public int bubbleSizeMin;  //생성될 때 버블 최소크기
     public int bubbleSizeMax;  //생성될 떄 버블 최대크기
-
-
+    
     #region Unity Callback
 
 
@@ -68,22 +67,30 @@ public class Loading_Bubble : MonoBehaviour
                 else
                 {//처음 게임 시작할때 그 위치에서부터 코루틴 시작           
                     bisStart = false;
-                }              
+                }
+
                 break;
 
             case MoveMode.Loading:
                 bubbleSizeMin = 100;
-                bubbleSizeMax = 400; 
+                bubbleSizeMax = 400;
                 break;
         }
-   
+
+
         randomSize = Random.Range(bubbleSizeMin, bubbleSizeMax);
         rectTransform.sizeDelta = new Vector2(randomSize, randomSize);
-        
 
         StartCoroutine(MoveUp_co());
+
+
+
     }
 
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+    }
 
     #endregion
 

@@ -7,6 +7,7 @@ public class MultiCanvas : MonoBehaviour
     [Header("Canvas")]
     [SerializeField] private MainCanvas mainCanvas = null;
     [SerializeField] private ProfileCanvas profileCanvas = null;
+    [SerializeField] private LoadingPanel loadingCanvas = null;
 
     [Header("Side Panel")]
     public GameObject BackButton = null;
@@ -60,6 +61,7 @@ public class MultiCanvas : MonoBehaviour
 
         StopAllCoroutines();
         SQL_Manager.instance.SQL_ProfileListSet();
+        loadingCanvas.gameObject.SetActive(true);
         MultiGame.SetActive(true);
         HelpButton.SetActive(false);
         BackButton.SetActive(false);
@@ -85,6 +87,7 @@ public class MultiCanvas : MonoBehaviour
 
         StartCoroutine(NonePlayerSetting_Co());
         ProfileManager.Instance.IsSelect = false;
+        loadingCanvas.gameObject.SetActive(true);
         ProfileSelectText.SetActive(true);
         MaskImage.SetActive(false);
         ReadyProfileSetting.ProfileName2P.gameObject.SetActive(false);

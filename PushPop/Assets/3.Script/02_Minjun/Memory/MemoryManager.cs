@@ -9,6 +9,7 @@ public class MemoryManager : MonoBehaviour, IGame
     public static MemoryManager Instance;
     [Header("Canvas")]
     [SerializeField] private MemoryCanvas memoryCanvas = null;
+    [SerializeField] private LoadingPanel loadingCanvas = null;
 
     [Header("Panel")]
     [SerializeField] private GameObject resultPanel = null;
@@ -226,8 +227,10 @@ public class MemoryManager : MonoBehaviour, IGame
     { // Result Panel - 나가기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         AudioManager.Instance.SetAudioClip_BGM(1);
+
         Time.timeScale = 1f;
 
+        loadingCanvas.gameObject.SetActive(true);
         memoryCanvas.Ready.SetActive(true);
         memoryCanvas.HelpButton.SetActive(true);
         BackButton.SetActive(true);
@@ -239,6 +242,7 @@ public class MemoryManager : MonoBehaviour, IGame
     { // Result Panel - 다시하기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
+        loadingCanvas.gameObject.SetActive(true);
         resultPanel.SetActive(false);
         Time.timeScale = 1f;
 
@@ -256,6 +260,7 @@ public class MemoryManager : MonoBehaviour, IGame
         Time.timeScale = 1f;
 
         Init();
+        loadingCanvas.gameObject.SetActive(true);
         warningPanel.SetActive(false);
         memoryCanvas.Ready.SetActive(true);
         memoryCanvas.HelpButton.SetActive(true);

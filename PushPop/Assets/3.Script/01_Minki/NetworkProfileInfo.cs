@@ -52,12 +52,10 @@ public class NetworkProfileInfo : MonoBehaviour
         { // favoriteList가 null이라면 처음 즐겨찾기를 등록하는 유저이기 때문에 새롭게 생성
             favorite.favoriteLists = new FavoriteList(new List<int> { profile.index});
             favoriteStar.sprite = favorite.favoriteStars[1];
-            Debug.Log("favorite이 없을때");
             return;
         }
         else if(favorite.favoriteLists.FriendIndex.Count == 0)
         { // favorite이 있지만 count가 0이라면 즐겨찾기를 등록했다가 삭제한 유저이기 때문에 추가 해야함
-            Debug.Log("Count가 0일때");
             favorite.favoriteLists.FriendIndex.Add(profile.index);
             favoriteStar.sprite = favorite.favoriteStars[1];
             return;
@@ -67,7 +65,6 @@ public class NetworkProfileInfo : MonoBehaviour
         {
             if(favorite.favoriteLists.FriendIndex[i] == profile.index)
             { // 동일하다면 즐겨찾기 목록에 있으므로 즐겨찾기 목록에서 해제해야함
-                Debug.Log("해제 할 때");
                 favorite.favoriteLists.FriendIndex.Remove(favorite.favoriteLists.FriendIndex[i]);
                 favoriteStar.sprite = favorite.favoriteStars[0];
             }
@@ -81,7 +78,10 @@ public class NetworkProfileInfo : MonoBehaviour
     public void MoaMoaButton()
     {
         moamoa.CurrentProfileIndex = profile.index;
+        moamoa.CurrentProfileName = $"{profile.name}#{profile.index}";
         moamoa.MoaMoaPanelActive();
+        moamoa.pushObjs = SQL_Manager.instance.SQL_SetPushPush(profile.index);
+        moamoa.SetMoaMoaList();
         moamoa.UpdateLikeAndHeartCount();
     }
     #endregion

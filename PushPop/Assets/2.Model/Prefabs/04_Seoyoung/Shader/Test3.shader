@@ -4,11 +4,13 @@ Shader "UI/Default_Fade"
 {
     Properties
     {
-        [PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
-        _Color("Tint", Color) = (1,1,1,1)
+        [PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}   //배경 텍스처  
 
-        _PlaneColor("Plane Color", Color) = (1,1,1,1)
-        _Visibility("Visibility", Range(0.001, 10)) = 1
+        _PlaneColor("Plane Color", Color) = (1,1,1,1)   //알파값 블렌딩용
+        _Visibility("Visibility", Range(0.001, 10)) = 1     //알파값 lerp용
+
+        [Toggle(HORIZONTAL)] _Horizontal("Horizonal", float) = 0    //상하or좌우 변경용 체크박스
+        [Toggle(REVERSE)] _ShadeReverse("ShaderReverse", float) = 0    //방향 변경용 체크박스
 
         _StencilComp("Stencil Comparison", Float) = 8
         _Stencil("Stencil ID", Float) = 0
@@ -61,6 +63,9 @@ Shader "UI/Default_Fade"
 
                 #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
                 #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
+                #pragma multi_compile __ DISCARD_BLUE
+                #pragma shader_feature HORIZONTAL
+                #pragma shader_featrue REVERSE
 
                 struct appdata_t
                 {
@@ -107,12 +112,22 @@ Shader "UI/Default_Fade"
                     //half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
                     half4 col = tex2D(_MainTex, IN.texcoord);
 
+                    #ifndef HORIZONTAL
+                    //상하 체크박스 활성화 되었을 떄
+                    float alpha = 1 - smoothstep(_Visibility, _Visibility * 0.01, IN.texcoord.x);                   
+                    #else
+                    //좌우 체크박스 비활성화 되었을 떄
                     float alpha = 1 - smoothstep(_Visibility, _Visibility * 0.01, IN.texcoord.y);
+                    #endif
+
+                  
+
+
                     col.rgb = lerp(_PlaneColor.rgb, col.rgb, col.a);
                     col.a *= alpha;
 
                     #ifdef UNITY_UI_CLIP_RECT
-                    //color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
+                
                     col.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
                     #endif
 
@@ -120,7 +135,6 @@ Shader "UI/Default_Fade"
                     clip(col.a - 0.001);
                     #endif
 
-                   // return color;
                     return col;
                 }
             ENDCG

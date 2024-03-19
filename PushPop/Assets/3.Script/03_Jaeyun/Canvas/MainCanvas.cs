@@ -10,6 +10,7 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] private SpeedCanvas speedCanvas = null;
     [SerializeField] private MemoryCanvas memoryCanvas = null;
     [SerializeField] private MultiCanvas multiCanvas = null;
+    [SerializeField] private LoadingPanel loadingCanvas = null;
 
     [Header("Side Panel")]
     public GameObject TitleText = null;
@@ -90,6 +91,8 @@ public class MainCanvas : MonoBehaviour
     { // 게임 시간 조절 - 확인
         AudioManager.Instance.SetAudioClip_BGM(1);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+
+        loadingCanvas.gameObject.SetActive(true);
 
         GameManager.Instance.ShutdownTimerStart();
         switch (GameManager.Instance.GameMode)
