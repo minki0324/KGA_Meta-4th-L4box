@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -36,6 +34,7 @@ public class PushPushCanvas : MonoBehaviour
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
         loadingCanvas.gameObject.SetActive(true);
 
+        GameManager.Instance.IsGameClear = false;
         SelectCategoryPanel.SetActive(false);
         SelectBoardPanel.SetActive(false);
         HelpButton.SetActive(false);
@@ -53,6 +52,7 @@ public class PushPushCanvas : MonoBehaviour
             loadingCanvas.gameObject.SetActive(true);
 
             GameManager.Instance.GameMode = GameMode.Lobby;
+            GameManager.Instance.IsGameClear = true;
             GameManager.Instance.InGame = false;
             mainCanvas.gameObject.SetActive(true);
             gameObject.SetActive(false);

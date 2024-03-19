@@ -11,7 +11,6 @@ public class GameReadyPanelClick : MonoBehaviour, IPointerDownHandler
     {
         if (multiCanvas.Ready.activeSelf)
         {
-            multiCanvas.StopAllCoroutines();
             gameObject.SetActive(false);
         }
     }

@@ -100,6 +100,8 @@ public class MultiManager : MonoBehaviour, IGame
     public void Init()
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
         GameManager.Instance.GameEnd -= GameEnd;
+        GameManager.Instance.IsGameClear = true;
+
         resultPanel.SetActive(false);
 
         // timer setting
@@ -231,8 +233,6 @@ public class MultiManager : MonoBehaviour, IGame
             RepeatGameLogic();
         }
     }
-
-
 
     private IEnumerator Result_Co()
     { // 결과창 출력 코루틴
@@ -574,9 +574,10 @@ public class MultiManager : MonoBehaviour, IGame
     public void ResultRestartButton()
     { // Result Panel - 다시하기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        AudioManager.Instance.Pause_SFX(false);
-        loadingCanvas.gameObject.SetActive(true);
 
+        if (GameManager.Instance.IsShutdown) return;
+
+        loadingCanvas.gameObject.SetActive(true);
         Time.timeScale = 1f;
 
         Init();

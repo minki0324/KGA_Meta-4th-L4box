@@ -43,13 +43,9 @@ public class TitlePanel : MonoBehaviour
     int screenHeight;     //화면 세로 길이
     int screenWidth;      //화면 가로 길이
 
-    #region Unity Callback
     private void OnEnable()
     {
-        if (GameManager.Instance.GameMode.Equals(GameMode.Lobby))
-        {
-            gameObject.SetActive(false);
-        }
+        StartCoroutine(TitleActive());
     }
 
     private void Start()
@@ -71,10 +67,15 @@ public class TitlePanel : MonoBehaviour
         }
     }
 
-    #endregion
-
     #region Other Method
-
+    private IEnumerator TitleActive()
+    {
+        yield return null;
+        if (GameManager.Instance.GameMode.Equals(GameMode.Lobby))
+        {
+            gameObject.SetActive(false);
+        }
+    }
     private void Init()
     {
         //화면 크기(픽셀단위)초기화
@@ -125,7 +126,6 @@ public class TitlePanel : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log("Start Game");
         AudioManager.Instance.SetCommonAudioClip_SFX(2);
 
         //LoadingCanvas.gameObject.SetActive(false);

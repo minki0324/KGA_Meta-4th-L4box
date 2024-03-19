@@ -210,6 +210,9 @@ public class PushPushManager : MonoBehaviour, IGame
     public void ResultRestartButton()
     { // Result Panel - 다시하기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        
+        if (GameManager.Instance.IsShutdown) return;
+
         loadingCanvas.gameObject.SetActive(true);
         resultPanel.SetActive(false);
 

@@ -60,6 +60,7 @@ public class MultiCanvas : MonoBehaviour
         }
 
         StopAllCoroutines();
+        GameManager.Instance.IsGameClear = false;
         SQL_Manager.instance.SQL_ProfileListSet();
         loadingCanvas.gameObject.SetActive(true);
         MultiGame.SetActive(true);

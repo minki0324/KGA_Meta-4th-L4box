@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,6 +30,7 @@ public class MainCanvas : MonoBehaviour
     public GameObject NetworkButton = null;
 
     [Header("Panel")]
+    [SerializeField] private GameObject shutdownPanel = null;
     [SerializeField] private GameObject timeSettingPanel = null;
     [SerializeField] private GameObject optionPanel = null;
 
@@ -37,11 +39,12 @@ public class MainCanvas : MonoBehaviour
 
     private void OnEnable()
     {
-        Init();
+        StartCoroutine(Init());
     }
 
-    private void Init()
+    private IEnumerator Init()
     {
+        yield return null;
         if (GameManager.Instance.GameMode.Equals(GameMode.Lobby))
         {
             CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
@@ -128,6 +131,9 @@ public class MainCanvas : MonoBehaviour
 
         GameManager.Instance.ShutdownTimer *= 60f;
         GameManager.Instance.InGame = true;
+        GameManager.Instance.IsGameClear = true;
+        GameManager.Instance.Shutdown += ShutDownPanelSetting;
+
         timeSettingPanel.SetActive(false);
         gameObject.SetActive(false);
     }
@@ -137,6 +143,17 @@ public class MainCanvas : MonoBehaviour
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         GameManager.Instance.GameMode = GameMode.Lobby;
         timeSettingPanel.SetActive(false);
+    }
+
+    private void ShutDownPanelSetting()
+    {
+        pushpushCanvas.gameObject.SetActive(false);
+        speedCanvas.gameObject.SetActive(false);
+        memoryCanvas.gameObject.SetActive(false);
+        multiCanvas.gameObject.SetActive(false);
+
+        shutdownPanel.SetActive(true);
+        gameObject.SetActive(true);
     }
     #endregion
     #region Music Option Setting Button

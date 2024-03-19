@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
 
     [Header("ShutDown")]
     public float ShutdownTimer = 0f;
+    public bool IsGameClear = false; // Game Clear 시 true, 아니면 false
     public bool InGame = false; // Shutdown setting 시 ture
     public bool IsShutdown = false; // Shutdown End 시 ture
 
@@ -82,6 +83,7 @@ public class GameManager : MonoBehaviour
     public Action NextMode;
     public Action OnDestroyBubble; // Bubble이 OnDestroy 했을 때
     public Action GameEnd; // PushPop button
+    public Action Shutdown; // shutdown 시 canvas 별 setActive
     public CompletedStage myMeomoryStageInfo;
     
     private void Awake()
@@ -103,6 +105,11 @@ public class GameManager : MonoBehaviour
         {
             ShutdownTimerStart();
         }
+
+        if (InGame && IsShutdown && IsGameClear)
+        {
+            GameShutDown();
+        }
     }
 
     public void ShutdownTimerStart()
@@ -114,6 +121,17 @@ public class GameManager : MonoBehaviour
             ShutdownTimer = 0f;
             return;
         }
+    }
+
+    public void GameShutDown()
+    {
+        IsShutdown = false;
+        IsGameClear = false;
+        InGame = false;
+
+        GameMode = GameMode.Lobby;
+        Shutdown?.Invoke();
+        Shutdown = null;
     }
 
     public void CreateBubble(Vector2 _size, Vector2 _pos, GameObject _puzzle)

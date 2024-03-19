@@ -53,6 +53,7 @@ public class SpeedCanvas : MonoBehaviour
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
         loadingCanvas.gameObject.SetActive(true);
 
+        GameManager.Instance.IsGameClear = false;
         PushPop.Instance.BoardSprite = SelectListSetting.BoardIcon; // pushpop
 
         SpeedGame.SetActive(true);
@@ -70,6 +71,7 @@ public class SpeedCanvas : MonoBehaviour
         { // 난이도 선택 중일 때
             AudioManager.Instance.SetAudioClip_BGM(0);
             GameManager.Instance.GameMode = GameMode.Lobby;
+            GameManager.Instance.IsGameClear = true;
             GameManager.Instance.InGame = false;
             loadingCanvas.gameObject.SetActive(true);
             mainCanvas.SetActive(true);

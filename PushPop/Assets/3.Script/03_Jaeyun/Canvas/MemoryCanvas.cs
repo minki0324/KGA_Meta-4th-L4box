@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,7 +29,7 @@ public class MemoryCanvas : MonoBehaviour
     public TMP_Text GameReadyPanelText = null;
 
     [Header("Continue")]
-   
+
     public Button[] stagebtns;
     #region Ready
     public void GameStartButton()
@@ -39,6 +37,7 @@ public class MemoryCanvas : MonoBehaviour
         AudioManager.Instance.SetAudioClip_BGM(4);
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
 
+        GameManager.Instance.IsGameClear = false;
         loadingCanvas.gameObject.SetActive(true);
         MemoryGame.SetActive(true);
         HelpButton.SetActive(false);
@@ -46,6 +45,7 @@ public class MemoryCanvas : MonoBehaviour
         memoryManager.BackButton.SetActive(true);
         memoryManager.GameStart();
     }
+
     public void ContinueBtn()
     {
         try
@@ -57,7 +57,7 @@ public class MemoryCanvas : MonoBehaviour
             Debug.Log("처음게임하는경우 saveStage : 0");
             memoryManager.saveStage = 1;
         }
-        int activebtnCount = memoryManager.saveStage / 5 ;
+        int activebtnCount = memoryManager.saveStage / 5;
         for (int i = 0; i < activebtnCount; i++)
         {
             stagebtns[i].interactable = true;
@@ -92,6 +92,7 @@ public class MemoryCanvas : MonoBehaviour
         { // 대기 화면일 때
             AudioManager.Instance.SetAudioClip_BGM(0);
             GameManager.Instance.GameMode = GameMode.Lobby;
+            GameManager.Instance.IsGameClear = true;
             GameManager.Instance.InGame = false;
 
             loadingCanvas.gameObject.SetActive(true);
