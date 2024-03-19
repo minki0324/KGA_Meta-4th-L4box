@@ -109,6 +109,10 @@ public class CustomPushpopManager : MonoBehaviour
             GameObject collider = PushPop.Instance.StackFakePops.Pop();
             Destroy(collider);
         }
+        if (PushPop.Instance.pushPopButton.Count > 0)
+        {
+            PushPop.Instance.pushPopButton.Clear();
+        }
     }
 
     public void RetryCustom()
