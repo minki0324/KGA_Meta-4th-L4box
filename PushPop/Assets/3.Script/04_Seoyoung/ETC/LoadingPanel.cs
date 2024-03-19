@@ -6,6 +6,9 @@ using UnityEngine.UI;
 //켜놓고 시작하기
 public class LoadingPanel : MonoBehaviour
 {
+    [Header("비동기 로딩 스크립트")]
+    [SerializeField] private AsyncLoading asyncLoading;
+
     [Header("터치 이펙트 캔버스")]
     [SerializeField] private Canvas ParticleCanvas;
 
@@ -37,6 +40,8 @@ public class LoadingPanel : MonoBehaviour
     private bool isLoadingEnd = false;   //로딩이 끝났는가
     private bool bisStart = true;
 
+    public bool bisSceneLoading = false;    //비동기 씬로딩중인가 아닌가 판별용 변수 (MainGame에선 false, AsyncLoading에선 true)
+
     #region Unity Callback
     private void Awake()
     {
@@ -52,12 +57,22 @@ public class LoadingPanel : MonoBehaviour
 
 
         FadeBackground.material.SetFloat("_Visibility", 0.001f);
-        ParticleCanvas.gameObject.SetActive(false);
+
+        if(!bisSceneLoading)
+        {
+            ParticleCanvas.gameObject.SetActive(false);
+        }
+        else
+        {
+            if(asyncLoading.Equals(null))
+            {
+                asyncLoading.GetComponent<AsyncLoading>();
+            }
+        }
+     
 
         for (int i = 0; i < maxBubble; i++)
-        {
-   
-           
+        {    
             bubble_Array[i].moveMode = MoveMode.Loading;
             bubble_Array[i].transform.position = new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), Random.Range(-850f, -150f), 0f);
             bubble_Array[i].upSpeedMin = upSpeed_Min;
@@ -67,9 +82,7 @@ public class LoadingPanel : MonoBehaviour
             bubble_Array[i].moveRangeMax = moveRange_Max;
 
             bubble_Array[i].sizeRandomMin = sizeRandom_Min;
-            bubble_Array[i].sizeRandomMax = sizeRandom_Max;
-
-            
+            bubble_Array[i].sizeRandomMax = sizeRandom_Max;            
 
             bubble_Array[i].gameObject.SetActive(true);
         }
@@ -81,7 +94,11 @@ public class LoadingPanel : MonoBehaviour
         else
         {
             bisStart = false;
-            gameObject.SetActive(false);
+            if(!bisSceneLoading)
+            {
+                gameObject.SetActive(false);
+            }
+           
         }
 
         
@@ -94,9 +111,13 @@ public class LoadingPanel : MonoBehaviour
         {
             bubble_Array[i].gameObject.SetActive(false);
         }
-        if(!ParticleCanvas.gameObject.activeSelf)
+        if(!bisSceneLoading)
         {
-            ParticleCanvas.gameObject.SetActive(true);
+            if (!ParticleCanvas.gameObject.activeSelf)
+            {
+                ParticleCanvas.gameObject.SetActive(true);
+            }
+
         }
 
         StopAllCoroutines();
@@ -104,8 +125,10 @@ public class LoadingPanel : MonoBehaviour
 
     private void Update()
     {
-        // BubblePooling();
-
+        if(bisSceneLoading)
+        {
+            BubblePooling();
+        }
         CheckBubbleEnd();
     }
     #endregion
@@ -130,7 +153,7 @@ public class LoadingPanel : MonoBehaviour
 
     private void BubblePooling()
     {//버블 계속 생산하는 코드
-        if (!bisLoaded)
+        if (!asyncLoading.bisLoadingEnd)
         {
             for (int i = 0; i < maxBubble; i++)
             {
@@ -163,7 +186,11 @@ public class LoadingPanel : MonoBehaviour
         if (isLoadingEnd)
         {
             isLoadingEnd = false;
-            ParticleCanvas.gameObject.SetActive(true);
+            if(!bisSceneLoading)
+            {
+                ParticleCanvas.gameObject.SetActive(true);
+            }
+           
             gameObject.SetActive(false);
         }
     }

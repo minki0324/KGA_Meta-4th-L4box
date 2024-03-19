@@ -7,6 +7,7 @@ using kcp2k;
 using LitJson;
 using System;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public enum Type
 {
@@ -31,6 +32,8 @@ public class Item
 
 public class Connect_Network : MonoBehaviour
 {
+
+    [SerializeField] AsyncLoading asyncLoading;
     public static Connect_Network instance;
 
     public Type type;
@@ -145,6 +148,11 @@ public class Connect_Network : MonoBehaviour
         };
     }
 
+
+    public void NetworkStart()
+    {
+        SceneManager.LoadScene("02_Async_Loading");       
+    }
 
     public void Start_Client()
     {

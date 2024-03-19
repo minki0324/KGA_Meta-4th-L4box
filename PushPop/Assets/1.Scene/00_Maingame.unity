@@ -15513,6 +15513,7 @@ GameObject:
   - component: {fileID: 434353814}
   - component: {fileID: 434353813}
   - component: {fileID: 434353812}
+  - component: {fileID: 434353817}
   m_Layer: 5
   m_Name: Loading Canvas
   m_TagString: Untagged
@@ -15532,6 +15533,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31700859351a9854f84db5f82916f69e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  asyncLoading: {fileID: 0}
   ParticleCanvas: {fileID: 1914530471}
   Bubbles: {fileID: 2129174947}
   bubblePrefab: {fileID: 8406907008433600334, guid: 877edc0f3adfb2046bd0051608140e11, type: 3}
@@ -15544,6 +15546,7 @@ MonoBehaviour:
   moveRange_Max: 3
   sizeRandom_Min: 0.1
   sizeRandom_Max: 0.3
+  bisSceneLoading: 0
 --- !u!114 &434353813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15626,6 +15629,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &434353817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434353811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65667e5ef4d94844e980d2b94e94f9c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instance: {fileID: 0}
+  manager: {fileID: 1374642970}
 --- !u!1 &441915830
 GameObject:
   m_ObjectHideFlags: 0
@@ -47845,6 +47862,7 @@ GameObject:
   - component: {fileID: 1374642971}
   - component: {fileID: 1374642970}
   - component: {fileID: 1374642969}
+  - component: {fileID: 1374642973}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -47936,6 +47954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d1c2f7481d71974cb3e01b35bd8ff09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  asyncLoading: {fileID: 434353817}
   type: 1
   ServerIP: 127.0.0.1
 --- !u!4 &1374642972
@@ -47953,6 +47972,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1374642973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374642968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65667e5ef4d94844e980d2b94e94f9c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instance: {fileID: 0}
+  manager: {fileID: 0}
 --- !u!1 &1377577798
 GameObject:
   m_ObjectHideFlags: 0
