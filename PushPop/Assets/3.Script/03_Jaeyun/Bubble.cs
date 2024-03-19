@@ -93,15 +93,15 @@ public class Bubble : MonoBehaviour, IPointerDownHandler
             { // boundary left
                 _dir = Vector2.Reflect(_dir, Vector2.right).normalized;
             }
-            else if (transform.position.x > Screen.width - (bubbleSize.x * bubbleScale / 2f))
+            if (transform.position.x > Screen.width - (bubbleSize.x * bubbleScale / 2f))
             { // boundary right
                 _dir = Vector2.Reflect(_dir, Vector2.left).normalized;
             }
-            else if (0f + (bubbleSize.y * bubbleScale / 2f) > transform.position.y)
+            if (0f + (bubbleSize.y * bubbleScale / 2f) > transform.position.y)
             { // boundary bottom
                 _dir = Vector2.Reflect(_dir, Vector2.up).normalized;
             }
-            else if (transform.position.y > Screen.height - (bubbleSize.y * bubbleScale / 2f))
+            if (transform.position.y > Screen.height - (bubbleSize.y * bubbleScale / 2f))
             { // boundary up
                 _dir = Vector2.Reflect(_dir, Vector2.down).normalized;
             }

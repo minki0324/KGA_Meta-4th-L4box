@@ -53,6 +53,7 @@ public class PushPushCanvas : MonoBehaviour
             loadingCanvas.gameObject.SetActive(true);
 
             GameManager.Instance.GameMode = GameMode.None;
+            GameManager.Instance.InGame = false;
             mainCanvas.gameObject.SetActive(true);
             gameObject.SetActive(false);
         }
