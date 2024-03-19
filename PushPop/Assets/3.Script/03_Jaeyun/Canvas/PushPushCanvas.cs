@@ -7,6 +7,7 @@ public class PushPushCanvas : MonoBehaviour
 {
     [Header("Canvas")]
     [SerializeField] private MainCanvas mainCanvas = null;
+    [SerializeField] private LoadingPanel loadingCanvas = null;
 
     [Header("Side Panel")]
     public GameObject BackButton = null;
@@ -33,6 +34,7 @@ public class PushPushCanvas : MonoBehaviour
     {
         AudioManager.Instance.SetAudioClip_BGM(3);
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
+        loadingCanvas.gameObject.SetActive(true);
 
         SelectCategoryPanel.SetActive(false);
         SelectBoardPanel.SetActive(false);
@@ -44,9 +46,12 @@ public class PushPushCanvas : MonoBehaviour
     public void PushPushBackButton()
     { // 뒤로가기 버튼
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+
         if (SelectCategoryPanel.activeSelf)
         { // 카테고리 선택 중일 때
             AudioManager.Instance.SetAudioClip_BGM(0);
+            loadingCanvas.gameObject.SetActive(true);
+
             GameManager.Instance.GameMode = GameMode.None;
             mainCanvas.gameObject.SetActive(true);
             gameObject.SetActive(false);

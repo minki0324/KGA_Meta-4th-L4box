@@ -14,6 +14,7 @@ public class SpeedManager : MonoBehaviour, IGame
 { // speed game
     [Header("Canvas")]
     [SerializeField] private SpeedCanvas speedCanvas = null;
+    [SerializeField] private LoadingPanel loadingCanvas = null;
 
     [Header("Panel")]
     [SerializeField] private GameObject resultPanel = null;
@@ -285,6 +286,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
         Time.timeScale = 1f;
 
+        loadingCanvas.gameObject.SetActive(true);
         speedCanvas.SelectCategoryPanel.SetActive(true);
         speedCanvas.HelpButton.SetActive(true);
         speedCanvas.BackButton.SetActive(true);
@@ -296,8 +298,9 @@ public class SpeedManager : MonoBehaviour, IGame
     { // Result Panel - 다시하기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         AudioManager.Instance.Stop_SFX();
-
+        loadingCanvas.gameObject.SetActive(true);
         resultPanel.SetActive(false);
+
         Time.timeScale = 1f;
 
         Init();
@@ -312,9 +315,11 @@ public class SpeedManager : MonoBehaviour, IGame
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         AudioManager.Instance.Stop_SFX();
 
+
         Time.timeScale = 1f;
 
         Init();
+        loadingCanvas.gameObject.SetActive(true);
         warningPanel.SetActive(false);
         speedCanvas.SelectCategoryPanel.SetActive(true);
         speedCanvas.HelpButton.SetActive(true);

@@ -9,6 +9,7 @@ public class PushPushManager : MonoBehaviour, IGame
 { // pushpush game
     [Header("Canvas")]
     [SerializeField] private PushPushCanvas pushpushCanvas = null;
+    [SerializeField] private LoadingPanel loadingCanvas = null;
 
     [Header("Panel")]
     [SerializeField] private GameObject resultPanel = null;
@@ -198,6 +199,7 @@ public class PushPushManager : MonoBehaviour, IGame
 
         Time.timeScale = 1f;
 
+        loadingCanvas.gameObject.SetActive(true);
         pushpushCanvas.SelectCategoryPanel.SetActive(true);
         pushpushCanvas.HelpButton.SetActive(true);
         pushpushCanvas.BackButton.SetActive(true);
@@ -208,8 +210,9 @@ public class PushPushManager : MonoBehaviour, IGame
     public void ResultRestartButton()
     { // Result Panel - 다시하기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-
+        loadingCanvas.gameObject.SetActive(true);
         resultPanel.SetActive(false);
+
         Time.timeScale = 1f;
 
         Init();
@@ -222,6 +225,7 @@ public class PushPushManager : MonoBehaviour, IGame
     { // Warning panel - 나가기
         AudioManager.Instance.SetAudioClip_BGM(1);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        loadingCanvas.gameObject.SetActive(true);
 
         Time.timeScale = 1f;
 
