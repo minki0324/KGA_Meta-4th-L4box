@@ -9,6 +9,7 @@ public class SpeedCanvas : MonoBehaviour
 {
     [Header("Canvas")]
     [SerializeField] private GameObject mainCanvas = null;
+    [SerializeField] private LoadingPanel loadingCanvas = null;
 
     [Header("Side Panel")]
     public GameObject BackButton = null;
@@ -50,6 +51,8 @@ public class SpeedCanvas : MonoBehaviour
     { // Ready - 게임 시작
         AudioManager.Instance.SetAudioClip_BGM(3);
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
+        loadingCanvas.gameObject.SetActive(true);
+
         PushPop.Instance.BoardSprite = SelectListSetting.BoardIcon; // pushpop
 
         SpeedGame.SetActive(true);
@@ -68,6 +71,7 @@ public class SpeedCanvas : MonoBehaviour
             AudioManager.Instance.SetAudioClip_BGM(0);
             GameManager.Instance.GameMode = GameMode.None;
             GameManager.Instance.InGame = false;
+            loadingCanvas.gameObject.SetActive(true);
             mainCanvas.SetActive(true);
             gameObject.SetActive(false);
         }

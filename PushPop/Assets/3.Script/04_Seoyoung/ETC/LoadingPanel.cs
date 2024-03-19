@@ -18,24 +18,25 @@ public class LoadingPanel : MonoBehaviour
     [SerializeField] private Image FadeBackground;
 
     [Header("비눗방울 최대 생성 갯수")]
-    public int maxBubble = 150;     //최대 버블 수
+    public int maxBubble = 100;     //최대 버블 수
 
     [Header("비눗방울 올라가는 속도")]
-    public int upSpeed_Min = 10;
-    public int upSpeed_Max = 25;
+    public int upSpeed_Min = 15;
+    public int upSpeed_Max = 26;
 
     [Header("비눗방울 좌우 속도")]
-    public float moveRange_Min;
-    public float moveRange_Max;
+    public float moveRange_Min = -3f;
+    public float moveRange_Max = 3f;
 
     [Header("비눗방울 커지고 작아지는 정도")]
-    public float sizeRandom_Min;
-    public float sizeRandom_Max;
+    public float sizeRandom_Min = 0.1f;
+    public float sizeRandom_Max = 0.3f;
 
     [Header("ETC")]
     private bool bisLoaded = false;  //로딩일 때 Fade Background 다 올라갔을 때 true -> 비눗방울 생성 더이상 안되도록 함
     private bool isLoadingEnd = false;   //로딩이 끝났는가
     private bool bisStart = true;
+
     #region Unity Callback
     private void Awake()
     {
@@ -47,14 +48,18 @@ public class LoadingPanel : MonoBehaviour
     {
         
         bisLoaded = false;
+        FadeBackground.material.SetFloat("_Horizontal", 1f);
+
+
         FadeBackground.material.SetFloat("_Visibility", 0.001f);
         ParticleCanvas.gameObject.SetActive(false);
 
         for (int i = 0; i < maxBubble; i++)
         {
+   
+           
             bubble_Array[i].moveMode = MoveMode.Loading;
             bubble_Array[i].transform.position = new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), Random.Range(-850f, -150f), 0f);
-
             bubble_Array[i].upSpeedMin = upSpeed_Min;
             bubble_Array[i].upSpeedMax = upSpeed_Max;
 
@@ -63,6 +68,8 @@ public class LoadingPanel : MonoBehaviour
 
             bubble_Array[i].sizeRandomMin = sizeRandom_Min;
             bubble_Array[i].sizeRandomMax = sizeRandom_Max;
+
+            
 
             bubble_Array[i].gameObject.SetActive(true);
         }
@@ -91,8 +98,8 @@ public class LoadingPanel : MonoBehaviour
         {
             ParticleCanvas.gameObject.SetActive(true);
         }
-       
 
+        StopAllCoroutines();
     }
 
     private void Update()
@@ -165,6 +172,9 @@ public class LoadingPanel : MonoBehaviour
     {
         float visibility = 0.001f;
         FadeBackground.material.SetFloat("_Visibility", visibility);
+
+
+
         yield return new WaitForSeconds(0.5f);
        
         float cashing1 = 0.1f;

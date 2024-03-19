@@ -11,7 +11,8 @@ using Mirror;
 /// </summary>
 public class MoaMoaManager : MonoBehaviour
 {
-    public int CurrentProfileIndex;
+    public int CurrentProfileIndex; // MoaMoa 띄워주는 Profile Index
+    public string CurrentProfileName;
 
     [Header("Heart And Like")]
     [SerializeField] private TMP_Text likeCount;
@@ -21,10 +22,13 @@ public class MoaMoaManager : MonoBehaviour
     [SerializeField] private Sprite[] btnSprite;                        // Pushpop Color Sprite
     [SerializeField] private Image[] moamoaImage;                       // PushPush Image
     [SerializeField] private SpriteAtlas atlas;                         // PushPush Image Atlas
-    private List<PushPushObject> pushObjs = new List<PushPushObject>(); // PushPushObject Class List
+    public List<PushPushObject> pushObjs = new List<PushPushObject>(); // PushPushObject Class List
+    [SerializeField] private TMP_Text errorLog;
+    [SerializeField] private TMP_Text profileNameText;
 
     [SerializeField] private GameObject MoaMoaPanel;
     private NetworkManager manager;
+    private Coroutine errorLogCoroutine;
 
     #region Unity Callback
     private void Awake()
@@ -66,7 +70,9 @@ public class MoaMoaManager : MonoBehaviour
     public void MoaMoaPanelActive()
     {
         bool active = MoaMoaPanel.activeSelf;
-
+        pushObjs = SQL_Manager.instance.SQL_SetPushPush(CurrentProfileIndex);
+        profileNameText.text = CurrentProfileName;
+        SetMoaMoaList();
         MoaMoaPanel.SetActive(!active);
     }
 
@@ -77,7 +83,6 @@ public class MoaMoaManager : MonoBehaviour
         // 신규 등록 혹은 리스트 초기화 로직
         if (heartAndLikeList == null)
         {
-            Debug.Log("신규 등록 함?");
             heartAndLikeList = new HeartAndLike(new List<int>(), new List<int>());
         }
 
@@ -91,7 +96,6 @@ public class MoaMoaManager : MonoBehaviour
         // 프로필 인덱스 추가 로직
         if (!targetList.Contains(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex))
         { // 타겟 리스트 안에 일치하는 인덱스가 없을 경우 새로 추가하고 DB에 저장
-            Debug.Log("업데이트함?");
             targetList.Add(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
 
             // 데이터베이스 업데이트 호출
@@ -101,13 +105,31 @@ public class MoaMoaManager : MonoBehaviour
         }
         else
         { // 이미 좋아요 혹은 하트를 누른 경우에 대한 처리
-            Debug.Log(_isLikeButton ? "이미 좋아요를 누른 유저입니다." : "이미 하트를 누른 유저입니다.");
+            if(errorLogCoroutine != null)
+            {
+                StopCoroutine(errorLogCoroutine);
+            }
+            errorLogCoroutine = StartCoroutine(ErrorLog_Co(_isLikeButton));
+        }
+    }
+
+    public void MoaMoaPanelTalkTalkButton()
+    {
+        pushObjs.Clear();
+        for(int i = 0; i < moamoaImage.Length; i++)
+        {
+            moamoaImage[i].sprite = ProfileManager.Instance.NoneBackground;
+            for(int j = 0; j < moamoaImage[i].transform.childCount; j++)
+            {
+                Destroy(moamoaImage[i].transform.GetChild(j).gameObject);
+            }
         }
     }
 
     public void TalktalkPanelMoaMoaButton()
     {
         CurrentProfileIndex = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex;
+        CurrentProfileName = $"{ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName}#{CurrentProfileIndex}";
     }
 
     public void UpdateLikeAndHeartCount()
@@ -122,7 +144,6 @@ public class MoaMoaManager : MonoBehaviour
         //DB그대로 이동하게끔하기
         if (manager != null)
         {
-
             //로비이동
             manager.StopClient();
         }
@@ -130,6 +151,14 @@ public class MoaMoaManager : MonoBehaviour
         {
             Debug.Log("네트워크매니저가 존재하지 않습니다.");
         }
+    }
+
+    private IEnumerator ErrorLog_Co(bool _isLikeButton)
+    {
+        errorLog.gameObject.SetActive(true);
+        errorLog.text = _isLikeButton ? "이미 좋아요를 누른 유저입니다." : "이미 하트를 누른 유저입니다.";
+        yield return new WaitForSeconds(2f);
+        errorLog.gameObject.SetActive(false);
     }
     #endregion
 }

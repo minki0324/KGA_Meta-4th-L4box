@@ -9,6 +9,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     [Header("Canvas")]
     [SerializeField] private MainCanvas mainCanvas = null;
     [SerializeField] private MultiCanvas multiCanvas = null;
+    [SerializeField] private LoadingPanel loadingCanvas = null;
 
     [Header("Profile Panel")]
     public GameObject BlockPanel = null;
@@ -252,6 +253,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         }
         else
         { // Gamemode.None
+            loadingCanvas.gameObject.SetActive(true);
             mainCanvas.TitleText.SetActive(true);
             mainCanvas.OptionButton.SetActive(true);
             mainCanvas.ProfileButton.SetActive(true);
@@ -261,7 +263,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             mainCanvas.MultiButton.SetActive(true);
             mainCanvas.NetworkButton.SetActive(true);
 
-            mainCanvas.CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
+            mainCanvas.CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;      
         }
         ProfileManager.Instance.isImageSelect = false;
         for (int i = 0; i < SQL_Manager.instance.ProfileList.Count; i++)
