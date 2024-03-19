@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,51 +27,104 @@ public class AudioOption : MonoBehaviour
         //시작 볼륨값 중간으로 조정
         if (PlayerPrefs.HasKey("BGMVolume"))
         {
-            //Master_Slider.value = PlayerPrefs.GetFloat("BGMVolume");
+            BGM_Slider.value = PlayerPrefs.GetFloat("BGMVolume");
         }
         else
         {
-            BGM_Slider.value = (BGM_Slider.minValue + BGM_Slider.maxValue) * 0.5f;
+            BGM_Slider.value = BGM_Slider.maxValue;
+            //BGM_Slider.value = (BGM_Slider.minValue + BGM_Slider.maxValue) * 0.5f;
         }
 
         if (PlayerPrefs.HasKey("SFXVolume"))
         {
-            //Master_Slider.value = PlayerPrefs.GetFloat("SFXVolume");
+            SFX_Slider.value = PlayerPrefs.GetFloat("SFXVolume");
         }
         else
         {
-            SFX_Slider.value = (SFX_Slider.minValue + SFX_Slider.maxValue) * 0.5f;
+            SFX_Slider.value = SFX_Slider.maxValue;
+            //SFX_Slider.value = (SFX_Slider.minValue + SFX_Slider.maxValue) * 0.5f;
         }
 
         //오디오 믹서 기본 볼륨 조정
         AudioManager.Instance.audioMixer.SetFloat("BGM", BGM_Slider.value);
         AudioManager.Instance.audioMixer.SetFloat("SFX", SFX_Slider.value);
-
-        //볼륨값 변경 시 AddListener 추가
-        BGM_Slider.onValueChanged.AddListener(delegate { SetVolume(BGM_Slider.value, "BGM"); });
-        SFX_Slider.onValueChanged.AddListener(delegate { SetVolume(SFX_Slider.value, "SFX"); });
     }
 
-    public void SetVolume()
+    public void SetVolume(bool _isBgm)
     {
+        float volume = 0f;
+        string soundType = "BGM";
+        if (_isBgm)
+        {
+            volume = BGM_Slider.value;
+            soundType = "BGM";
+            PlayerPrefs.SetFloat("BGMVolume", volume);
+        }
+        else
+        {
+            volume = SFX_Slider.value;
+            soundType = "SFX";
+            PlayerPrefs.SetFloat("SFXVolume", volume);
+        }
+        PlayerPrefs.Save();
 
+        if (volume.Equals(minSound))
+        {
+            AudioManager.Instance.audioMixer.SetFloat(soundType, -80f);
+        }
+        else
+        {
+            AudioManager.Instance.audioMixer.SetFloat(soundType, volume);
+        }
     }
 
-    public void SetVolume(float volume, string soundtype)
+    public void VolumeOffButton(bool _isBgm)
+    {
+        if (_isBgm)
+        {
+            BGM_Slider.value = minSound;
+            PlayerPrefs.SetFloat("BGMVolume", -80f);
+            AudioManager.Instance.audioMixer.SetFloat("BGM", -80f);
+        }
+        else
+        {
+            SFX_Slider.value = minSound;
+            PlayerPrefs.SetFloat("SFXVolume", -80f);
+            AudioManager.Instance.audioMixer.SetFloat("SFX", -80f);
+        }
+        PlayerPrefs.Save();
+    }
+
+    public void VolumeOnButton(bool _isBgm)
+    {
+        if (_isBgm)
+        {
+            BGM_Slider.value = maxSound;
+            PlayerPrefs.SetFloat("BGMVolume", maxSound);
+            AudioManager.Instance.audioMixer.SetFloat("BGM", maxSound);
+        }
+        else
+        {
+            SFX_Slider.value = maxSound;
+            PlayerPrefs.SetFloat("SFXVolume", maxSound);
+            AudioManager.Instance.audioMixer.SetFloat("SFX", maxSound);
+        }
+        PlayerPrefs.Save();
+    }
+    /*public void SetVolume(float volume, string soundtype)
     {
         switch (soundtype)
         {
             case "BGM":
                 volume = BGM_Slider.value;
-                PlayerPrefs.DeleteKey("BGMVolume");
                 PlayerPrefs.SetFloat("BGMVolume", volume);
                 break;
             case "SFX":
                 volume = SFX_Slider.value;
-                PlayerPrefs.DeleteKey("SFXVolume");
                 PlayerPrefs.SetFloat("SFXVolume", volume);
                 break;
         }
+        PlayerPrefs.Save();
 
         if (volume.Equals(minSound))
         {
@@ -83,5 +134,5 @@ public class AudioOption : MonoBehaviour
         {
             AudioManager.Instance.audioMixer.SetFloat(soundtype, volume);
         }
-    }
+    }*/
 }
