@@ -44,18 +44,18 @@ public class TitlePanel : MonoBehaviour
     int screenWidth;      //화면 가로 길이
 
     #region Unity Callback
-
-    private void Awake()
+    private void OnEnable()
     {
-        Init();
-        ParticleCanvas.gameObject.SetActive(true);
-       // StartBtn.interactable = false;
-
-        StartCoroutine(Init_co());
+        if (GameManager.Instance.GameMode.Equals(GameMode.Lobby))
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void Start()
     {
+        Init();
+        StartCoroutine(Init_co());
         AudioManager.Instance.SetAudioClip_BGM(0);
     }
 
@@ -106,8 +106,9 @@ public class TitlePanel : MonoBehaviour
             //bubble_Array[i].gameObject.SetActive(false);
             bubble_Array[i].gameObject.SetActive(true);
         }
+        ParticleCanvas.gameObject.SetActive(true);
     }
-    
+
 
 
     private IEnumerator Init_co()

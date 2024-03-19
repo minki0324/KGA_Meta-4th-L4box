@@ -65,6 +65,7 @@ public class MainCanvas : MonoBehaviour
         isChangeProfile = true;
 
         profileCanvas.BlockPanel.SetActive(true);
+        profileCanvas.BackButton.SetActive(true);
         profileCanvas.gameObject.SetActive(true);
     }
 

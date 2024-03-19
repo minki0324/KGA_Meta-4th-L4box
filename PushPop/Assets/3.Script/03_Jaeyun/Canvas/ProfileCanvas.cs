@@ -51,14 +51,15 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     [SerializeField] private MemoryManager memoryManager;
 
     public bool isChangeProfile = false;
+    private void OnEnable()
+    {
+        StartCoroutine(Init());
+    }
+
     private void Start()
     {
         ProfileManager.Instance.LoadOrCreateGUID();
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
-    }
-    private void OnEnable()
-    {
-        StartCoroutine(Init());
     }
 
     public void OnPointerClick(PointerEventData eventData)
