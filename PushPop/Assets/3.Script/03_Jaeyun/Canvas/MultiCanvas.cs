@@ -82,7 +82,7 @@ public class MultiCanvas : MonoBehaviour
         AudioManager.Instance.SetAudioClip_BGM(0);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.SelectPlayer = Player.Player1;
-        GameManager.Instance.GameMode = GameMode.None;
+        GameManager.Instance.GameMode = GameMode.Lobby;
         GameManager.Instance.InGame = false;
 
         StartCoroutine(NonePlayerSetting_Co());

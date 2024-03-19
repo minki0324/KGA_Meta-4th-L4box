@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -57,15 +58,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     }
     private void OnEnable()
     {
-        if (ProfileManager.Instance.IsUsingProfile  && !isChangeProfile)
-        {
-            gameObject.SetActive(false);
-        }
-    }
-
-    public void dddd()
-    {
-        isChangeProfile = true;
+        StartCoroutine(Init());
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -83,6 +76,25 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    private IEnumerator Init()
+    {
+        yield return null;
+        if (GameManager.Instance.GameMode.Equals(GameMode.Lobby) && !mainCanvas.isChangeProfile)
+        {
+            gameObject.SetActive(false);
+        }
+        else if (GameManager.Instance.GameMode.Equals(GameMode.Title))
+        {
+            mainCanvas.TitleText.SetActive(false);
+            mainCanvas.OptionButton.SetActive(false);
+            mainCanvas.ProfileButton.SetActive(false);
+            mainCanvas.PushpushButton.SetActive(false);
+            mainCanvas.SpeedButton.SetActive(false);
+            mainCanvas.MemoryButton.SetActive(false);
+            mainCanvas.MultiButton.SetActive(false);
+            mainCanvas.NetworkButton.SetActive(false);
+        }
+    }
     #region Select
     public void ProfileCreateButton()
     { // 프로필 선택 창 - 프로필 생성
@@ -265,8 +277,9 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             multiCanvas.MaskImage.SetActive(true);
             multiCanvas.ReadyProfileSetting.ProfileName2P.gameObject.SetActive(true);
         }
-        else
-        { // Gamemode.None
+        else if (GameManager.Instance.GameMode.Equals(GameMode.Title))
+        {
+            GameManager.Instance.GameMode = GameMode.Lobby;
             loadingCanvas.gameObject.SetActive(true);
             mainCanvas.TitleText.SetActive(true);
             mainCanvas.OptionButton.SetActive(true);
@@ -276,9 +289,9 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             mainCanvas.MemoryButton.SetActive(true);
             mainCanvas.MultiButton.SetActive(true);
             mainCanvas.NetworkButton.SetActive(true);
-
-            mainCanvas.CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;      
         }
+
+        mainCanvas.CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
         ProfileManager.Instance.isImageSelect = false;
         for (int i = 0; i < SQL_Manager.instance.ProfileList.Count; i++)
         {
@@ -302,8 +315,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         {
             MemoryManager.Instance.CurrentStage= 1;
         }
-        ProfileManager.Instance.IsUsingProfile = true;
-        isChangeProfile = false;
+        mainCanvas.isChangeProfile = false;
 
     }
 
@@ -322,7 +334,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         SelectScrollView.normalizedPosition = new Vector2(1f, 1f);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
-        if (GameManager.Instance.GameMode.Equals(GameMode.None) && !mainCanvas.ProfileButton.activeSelf)
+        if (GameManager.Instance.GameMode.Equals(GameMode.Lobby) && !mainCanvas.ProfileButton.activeSelf)
         {
             BlockPanel.SetActive(false);
             ExitButton.SetActive(true);

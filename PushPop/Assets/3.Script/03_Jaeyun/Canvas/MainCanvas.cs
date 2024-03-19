@@ -11,6 +11,7 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] private MemoryCanvas memoryCanvas = null;
     [SerializeField] private MultiCanvas multiCanvas = null;
     [SerializeField] private LoadingPanel loadingCanvas = null;
+    public bool isChangeProfile = false;
 
     [Header("Side Panel")]
     public GameObject TitleText = null;
@@ -41,7 +42,10 @@ public class MainCanvas : MonoBehaviour
 
     private void Init()
     {
-        CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
+        if (GameManager.Instance.GameMode.Equals(GameMode.Lobby))
+        {
+            CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
+        }
     }
     #region Button Click Method
     public void GameModeButton(int _gameMode)
@@ -58,6 +62,7 @@ public class MainCanvas : MonoBehaviour
     { // Profile 이미지 클릭 시 프로필 선택으로 돌아감
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.PrintProfileList(profileCanvas.SelectScrollViewContent);
+        isChangeProfile = true;
 
         profileCanvas.BlockPanel.SetActive(true);
         profileCanvas.gameObject.SetActive(true);
@@ -129,7 +134,7 @@ public class MainCanvas : MonoBehaviour
     public void TimeSettingBackButton()
     { // 게임 시간 조절 - 나가기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        GameManager.Instance.GameMode = GameMode.None;
+        GameManager.Instance.GameMode = GameMode.Lobby;
         timeSettingPanel.SetActive(false);
     }
     #endregion

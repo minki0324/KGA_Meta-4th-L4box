@@ -10,7 +10,7 @@ public enum GameMode // GameMode
     Speed,
     Memory,
     Multi,
-    None,
+    Lobby,
     Title
 }
 
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance = null;
 
-    public GameMode GameMode = GameMode.None;
+    public GameMode GameMode = GameMode.Title;
 
     [Header("ShutDown")]
     public float ShutdownTimer = 0f;

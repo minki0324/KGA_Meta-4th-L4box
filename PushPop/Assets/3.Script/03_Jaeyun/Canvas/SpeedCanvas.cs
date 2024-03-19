@@ -69,7 +69,7 @@ public class SpeedCanvas : MonoBehaviour
         if (SelectDifficultyPanel.activeSelf)
         { // 난이도 선택 중일 때
             AudioManager.Instance.SetAudioClip_BGM(0);
-            GameManager.Instance.GameMode = GameMode.None;
+            GameManager.Instance.GameMode = GameMode.Lobby;
             GameManager.Instance.InGame = false;
             loadingCanvas.gameObject.SetActive(true);
             mainCanvas.SetActive(true);

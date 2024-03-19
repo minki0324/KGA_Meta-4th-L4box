@@ -30,7 +30,6 @@ public class MemoryCanvas : MonoBehaviour
     [Header("Game Ready Panel")]
     public TMP_Text GameReadyPanelText = null;
 
-
     [Header("Continue")]
    
     public Button[] stagebtns;
@@ -92,7 +91,7 @@ public class MemoryCanvas : MonoBehaviour
         if (Ready.activeSelf)
         { // 대기 화면일 때
             AudioManager.Instance.SetAudioClip_BGM(0);
-            GameManager.Instance.GameMode = GameMode.None;
+            GameManager.Instance.GameMode = GameMode.Lobby;
             GameManager.Instance.InGame = false;
 
             loadingCanvas.gameObject.SetActive(true);

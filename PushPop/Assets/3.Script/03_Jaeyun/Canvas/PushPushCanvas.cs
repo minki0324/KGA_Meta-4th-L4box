@@ -52,7 +52,7 @@ public class PushPushCanvas : MonoBehaviour
             AudioManager.Instance.SetAudioClip_BGM(0);
             loadingCanvas.gameObject.SetActive(true);
 
-            GameManager.Instance.GameMode = GameMode.None;
+            GameManager.Instance.GameMode = GameMode.Lobby;
             GameManager.Instance.InGame = false;
             mainCanvas.gameObject.SetActive(true);
             gameObject.SetActive(false);
