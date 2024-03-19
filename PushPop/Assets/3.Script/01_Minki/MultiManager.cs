@@ -21,6 +21,7 @@ public class MultiManager : MonoBehaviour, IGame
 { // multi game
     [Header("Canvas")]
     [SerializeField] private MultiCanvas multiCanvas = null;
+    [SerializeField] private LoadingPanel loadingCanvas = null;
 
     [Header("Panel")]
     [SerializeField] private GameObject warningPanel = null;
@@ -566,6 +567,7 @@ public class MultiManager : MonoBehaviour, IGame
         AudioManager.Instance.Stop_SFX();
         Time.timeScale = 1f;
 
+        loadingCanvas.gameObject.SetActive(true);
         multiCanvas.Ready.SetActive(true);
         multiCanvas.BackButton.SetActive(true);
         multiCanvas.HelpButton.SetActive(true);
@@ -576,6 +578,8 @@ public class MultiManager : MonoBehaviour, IGame
     { // Result Panel - 다시하기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         AudioManager.Instance.Pause_SFX(false);
+        loadingCanvas.gameObject.SetActive(true);
+
         Time.timeScale = 1f;
 
         Init();
@@ -609,6 +613,7 @@ public class MultiManager : MonoBehaviour, IGame
 
         Time.timeScale = 1f;
 
+        loadingCanvas.gameObject.SetActive(true);
         warningPanel.SetActive(false);
         multiCanvas.Ready.SetActive(true);
         multiCanvas.BackButton.SetActive(true);
