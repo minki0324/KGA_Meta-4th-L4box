@@ -93,7 +93,6 @@ public class Ranking : MonoBehaviour
             return;
         }
 
-
         rankPath = Application.persistentDataPath + "/Rank.json";
         versusPath = Application.persistentDataPath + "/Versus.json";
 
@@ -170,7 +169,7 @@ public class Ranking : MonoBehaviour
     /// <param name="_index2P"></param>
     /// <param name="_name2P"></param>
     /// <param name="_result"></param>
-    public void SetBombVersus(int _index1P, string _name1P, int _index2P, string _name2P, bool _result)
+    public void SetMultiVersus(int _index1P, string _name1P, int _index2P, string _name2P, bool _result)
     { // 새로운 게임 결과 생성
         BombVersus newGameResult = new BombVersus(_name1P, _name2P, _index1P, _index2P, _result);
 
@@ -371,14 +370,14 @@ public class Ranking : MonoBehaviour
                 else if (currentGame.Result)
                 { // 1P가 이긴 경우
                     SetGameResultText(_winText[i], _loseText[i], currentGame.Player1PName, currentGame.Player2PName);
-                    SetPlayerProfileImage(_winImage[i], currentGame.Player1PIndex, true);
-                    SetPlayerProfileImage(_loseImage[i], currentGame.Player2PIndex, false);
+                    SetPlayerProfileImage(_winImage[i], currentGame.Player1PIndex);
+                    SetPlayerProfileImage(_loseImage[i], currentGame.Player2PIndex);
                 }
                 else
                 { // 1P가 진 경우
                     SetGameResultText(_loseText[i], _winText[i], currentGame.Player1PName, currentGame.Player2PName);
-                    SetPlayerProfileImage(_loseImage[i], currentGame.Player1PIndex, true);
-                    SetPlayerProfileImage(_winImage[i], currentGame.Player2PIndex, false);
+                    SetPlayerProfileImage(_loseImage[i], currentGame.Player1PIndex);
+                    SetPlayerProfileImage(_winImage[i], currentGame.Player2PIndex);
                 }
             }
             else
@@ -412,14 +411,14 @@ public class Ranking : MonoBehaviour
         if (_currentGame.Result)
         { // 1P가 이긴 경우
             SetGameResultText(_winText, _loseText, _currentGame.Player1PName, _currentGame.Player2PName);
-            SetPlayerProfileImage(_winImage, _currentGame.Player1PIndex, true);
-            SetPlayerProfileImage(_loseImage, _currentGame.Player2PIndex, false);
+            SetPlayerProfileImage(_winImage, _currentGame.Player1PIndex);
+            SetPlayerProfileImage(_loseImage, _currentGame.Player2PIndex);
         }
         else
         { // 1P가 진 경우
             SetGameResultText(_loseText, _winText, _currentGame.Player1PName, _currentGame.Player2PName);
-            SetPlayerProfileImage(_loseImage, _currentGame.Player1PIndex, true);
-            SetPlayerProfileImage(_winImage, _currentGame.Player2PIndex, false);
+            SetPlayerProfileImage(_loseImage, _currentGame.Player1PIndex);
+            SetPlayerProfileImage(_winImage, _currentGame.Player2PIndex);
         }
     }
 
@@ -517,7 +516,6 @@ public class Ranking : MonoBehaviour
         }
     }
 
-
     public void DeleteRankAndVersus(int _profileIndex)
     { // Rank 삭제
         rankList.RemoveAll(r => r.index == _profileIndex);
@@ -542,7 +540,7 @@ public class Ranking : MonoBehaviour
     }
     #endregion
 
-    private void SetPlayerProfileImage(Image image, int playerIndex, bool isWinner)
+    private void SetPlayerProfileImage(Image image, int playerIndex)
     {
         Profile profile = GetPlayerProfile(playerIndex);
 
@@ -578,6 +576,5 @@ public class Ranking : MonoBehaviour
         winText.text = winPlayerName;
         loseText.text = losePlayerName;
     }
-
     #endregion
 }

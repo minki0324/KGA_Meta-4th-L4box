@@ -254,8 +254,8 @@ public class MemoryManager : MonoBehaviour, IGame
     #region Warning Panel, BackButton , ContinueBtn
     public void WarningPanelGoOutButton()
     { // 나가기
-        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         AudioManager.Instance.Stop_SFX();
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         Time.timeScale = 1f;
 

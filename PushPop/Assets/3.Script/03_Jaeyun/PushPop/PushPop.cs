@@ -18,8 +18,13 @@ public class PushPop : MonoBehaviour
     public List<GameObject> PushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
 
     [Header("PushPush")]
+    public PushPushManager pushpushManager = null;
     public Stack<GameObject> StackPops = new Stack<GameObject>(); // UI상 보이는 버튼담는 스택
     public Stack<GameObject> StackFakePops = new Stack<GameObject>(); // OverLap 검사를 하기위한 gameObject 스택
+
+    [Header("Mulit")]
+    public List<GameObject> popButtonList1P = new List<GameObject>(); // 1P 의 Pushpop button list
+    public List<GameObject> popButtonList2P = new List<GameObject>(); // 2P 의 Pushpop List
 
     [Header("PushPop GameObject")]
     [SerializeField] private SpriteAtlas pushPopSpriteAtlas; // pushPop Atlas 참조
@@ -37,7 +42,7 @@ public class PushPop : MonoBehaviour
     public GameObject PosPrefab = null; // grid에 지정할 pos prefab
     private List<GameObject> pos = new List<GameObject>(); // grid 배치된 posPrefab
 
-    public List<GameObject> pushPopButton = new List<GameObject>();
+    public List<GameObject> pushPopButton = new List<GameObject>(); // object pooling 때문에 필요
     public List<GameObject> activePos = new List<GameObject>();
     public int ActivePosCount = 0;
 
@@ -62,32 +67,60 @@ public class PushPop : MonoBehaviour
     public void Init()
     {
         // gameObject claer
-        for (int i = 0; i < PushPopBoardObject.Count; i++)
+        ActivePosCount = 0;
+        if (PushPopBoardObject.Count > 0)
         {
-            Destroy(PushPopBoardObject[i]);
+            for (int i = 0; i < PushPopBoardObject.Count; i++)
+            {
+                Destroy(PushPopBoardObject[i]);
+            }
+            PushPopBoardObject.Clear();
         }
-        PushPopBoardObject.Clear();
 
-        if (!activePos.Count.Equals(0))
+        if (activePos.Count > 0)
         {
             for (int i = 0; i < activePos.Count; i++)
             {
-                activePos[i].SetActive(false);
+                Destroy(activePos[i]);
             }
             activePos.Clear();
         }
 
-        for (int i = 0; i < pushPopButton.Count; i++)
+        if (pushPopButton.Count > 0)
         {
-            pushPopButton[i].SetActive(false);
+            for (int i = 0; i < pushPopButton.Count; i++)
+            {
+                Destroy(pushPopButton[i]);
+            }
+            pushPopButton.Clear();
+        }
+        
+        if (PushPopBoardUIObject.Count > 0)
+        {
+            for (int i = 0; i < PushPopBoardUIObject.Count; i++)
+            {
+                Destroy(PushPopBoardUIObject[i]);
+            }
+            PushPopBoardUIObject.Clear();
         }
 
-        // canvas clear
-        for (int i = 0; i < PushPopBoardUIObject.Count; i++)
+        if (popButtonList1P.Count > 0)
         {
-            Destroy(PushPopBoardUIObject[i]);
+            for (int i = 0; i < popButtonList1P.Count; i++)
+            {
+                Destroy(popButtonList1P[i]);
+            }
+            popButtonList1P.Clear();
         }
-        PushPopBoardUIObject.Clear();
+       
+        if (popButtonList2P.Count > 0)
+        {
+            for (int i = 0; i < popButtonList2P.Count; i++)
+            {
+                Destroy(popButtonList2P[i]);
+            }
+            popButtonList2P.Clear();
+        }
     }
 
     // Sprite 모양에 따른 Polygon collider setting
@@ -156,7 +189,7 @@ public class PushPop : MonoBehaviour
         {
             GameObject pushpop = GetPushPopButton(pushPopButton, pushPopButtonPrefab, parent);
             pushpop.GetComponent<RectTransform>().sizeDelta = ButtonSize;
-            pushpop.GetComponent<Image>().sprite = pushPopBtnSprites[activePos[i].GetComponent<PushPopCheck>().spriteIndex-index];
+            pushpop.GetComponent<Image>().sprite = pushPopBtnSprites[activePos[i].GetComponent<PushPopCheck>().spriteIndex - index];
             pushpop.transform.position = Camera.main.WorldToScreenPoint(activePos[i].transform.position);
         }
 
@@ -166,36 +199,14 @@ public class PushPop : MonoBehaviour
     // PushPop Button Object Pooling
     private GameObject GetPushPopButton(List<GameObject> _pos, GameObject _prefab, Transform _parent)
     {
-        for (int i = 0; i < _pos.Count; i++)
-        {
-            if (!_pos[i].activeSelf) // 기존 button이 활성화 되어있지 않다면 true
-            {
-                _pos[i].SetActive(true);
-                return _pos[i];
-            }
-        }
-
         GameObject newPos = Instantiate(_prefab, _parent); // Button이 더 필요하다면 새로 생성
         _pos.Add(newPos);
         return newPos;
     }
 
-    // PushPop position Object Pooling
     private GameObject GetPushPopPos(List<GameObject> _pos, GameObject _prefab, Transform _parent, float _posX, float _posY, int _spriteIndex)
     {
         _parent = this.gameObject.transform;
-
-        for (int i = 0; i < _pos.Count; i++)
-        {
-            if (!_pos[i].activeSelf) // 기존 button이 활성화 되어있지 않다면 true
-            {
-                _pos[i].SetActive(true);
-                _pos[i].transform.position = boardPrefab.transform.position + new Vector3(boardObjectSize.x / 2, boardObjectSize.y / 2, 0f) + new Vector3(_posX, _posY, 1f); // grid 배치
-                _pos[i].GetComponent<PushPopCheck>().PointContains(); // collider check
-                _pos[i].GetComponent<PushPopCheck>().spriteIndex = _spriteIndex;
-                return _pos[i];
-            }
-        }
 
         GameObject newPos = Instantiate(_prefab, _parent); // Button이 더 필요하다면 새로 생성
         _pos.Add(newPos);
@@ -205,37 +216,4 @@ public class PushPop : MonoBehaviour
         return newPos;
     }
     #endregion
-    // Game Clear 시 호출되는 method
-    public void PushPopClear()
-    {
-        // gameObject claer
-        for (int i = 0; i < PushPopBoardObject.Count; i++)
-        {
-            Destroy(PushPopBoardObject[i]);
-        }
-        PushPopBoardObject.Clear();
-
-        if (!activePos.Count.Equals(0))
-        {
-            for (int i = 0; i < activePos.Count; i++)
-            {
-                activePos[i].SetActive(false);
-            }
-            activePos.Clear();
-        }
-
-        for (int i = 0; i < pushPopButton.Count; i++)
-        {
-            pushPopButton[i].SetActive(false);
-        }
-
-        // canvas clear
-        for (int i = 0; i < PushPopBoardUIObject.Count; i++)
-        {
-            Destroy(PushPopBoardUIObject[i]);
-        }
-        PushPopBoardUIObject.Clear();
-    }
-
-    
 }

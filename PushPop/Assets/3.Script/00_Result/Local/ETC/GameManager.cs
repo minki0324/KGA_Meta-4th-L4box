@@ -11,6 +11,7 @@ public enum GameMode // GameMode
     Memory,
     Multi,
     None,
+    Title
 }
 
 public class PushPushObject
@@ -56,13 +57,13 @@ public class GameManager : MonoBehaviour
     public bool InGame = false; // Shutdown setting 시 ture
     public bool IsShutdown = false; // Shutdown End 시 ture
 
-    [Header("Game Script")]
-    public MultiManager multiGame = null;
-    public PushPushManager pushPush;
-
+    [Header("Current Board")]
     public int CurrentIcon = 0; // 선택한 아이콘 리스트 순서
     public int CurrentIconName = 0; // 선택한 아이콘 이름
     public Difficulty Difficulty = Difficulty.Easy;
+
+    [Header("Memory")]
+    public int CurrentStage = 1; // memory 현재 단계
 
     [Header("Bubble Info")]
     [SerializeField] private GameObject bubblePrefab = null;
@@ -77,7 +78,6 @@ public class GameManager : MonoBehaviour
     public bool IsCustomMode = false;
 
     [Header("PushPush Game CallBack")]
-    //public int puzzleListCount = 0;
     public int LiveBubbleCount = 0; // Bubble을 터트리지 않은 상태로 나갈 때 0으로 초기화하여 OnDestroy 때 return 시킴
     public Action NextMode;
     public Action OnDestroyBubble; // Bubble이 OnDestroy 했을 때
@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {

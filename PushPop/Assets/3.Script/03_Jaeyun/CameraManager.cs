@@ -8,7 +8,6 @@ using UnityEngine.UI;
 /// </summary>
 public class CameraManager : MonoBehaviour
 {
-    [SerializeField] private MultiManager bomb;
     private Texture2D captureTexture; // Create Image
 
     public void CameraOpen(Image _captureImage) // Camera Open method
@@ -58,7 +57,7 @@ public class CameraManager : MonoBehaviour
                 _captureImage.sprite = Sprite.Create(captureTexture, rect, new Vector2(0.5f, 0.5f));
 
                 // image name 때문에 profile index 설정
-                ProfileManager.Instance.AddProfile(0, false);
+                ProfileManager.Instance.AddProfile(false);
 
                 // capture texture save
                 Texture2D readableTexture = GetReadableTexture(texture); // Texture 변환
@@ -76,11 +75,11 @@ public class CameraManager : MonoBehaviour
                 // Image Setting
                 if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
                 { // Second Player
-                    ProfileManager.Instance.ImageSet(false, false, ProfileManager.Instance.TempProfileName, -1, null);
+                    ProfileManager.Instance.ImageSet(false, null);
                 }
                 else
                 { // First Player
-                    ProfileManager.Instance.ImageSet(false, true, ProfileManager.Instance.TempProfileName, -1, null);
+                    ProfileManager.Instance.ImageSet(false, null);
                 }
 
                 Destroy(quad, 5f);

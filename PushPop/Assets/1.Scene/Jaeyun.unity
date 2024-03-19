@@ -12434,6 +12434,7 @@ MonoBehaviour:
   speedCanvas: {fileID: 1699295115}
   memoryCanvas: {fileID: 401585168}
   multiCanvas: {fileID: 2001028091}
+  loadingCanvas: {fileID: 0}
   TitleText: {fileID: 325291908}
   OptionButton: {fileID: 578710459}
   ProfileButton: {fileID: 996891277}
@@ -14336,6 +14337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCanvas: {fileID: 353571529}
+  loadingCanvas: {fileID: 0}
   HelpButton: {fileID: 1598689847}
   Ready: {fileID: 547332916}
   ReadyProfileSetting: {fileID: 547332918}
@@ -17016,16 +17018,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UID: 0
   SelectPlayer: 0
-  ProfileName1P: 
-  FirstPlayerIndex: 0
-  DefaultImage1P: 0
-  IsImageMode1P: 0
-  CacheProfileImage1P: {fileID: 0}
-  ProfileName2P: 
-  SecondPlayerIndex: 0
-  DefaultImage2P: 0
-  IsImageMode2P: 0
-  CacheProfileImage2P: {fileID: 0}
   IsSelect: 0
   ProfileImages:
   - {fileID: 21300000, guid: ec63b76a27e30a848b5dc421a7b14d79, type: 3}
@@ -21257,6 +21249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCanvas: {fileID: 353571530}
+  loadingCanvas: {fileID: 0}
   BackButton: {fileID: 709492034}
   HelpButton: {fileID: 1434590310}
   pushpushManager: {fileID: 1719432618}
@@ -34585,7 +34578,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd9b8a6ad230c2246a13602ae7fa5cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profile: {fileID: 0}
   bomb: {fileID: 0}
 --- !u!4 &949941714
 Transform:
@@ -57005,6 +56997,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   memoryCanvas: {fileID: 401585168}
+  loadingCanvas: {fileID: 0}
   resultPanel: {fileID: 183581540}
   warningPanel: {fileID: 1209460623}
   gameReadyPanel: {fileID: 1088452044}
@@ -58355,6 +58348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCanvas: {fileID: 353571529}
+  loadingCanvas: {fileID: 0}
   BackButton: {fileID: 1983013725}
   HelpButton: {fileID: 194399408}
   SelectListSetting: {fileID: 355265739}
@@ -59278,6 +59272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pushpushCanvas: {fileID: 573658053}
+  loadingCanvas: {fileID: 0}
   resultPanel: {fileID: 559831835}
   warningPanel: {fileID: 1878361652}
   customManager: {fileID: 1719432620}
@@ -63556,6 +63551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedCanvas: {fileID: 1699295115}
+  loadingCanvas: {fileID: 0}
   resultPanel: {fileID: 1885975315}
   warningPanel: {fileID: 325741107}
   Difficulty: 50
@@ -70651,6 +70647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   multiCanvas: {fileID: 2001028091}
+  loadingCanvas: {fileID: 0}
   warningPanel: {fileID: 353337975}
   resultPanel: {fileID: 1312491979}
   profileImage:
@@ -71009,6 +71006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCanvas: {fileID: 353571530}
   profileCanvas: {fileID: 2134286061}
+  loadingCanvas: {fileID: 0}
   BackButton: {fileID: 940505443}
   HelpButton: {fileID: 1198253739}
   Ready: {fileID: 1099496117}
@@ -74197,6 +74195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCanvas: {fileID: 353571530}
   multiCanvas: {fileID: 2001028091}
+  loadingCanvas: {fileID: 0}
   BlockPanel: {fileID: 471410142}
   ProfilePanel: {fileID: 1839560111}
   Select: {fileID: 204090335}

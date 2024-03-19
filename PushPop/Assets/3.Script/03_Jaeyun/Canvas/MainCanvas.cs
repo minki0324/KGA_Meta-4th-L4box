@@ -34,6 +34,15 @@ public class MainCanvas : MonoBehaviour
     [Header("TimeSetting Panel")]
     [SerializeField] private TMP_Text timeText = null;
 
+    private void OnEnable()
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
+    }
     #region Button Click Method
     public void GameModeButton(int _gameMode)
     { // Time Set Start

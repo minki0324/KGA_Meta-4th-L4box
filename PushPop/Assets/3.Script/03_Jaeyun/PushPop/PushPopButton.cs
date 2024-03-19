@@ -48,11 +48,11 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
             case GameMode.Multi:
                 if (player.Equals(0))
                 { // 1P 소유 팝 버튼
-                    GameManager.Instance.multiGame.popButtonList1P.Remove(clickButton);
+                    PushPop.Instance.popButtonList1P.Remove(clickButton);
                 }
                 else if (player.Equals(1))
                 { // 2P 소유 팝 버튼
-                    GameManager.Instance.multiGame.popButtonList2P.Remove(clickButton);
+                    PushPop.Instance.popButtonList2P.Remove(clickButton);
                 }
                 break;
         }

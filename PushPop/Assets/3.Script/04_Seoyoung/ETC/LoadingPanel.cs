@@ -120,7 +120,7 @@ public class LoadingPanel : MonoBehaviour
         {
             //GameObject bub = Instantiate(bubblePrefab, new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), Random.Range(-400f, -150f), 0f), Quaternion.identity);
             GameObject bub = Instantiate(bubblePrefab, Vector3.zero, Quaternion.identity);
-            bub.transform.parent = Bubbles.transform;
+            bub.transform.SetParent(Bubbles.transform);
             bubble_Array[i] = bub.GetComponent<Loading_Bubble>();
             bubble_Array[i].gameObject.SetActive(false);
         }

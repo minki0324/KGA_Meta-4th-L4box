@@ -174,8 +174,8 @@ public class SpeedManager : MonoBehaviour, IGame
     {
         if (gameTimer.EndTimer || countSlider.value >= 0.9f)
         {
-            AudioManager.Instance.SetCommonAudioClip_SFX(6);
             AudioManager.Instance.Stop_SFX();
+            AudioManager.Instance.SetCommonAudioClip_SFX(6);
 
             isEndGame = true;
             Ranking.Instance.SetTimer(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex, int.Parse(speedCanvas.SelectListSetting.BoardIcon.name), (int)gameTimer.CurrentTime);
@@ -225,7 +225,7 @@ public class SpeedManager : MonoBehaviour, IGame
             {
                 for (int i = 0; i < PushPop.Instance.activePos.Count; i++)
                 {
-                    PushPop.Instance.activePos[i].SetActive(false);
+                    Destroy(PushPop.Instance.activePos[i]);
                 }
                 PushPop.Instance.activePos.Clear();
             }
@@ -280,9 +280,9 @@ public class SpeedManager : MonoBehaviour, IGame
     #region Result Panel
     public void ResultExitButton()
     { // Result Panel - 나가기
+        AudioManager.Instance.Stop_SFX();
         AudioManager.Instance.SetAudioClip_BGM(1);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        AudioManager.Instance.Stop_SFX();
 
         Time.timeScale = 1f;
 
@@ -296,8 +296,8 @@ public class SpeedManager : MonoBehaviour, IGame
 
     public void ResultRestartButton()
     { // Result Panel - 다시하기
-        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         AudioManager.Instance.Stop_SFX();
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         loadingCanvas.gameObject.SetActive(true);
         resultPanel.SetActive(false);
 
@@ -311,10 +311,9 @@ public class SpeedManager : MonoBehaviour, IGame
     #region Warning Panel
     public void WarningPanelGoOutButton()
     { // Warning panel - 나가기
+        AudioManager.Instance.Stop_SFX();
         AudioManager.Instance.SetAudioClip_BGM(1);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        AudioManager.Instance.Stop_SFX();
-
 
         Time.timeScale = 1f;
 

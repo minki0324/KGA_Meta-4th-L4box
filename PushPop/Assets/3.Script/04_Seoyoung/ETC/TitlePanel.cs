@@ -88,7 +88,7 @@ public class TitlePanel : MonoBehaviour
             int rangeX = Random.Range(100, screenWidth - 100);
             int rangeY = Random.Range(100, screenHeight - 100);
             GameObject bub = Instantiate(bubblePrefab, new Vector3(rangeX, rangeY), Quaternion.identity);
-            bub.transform.parent = Bubbles.transform;
+            bub.transform.SetParent(Bubbles.transform);
 
             bubble_Array[i] = bub.GetComponent<Loading_Bubble>();
             bubble_Array[i].moveMode = MoveMode.Main;
@@ -124,6 +124,7 @@ public class TitlePanel : MonoBehaviour
 
     public void StartGame()
     {
+        Debug.Log("Start Game");
         AudioManager.Instance.SetCommonAudioClip_SFX(2);
 
         //LoadingCanvas.gameObject.SetActive(false);

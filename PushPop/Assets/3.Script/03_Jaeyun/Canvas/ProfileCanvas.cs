@@ -48,10 +48,24 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     [Header("MemoryManager")]
     [SerializeField] private MemoryManager memoryManager;
+
+    public bool isChangeProfile = false;
     private void Start()
     {
         ProfileManager.Instance.LoadOrCreateGUID();
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
+    }
+    private void OnEnable()
+    {
+        if (ProfileManager.Instance.IsUsingProfile  && !isChangeProfile)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    public void dddd()
+    {
+        isChangeProfile = true;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -99,7 +113,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
-        if (ProfileManager.Instance.ImageSet(true, true, ProfileManager.Instance.TempProfileName, ProfileManager.Instance.TempImageIndex, selectProfileIcon.WarningLog))
+        if (ProfileManager.Instance.ImageSet(true, selectProfileIcon.WarningLog))
         {
             ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
@@ -288,7 +302,8 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         {
             MemoryManager.Instance.CurrentStage= 1;
         }
-
+        ProfileManager.Instance.IsUsingProfile = true;
+        isChangeProfile = false;
 
     }
 

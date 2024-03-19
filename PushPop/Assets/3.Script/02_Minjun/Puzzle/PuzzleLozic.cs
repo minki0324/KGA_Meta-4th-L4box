@@ -125,7 +125,7 @@ public class PuzzleLozic : MonoBehaviour
 
     public void CraetBoard()
     { // 퍼즐 완료하고 퍼즐 원본 오브젝트 생성
-        Image frameImage = GameManager.Instance.pushPush.customManager.puzzleBoard.GetComponent<Image>();
+        Image frameImage = PushPop.Instance.pushpushManager.customManager.puzzleBoard.GetComponent<Image>();
         frameImage.sprite = DataManager.Instance.pushPopAtlas.GetSprite(CurrentPuzzle.PuzzleID.ToString()); //퍼즐 사진넣기
         frameImage.SetNativeSize();
         frameImage.alphaHitTestMinimumThreshold = 0.1f;

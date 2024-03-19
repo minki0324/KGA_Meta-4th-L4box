@@ -40,25 +40,24 @@ public class ProfileManager : MonoBehaviour
     public bool IsSelect = false;
 
     [Header("Profile Component")]
-    [Space(5)]
     public Sprite[] ProfileImages = null; // ProfileImage Sprites
     public Sprite NoneBackground = null; // Profile None Sprite
     public GameObject ProfilePanel = null; // Profile Panel
     public List<GameObject> ProfilePanelList = new List<GameObject>(); // Profile Panel List
 
     [Header("Other Request")]
-    [Space(5)]
     private string imagePath = string.Empty; // Image Saving Path
     public bool isUpdate = false; // Profile 추가 시 false, 수정 시 true
     public bool isImageSelect = false; // Profile Image Icon 선택 시 true, 아닐 시 false
     public bool isProfileSelected = false; // is Profile Select ?
 
     [Header("Temp Info")]
-    [Space(5)]
     public int TempImageIndex = 0; // profile 등록 시 이미지 고르기에서 선택한 index
     public int TempUserIndex = -1; // Profile 등록할 때 사용할 임시 ProfileIndex
     public string TempProfileName = string.Empty; // Profile 등록할 때 사용할 임시 ProfileName
     public bool TempImageMode = true; // profile 이미지 등록 시 true, 사진 찍기 시 false
+
+    public bool IsUsingProfile = false; // title에서 network 다녀오면 true
 
     #region Unity Callback
     private void Awake()
@@ -74,12 +73,6 @@ public class ProfileManager : MonoBehaviour
             return;
         }
     }
-
-    /*private void Start()
-    {
-        LoadOrCreateGUID();
-        PrintProfileList(canvas.profileParent);
-    }*/
     #endregion
 
     #region Other Method
@@ -113,7 +106,7 @@ public class ProfileManager : MonoBehaviour
     /// SQL Manager와 연동하여 신규 Profile을 등록하거나, Update 하는 Method
     /// </summary>
     /// <param name="_profileIndex"></param>
-    public void AddProfile(int _profileIndex, bool _isIconMode)
+    public void AddProfile(bool _isIconMode)
     { // Profile 생성 및 수정
         int iconMode = _isIconMode ? 1 : 0; // take picture or default image
 
@@ -185,11 +178,9 @@ public class ProfileManager : MonoBehaviour
         }
     }
 
-    public bool ImageSet(bool _isIconMode, bool _isFirstPlayer, string _profileName, int _defaultImageIndex, TMP_Text _nameLog = null)
+    public bool ImageSet(bool _isIconMode, TMP_Text _nameLog = null)
     { // Profile에 넣을 Image Setting
         // _player bool값에 따라 1P를 설정하는지 2P를 설정하는지 결정
-        int profileIndex = GameManager.Instance.GameMode.Equals(GameMode.Multi) ? PlayerInfo[(int)Player.Player1].playerIndex : PlayerInfo[(int)Player.Player2].playerIndex;
-
         if (!_isIconMode)
         { // 사진 찍기 버튼 클릭 시
             AddProfileImage();
@@ -207,7 +198,7 @@ public class ProfileManager : MonoBehaviour
             else
             { // 선택한 이미지가 있을 때
               //SetImageMode(_isFirstPlayer, true);
-                AddProfile(profileIndex, _isIconMode); // defaultimage add
+                AddProfile(_isIconMode); // defaultimage add
 
                 // 전달받은 profile Index로 Profile Image 설정
 
@@ -270,10 +261,6 @@ public class ProfileManager : MonoBehaviour
         return sprite;
     }
     #endregion
-
-    // Jaeyun Profile Canvas
-
-
     #region Warning Log Output
     public void PrintErrorLog(TMP_Text _warningLog, string _logText)
     { // InputField Check 후 Error Log 띄우는 method

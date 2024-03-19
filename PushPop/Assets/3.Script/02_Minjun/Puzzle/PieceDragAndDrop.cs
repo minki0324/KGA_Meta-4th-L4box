@@ -16,7 +16,7 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 
     private void Awake()
     {
-        puzzleLozic = GameManager.Instance.pushPush.puzzleManager;
+        puzzleLozic = PushPop.Instance.pushpushManager.puzzleManager;
     }
 
     private void Start()

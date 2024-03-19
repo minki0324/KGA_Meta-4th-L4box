@@ -96,7 +96,7 @@ public class Speed_Timer : MonoBehaviour
             GameManager.Instance.bubbleObject.Clear();
         }
 
-        PushPop.Instance.PushPopClear();
+        // PushPop.Instance.PushPopClear();
     }
 
     //타이머 코루틴
@@ -187,7 +187,7 @@ public class Speed_Timer : MonoBehaviour
             GameManager.Instance.bubbleObject.Clear();
         }
 
-        PushPop.Instance.PushPopClear();
+        // PushPop.Instance.PushPopClear();
         if(timer != null)
         {
             StopCoroutine(timer);
