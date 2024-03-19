@@ -37,22 +37,6 @@ public class ProfileManager : MonoBehaviour
     [Header("Player Info")]
     public Player SelectPlayer = Player.Player1;
     public PlayerInfo[] PlayerInfo = new PlayerInfo[2]; // Player1, Player2
-
-    [Header("1P Info")]
-    [Space(5)]
-    public string ProfileName1P = string.Empty; // 1P Profile Name
-    public int FirstPlayerIndex = 0; // 1P Profile Index
-    public int DefaultImage1P = 0; // 1P Profile DefaultImage Index
-    public bool IsImageMode1P = false; // false = 사진찍기, true = 이미지 선택
-    public Sprite CacheProfileImage1P = null;
-
-    [Header("2P Info")]
-    [Space(5)]
-    public string ProfileName2P = string.Empty; // 2P Profile Name
-    public int SecondPlayerIndex = 0; // 2P Profile Index
-    public int DefaultImage2P = 0; // 2P Profile DefaultImage Index
-    public bool IsImageMode2P = false; // false = 사진찍기, true = 이미지 선택
-    public Sprite CacheProfileImage2P = null;
     public bool IsSelect = false;
 
     [Header("Profile Component")]
@@ -204,7 +188,7 @@ public class ProfileManager : MonoBehaviour
     public bool ImageSet(bool _isIconMode, bool _isFirstPlayer, string _profileName, int _defaultImageIndex, TMP_Text _nameLog = null)
     { // Profile에 넣을 Image Setting
         // _player bool값에 따라 1P를 설정하는지 2P를 설정하는지 결정
-        int profileIndex = GameManager.Instance.GameMode.Equals(GameMode.Multi) ? FirstPlayerIndex : SecondPlayerIndex;
+        int profileIndex = GameManager.Instance.GameMode.Equals(GameMode.Multi) ? PlayerInfo[(int)Player.Player1].playerIndex : PlayerInfo[(int)Player.Player2].playerIndex;
 
         if (!_isIconMode)
         { // 사진 찍기 버튼 클릭 시
@@ -240,19 +224,6 @@ public class ProfileManager : MonoBehaviour
             }
         }
     }
-
-    private void SetImageMode(bool isFirstPlayer, bool isImageMode)
-    {
-        if (isFirstPlayer)
-        {
-            IsImageMode1P = isImageMode;
-        }
-        else
-        {
-            IsImageMode2P = isImageMode;
-        }
-    }
-
     private void AddProfileImage()
     {
         imagePath = $"{Application.persistentDataPath}/Profile/{UID}_{TempUserIndex}.png";

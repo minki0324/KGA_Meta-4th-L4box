@@ -64,7 +64,6 @@ public class Connect_Network : MonoBehaviour
         {
             Path = Application.persistentDataPath + "/License";
         }
-        Debug.Log("패스 : " + Path);
         if (!File.Exists(Path)) //폴더 검사
         {
             Directory.CreateDirectory(Path);
@@ -74,11 +73,8 @@ public class Connect_Network : MonoBehaviour
             Default_Data(Path);
         }
         manager = GetComponent<NetworkManager>();
-        Debug.Log("매니저 : " + manager);
         kcp = (KcpTransport)manager.transport;
-        Debug.Log("kcp : " + kcp);
         type = License_type();
-        Debug.Log("타입 : " + type);
     }
 
     private void Start()
@@ -137,17 +133,16 @@ public class Connect_Network : MonoBehaviour
 
     public void Start_Server()
     {
-        
-            manager.StartServer();
-            Debug.Log($"{manager.networkAddress} StartServer....");
-            NetworkServer.OnConnectedEvent += (NetworkConnectionToClient) =>
-            {
-                Debug.Log($"New client Connect : {NetworkConnectionToClient.address}");
-            };
-            NetworkServer.OnDisconnectedEvent += (NetworkConnectionToClient) =>
-            {
-                Debug.Log($"client DisConnect : {NetworkConnectionToClient.address}");
-            };
+        manager.StartServer();
+        Debug.Log($"{manager.networkAddress} StartServer....");
+        NetworkServer.OnConnectedEvent += (NetworkConnectionToClient) =>
+        {
+            Debug.Log($"New client Connect : {NetworkConnectionToClient.address}");
+        };
+        NetworkServer.OnDisconnectedEvent += (NetworkConnectionToClient) =>
+        {
+            Debug.Log($"client DisConnect : {NetworkConnectionToClient.address}");
+        };
     }
 
 
