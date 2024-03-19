@@ -17,9 +17,6 @@ public class MultiCanvas : MonoBehaviour
     public ReadyProfileSetting ReadyProfileSetting = null;
     public GameObject ProfileSelectText = null;
 
-    [Header("Ready Info")]
-    [SerializeField] private TMP_Text warningLog = null;
-
     [Header("Profile Info")]
     public GameObject MaskImage = null;
     public GameObject SelectButton = null;
@@ -55,13 +52,13 @@ public class MultiCanvas : MonoBehaviour
         AudioManager.Instance.SetAudioClip_BGM(5);
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
 
-        // todo... gamereadypanel에 뜨도록 수정
         if (!ProfileManager.Instance.IsSelect)
         { // 플레이어 선택을 안했을 시
-            ProfileManager.Instance.PrintErrorLog(warningLog, "플레이어를 선택해주세요.");
+            StartCoroutine(NonePlayerSetting_Co());
             return;
         }
 
+        StopAllCoroutines();
         SQL_Manager.instance.SQL_ProfileListSet();
         MultiGame.SetActive(true);
         HelpButton.SetActive(false);
@@ -70,11 +67,11 @@ public class MultiCanvas : MonoBehaviour
         multiManager.GameStart();
     }
 
-    private IEnumerator NonePlayerSetting()
-    { // panel touch 시 바로 꺼지게 만들까 말까 ... todo
+    private IEnumerator NonePlayerSetting_Co()
+    {
         GameReadyPanelText.text = "플레이어를 선택해주세요.";
         GameReadyPanel.SetActive(true);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(0.5f);
     }
     #endregion
     #region Side Panel
@@ -86,12 +83,13 @@ public class MultiCanvas : MonoBehaviour
         GameManager.Instance.GameMode = GameMode.None;
         GameManager.Instance.InGame = false;
 
+        StartCoroutine(NonePlayerSetting_Co());
         ProfileManager.Instance.IsSelect = false;
         ProfileSelectText.SetActive(true);
         MaskImage.SetActive(false);
         ReadyProfileSetting.ProfileName2P.gameObject.SetActive(false);
-        warningLog.gameObject.SetActive(false);
         mainCanvas.gameObject.SetActive(true);
+        GameReadyPanel.SetActive(false);
         ChangeButton.SetActive(false);
         SelectButton.SetActive(true);
         gameObject.SetActive(false);
