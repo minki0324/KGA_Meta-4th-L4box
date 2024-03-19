@@ -67,7 +67,7 @@ public class Main_Button : MonoBehaviour
         //GameManager.Instance.GameModeSetting((int)GameMode.Multi);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
     }
-
+/*
     public void Profile_Btn_Clicked()
     { // MainLobby ProfileIconBtn ¿¬µ¿ Method
         NewProfileCanvas profile = profilePanel.GetComponent<NewProfileCanvas>();
@@ -76,7 +76,7 @@ public class Main_Button : MonoBehaviour
         ProfileManager.Instance.PrintProfileList(profile.profileParent);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
     }
-
+*/
     public void ProfileReturnBtn_Clicked()
     { // Profile Return Btn
         profilePanel.SetActive(false);

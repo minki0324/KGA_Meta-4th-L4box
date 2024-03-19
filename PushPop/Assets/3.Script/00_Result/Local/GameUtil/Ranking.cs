@@ -319,49 +319,6 @@ public class Ranking : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// RankList에 담겨 있는 본인의 기록을 조회하고, 기록이 있다면 rankList에 담긴 본인의 기록을 출력, 없다면 공백으로 출력
-    /// </summary>
-    /// <param name="_name"></param>
-    /// <param name="_timer"></param>
-    /// <param name="_image"></param>
-    /// <param name="_spriteName"></param>
-    public void LoadTimer_Personal(TMP_Text _name, TMP_Text _timer, Image _image, int _spriteName)
-    {
-        SQL_Manager.instance.SQL_ProfileListSet();
-        LoadRanking();
-
-        var userRecord = rankList.FirstOrDefault(r => r.index == ProfileManager.Instance.FirstPlayerIndex && r.spriteName.Contains(_spriteName));
-
-        if (userRecord != null)
-        {
-            for (int i = 0; i < userRecord.spriteName.Count; i++)
-            {
-                if (userRecord.spriteName[i] == _spriteName)
-                {
-                    int sec = userRecord.timer[i] % 60;    //60으로 나눈 나머지 = 초
-                    int min = userRecord.timer[i] / 60;
-                    _name.text = ProfileManager.Instance.ProfileName1P;
-                    _timer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
-                    break;
-                }
-                else
-                {
-                    _image.sprite = ProfileManager.Instance.NoneBackground;
-                    _name.text = userRecord.name;
-                    _timer.text = "";
-                }
-            }
-        }
-        else
-        {
-            _image.sprite = ProfileManager.Instance.NoneBackground;
-            _name.text = ProfileManager.Instance.ProfileName1P;
-            _timer.text = "";
-        }
-        _image.sprite = ProfileManager.Instance.CacheProfileImage1P;
-    }
-
     public int LoadPersonalTimer()
     { // speed mode timer 불러옴
         SQL_Manager.instance.SQL_ProfileListSet();

@@ -8,7 +8,6 @@ using UnityEngine.UI;
 /// </summary>
 public class CameraManager : MonoBehaviour
 {
-    [SerializeField] private NewProfileCanvas profile;
     [SerializeField] private MultiManager bomb;
     private Texture2D captureTexture; // Create Image
 
