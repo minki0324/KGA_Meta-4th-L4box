@@ -9,8 +9,10 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Loading_Material
   m_Shader: {fileID: 4800000, guid: 9217fb1aeeb071e43b3cfd7bd7a52873, type: 3}
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_ValidKeywords:
+  - HORIZONTAL
+  m_InvalidKeywords:
+  - SHADEREVERSE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -101,12 +103,15 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _Horizontal: 1
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Reverse: 1
+    - _ShadeReverse: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -119,7 +124,7 @@ Material:
     - _Surface: 0
     - _Tiling: 1.59
     - _UseUIAlphaClip: 0
-    - _Visibility: 0.651
+    - _Visibility: 2.301
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
