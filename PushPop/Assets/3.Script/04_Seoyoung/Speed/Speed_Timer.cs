@@ -216,7 +216,6 @@ public class Speed_Timer : MonoBehaviour
 
     public void Result()
     {
-        int clearTitle;
         resultImage.sprite = speed_Canvas.BoardIcon;
         resultTimer.text = $"{string.Format("{0:00}", min)}:{string.Format("{0:00}", sec)}";
         bNoTimePlaying = false;
@@ -224,7 +223,6 @@ public class Speed_Timer : MonoBehaviour
 
         if (currentTime.Equals((int)difficult))
         {
-            clearTitle = (int)ClearTitle.Fail;
             AudioManager.Instance.SetCommonAudioClip_SFX(8);
         }
         else

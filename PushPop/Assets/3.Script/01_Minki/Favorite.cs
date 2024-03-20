@@ -172,6 +172,7 @@ public class Favorite : MonoBehaviour
             }
             warningLogCoroutine = StartCoroutine(WarningLog());
         }
+        searchInput.text = string.Empty;
     }
     
     #endregion
