@@ -112,7 +112,6 @@ public class MainCanvas : MonoBehaviour
 
         loadingCanvas.gameObject.SetActive(true);
 
-        GameManager.Instance.ShutdownTimerStart();
         switch (GameManager.Instance.GameMode)
         {
             case GameMode.PushPush:
@@ -133,6 +132,7 @@ public class MainCanvas : MonoBehaviour
         GameManager.Instance.InGame = true;
         GameManager.Instance.IsGameClear = true;
         GameManager.Instance.Shutdown += ShutDownPanelSetting;
+        GameManager.Instance.ShutdownAlarmStart();
 
         timeSettingPanel.SetActive(false);
         gameObject.SetActive(false);

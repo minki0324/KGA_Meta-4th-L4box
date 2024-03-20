@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 using Mirror;
+using System.Collections;
+
 public enum GameMode // GameMode
 {
     PushPush = 0,
@@ -57,14 +59,13 @@ public class GameManager : MonoBehaviour
     public bool IsGameClear = false; // Game Clear 시 true, 아니면 false
     public bool InGame = false; // Shutdown setting 시 ture
     public bool IsShutdown = false; // Shutdown End 시 ture
+    public bool IsLoading = false; // ready 끝난 뒤 false
+    public bool OnShutdownAlarm = false;
 
     [Header("Current Board")]
     public int CurrentIcon = 0; // 선택한 아이콘 리스트 순서
     public int CurrentIconName = 0; // 선택한 아이콘 이름
     public Difficulty Difficulty = Difficulty.Easy;
-
-    [Header("Memory")]
-    public int CurrentStage = 1; // memory 현재 단계
 
     [Header("Bubble Info")]
     [SerializeField] private GameObject bubblePrefab = null;
@@ -84,6 +85,7 @@ public class GameManager : MonoBehaviour
     public Action OnDestroyBubble; // Bubble이 OnDestroy 했을 때
     public Action GameEnd; // PushPop button
     public Action Shutdown; // shutdown 시 canvas 별 setActive
+    public Action ShutdownAlarm; // in game alarm
     public CompletedStage myMeomoryStageInfo;
     
     private void Awake()
@@ -123,15 +125,34 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GameShutDown()
+    private void GameShutDown()
     {
+        StopAllCoroutines(); // ShutdownAlarm_Co() stop
+        AudioManager.Instance.SetAudioClip_BGM(0);
+        GameMode = GameMode.Lobby;
+        Shutdown?.Invoke();
+
         IsShutdown = false;
         IsGameClear = false;
         InGame = false;
 
-        GameMode = GameMode.Lobby;
-        Shutdown?.Invoke();
         Shutdown = null;
+    }
+
+    public void ShutdownAlarmStart()
+    {
+        StartCoroutine(ShutdownAlarm_Co());
+    }
+
+    private IEnumerator ShutdownAlarm_Co()
+    {
+        while (true)
+        {
+            if (IsShutdown) yield break;
+            yield return new WaitForSeconds(10f);
+            OnShutdownAlarm = true;
+            if (!IsLoading) ShutdownAlarm?.Invoke();
+        }
     }
 
     public void CreateBubble(Vector2 _size, Vector2 _pos, GameObject _puzzle)

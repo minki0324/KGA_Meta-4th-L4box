@@ -37,6 +37,20 @@ public class SpeedCanvas : MonoBehaviour
     public GameObject GameReadyPanel = null;
     public TMP_Text GameReadyPanelText = null;
 
+    private void OnDisable()
+    {
+        ShutdownInit();
+    }
+
+    private void ShutdownInit()
+    { // shutdown 시 init
+        if (!GameManager.Instance.IsShutdown) return;
+        loadingCanvas.gameObject.SetActive(true);
+        SelectDifficultyPanel.SetActive(true);
+        SelectCategoryPanel.SetActive(false);
+        HelpPanel.SetActive(false);
+    }
+    
     public void SelectDifficultyButton(int _difficulty)
     { // 난이도 버튼
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
@@ -44,7 +58,6 @@ public class SpeedCanvas : MonoBehaviour
 
         SelectCategoryPanelScrollView.normalizedPosition = new Vector2(1f, 1f);
         SelectCategoryPanel.SetActive(true);
-        SelectDifficultyPanel.SetActive(false);
     }
 
     public void GameStartButton()
@@ -71,7 +84,6 @@ public class SpeedCanvas : MonoBehaviour
         { // 난이도 선택 중일 때
             AudioManager.Instance.SetAudioClip_BGM(0);
             GameManager.Instance.GameMode = GameMode.Lobby;
-            GameManager.Instance.IsGameClear = true;
             GameManager.Instance.InGame = false;
             loadingCanvas.gameObject.SetActive(true);
             mainCanvas.SetActive(true);

@@ -41,77 +41,25 @@ public class LoadingPanel : MonoBehaviour
     private void Awake()
     {
         Init();
-        //gameObject.SetActive(false);
     }
 
     private void OnEnable()
     {
-        
-        bisLoaded = false;
-        FadeBackground.material.SetFloat("_Horizontal", 1f);
-
-
-        FadeBackground.material.SetFloat("_Visibility", 0.001f);
-        ParticleCanvas.gameObject.SetActive(false);
-
-        for (int i = 0; i < maxBubble; i++)
-        {
-   
-           
-            bubble_Array[i].moveMode = MoveMode.Loading;
-            bubble_Array[i].transform.position = new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), Random.Range(-850f, -150f), 0f);
-            bubble_Array[i].upSpeedMin = upSpeed_Min;
-            bubble_Array[i].upSpeedMax = upSpeed_Max;
-
-            bubble_Array[i].moveRangeMin = moveRange_Min;
-            bubble_Array[i].moveRangeMax = moveRange_Max;
-
-            bubble_Array[i].sizeRandomMin = sizeRandom_Min;
-            bubble_Array[i].sizeRandomMax = sizeRandom_Max;
-
-            
-
-            bubble_Array[i].gameObject.SetActive(true);
-        }
-
-        if(!bisStart)
-        {
-            StartCoroutine(BackgroundFadeOut_co());
-        }
-        else
-        {
-            bisStart = false;
-            gameObject.SetActive(false);
-        }
-
-        
-
+        Loading();
     }
 
     private void OnDisable()
     {
-        for (int i = 0; i < maxBubble; i++)
-        {
-            bubble_Array[i].gameObject.SetActive(false);
-        }
-        if(!ParticleCanvas.gameObject.activeSelf)
-        {
-            ParticleCanvas.gameObject.SetActive(true);
-        }
-
-        StopAllCoroutines();
+        BubbleSetting();
     }
 
     private void Update()
     {
         // BubblePooling();
-
         CheckBubbleEnd();
     }
     #endregion
-
     #region Other Method
-
     private void Init()
     {
         bubble_Array = new Loading_Bubble[maxBubble];
@@ -124,8 +72,56 @@ public class LoadingPanel : MonoBehaviour
             bubble_Array[i] = bub.GetComponent<Loading_Bubble>();
             bubble_Array[i].gameObject.SetActive(false);
         }
+    }
 
+    private void Loading()
+    {
+        GameManager.Instance.IsLoading = true;
+
+        bisLoaded = false;
+        FadeBackground.material.SetFloat("_Horizontal", 1f);
+        FadeBackground.material.SetFloat("_Visibility", 0.001f);
+        ParticleCanvas.gameObject.SetActive(false);
+
+        for (int i = 0; i < maxBubble; i++)
+        {
+            bubble_Array[i].moveMode = MoveMode.Loading;
+            bubble_Array[i].transform.position = new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), Random.Range(-850f, -150f), 0f);
+            bubble_Array[i].upSpeedMin = upSpeed_Min;
+            bubble_Array[i].upSpeedMax = upSpeed_Max;
+
+            bubble_Array[i].moveRangeMin = moveRange_Min;
+            bubble_Array[i].moveRangeMax = moveRange_Max;
+
+            bubble_Array[i].sizeRandomMin = sizeRandom_Min;
+            bubble_Array[i].sizeRandomMax = sizeRandom_Max;
+
+            bubble_Array[i].gameObject.SetActive(true);
+        }
+
+        if (!bisStart)
+        {
+            StartCoroutine(BackgroundFadeOut_co());
+        }
+        else
+        {
+            bisStart = false;
+            gameObject.SetActive(false);
+        }
+    }
+
+    private void BubbleSetting()
+    {
+        StopAllCoroutines();
         
+        for (int i = 0; i < maxBubble; i++)
+        {
+            bubble_Array[i].gameObject.SetActive(false);
+        }
+        if (!ParticleCanvas.gameObject.activeSelf)
+        {
+            ParticleCanvas.gameObject.SetActive(true);
+        }
     }
 
     private void BubblePooling()
@@ -165,6 +161,13 @@ public class LoadingPanel : MonoBehaviour
             isLoadingEnd = false;
             ParticleCanvas.gameObject.SetActive(true);
             gameObject.SetActive(false);
+
+            // shutdown loading ³¡³­ µÚ
+            if (GameManager.Instance.OnShutdownAlarm)
+            {
+                GameManager.Instance.ShutdownAlarm?.Invoke();
+            }
+            GameManager.Instance.IsLoading = false;
         }
     }
 
@@ -173,15 +176,12 @@ public class LoadingPanel : MonoBehaviour
         float visibility = 0.001f;
         FadeBackground.material.SetFloat("_Visibility", visibility);
 
-
-
         yield return new WaitForSeconds(0.5f);
        
         float cashing1 = 0.1f;
         float cashing2= 0.05f;
         while(true)
         {
-
             if (visibility <= 0.35f)
             {
                 visibility += 0.05f;

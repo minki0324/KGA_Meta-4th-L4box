@@ -29,8 +29,21 @@ public class MemoryCanvas : MonoBehaviour
     public TMP_Text GameReadyPanelText = null;
 
     [Header("Continue")]
-
     public Button[] stagebtns;
+    public GameObject ContinuePanel = null;
+
+    private void OnDisable()
+    {
+        ShutdownInit();
+    }
+
+    private void ShutdownInit()
+    {
+        if (!GameManager.Instance.IsShutdown) return;
+        loadingCanvas.gameObject.SetActive(true);
+        ContinuePanel.SetActive(false);
+        HelpPanel.SetActive(false);
+    }
     #region Ready
     public void GameStartButton()
     { // 대기 - 게임 시작
@@ -38,7 +51,9 @@ public class MemoryCanvas : MonoBehaviour
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
 
         GameManager.Instance.IsGameClear = false;
+
         loadingCanvas.gameObject.SetActive(true);
+        ContinuePanel.SetActive(false);
         MemoryGame.SetActive(true);
         HelpButton.SetActive(false);
         Ready.SetActive(false);
@@ -48,6 +63,7 @@ public class MemoryCanvas : MonoBehaviour
 
     public void ContinueBtn()
     {
+        ContinuePanel.SetActive(true);
         try
         {
             memoryManager.saveStage = GameManager.Instance.myMeomoryStageInfo.saveStageIndex;
@@ -62,11 +78,11 @@ public class MemoryCanvas : MonoBehaviour
         {
             stagebtns[i].interactable = true;
         }
-
     }
 
     public void ExitContinuePanel()
     {
+        ContinuePanel.SetActive(false);
         //버튼모두 disable
         //currentStage = 0
         for (int i = 0; i < stagebtns.Length; i++)
@@ -92,7 +108,6 @@ public class MemoryCanvas : MonoBehaviour
         { // 대기 화면일 때
             AudioManager.Instance.SetAudioClip_BGM(0);
             GameManager.Instance.GameMode = GameMode.Lobby;
-            GameManager.Instance.IsGameClear = true;
             GameManager.Instance.InGame = false;
 
             loadingCanvas.gameObject.SetActive(true);

@@ -28,6 +28,18 @@ public class PushPushCanvas : MonoBehaviour
     public GameObject HelpPanel = null;
     public TMP_Text GameReadyPanelText = null;
 
+    private void OnDisable()
+    {
+        ShutdownInit();
+    }
+
+    private void ShutdownInit()
+    {
+        if (!GameManager.Instance.IsShutdown) return;
+        loadingCanvas.gameObject.SetActive(true);
+        SelectBoardPanel.SetActive(false);
+        HelpPanel.SetActive(false);
+    }
     public void GameStartButton()
     {
         AudioManager.Instance.SetAudioClip_BGM(3);
@@ -52,7 +64,6 @@ public class PushPushCanvas : MonoBehaviour
             loadingCanvas.gameObject.SetActive(true);
 
             GameManager.Instance.GameMode = GameMode.Lobby;
-            GameManager.Instance.IsGameClear = true;
             GameManager.Instance.InGame = false;
             mainCanvas.gameObject.SetActive(true);
             gameObject.SetActive(false);

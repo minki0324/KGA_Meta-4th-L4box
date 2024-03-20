@@ -99,6 +99,7 @@ public class MultiManager : MonoBehaviour, IGame
     #region Game Interface
     public void Init()
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
+        AudioManager.Instance.Stop_SFX();
         GameManager.Instance.GameEnd -= GameEnd;
         GameManager.Instance.IsGameClear = true;
 
@@ -560,7 +561,6 @@ public class MultiManager : MonoBehaviour, IGame
     #region Result Panel
     public void ResultExitButton()
     { // Result Panel - 나가기
-        AudioManager.Instance.Stop_SFX();
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         Time.timeScale = 1f;
 
@@ -606,7 +606,6 @@ public class MultiManager : MonoBehaviour, IGame
 
     public void WarningPanelGoOutButton()
     { // 나가기 1P, 2P 둘다 눌렀을 때 - 나가기
-        AudioManager.Instance.Stop_SFX();
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         Time.timeScale = 1f;
