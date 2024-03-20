@@ -154,7 +154,7 @@ public class GameManager : MonoBehaviour
             {
                 yield break;
             }
-            yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(60f);
             OnShutdownAlarm = true;
             if (!IsLoading) ShutdownAlarm?.Invoke();
         }
