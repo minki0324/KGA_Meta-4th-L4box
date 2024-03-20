@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -40,7 +39,6 @@ public class LoadingPanel : MonoBehaviour
     private bool bisLoaded = false;  //로딩일 때 Fade Background 다 올라갔을 때 true -> 비눗방울 생성 더이상 안되도록 함
     private bool isLoadingEnd = false;   //로딩이 끝났는가
     private bool bisStart = true;
-
     public bool bisSceneLoading = false;    //비동기 씬로딩중인가 아닌가 판별용 변수 (MainGame에선 false, AsyncLoading에선 true)
 
     private void Awake()
@@ -62,7 +60,7 @@ public class LoadingPanel : MonoBehaviour
     {
         CheckBubbleEnd();
     }
-    
+
     private void Init()
     {
         bubble_Array = new Loading_Bubble[maxBubble];
@@ -82,11 +80,12 @@ public class LoadingPanel : MonoBehaviour
         bisLoaded = false;
         FadeBackground.material.SetFloat("_Horizontal", 1f);
         FadeBackground.material.SetFloat("_Visibility", 0.001f);
-        if(!SceneManager.GetActiveScene().Equals("01_Network Minki"))
+
+        if (SceneManager.GetActiveScene().Equals("01_Network"))
         {
-            bisStart = false;       
+            bisStart = false;
         }
-        else if(SceneManager.GetActiveScene().Equals("02_Async_Loading"))
+        else if (SceneManager.GetActiveScene().Equals("02_Async_Loading"))
         {
             asyncLoading = GetComponent<AsyncLoading>();
             bisSceneLoading = true;
@@ -97,7 +96,7 @@ public class LoadingPanel : MonoBehaviour
         }
 
         for (int i = 0; i < maxBubble; i++)
-        {    
+        {
             bubble_Array[i].moveMode = MoveMode.Loading;
             bubble_Array[i].transform.position = new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), Random.Range(-850f, -150f), 0f);
             bubble_Array[i].upSpeedMin = upSpeed_Min;
@@ -107,19 +106,19 @@ public class LoadingPanel : MonoBehaviour
             bubble_Array[i].moveRangeMax = moveRange_Max;
 
             bubble_Array[i].sizeRandomMin = sizeRandom_Min;
-            bubble_Array[i].sizeRandomMax = sizeRandom_Max;            
+            bubble_Array[i].sizeRandomMax = sizeRandom_Max;
 
             bubble_Array[i].gameObject.SetActive(true);
         }
 
-        if(!bisStart)
+        if (!bisStart)
         {
             StartCoroutine(BackgroundFadeOut_co());
         }
         else
         {
             bisStart = false;
-            if(!bisSceneLoading)
+            if (!bisSceneLoading)
             {
                 gameObject.SetActive(false);
             }
@@ -134,7 +133,7 @@ public class LoadingPanel : MonoBehaviour
             bubble_Array[i].gameObject.SetActive(false);
         }
 
-        if(!bisSceneLoading)
+        if (!bisSceneLoading)
         {
             if (!ParticleCanvas.gameObject.activeSelf)
             {
@@ -148,8 +147,8 @@ public class LoadingPanel : MonoBehaviour
 
         if (bisSceneLoading)
         {
-            
-                
+
+
             for (int i = 0; i < maxBubble; i++)
             {
                 if (!bubble_Array[i].gameObject.activeSelf)
@@ -176,7 +175,7 @@ public class LoadingPanel : MonoBehaviour
         {
             BubblePooling();
         }
-        
+
         isLoadingEnd = true;
 
         for (int i = 0; i < maxBubble; i++)
@@ -191,11 +190,11 @@ public class LoadingPanel : MonoBehaviour
         if (isLoadingEnd)
         {
             isLoadingEnd = false;
-            if(!bisSceneLoading)
+            if (!bisSceneLoading)
             {
                 ParticleCanvas.gameObject.SetActive(true);
             }
-           
+
             gameObject.SetActive(false);
 
             // shutdown loading 끝난 뒤
@@ -209,14 +208,16 @@ public class LoadingPanel : MonoBehaviour
 
     private IEnumerator BackgroundFadeOut_co()
     {
+        GameManager.Instance.IsLoading = true;
+
         float visibility = 0.001f;
         FadeBackground.material.SetFloat("_Visibility", visibility);
 
         yield return new WaitForSeconds(0.5f);
-       
+
         float cashing1 = 0.1f;
-        float cashing2= 0.05f;
-        while(true)
+        float cashing2 = 0.05f;
+        while (true)
         {
             if (visibility <= 0.35f)
             {

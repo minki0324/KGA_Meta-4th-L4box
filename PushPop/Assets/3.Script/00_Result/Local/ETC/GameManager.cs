@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
     public bool IsGameClear = false; // Game Clear 시 true, 아니면 false
     public bool InGame = false; // Shutdown setting 시 ture
     public bool IsShutdown = false; // Shutdown End 시 ture
-    public bool IsLoading = false; // ready 끝난 뒤 false
+    public bool IsLoading = false; // loading 끝난 뒤 false
     public bool OnShutdownAlarm = false;
 
     [Header("Current Board")]

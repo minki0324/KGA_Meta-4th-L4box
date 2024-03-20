@@ -35698,7 +35698,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1029402099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35711,6 +35711,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31700859351a9854f84db5f82916f69e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  asyncLoading: {fileID: 0}
   ParticleCanvas: {fileID: 233091386}
   Bubbles: {fileID: 1352581767}
   bubblePrefab: {fileID: 8406907008433600334, guid: 877edc0f3adfb2046bd0051608140e11, type: 3}
@@ -35723,6 +35724,7 @@ MonoBehaviour:
   moveRange_Max: 3
   sizeRandom_Min: 0.1
   sizeRandom_Max: 0.3
+  bisSceneLoading: 0
 --- !u!224 &1029402100
 RectTransform:
   m_ObjectHideFlags: 0
@@ -43321,6 +43323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d1c2f7481d71974cb3e01b35bd8ff09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  asyncLoading: {fileID: 0}
   type: 1
   ServerIP: 127.0.0.1
 --- !u!114 &1205722741
@@ -53631,7 +53634,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1471024074
 MonoBehaviour:
   m_ObjectHideFlags: 0
