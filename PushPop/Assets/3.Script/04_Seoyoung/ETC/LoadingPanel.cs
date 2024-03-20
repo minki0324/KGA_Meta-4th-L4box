@@ -6,7 +6,8 @@ using UnityEngine.UI;
 //켜놓고 시작하기
 public class LoadingPanel : MonoBehaviour
 {
-    
+    public static LoadingPanel Instance;
+
     [Header("비동기 로딩 스크립트")]
     [SerializeField] private AsyncLoading asyncLoading;
 
@@ -39,27 +40,38 @@ public class LoadingPanel : MonoBehaviour
     [Header("ETC")]
     private bool bisLoaded = false;  //로딩일 때 Fade Background 다 올라갔을 때 true -> 비눗방울 생성 더이상 안되도록 함
     private bool isLoadingEnd = false;   //로딩이 끝났는가
-    public bool bisStart;
+    public bool bisStart = false;
    
 
     private void Awake()
     {
-        if (ParticleCanvas != null)
+        if(Instance == null)
         {
-
-            bisStart = true;
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            bisStart = false;
+            Destroy(this);
+            return;
         }
-
+        
         Init();
     }
 
     private void OnEnable()
     {
+        if (!bisStart)
+        {
+            gameObject.SetActive(false);
+            bisStart = !bisStart;
+            return;
+        }
         Loading();
+    }
+    private void Start()
+    {
+        SceneManager.sceneLoaded += OnNetworkScene;
     }
 
     private void OnDisable()
@@ -70,6 +82,18 @@ public class LoadingPanel : MonoBehaviour
     private void Update()
     {
         CheckBubbleEnd();
+    }
+
+    private void OnNetworkScene(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name.Equals("01_Network"))
+        {
+            gameObject.SetActive(true);
+        }
+        else if (scene.name.Equals("00_Maingame") && bisStart)
+        {
+            gameObject.SetActive(true);
+        }
     }
 
     private void Init()
@@ -92,11 +116,7 @@ public class LoadingPanel : MonoBehaviour
         FadeBackground.material.SetFloat("_Horizontal", 1f);
         FadeBackground.material.SetFloat("_Visibility", 0.001f);
 
-        if(SceneManager.GetActiveScene().Equals("01_Network"))
-        {
-            bisStart = false;
-        }
-        else if(SceneManager.GetActiveScene().Equals("00_Maingame"))
+        if (ParticleCanvas != null)
         {
             ParticleCanvas.gameObject.SetActive(false);
         }
@@ -116,23 +136,18 @@ public class LoadingPanel : MonoBehaviour
 
             bubble_Array[i].gameObject.SetActive(true);
         }
-        if (!bisStart)
-        {
-            StartCoroutine(BackgroundFadeOut_co());
-        }
-        else
-        {
-            bisStart = false;
-            gameObject.SetActive(false);
-        }
+        StartCoroutine(BackgroundFadeOut_co());
     }
 
     public void BubbleSetting()
     {
         StopAllCoroutines();
-        for (int i = 0; i < maxBubble; i++)
+        for (int i = 0; i < bubble_Array.Length; i++)
         {
-            bubble_Array[i].gameObject.SetActive(false);
+            if(bubble_Array[i].gameObject.activeSelf)
+            {
+                bubble_Array[i].gameObject.SetActive(false);
+            }
         }
 
         if (ParticleCanvas != null)
