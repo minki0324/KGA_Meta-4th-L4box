@@ -1,6 +1,9 @@
 ﻿using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
+using System.Collections;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class MyEvent : UnityEvent<PlayerObj.PlayerState>
@@ -16,8 +19,11 @@ public class PlayerObj : NetworkBehaviour
     public SPUM_Prefabs _prefabs;
     public NetworkAnimator netAni;
     public PlayerEmotionControl emotionControl;
+    [SyncVar] public string playerName;
     [SyncVar] public int avatarIndex;
     public float _charMS;
+    public TMP_Text playerNameText;
+    public Vector3 ChangeScale = Vector3.zero;
 
     public enum PlayerState
     {
@@ -51,16 +57,17 @@ public class PlayerObj : NetworkBehaviour
             transform.position = Vector3.zero;
             playerManager = FindObjectOfType<PlayerManager>();
             myIdentity = GetComponent<NetworkIdentity>();
-            if(myIdentity == null)
+            playerName = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName + "#" + ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex;
+            if (myIdentity == null)
             {
                 Debug.Log("NetworkIdentity가 존재하지않습니다. NetworkManager에 playerPrefab을 추가했는지 확인해주세요. 또는 NetworkIdentity 를 확인하세요.");
             }
             playerManager.ConnectPrefabs = myIdentity;
             playerManager._nowObj = this;
         }
-
+        ChangeScale = playerNameText.transform.localScale;
         _stateChanged.AddListener(PlayStateAnimation);
-
+        StartCoroutine(NicNameSync_co());
 
     }
     private void PlayStateAnimation(PlayerState state)
@@ -80,7 +87,12 @@ public class PlayerObj : NetworkBehaviour
                 break;
         }
     }
+    private IEnumerator NicNameSync_co()
+    {
+        yield return new WaitForSeconds(0.1f);
+        playerNameText.text = playerName;
 
+    }
     void DoMove()
     {
         Vector3 _dirVec = _goalPos - transform.position;
@@ -97,8 +109,8 @@ public class PlayerObj : NetworkBehaviour
             Mathf.Clamp(transform.position.x, playerManager.AvatarBoundary.bounds.min.x, playerManager.AvatarBoundary.bounds.max.x),
             Mathf.Clamp(transform.position.y, playerManager.AvatarBoundary.bounds.min.y, playerManager.AvatarBoundary.bounds.max.y),
             transform.position.z);
-        if (_dirMVec.x > 0) transform.localScale = new Vector3(-1.5f, 1.5f, 1.5f);
-        else if (_dirMVec.x < 0) transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+        if (_dirMVec.x > 0) _prefabs.transform.localScale = new Vector3(-1f, 1f, 1f);
+        else if (_dirMVec.x < 0) _prefabs.transform.localScale = new Vector3(1f, 1f, 1f);
     }
     [Client]
     public void SetMovePos(Vector2 pos)

@@ -38,6 +38,8 @@ public class PlayerManager : NetworkBehaviour
     //public bool _isMovePause = true;
     public bool _generate;
     public bool isMouseOnUI;
+    public float tempScale;
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -48,7 +50,6 @@ public class PlayerManager : NetworkBehaviour
     }
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -60,17 +61,28 @@ public class PlayerManager : NetworkBehaviour
             _generate = false;
         }
 
-        if(Input.GetMouseButtonDown(0) /*&& !_isMovePause */&& !EventSystem.current.IsPointerOverGameObject())
+        if(Input.GetMouseButtonDown(0)&& !IsTouchingUI())
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
             if(hit.collider != null)
             {
-               
-                    //Set move Player object to this point
-                    if(_nowObj!=null)
-                    {
-                        Vector2 goalPos = hit.point;
+
+                //Set move Player object to this point
+                if (_nowObj != null)
+                {
+
+                    //if (gameObject.transform.position.x - hit.point.x < 0)
+                    //{
+                    //    _nowObj.ChangeScale.x = -Mathf.Abs(_nowObj.ChangeScale.x);
+                    //}
+                    //else
+                    //{
+                    //    _nowObj.ChangeScale.x = Mathf.Abs( _nowObj.ChangeScale.x);
+                    //}
+                    //_nowObj.playerNameText.transform.localScale = _nowObj.ChangeScale;
+
+                    Vector2 goalPos = hit.point;
                     goalPos = new Vector3(
           Mathf.Clamp(goalPos.x, AvatarBoundary.bounds.min.x, AvatarBoundary.bounds.max.x),
           Mathf.Clamp(goalPos.y, AvatarBoundary.bounds.min.y, AvatarBoundary.bounds.max.y));
@@ -81,10 +93,24 @@ public class PlayerManager : NetworkBehaviour
             }
         }
 
-        if (_nowObj!=null)
+        if (_nowObj != null)
         {
             _playerObjCircle.transform.position = _nowObj.transform.position;
         }
+    }
+    private bool IsTouchingUI()
+    {
+        if (Input.touchCount > 0)
+        {
+            foreach (Touch touch in Input.touches)
+            {
+                if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void GetPlayerList()
@@ -130,12 +156,6 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    //public void HideAvatar(bool isHide)
-    //{
-    //    _isMovePause = isHide;
-    //    OverUICamera.gameObject.SetActive(!isHide);
-    //}
-
     [Client]
     public void SetPlayer(int index)
     {
@@ -171,7 +191,7 @@ public class PlayerManager : NetworkBehaviour
        
         identity.GetComponent<PlayerObj>().avatarIndex = index;
         playersAvatarIdentity.Add(identity);
-        yield return new WaitForSeconds(1.5f);  
+        yield return new WaitForSeconds(0.1f);  
         RPC_SetPlayer(playersAvatarIdentity, identity ,index);
     }
     [ClientRpc]
