@@ -38,7 +38,6 @@ public class LoadingPanel : MonoBehaviour
     public float sizeRandom_Max = 0.3f;
 
     [Header("ETC")]
-    private bool bisLoaded = false;  //로딩일 때 Fade Background 다 올라갔을 때 true -> 비눗방울 생성 더이상 안되도록 함
     private bool isLoadingEnd = false;   //로딩이 끝났는가
     public bool bisStart = false;
    
@@ -112,7 +111,6 @@ public class LoadingPanel : MonoBehaviour
 
     private void Loading()
     {
-        bisLoaded = false;
         FadeBackground.material.SetFloat("_Horizontal", 1f);
         FadeBackground.material.SetFloat("_Visibility", 0.001f);
 
@@ -224,7 +222,6 @@ public class LoadingPanel : MonoBehaviour
             else
             {
                 FadeBackground.material.SetFloat("_Visibility", 7f);
-                bisLoaded = true;
                 yield break;
             }
         }

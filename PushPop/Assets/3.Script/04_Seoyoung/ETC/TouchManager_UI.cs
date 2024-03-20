@@ -35,7 +35,6 @@ public class TouchManager_UI : MonoBehaviour
     public int maxTouchCount = 10;      //최대 터치 허용 수
 
     public float dragTime = 0.7f;   //드래그로 판정될 시간 변수
-    private float touchTime = 0;    //터치 꾹 눌렀을 때 드래그로 판정되는 시간 측정용 변수
     private float[] touchTime_arr;
 
     public float createCoolTime = 0.1f;  //프리팹 생성 쿨타임 변수
@@ -45,7 +44,6 @@ public class TouchManager_UI : MonoBehaviour
     public int MaxCount = 60;   //꾹 눌렀을 떄 생성되는 프리팹 최대 갯수
     private int CurrentCount = 0;   //꾹 눌렀을 떄 생성되는 프리팹 현재 갯수
 
-    private float timeCool = 0.3f;
     #region Unity Callback
     private void Awake()
     {

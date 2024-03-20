@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -7,7 +8,6 @@ using UnityEngine.UI;
 public class CustomPushpopManager : MonoBehaviour
 {
     [Header("Custom Mode")]
-    [SerializeField] private PuzzleLozic puzzleMode = null; 
     public GameObject CustomMode = null;
     private Vector3 selectPositon; //카메라에서보이는 world 포지션 저장할 Vector
     [SerializeField] private GameObject pushPop; // OverLap검사하는 푸시팝(gameObject)
@@ -15,9 +15,10 @@ public class CustomPushpopManager : MonoBehaviour
     public TMP_Text StageTitle = null;
     public GameObject ReDecoButton = null;
     public GameObject DecoPanel = null;
-
     [SerializeField] private RectTransform customAreaRectTrans = null;
     private float customPosX = 0f;
+    [SerializeField] private bool buttonDownDelay = false;
+    private Coroutine buttonDownCoroutine;
 
     [Header("Result Panel")]
     public GameObject ResultPanel = null; 
@@ -39,8 +40,8 @@ public class CustomPushpopManager : MonoBehaviour
     }
 
     #region DecoPanel Button Method
-    public void ClickDown()
-    { // button 생성
+    private IEnumerator ClickDown_Co()
+    {
         AudioManager.Instance.SetAudioClip_SFX(3, false);
 
         selectPositon = Camera.main.ScreenToWorldPoint(Input.mousePosition); // 터치 시 카메라 상의 좌표
@@ -67,6 +68,14 @@ public class CustomPushpopManager : MonoBehaviour
         // pushpop Btn Parent 설정
         newRectPush.transform.SetParent(puzzleBoard.transform);
         newRectPush.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f); // 스케일 변경시 프리팹 Circle(콜라이더검사) 스케일도 바꾼 스케일의 1.3배로 바꿔주세요
+        yield return new WaitForSeconds(0.3f);
+        buttonDownCoroutine = null;
+    }
+
+    public void ClickDown()
+    { // button 생성
+        if (buttonDownCoroutine != null) return;
+        buttonDownCoroutine = StartCoroutine(ClickDown_Co());
     }
 
     public void ReturnButton()

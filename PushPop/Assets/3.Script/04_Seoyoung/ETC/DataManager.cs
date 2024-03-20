@@ -152,7 +152,7 @@ public class DataManager : MonoBehaviour
 
         if(!File.Exists(realPath))
         {
-
+#pragma warning disable 0618
             WWW reader = new WWW(oriPath);
             while (!reader.isDone)
             {

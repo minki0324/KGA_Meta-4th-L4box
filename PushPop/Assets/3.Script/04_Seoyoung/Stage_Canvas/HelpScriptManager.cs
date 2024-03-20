@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class HelpScriptManager : MonoBehaviour
 { // Help Panel Script
-    private int gameMode = 0;
-    [SerializeField] private GameObject helpPanel = null;
     [SerializeField] private Image helpImage;
     [SerializeField] private TMP_Text helpDescription;
     [SerializeField] private TMP_Text pageText;

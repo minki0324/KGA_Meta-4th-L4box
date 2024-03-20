@@ -21,8 +21,6 @@ public class SelectListSetting : MonoBehaviour
     [SerializeField] private TMP_Text selectCategory = null;
     [SerializeField] private Image selectIconImage = null;
     [SerializeField] private TMP_Text selectIconText = null;
-    [SerializeField] private Button previousButton = null;
-    [SerializeField] private Button nextButton = null;
 
     [Header("PushPush Icon List")] // sprite atlas로 바꿀 수 있다면... todo
     private int maxPage = 0; // category list count

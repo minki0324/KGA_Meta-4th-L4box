@@ -4134,7 +4134,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca30b66d7d798ee49aab613a516f0be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  helpPanel: {fileID: 95119693}
   helpImage: {fileID: 978433310}
   helpDescription: {fileID: 1999386849}
   pageText: {fileID: 745949022}
@@ -20086,7 +20085,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca30b66d7d798ee49aab613a516f0be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  helpPanel: {fileID: 602711666}
   helpImage: {fileID: 106298226}
   helpDescription: {fileID: 1005278874}
   pageText: {fileID: 1089627366}
@@ -40950,7 +40948,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca30b66d7d798ee49aab613a516f0be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  helpPanel: {fileID: 1244860964}
   helpImage: {fileID: 1047606550}
   helpDescription: {fileID: 1544515514}
   pageText: {fileID: 1496463118}
@@ -46058,8 +46055,6 @@ MonoBehaviour:
   selectCategory: {fileID: 597626434}
   selectIconImage: {fileID: 1125920174}
   selectIconText: {fileID: 1182477690}
-  previousButton: {fileID: 2139225562}
-  nextButton: {fileID: 924698660}
   pageText: {fileID: 0}
   categoryIconList: []
   IconList10: []
@@ -48926,7 +48921,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffdf059670282104fa8b85965b4e8ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  puzzleMode: {fileID: 1605325752}
   CustomMode: {fileID: 1709801918}
   pushPop: {fileID: 2804409159849094026, guid: c84c226c0b6b14b4bafe85eb215718fc, type: 3}
   RectPushPop: {fileID: 7161972215700324124, guid: 1381da20a7f6349438dc19f56e561b10, type: 3}
@@ -48934,6 +48928,7 @@ MonoBehaviour:
   ReDecoButton: {fileID: 1444743874}
   DecoPanel: {fileID: 73665160}
   customAreaRectTrans: {fileID: 342498513}
+  buttonDownDelay: 0
   ResultPanel: {fileID: 552486806}
   ResultText: {fileID: 315816602}
   ResultImage: {fileID: 1882957326}
@@ -54986,8 +54981,6 @@ MonoBehaviour:
   selectCategory: {fileID: 212314617}
   selectIconImage: {fileID: 1837292198}
   selectIconText: {fileID: 1581079924}
-  previousButton: {fileID: 1744987260}
-  nextButton: {fileID: 1934100627}
   pageText: {fileID: 776364091}
   categoryIconList:
   - {fileID: 21300000, guid: 2ecd0254d7bb706408e617feb935950d, type: 3}
@@ -66703,7 +66696,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca30b66d7d798ee49aab613a516f0be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  helpPanel: {fileID: 1939655137}
   helpImage: {fileID: 1440861016}
   helpDescription: {fileID: 432858268}
   pageText: {fileID: 17489934}

@@ -24,7 +24,7 @@ public class TempPushPop : MonoBehaviour
             else
             {
                 isSet = true;
-            }
+            } 
         }
     }
 
