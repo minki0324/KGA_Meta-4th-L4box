@@ -10,10 +10,16 @@ public class ShutdownCanvas : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.Shutdown += ShutdownInit;
         GameManager.Instance.ShutdownAlarm += ShutdownAlarm;
     }
 
-    public void ShutdownAlarm()
+    private void ShutdownInit()
+    {
+        gameObject.SetActive(false);
+    }
+
+    private void ShutdownAlarm()
     {
         GameManager.Instance.OnShutdownAlarm = false;
         float shutdownTime = GameManager.Instance.ShutdownTimer / 60f;

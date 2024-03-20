@@ -49,6 +49,7 @@ public class MainCanvas : MonoBehaviour
         {
             CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
         }
+        GameManager.Instance.Shutdown += ShutDownPanelSetting;
     }
     #region Button Click Method
     public void GameModeButton(int _gameMode)
@@ -131,7 +132,6 @@ public class MainCanvas : MonoBehaviour
         GameManager.Instance.ShutdownTimer *= 60f;
         GameManager.Instance.InGame = true;
         GameManager.Instance.IsGameClear = true;
-        GameManager.Instance.Shutdown += ShutDownPanelSetting;
         GameManager.Instance.ShutdownAlarmStart();
 
         timeSettingPanel.SetActive(false);

@@ -135,8 +135,6 @@ public class GameManager : MonoBehaviour
         IsShutdown = false;
         IsGameClear = false;
         InGame = false;
-
-        Shutdown = null;
     }
 
     public void ShutdownAlarmStart()
