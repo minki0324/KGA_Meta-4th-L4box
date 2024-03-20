@@ -6,26 +6,24 @@ using Mirror;
 
 public class AsyncLoading : MonoBehaviour
 {
-    public AsyncLoading instance = null;
+    //public AsyncLoading instance = null;
+    //[SerializeField] private NetworkManager manager;
 
-    public bool bisLoadingEnd { get; private set; }
-    [SerializeField] private NetworkManager manager;
-
-
+    public bool bisLoading { get; private set; } = true;
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(instance);
-        }
+        //if (instance == null)
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(gameObject);
+        //}
+        //else
+        //{
+        //    Destroy(instance);
+        //}
 
-        manager = GetComponent<NetworkManager>();
+        //manager = GetComponent<NetworkManager>();
 
     }
 
@@ -33,13 +31,18 @@ public class AsyncLoading : MonoBehaviour
 
     private void OnEnable()
     {
-        bisLoadingEnd = false;
-        StartCoroutine(LoadAsyncScene_co("01_Network"));
+        LoadScene();
     }
 
-    public IEnumerator LoadAsyncScene_co(string _name)
+    public void LoadScene()
     {
-        AsyncOperation operation = SceneManager.LoadSceneAsync(_name);
+        StartCoroutine(LoadAsyncScene_co("01_Network Minki"));
+    }
+
+    private IEnumerator LoadAsyncScene_co(string _name)
+    {
+        bisLoading = true;
+        AsyncOperation operation = SceneManager.LoadSceneAsync(_name);  // 비동기 Scene 로딩 ( 로딩할 Scene 이름 )
         operation.allowSceneActivation = false;
 
         while(!operation.isDone)
@@ -47,8 +50,10 @@ public class AsyncLoading : MonoBehaviour
             yield return null;
         }
 
+        yield return new WaitForSeconds(0.1f);
+        bisLoading = false;
         operation.allowSceneActivation = true;
-        bisLoadingEnd = true;
+        
 
 
     }

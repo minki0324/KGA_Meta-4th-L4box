@@ -156,6 +156,7 @@ public class Connect_Network : MonoBehaviour
 
     public void Start_Client()
     {
+       // SceneManager.LoadScene("02_Async_Loading");
         Debug.Log($"{manager.networkAddress} : Startclient...");
         manager.StartClient();
     }

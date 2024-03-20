@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 //켜놓고 시작하기
@@ -58,18 +59,31 @@ public class LoadingPanel : MonoBehaviour
 
         FadeBackground.material.SetFloat("_Visibility", 0.001f);
 
-        if(!bisSceneLoading)
+        //if(!bisSceneLoading)
+        //{
+        //    ParticleCanvas.gameObject.SetActive(false);
+        //}
+        //else
+        //{
+        //    asyncLoading.GetComponent<AsyncLoading>();
+        //}
+     
+        if(!SceneManager.GetActiveScene().Equals("01_Network Minki"))
         {
-            ParticleCanvas.gameObject.SetActive(false);
+            Debug.Log("zz");
+            bisStart = false;       
+        }
+        else if(SceneManager.GetActiveScene().Equals("02_Async_Loading"))
+        {
+            asyncLoading = GetComponent<AsyncLoading>();
+            bisSceneLoading = true;
         }
         else
         {
-            if(asyncLoading.Equals(null))
-            {
-                asyncLoading.GetComponent<AsyncLoading>();
-            }
+            Debug.Log("dd");
+            ParticleCanvas.gameObject.SetActive(false);
         }
-     
+
 
         for (int i = 0; i < maxBubble; i++)
         {    
@@ -125,7 +139,12 @@ public class LoadingPanel : MonoBehaviour
 
     private void Update()
     {
-        if(bisSceneLoading)
+        if (SceneManager.GetActiveScene().Equals("02_Async_Loading"))
+        {
+            bisSceneLoading = asyncLoading.bisLoading;
+        }
+
+        if (bisSceneLoading)
         {
             BubblePooling();
         }
@@ -153,8 +172,11 @@ public class LoadingPanel : MonoBehaviour
 
     private void BubblePooling()
     {//버블 계속 생산하는 코드
-        if (!asyncLoading.bisLoadingEnd)
+
+        if (bisSceneLoading)
         {
+            
+                
             for (int i = 0; i < maxBubble; i++)
             {
                 if (!bubble_Array[i].gameObject.activeSelf)
