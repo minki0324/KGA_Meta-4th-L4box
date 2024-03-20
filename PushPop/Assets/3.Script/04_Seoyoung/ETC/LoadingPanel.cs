@@ -6,6 +6,7 @@ using UnityEngine.UI;
 //켜놓고 시작하기
 public class LoadingPanel : MonoBehaviour
 {
+    
     [Header("비동기 로딩 스크립트")]
     [SerializeField] private AsyncLoading asyncLoading;
 
@@ -38,11 +39,21 @@ public class LoadingPanel : MonoBehaviour
     [Header("ETC")]
     private bool bisLoaded = false;  //로딩일 때 Fade Background 다 올라갔을 때 true -> 비눗방울 생성 더이상 안되도록 함
     private bool isLoadingEnd = false;   //로딩이 끝났는가
-    private bool bisStart = true;
-    public bool bisSceneLoading = false;    //비동기 씬로딩중인가 아닌가 판별용 변수 (MainGame에선 false, AsyncLoading에선 true)
+    public bool bisStart;
+   
 
     private void Awake()
     {
+        if (ParticleCanvas != null)
+        {
+
+            bisStart = true;
+        }
+        else
+        {
+            bisStart = false;
+        }
+
         Init();
     }
 
@@ -81,16 +92,11 @@ public class LoadingPanel : MonoBehaviour
         FadeBackground.material.SetFloat("_Horizontal", 1f);
         FadeBackground.material.SetFloat("_Visibility", 0.001f);
 
-        if (SceneManager.GetActiveScene().Equals("01_Network"))
+        if(SceneManager.GetActiveScene().Equals("01_Network"))
         {
             bisStart = false;
         }
-        else if (SceneManager.GetActiveScene().Equals("02_Async_Loading"))
-        {
-            asyncLoading = GetComponent<AsyncLoading>();
-            bisSceneLoading = true;
-        }
-        else
+        else if(SceneManager.GetActiveScene().Equals("00_Maingame"))
         {
             ParticleCanvas.gameObject.SetActive(false);
         }
@@ -110,7 +116,6 @@ public class LoadingPanel : MonoBehaviour
 
             bubble_Array[i].gameObject.SetActive(true);
         }
-
         if (!bisStart)
         {
             StartCoroutine(BackgroundFadeOut_co());
@@ -118,14 +123,11 @@ public class LoadingPanel : MonoBehaviour
         else
         {
             bisStart = false;
-            if (!bisSceneLoading)
-            {
-                gameObject.SetActive(false);
-            }
+            gameObject.SetActive(false);
         }
     }
 
-    private void BubbleSetting()
+    public void BubbleSetting()
     {
         StopAllCoroutines();
         for (int i = 0; i < maxBubble; i++)
@@ -133,48 +135,20 @@ public class LoadingPanel : MonoBehaviour
             bubble_Array[i].gameObject.SetActive(false);
         }
 
-        if (!bisSceneLoading)
+        if (ParticleCanvas != null)
         {
             if (!ParticleCanvas.gameObject.activeSelf)
             {
                 ParticleCanvas.gameObject.SetActive(true);
             }
         }
+        
+
     }
 
-    private void BubblePooling()
-    {//버블 계속 생산하는 코드
-
-        if (bisSceneLoading)
-        {
-
-
-            for (int i = 0; i < maxBubble; i++)
-            {
-                if (!bubble_Array[i].gameObject.activeSelf)
-                {
-                    bubble_Array[i].gameObject.SetActive(true);
-                    bubble_Array[i].transform.position = new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), -100f, 0f);
-                }
-            }
-        }
-        else
-        {
-            CheckBubbleEnd();
-        }
-    }
 
     private void CheckBubbleEnd()
     {
-        if (SceneManager.GetActiveScene().Equals("02_Async_Loading"))
-        {
-            bisSceneLoading = asyncLoading.bisLoading;
-        }
-
-        if (bisSceneLoading)
-        {
-            BubblePooling();
-        }
 
         isLoadingEnd = true;
 
@@ -190,11 +164,11 @@ public class LoadingPanel : MonoBehaviour
         if (isLoadingEnd)
         {
             isLoadingEnd = false;
-            if (!bisSceneLoading)
+            if(ParticleCanvas != null)
             {
                 ParticleCanvas.gameObject.SetActive(true);
             }
-
+                
             gameObject.SetActive(false);
 
             // shutdown loading 끝난 뒤
