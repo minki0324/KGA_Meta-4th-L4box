@@ -162,6 +162,7 @@ public class Connect_Network : MonoBehaviour
 
         if (NetworkServer.active)
         {
+            SQL_Manager.instance.SQL_OnServerDisconnected();
             manager.StopServer();
         }
     }

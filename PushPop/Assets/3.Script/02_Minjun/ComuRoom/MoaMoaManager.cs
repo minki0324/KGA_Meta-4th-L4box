@@ -11,24 +11,27 @@ using Mirror;
 /// </summary>
 public class MoaMoaManager : MonoBehaviour
 {
+    [Header("Current MoaMoa Profile Info")] [Space(5)]
     public int CurrentProfileIndex; // MoaMoa 띄워주는 Profile Index
     public string CurrentProfileName;
+    [SerializeField] private TMP_Text profileNameText;
 
-    [Header("Heart And Like")]
+    [Header("Heart And Like")] [Space(5)]
     [SerializeField] private TMP_Text likeCount;
     [SerializeField] private TMP_Text heartCount;
+    [SerializeField] private TMP_Text errorLog;
+    private Coroutine errorLogCoroutine;
 
+    [Header("MoaMoa Object")] [Space(5)]
     [SerializeField] private GameObject popBtn;                         // Pushpop Prefabs
     [SerializeField] private Sprite[] btnSprite;                        // Pushpop Color Sprite
     [SerializeField] private Image[] moamoaImage;                       // PushPush Image
     [SerializeField] private SpriteAtlas atlas;                         // PushPush Image Atlas
     public List<PushPushObject> pushObjs = new List<PushPushObject>(); // PushPushObject Class List
-    [SerializeField] private TMP_Text errorLog;
-    [SerializeField] private TMP_Text profileNameText;
 
+    [Header("Other Component")] [Space(5)]
     [SerializeField] private GameObject MoaMoaPanel;
     private NetworkManager manager;
-    private Coroutine errorLogCoroutine;
 
     #region Unity Callback
     private void Awake()
@@ -69,10 +72,15 @@ public class MoaMoaManager : MonoBehaviour
 
     public void MoaMoaPanelActive()
     {
-        bool active = MoaMoaPanel.activeSelf;
-        pushObjs = SQL_Manager.instance.SQL_SetPushPush(CurrentProfileIndex);
+        // 화면 상단 이름 설정
         profileNameText.text = CurrentProfileName;
+
+        // 모아모아 리스트 세팅
+        pushObjs = SQL_Manager.instance.SQL_SetPushPush(CurrentProfileIndex);
         SetMoaMoaList();
+
+        // 켜고 끄기
+        bool active = MoaMoaPanel.activeSelf;
         MoaMoaPanel.SetActive(!active);
     }
 
@@ -89,7 +97,7 @@ public class MoaMoaManager : MonoBehaviour
         // 누른 버튼에 따라 (bool값) 어떤 list를 갱신해야 하는지 targetlist 설정
         List<int> targetList = _isLikeButton ? heartAndLikeList.PressLikeProfileIndex : heartAndLikeList.PressHeartProfileIndex;
         if (targetList == null)
-        {
+        { // 기존에 좋아요나 하트 리스트가 없었다면 새로 생성
             targetList = new List<int>();
         }
 
@@ -114,7 +122,7 @@ public class MoaMoaManager : MonoBehaviour
     }
 
     public void MoaMoaPanelTalkTalkButton()
-    {
+    { // 모아모아 패널에 있는 토크토크 버튼 (모아모아에서 토크토크로 나갈때)
         pushObjs.Clear();
         for(int i = 0; i < moamoaImage.Length; i++)
         {
@@ -127,13 +135,13 @@ public class MoaMoaManager : MonoBehaviour
     }
 
     public void TalktalkPanelMoaMoaButton()
-    {
+    { // 토크토크 패널에 있는 모아모아 버튼 (토크토크에서 모아모아로 들어갈 때)
         CurrentProfileIndex = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex;
         CurrentProfileName = $"{ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName}#{CurrentProfileIndex}";
     }
 
     public void UpdateLikeAndHeartCount()
-    {
+    { // 좋아요 혹은 하트 숫자 갱신 메소드
         int[] heartandlikearr = SQL_Manager.instance.SQL_HeartAndLikeCount(CurrentProfileIndex);
         likeCount.text = heartandlikearr[0].ToString();
         heartCount.text = heartandlikearr[1].ToString();
@@ -154,7 +162,7 @@ public class MoaMoaManager : MonoBehaviour
     }
 
     private IEnumerator ErrorLog_Co(bool _isLikeButton)
-    {
+    { // 좋아요나 하트를 이미 누른 유저에게 다시 버튼 눌렀을 때 출력되는 error log
         errorLog.gameObject.SetActive(true);
         errorLog.text = _isLikeButton ? "이미 좋아요를 누른 유저입니다." : "이미 하트를 누른 유저입니다.";
         yield return new WaitForSeconds(2f);

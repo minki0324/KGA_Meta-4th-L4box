@@ -98,7 +98,7 @@ public class ProfileManager : MonoBehaviour
         }
        catch(Exception e)
         {
-            DebugLog.instance.Adding_Message(e.Message);
+            Debug.Log("LoadOrCreateGUID : " + e.Message);
         }
     }
 

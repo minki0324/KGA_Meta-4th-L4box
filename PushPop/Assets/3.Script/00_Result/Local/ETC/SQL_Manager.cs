@@ -375,10 +375,15 @@ public class SQL_Manager : MonoBehaviour
             MySqlCommand pushpush_cmd = new MySqlCommand(pushpush_command, connection);
             pushpush_cmd.ExecuteNonQuery();
 
-            // 5. Ranking 삭제
+            // 5. Favorite 삭제
+            string favorite_command = string.Format(@"DELETE FROM Favorite WHERE Profile_Index = '{0}';", index);
+            MySqlCommand favorite_cmd = new MySqlCommand(favorite_command, connection);
+            favorite_cmd.ExecuteNonQuery();
+
+            // 6. Ranking 삭제
             Ranking.Instance.DeleteRankAndVersus(index);
 
-            // 6. List 초기화
+            // 7. List 초기화
             for(int i = 0; i < ProfileList.Count; i++)
             {
                 if(index == ProfileList[i].index)
@@ -749,6 +754,11 @@ public class SQL_Manager : MonoBehaviour
     #endregion
 
     #region Network Connect
+    /// <summary>
+    /// Client가 접속할 때 Query문을 보내 접속중인 상태를 변경, Network에서 나갈 때 접속중인 상태를 변경
+    /// </summary>
+    /// <param name="_connectType"></param>
+    /// <param name="_profileIndex"></param>
     public void SQL_ConnectCheck(bool _connectType, int _profileIndex)
     {
         try
@@ -780,8 +790,13 @@ public class SQL_Manager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    ///  접속중인 Profile List Setting 하는 메소드
+    /// </summary>
+    /// <param name="_profileIndex"></param>
+    /// <returns></returns>
     public List<Profile> SQL_ConnectListSet(int _profileIndex)
-    {
+    { 
         try
         {
             // 1. SQL 서버에 접속 되어 있는지 확인
@@ -827,6 +842,33 @@ public class SQL_Manager : MonoBehaviour
             if (!reader.IsClosed) reader.Close();
             Debug.Log(e.Message);
             return null;
+        }
+    }
+
+    /// <summary>
+    /// 서버가 닫힐 때 모든 접속중인 Profile의 Connect를 F로 변경하는 Method
+    /// </summary>
+    public void SQL_OnServerDisconnected()
+    {
+        try
+        {
+            // 1. SQL 서버에 접속 되어 있는지 확인
+            if (!ConnectionCheck(connection))
+            {
+                return;
+            }
+
+            string update_cmd = "UPDATE Profile SET NetworkConnect = 'F' WHERE NetworkConnect = 'T';";
+            MySqlCommand updateCmd = new MySqlCommand(update_cmd, connection);
+            updateCmd.ExecuteNonQuery();
+
+            Debug.Log("모든 프로필의 접속 상태를 F로 변경했습니다.");
+
+            if (!reader.IsClosed) reader.Close();
+        }
+        catch(Exception e)
+        {
+            Debug.Log("SQL OnServerDisconnected : " + e.Message);
         }
     }
     #endregion
