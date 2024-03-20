@@ -34,7 +34,19 @@ public class MultiCanvas : MonoBehaviour
     [Header("Game Ready Panel")]
     public TMP_Text GameReadyPanelText = null; // warning, ready 공용
 
+    private void OnDisable()
+    {
+        ShutdownInit();
+    }
 
+    private void ShutdownInit()
+    {
+        if (!GameManager.Instance.IsShutdown) return;
+        loadingCanvas.gameObject.SetActive(true);
+        StopAllCoroutines();
+        profileCanvas.gameObject.SetActive(false);
+        HelpPanel.SetActive(false);
+    }
     #region Ready
     public void ProfileSelectButton()
     { // 프로필 - 프로필 선택, 변경
@@ -60,6 +72,7 @@ public class MultiCanvas : MonoBehaviour
         }
 
         StopAllCoroutines();
+        GameManager.Instance.IsGameClear = false;
         SQL_Manager.instance.SQL_ProfileListSet();
         loadingCanvas.gameObject.SetActive(true);
         MultiGame.SetActive(true);

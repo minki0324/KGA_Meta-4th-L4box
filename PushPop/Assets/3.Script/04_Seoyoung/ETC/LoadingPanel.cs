@@ -43,34 +43,47 @@ public class LoadingPanel : MonoBehaviour
 
     public bool bisSceneLoading = false;    //비동기 씬로딩중인가 아닌가 판별용 변수 (MainGame에선 false, AsyncLoading에선 true)
 
-    #region Unity Callback
     private void Awake()
     {
         Init();
-        //gameObject.SetActive(false);
     }
 
     private void OnEnable()
     {
-        
+        Loading();
+    }
+
+    private void OnDisable()
+    {
+        BubbleSetting();
+    }
+
+    private void Update()
+    {
+        CheckBubbleEnd();
+    }
+    
+    private void Init()
+    {
+        bubble_Array = new Loading_Bubble[maxBubble];
+
+        for (int i = 0; i < maxBubble; i++)
+        {
+            //GameObject bub = Instantiate(bubblePrefab, new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), Random.Range(-400f, -150f), 0f), Quaternion.identity);
+            GameObject bub = Instantiate(bubblePrefab, Vector3.zero, Quaternion.identity);
+            bub.transform.SetParent(Bubbles.transform);
+            bubble_Array[i] = bub.GetComponent<Loading_Bubble>();
+            bubble_Array[i].gameObject.SetActive(false);
+        }
+    }
+
+    private void Loading()
+    {
         bisLoaded = false;
         FadeBackground.material.SetFloat("_Horizontal", 1f);
-
-
         FadeBackground.material.SetFloat("_Visibility", 0.001f);
-
-        //if(!bisSceneLoading)
-        //{
-        //    ParticleCanvas.gameObject.SetActive(false);
-        //}
-        //else
-        //{
-        //    asyncLoading.GetComponent<AsyncLoading>();
-        //}
-     
         if(!SceneManager.GetActiveScene().Equals("01_Network Minki"))
         {
-            Debug.Log("zz");
             bisStart = false;       
         }
         else if(SceneManager.GetActiveScene().Equals("02_Async_Loading"))
@@ -80,10 +93,8 @@ public class LoadingPanel : MonoBehaviour
         }
         else
         {
-            Debug.Log("dd");
             ParticleCanvas.gameObject.SetActive(false);
         }
-
 
         for (int i = 0; i < maxBubble; i++)
         {    
@@ -112,62 +123,24 @@ public class LoadingPanel : MonoBehaviour
             {
                 gameObject.SetActive(false);
             }
-           
         }
-
-        
-
     }
 
-    private void OnDisable()
+    private void BubbleSetting()
     {
+        StopAllCoroutines();
         for (int i = 0; i < maxBubble; i++)
         {
             bubble_Array[i].gameObject.SetActive(false);
         }
+
         if(!bisSceneLoading)
         {
             if (!ParticleCanvas.gameObject.activeSelf)
             {
                 ParticleCanvas.gameObject.SetActive(true);
             }
-
         }
-
-        StopAllCoroutines();
-    }
-
-    private void Update()
-    {
-        if (SceneManager.GetActiveScene().Equals("02_Async_Loading"))
-        {
-            bisSceneLoading = asyncLoading.bisLoading;
-        }
-
-        if (bisSceneLoading)
-        {
-            BubblePooling();
-        }
-        CheckBubbleEnd();
-    }
-    #endregion
-
-    #region Other Method
-
-    private void Init()
-    {
-        bubble_Array = new Loading_Bubble[maxBubble];
-
-        for (int i = 0; i < maxBubble; i++)
-        {
-            //GameObject bub = Instantiate(bubblePrefab, new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), Random.Range(-400f, -150f), 0f), Quaternion.identity);
-            GameObject bub = Instantiate(bubblePrefab, Vector3.zero, Quaternion.identity);
-            bub.transform.SetParent(Bubbles.transform);
-            bubble_Array[i] = bub.GetComponent<Loading_Bubble>();
-            bubble_Array[i].gameObject.SetActive(false);
-        }
-
-        
     }
 
     private void BubblePooling()
@@ -194,6 +167,16 @@ public class LoadingPanel : MonoBehaviour
 
     private void CheckBubbleEnd()
     {
+        if (SceneManager.GetActiveScene().Equals("02_Async_Loading"))
+        {
+            bisSceneLoading = asyncLoading.bisLoading;
+        }
+
+        if (bisSceneLoading)
+        {
+            BubblePooling();
+        }
+        
         isLoadingEnd = true;
 
         for (int i = 0; i < maxBubble; i++)
@@ -214,6 +197,13 @@ public class LoadingPanel : MonoBehaviour
             }
            
             gameObject.SetActive(false);
+
+            // shutdown loading 끝난 뒤
+            if (GameManager.Instance.OnShutdownAlarm)
+            {
+                GameManager.Instance.ShutdownAlarm?.Invoke();
+            }
+            GameManager.Instance.IsLoading = false;
         }
     }
 
@@ -222,15 +212,12 @@ public class LoadingPanel : MonoBehaviour
         float visibility = 0.001f;
         FadeBackground.material.SetFloat("_Visibility", visibility);
 
-
-
         yield return new WaitForSeconds(0.5f);
        
         float cashing1 = 0.1f;
         float cashing2= 0.05f;
         while(true)
         {
-
             if (visibility <= 0.35f)
             {
                 visibility += 0.05f;
@@ -252,26 +239,4 @@ public class LoadingPanel : MonoBehaviour
             }
         }
     }
-
-    private IEnumerator BackgroundFade_co()
-    {
-        //아래서부터 올라오는 쉐이더가 적용된 배경화면 Fade 코루틴
-        float visibility = 15f;
-
-        while (true)
-        {
-            if (visibility <= 0)
-            {
-                bisLoaded = true;
-                yield break;
-            }
-
-            FadeBackground.material.SetFloat("_Visibility", visibility);
-
-            visibility -= 0.1f;
-            //visibility -= Time.deltaTime;
-            yield return null;
-        }
-    }
-    #endregion
 }

@@ -60,8 +60,10 @@ public class SpeedManager : MonoBehaviour, IGame
 
     public void Init()
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
+        AudioManager.Instance.Stop_SFX();
         GameManager.Instance.OnDestroyBubble -= BubbleOnDestroy; // action 삭제
         GameManager.Instance.GameEnd -= GameEnd;
+        GameManager.Instance.IsGameClear = true;
         GameManager.Instance.LiveBubbleCount = 0;
         GameManager.Instance.bubbleObject.Clear();
 
@@ -146,7 +148,7 @@ public class SpeedManager : MonoBehaviour, IGame
         yield return new WaitForSeconds(0.8f);
 
         speedCanvas.GameReadyPanel.SetActive(false);
-        // ready
+        
         GameReadyStart();
     }
 
@@ -280,7 +282,6 @@ public class SpeedManager : MonoBehaviour, IGame
     #region Result Panel
     public void ResultExitButton()
     { // Result Panel - 나가기
-        AudioManager.Instance.Stop_SFX();
         AudioManager.Instance.SetAudioClip_BGM(1);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
@@ -296,8 +297,10 @@ public class SpeedManager : MonoBehaviour, IGame
 
     public void ResultRestartButton()
     { // Result Panel - 다시하기
-        AudioManager.Instance.Stop_SFX();
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+
+        if (GameManager.Instance.IsShutdown) return;
+
         loadingCanvas.gameObject.SetActive(true);
         resultPanel.SetActive(false);
 
@@ -311,7 +314,6 @@ public class SpeedManager : MonoBehaviour, IGame
     #region Warning Panel
     public void WarningPanelGoOutButton()
     { // Warning panel - 나가기
-        AudioManager.Instance.Stop_SFX();
         AudioManager.Instance.SetAudioClip_BGM(1);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
 

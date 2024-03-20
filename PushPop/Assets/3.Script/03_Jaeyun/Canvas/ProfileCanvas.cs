@@ -11,6 +11,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     [SerializeField] private MainCanvas mainCanvas = null;
     [SerializeField] private MultiCanvas multiCanvas = null;
     [SerializeField] private LoadingPanel loadingCanvas = null;
+    [SerializeField] private MemoryManager memoryManager = null;
 
     [Header("Profile Panel")]
     public GameObject BlockPanel = null;
@@ -46,11 +47,8 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     [Header("Delete Panel")]
     public GameObject DeletePanel = null;
-
-    [Header("MemoryManager")]
-    [SerializeField] private MemoryManager memoryManager;
-
     public bool isChangeProfile = false;
+
     private void OnEnable()
     {
         StartCoroutine(Init());
@@ -60,6 +58,11 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     {
         ProfileManager.Instance.LoadOrCreateGUID();
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
+    }
+
+    private void OnDisable()
+    {
+        ShutdownInit();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -95,6 +98,20 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             mainCanvas.MultiButton.SetActive(false);
             mainCanvas.NetworkButton.SetActive(false);
         }
+    }
+
+    private void ShutdownInit()
+    {
+        if (!GameManager.Instance.IsShutdown) return;
+        Select.SetActive(true);
+        CreateName.SetActive(false);
+        CreateImage.SetActive(false);
+        ProfileIconSelect.SetActive(false);
+        CaptureCheck.SetActive(false);
+        CurrentProfile.SetActive(false);
+        DeletePanel.SetActive(false);
+        BlockPanel.SetActive(true);
+        BackButton.SetActive(true);
     }
     #region Select
     public void ProfileCreateButton()
@@ -314,7 +331,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         }
         catch (System.Exception)
         {
-            MemoryManager.Instance.CurrentStage= 1;
+            memoryManager.CurrentStage= 1;
         }
         mainCanvas.isChangeProfile = false;
 

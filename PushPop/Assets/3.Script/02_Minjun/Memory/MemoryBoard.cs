@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MemoryBoard : MonoBehaviour
 { // stage 관리하는 board prefabs에 참조
+    public MemoryManager memoryManager = null;
     public MemoryStageData Stage { get; private set; }
     private MemoryPushpop currentOrderPushPop = null;
     private List<MemoryPushpop> memoryPopButtonList = new List<MemoryPushpop>(); // 스테이지 당 생성된 버튼
@@ -13,6 +14,11 @@ public class MemoryBoard : MonoBehaviour
     private int clearCount = 0; // 맞춰야하는 정답 갯수
     public int CurrentCorrectCount = 0; // 현재 맞춘 정답 갯수
     private bool isReplay = true; // 힌트 버튼을 눌렀을 때 true
+
+    private void Awake()
+    {
+        memoryManager = FindObjectOfType<MemoryManager>();
+    }
 
     private void OnEnable()
     {
@@ -25,10 +31,10 @@ public class MemoryBoard : MonoBehaviour
         {
             memoryPopButtonList.Add(transform.GetChild(i).GetComponent<MemoryPushpop>());
         }
-        MemoryManager.Instance.CurrentBoard = this;
+        memoryManager.CurrentBoard = this;
 
         // 스테이지마다 새로운 보드 생성
-        Stage = MemoryManager.Instance.GetStage(); // 현재 스테이지 가져오기
+        Stage = memoryManager.GetStage(); // 현재 스테이지 가져오기
         clearCount = Stage.CorrectCount; // stage 정답 개수 setting
         RandCorrectDraw();
         Blink(!isReplay);
@@ -44,8 +50,8 @@ public class MemoryBoard : MonoBehaviour
     #region Memory Pop Button Setting
     public void ButtonAllStop()
     { // Memory pop button 클릭 못하게 만듦
-        MemoryManager.Instance.BackButton.GetComponent<Button>().interactable = false;
-        MemoryManager.Instance.Hintbutton.interactable = false;
+        memoryManager.BackButton.GetComponent<Button>().interactable = false;
+        memoryManager.Hintbutton.interactable = false;
         for (int i = 0; i < memoryPopButtonList.Count; i++)
         {
             memoryPopButtonList[i].GetComponent<Image>().raycastTarget = false;
@@ -54,8 +60,8 @@ public class MemoryBoard : MonoBehaviour
 
     public void ButtonAllPlay()
     { // Memory pop button 클릭 가능하게 만듦
-        MemoryManager.Instance.BackButton.GetComponent<Button>().interactable = true;
-        MemoryManager.Instance.HintButtonActive();
+        memoryManager.BackButton.GetComponent<Button>().interactable = true;
+        memoryManager.HintButtonActive();
         for (int i = 0; i < memoryPopButtonList.Count; i++)
         {
             memoryPopButtonList[i].GetComponent<Image>().raycastTarget = true;
@@ -126,13 +132,13 @@ public class MemoryBoard : MonoBehaviour
             switch (randindex)
             {
                 case 1:
-                    MemoryManager.Instance.PlayStartPanel("집중해보세요!");
+                    memoryManager.PlayStartPanel("집중해보세요!");
                     break;
                 case 2:
-                    MemoryManager.Instance.PlayStartPanel("정답을 찾아라!");
+                    memoryManager.PlayStartPanel("정답을 찾아라!");
                     break;
                 case 3:
-                    MemoryManager.Instance.PlayStartPanel("준비 됐나요?");
+                    memoryManager.PlayStartPanel("준비 됐나요?");
                     break;
             }
 
@@ -157,10 +163,10 @@ public class MemoryBoard : MonoBehaviour
             switch (randindex)
             {
                 case 1:
-                    MemoryManager.Instance.PlayStartPanel("스페셜 스테이지!");
+                    memoryManager.PlayStartPanel("스페셜 스테이지!");
                     break;
                 case 2:
-                    MemoryManager.Instance.PlayStartPanel("순서대로 눌러라!");
+                    memoryManager.PlayStartPanel("순서대로 눌러라!");
                     break;
             }
 

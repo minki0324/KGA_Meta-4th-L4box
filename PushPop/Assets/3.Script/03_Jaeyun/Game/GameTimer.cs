@@ -90,8 +90,8 @@ public class GameTimer : MonoBehaviour
 
     private Color TimerCountColorChange(string _colorCode)
     { // text color change
-        Color newColor = new Color(0, 0, 0, 1);
-        if (ColorUtility.TryParseHtmlString(_colorCode, out newColor))
+        // Color newColor = new Color(0, 0, 0, 1);
+        if (ColorUtility.TryParseHtmlString(_colorCode, out Color newColor))
         {
             return newColor;
         }

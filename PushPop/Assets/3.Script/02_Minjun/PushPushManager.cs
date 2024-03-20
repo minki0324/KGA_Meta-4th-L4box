@@ -18,12 +18,6 @@ public class PushPushManager : MonoBehaviour, IGame
     [Header("Game Info")]
     public CustomPushpopManager customManager = null;
     public PuzzleLozic puzzleManager = null;
-    [SerializeField] private TMP_Text stageTitle = null;
-    [SerializeField] private FramePuzzle framePuzzle = null;
-
-    [Header("Game Result")]
-    [SerializeField] private Image resultImage = null;
-    [SerializeField] private TMP_Text resultMassageText = null;
 
     [Header("PushPop Object")]
     public Stack<GameObject> StackPops = new Stack<GameObject>(); //UI상 보이는 버튼담는 스택
@@ -85,11 +79,12 @@ public class PushPushManager : MonoBehaviour, IGame
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
     }
     #endregion
-
+    #region Game Interface
     public void Init()
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         GameManager.Instance.GameEnd -= GameEnd;
+        GameManager.Instance.IsGameClear = true;
         GameManager.Instance.NextMode = null;
         GameManager.Instance.LiveBubbleCount = 0;
         GameManager.Instance.bubbleObject.Clear();
@@ -134,7 +129,7 @@ public class PushPushManager : MonoBehaviour, IGame
         yield return new WaitForSeconds(0.8f);
 
         pushpushCanvas.GameReadyPanel.SetActive(false);
-        // ready
+        
         GameReadyStart();
     }
 
@@ -190,7 +185,7 @@ public class PushPushManager : MonoBehaviour, IGame
             resultPanel.SetActive(true);
         }
     }
-
+    #endregion
     #region Result Panel
     public void ResultExitButton()
     { // Result Panel - 나가기
@@ -210,6 +205,9 @@ public class PushPushManager : MonoBehaviour, IGame
     public void ResultRestartButton()
     { // Result Panel - 다시하기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        
+        if (GameManager.Instance.IsShutdown) return;
+
         loadingCanvas.gameObject.SetActive(true);
         resultPanel.SetActive(false);
 

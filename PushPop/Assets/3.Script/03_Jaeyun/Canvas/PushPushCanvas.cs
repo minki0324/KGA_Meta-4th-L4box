@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -30,12 +28,25 @@ public class PushPushCanvas : MonoBehaviour
     public GameObject HelpPanel = null;
     public TMP_Text GameReadyPanelText = null;
 
+    private void OnDisable()
+    {
+        ShutdownInit();
+    }
+
+    private void ShutdownInit()
+    {
+        if (!GameManager.Instance.IsShutdown) return;
+        loadingCanvas.gameObject.SetActive(true);
+        SelectBoardPanel.SetActive(false);
+        HelpPanel.SetActive(false);
+    }
     public void GameStartButton()
     {
         AudioManager.Instance.SetAudioClip_BGM(3);
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
         loadingCanvas.gameObject.SetActive(true);
 
+        GameManager.Instance.IsGameClear = false;
         SelectCategoryPanel.SetActive(false);
         SelectBoardPanel.SetActive(false);
         HelpButton.SetActive(false);

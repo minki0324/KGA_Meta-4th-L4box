@@ -47,8 +47,6 @@ public class TouchManager : MonoBehaviour
     public int MaxCount = 60;   //꾹 눌렀을 떄 생성되는 프리팹 최대 갯수
     private int CurrentCount = 0;   //꾹 눌렀을 떄 생성되는 프리팹 현재 갯수
 
-    private float timeCool = 0.3f;
-    #region Unity Callback
     private void Awake()
     {
         //프레임 속도 고정
@@ -94,11 +92,6 @@ public class TouchManager : MonoBehaviour
             MultiTouchEvent_Independent();
         }
     }
-
-
-    #endregion
-
-    #region Other Method
     private void Init()
     {//초기화 메소드      
         visualEffect_Pooling = new VisualEffect[MaxCount];
@@ -289,5 +282,3 @@ public class TouchManager : MonoBehaviour
 
 
 }
-
-    #endregion

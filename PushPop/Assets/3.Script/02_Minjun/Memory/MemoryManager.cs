@@ -6,7 +6,6 @@ using TMPro;
 
 public class MemoryManager : MonoBehaviour, IGame
 {
-    public static MemoryManager Instance;
     [Header("Canvas")]
     [SerializeField] private MemoryCanvas memoryCanvas = null;
     [SerializeField] private LoadingPanel loadingCanvas = null;
@@ -14,7 +13,6 @@ public class MemoryManager : MonoBehaviour, IGame
     [Header("Panel")]
     [SerializeField] private GameObject resultPanel = null;
     [SerializeField] private GameObject warningPanel = null;   
-    [SerializeField] private GameObject gameReadyPanel = null;
     [SerializeField] public GameObject hintGuidePanel = null;
 
     [Header("Game Info")]
@@ -48,7 +46,6 @@ public class MemoryManager : MonoBehaviour, IGame
     public bool isSave = true;
     private void Awake()
     {
-        Instance = this;
         MaxStageCount();
     }
     private void OnEnable()
@@ -64,6 +61,9 @@ public class MemoryManager : MonoBehaviour, IGame
     public void Init()
     { // OnDisable(), check list: coroutine, list, array, variables 초기화 관련
         // coroutine 초기화
+        AudioManager.Instance.Stop_SFX();
+        GameManager.Instance.GameEnd -= GameEnd;
+        GameManager.Instance.IsGameClear = true;
         StopAllCoroutines();
         Destroy(CurrentBoard.gameObject);
 
@@ -88,6 +88,7 @@ public class MemoryManager : MonoBehaviour, IGame
 
     public void GameSetting()
     { // OnEnable() bubble size, board size, pushpopbutton size, pushpop percentage, etc. setting 관련
+        GameManager.Instance.GameEnd += GameEnd;
         Ranking.Instance.SettingPreviousScore(); // old score
         HintButtonActive(); // hint button Setting
         StageText.text = $"{CurrentStage} 단계";
@@ -241,7 +242,9 @@ public class MemoryManager : MonoBehaviour, IGame
     public void ResultRestartButton()
     { // Result Panel - 다시하기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-
+        
+        if (GameManager.Instance.IsShutdown) return;
+        
         loadingCanvas.gameObject.SetActive(true);
         resultPanel.SetActive(false);
         Time.timeScale = 1f;
@@ -254,7 +257,6 @@ public class MemoryManager : MonoBehaviour, IGame
     #region Warning Panel, BackButton , ContinueBtn
     public void WarningPanelGoOutButton()
     { // 나가기
-        AudioManager.Instance.Stop_SFX();
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         Time.timeScale = 1f;

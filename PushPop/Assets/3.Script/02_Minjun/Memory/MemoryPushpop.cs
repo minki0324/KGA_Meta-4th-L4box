@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class MemoryPushpop : MonoBehaviour
 { // Memeory PushPop Button Prefabs
+    private MemoryManager memoryManager = null;
     [SerializeField] private MemoryBoard memoryBoard;
     [SerializeField] private Image popButtonImage;
     [SerializeField] private Button popButton;
@@ -14,6 +15,7 @@ public class MemoryPushpop : MonoBehaviour
     {
         popButtonImage.alphaHitTestMinimumThreshold = 0.1f; // Sprite에서 Alpha 값이 0.1 이하 일시 인식하지 않게함
         memoryBoard = transform.parent.GetComponent<MemoryBoard>();
+        memoryManager = memoryBoard.memoryManager;
     }
 
     #region OnClick Method
@@ -60,7 +62,7 @@ public class MemoryPushpop : MonoBehaviour
         // 점수 주기
         popButton.interactable = false; // 누른 버튼은 비활성화
         memoryBoard.CurrentCorrectCount++; // 정답 카운트 증가
-        MemoryManager.Instance.AddScore(100); // 점수 증가
+        memoryManager.AddScore(100); // 점수 증가
         if (memoryBoard.IsStageClear())
         {
             StartCoroutine(StageClear_Co());
@@ -70,13 +72,13 @@ public class MemoryPushpop : MonoBehaviour
     { // 오답 시
         AudioManager.Instance.SetAudioClip_SFX(0, false);
         PlayShakePush(); // ani
-        MemoryManager.Instance.Life--;
-        MemoryManager.Instance.LifeRemove();
+        memoryManager.Life--;
+        memoryManager.LifeRemove();
 
-        if (MemoryManager.Instance.Life.Equals(0))
+        if (memoryManager.Life.Equals(0))
         { // 라이프 모두 소진 시 게임 종료
             AudioManager.Instance.SetAudioClip_SFX(5, false);
-            MemoryManager.Instance.GameEnd();
+            GameManager.Instance.GameEnd?.Invoke();
         }
     }
     #endregion
@@ -85,22 +87,22 @@ public class MemoryPushpop : MonoBehaviour
     { // Stage Clear
         AudioManager.Instance.SetAudioClip_SFX(4, false);
         memoryBoard.ButtonAllStop(); // 버튼 동작 정지
-        MemoryManager.Instance.PlayStartPanel("훌륭해요!");
+        memoryManager.PlayStartPanel("훌륭해요!");
 
         yield return new WaitForSeconds(2f);
 
-        MemoryManager.Instance.CurrentStage++; //스테이지 Index 증가
-        if (MemoryManager.Instance.EndStageIndex < MemoryManager.Instance.CurrentStage)
+        memoryManager.CurrentStage++; //스테이지 Index 증가
+        if (memoryManager.EndStageIndex < memoryManager.CurrentStage)
         { // 준비된 스테이지 < 현재 스테이지, 모든 스테이지 클리어 시
-            MemoryManager.Instance.GameEnd();
+            GameManager.Instance.GameEnd?.Invoke();
             yield break;
         }
 
         Destroy(memoryBoard.gameObject); // 현재 스테이지 보드 지우기
-        MemoryManager.Instance.StageText.text = $"{MemoryManager.Instance.CurrentStage} 단계";
+        memoryManager.StageText.text = $"{memoryManager.CurrentStage} 단계";
 
         // 다음 스테이지로 (새로운 보드 생성) 
-        MemoryManager.Instance.CreatBoard();
+        memoryManager.CreatBoard();
     }
     #endregion
     #region Button Animation
