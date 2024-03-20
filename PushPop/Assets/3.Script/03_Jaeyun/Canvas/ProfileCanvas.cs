@@ -352,7 +352,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         SelectScrollView.normalizedPosition = new Vector2(1f, 1f);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
-        if (GameManager.Instance.GameMode.Equals(GameMode.Lobby) && !mainCanvas.ProfileButton.activeSelf)
+        if (GameManager.Instance.GameMode.Equals(GameMode.Title))
         {
             BlockPanel.SetActive(false);
             ExitButton.SetActive(true);

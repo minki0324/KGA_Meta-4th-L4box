@@ -1,10 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.U2D;
 using UnityEngine.UI;
-using Mirror;
-using System.Collections;
 
 public enum GameMode // GameMode
 {
@@ -87,7 +85,7 @@ public class GameManager : MonoBehaviour
     public Action Shutdown; // shutdown 시 canvas 별 setActive
     public Action ShutdownAlarm; // in game alarm
     public CompletedStage myMeomoryStageInfo;
-    
+
     private void Awake()
     {
         if (Instance == null)
@@ -139,14 +137,23 @@ public class GameManager : MonoBehaviour
 
     public void ShutdownAlarmStart()
     {
+        StopAllCoroutines();
         StartCoroutine(ShutdownAlarm_Co());
+    }
+
+    public void ShutdownCoroutineStop()
+    { // 뒤로가기 시 stop
+        StopAllCoroutines();
     }
 
     private IEnumerator ShutdownAlarm_Co()
     {
         while (true)
         {
-            if (IsShutdown) yield break;
+            if (IsShutdown)
+            {
+                yield break;
+            }
             yield return new WaitForSeconds(10f);
             OnShutdownAlarm = true;
             if (!IsLoading) ShutdownAlarm?.Invoke();

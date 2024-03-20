@@ -61,12 +61,32 @@ public class AudioManager : MonoBehaviour
         playingBgm = 0;
         audioSource_arr[1].clip = bgmClip_List[0];
 
-
         sfxClipList.Add(pushSfxClip_List);
         sfxClipList.Add(speedSfxClip_List);
         sfxClipList.Add(memorySfxClip_List);
         sfxClipList.Add(multiSfxClip_List);
         sfxClipList.Add(talkSfxClip_List);
+
+        // Ω√¿€ Ω√ Audio Setting
+        if (PlayerPrefs.HasKey("BGMVolume"))
+        {
+            audioMixer.SetFloat("BGM", PlayerPrefs.GetFloat("BGMVolume"));
+        }
+        else
+        {
+            audioMixer.SetFloat("BGM", -5f);
+            PlayerPrefs.SetFloat("BGMVolume", -5f);
+        }
+
+        if (PlayerPrefs.HasKey("SFXVolume"))
+        {
+            audioMixer.SetFloat("SFX", PlayerPrefs.GetFloat("SFXVolume"));
+        }
+        else
+        {
+            audioMixer.SetFloat("SFX", -5f);
+            PlayerPrefs.SetFloat("SFXVolume", -5f);
+        }
     }
 
     public void SetAudioClip_BGM(int index)

@@ -62,9 +62,10 @@ public class PushPushCanvas : MonoBehaviour
         { // 카테고리 선택 중일 때
             AudioManager.Instance.SetAudioClip_BGM(0);
             loadingCanvas.gameObject.SetActive(true);
-
             GameManager.Instance.GameMode = GameMode.Lobby;
             GameManager.Instance.InGame = false;
+            GameManager.Instance.ShutdownCoroutineStop();
+
             mainCanvas.gameObject.SetActive(true);
             gameObject.SetActive(false);
         }

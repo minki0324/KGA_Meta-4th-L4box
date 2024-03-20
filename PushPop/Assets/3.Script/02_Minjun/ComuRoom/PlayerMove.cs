@@ -27,13 +27,6 @@ public class PlayerMove : NetworkBehaviour
             PlayerMoveMent();
         }
     }
-    private void Update()
-    {
-        //if (isLocalPlayer)
-        //{
-        //    PlayerMoveMent();
-        //}
-    }
 
     public void PlayerMoveMent()
     {

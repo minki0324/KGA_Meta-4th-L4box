@@ -51,12 +51,6 @@ public class SavePoint : MonoBehaviour
      
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void SaveStage()
     {
         PlayersStage rankListWrapper = new PlayersStage { stages = completedStageList };

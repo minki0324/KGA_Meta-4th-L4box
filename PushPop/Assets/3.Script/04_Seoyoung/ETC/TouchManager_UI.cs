@@ -160,7 +160,7 @@ public class TouchManager_UI : MonoBehaviour
     {//터치 이펙트 생성 메소드 -> 얘도 풀링으로 할까요?
 
         GameObject touchEffect = Instantiate(TouchEffectPrefab, nowPos_List[_index], Quaternion.identity);
-        touchEffect.transform.parent = DragEffectsObj;
+        touchEffect.transform.SetParent(DragEffectsObj);
 
         Destroy(touchEffect, 1f);
     }
@@ -177,7 +177,7 @@ public class TouchManager_UI : MonoBehaviour
             GameObject touchEffect = Instantiate(DragEffectPrefab, nowPos_List[_index], Quaternion.identity);
 
             TouchEffect_Pooling[CurrentCount] = touchEffect;
-            touchEffect.transform.parent = DragEffectsObj;
+            touchEffect.transform.SetParent(DragEffectsObj);
             TouchEffect_Pooling[CurrentCount].gameObject.SetActive(true);
 
             CurrentCount += 1;

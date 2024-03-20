@@ -14,7 +14,7 @@ public class TempPushPop : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-       if (collision.CompareTag("PushPop") && !isSet && !isTrigger)
+       if (collision.CompareTag("PushPop") /*&& !isSet*/ && !isTrigger)
         {
             isTrigger = true;
             if (createIndex > collision.GetComponent<TempPushPop>().createIndex)

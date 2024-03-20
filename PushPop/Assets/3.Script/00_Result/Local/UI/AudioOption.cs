@@ -32,7 +32,6 @@ public class AudioOption : MonoBehaviour
         else
         {
             BGM_Slider.value = BGM_Slider.maxValue;
-            //BGM_Slider.value = (BGM_Slider.minValue + BGM_Slider.maxValue) * 0.5f;
         }
 
         if (PlayerPrefs.HasKey("SFXVolume"))
@@ -42,12 +41,7 @@ public class AudioOption : MonoBehaviour
         else
         {
             SFX_Slider.value = SFX_Slider.maxValue;
-            //SFX_Slider.value = (SFX_Slider.minValue + SFX_Slider.maxValue) * 0.5f;
         }
-
-        //오디오 믹서 기본 볼륨 조정
-        AudioManager.Instance.audioMixer.SetFloat("BGM", BGM_Slider.value);
-        AudioManager.Instance.audioMixer.SetFloat("SFX", SFX_Slider.value);
     }
 
     public void SetVolume(bool _isBgm)

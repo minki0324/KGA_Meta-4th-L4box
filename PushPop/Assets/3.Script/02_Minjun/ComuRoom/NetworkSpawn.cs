@@ -13,10 +13,4 @@ public class NetworkSpawn : MonoBehaviour
             NetworkServer.Spawn(Prebab);
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

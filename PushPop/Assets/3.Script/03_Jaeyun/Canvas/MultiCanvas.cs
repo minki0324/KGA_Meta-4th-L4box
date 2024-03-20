@@ -94,13 +94,15 @@ public class MultiCanvas : MonoBehaviour
     { // 뒤로가기
         AudioManager.Instance.SetAudioClip_BGM(0);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        loadingCanvas.gameObject.SetActive(true);
+
         ProfileManager.Instance.SelectPlayer = Player.Player1;
         GameManager.Instance.GameMode = GameMode.Lobby;
         GameManager.Instance.InGame = false;
+        GameManager.Instance.ShutdownCoroutineStop();
 
         StartCoroutine(NonePlayerSetting_Co());
         ProfileManager.Instance.IsSelect = false;
-        loadingCanvas.gameObject.SetActive(true);
         ProfileSelectText.SetActive(true);
         MaskImage.SetActive(false);
         ReadyProfileSetting.ProfileName2P.gameObject.SetActive(false);
