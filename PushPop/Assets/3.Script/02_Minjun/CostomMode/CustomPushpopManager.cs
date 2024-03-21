@@ -40,7 +40,7 @@ public class CustomPushpopManager : MonoBehaviour
     }
 
     #region DecoPanel Button Method
-    private void ClickDown_Co()
+    private IEnumerator ClickDown_Co()
     {
         AudioManager.Instance.SetAudioClip_SFX(3, false);
 
@@ -68,7 +68,7 @@ public class CustomPushpopManager : MonoBehaviour
         // pushpop Btn Parent 설정
         newRectPush.transform.SetParent(puzzleBoard.transform);
         newRectPush.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f); // 스케일 변경시 프리팹 Circle(콜라이더검사) 스케일도 바꾼 스케일의 1.3배로 바꿔주세요
-        //yield return null;
+        yield return new WaitForSeconds(0.3f);
         buttonDownCoroutine = null;
     }
 
@@ -80,8 +80,7 @@ public class CustomPushpopManager : MonoBehaviour
             // 터치가 1개를 초과할 경우 함수 종료
             return;
         }
-        // buttonDownCoroutine = StartCoroutine(ClickDown_Co());
-        ClickDown_Co();
+        buttonDownCoroutine = StartCoroutine(ClickDown_Co());
     }
 
     public void ReturnButton()
