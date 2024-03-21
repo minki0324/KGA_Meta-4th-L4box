@@ -148,7 +148,7 @@ public class ProfileManager : MonoBehaviour
             ProfilePanelList.Add(panel);
         }
 
-        if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
+        if (GameManager.Instance.GameMode.Equals(GameMode.Multi) || GameManager.Instance.GameMode.Equals(GameMode.Lobby))
         { // Multi Mode에서 Profile 수정 시
             DuplicateProfileDelete();
         }

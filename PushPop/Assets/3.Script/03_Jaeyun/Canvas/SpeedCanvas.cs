@@ -90,6 +90,8 @@ public class SpeedCanvas : MonoBehaviour
             GameManager.Instance.ShutdownCoroutineStop();
 
             mainCanvas.SetActive(true);
+            SelectCategoryPanel.SetActive(false) ;
+            SelectDifficultyPanel.SetActive(true);
             gameObject.SetActive(false);
         }
         else if (SelectCategoryPanel.activeSelf)
