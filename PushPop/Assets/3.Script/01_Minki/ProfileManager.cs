@@ -215,17 +215,17 @@ public class ProfileManager : MonoBehaviour
             }
         }
     }
-    private async Task AddProfileImage()
+    private void AddProfileImage()
     {
         imagePath = $"{Application.persistentDataPath}/Profile/{UID}_{TempUserIndex}.png";
 
         if (!isUpdate)
         { // 첫 등록일 때
-            await Task.Run(() => SQL_Manager.instance.SQL_AddProfileImage(imagePath, UID, TempUserIndex));
+            SQL_Manager.instance.SQL_AddProfileImage(imagePath, UID, TempUserIndex);
         }
         else
         { // 수정모드 일 때
-            await Task.Run(() => SQL_Manager.instance.SQL_UpdateProfile(TempUserIndex, TempProfileName, UID, imagePath));
+            SQL_Manager.instance.SQL_UpdateProfile(TempUserIndex, TempProfileName, UID, imagePath);
         }
     }
 
