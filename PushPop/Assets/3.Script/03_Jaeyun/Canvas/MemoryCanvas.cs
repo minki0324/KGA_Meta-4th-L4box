@@ -6,7 +6,7 @@ public class MemoryCanvas : MonoBehaviour
 {
     [Header("Canvas")]
     [SerializeField] private GameObject mainCanvas = null;
-    [SerializeField] private LoadingPanel loadingCanvas = null;
+
 
     [Header("Side Panel")]
     public GameObject HelpButton = null;
@@ -40,7 +40,7 @@ public class MemoryCanvas : MonoBehaviour
     private void ShutdownInit()
     {
         if (!GameManager.Instance.IsShutdown) return;
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
         ContinuePanel.SetActive(false);
         HelpPanel.SetActive(false);
     }
@@ -52,7 +52,7 @@ public class MemoryCanvas : MonoBehaviour
 
         GameManager.Instance.IsGameClear = false;
 
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
         ContinuePanel.SetActive(false);
         MemoryGame.SetActive(true);
         HelpButton.SetActive(false);
@@ -107,7 +107,7 @@ public class MemoryCanvas : MonoBehaviour
         if (Ready.activeSelf)
         { // 대기 화면일 때
             AudioManager.Instance.SetAudioClip_BGM(0);
-            loadingCanvas.gameObject.SetActive(true);
+            LoadingPanel.Instance.gameObject.SetActive(true);
 
             GameManager.Instance.GameMode = GameMode.Lobby;
             GameManager.Instance.InGame = false;

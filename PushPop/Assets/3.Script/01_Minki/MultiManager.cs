@@ -21,7 +21,7 @@ public class MultiManager : MonoBehaviour, IGame
 { // multi game
     [Header("Canvas")]
     [SerializeField] private MultiCanvas multiCanvas = null;
-    [SerializeField] private LoadingPanel loadingCanvas = null;
+
 
     [Header("Panel")]
     [SerializeField] private GameObject warningPanel = null;
@@ -561,10 +561,11 @@ public class MultiManager : MonoBehaviour, IGame
     #region Result Panel
     public void ResultExitButton()
     { // Result Panel - 나가기
+        AudioManager.Instance.SetAudioClip_BGM(1);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         Time.timeScale = 1f;
 
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
         multiCanvas.Ready.SetActive(true);
         multiCanvas.BackButton.SetActive(true);
         multiCanvas.HelpButton.SetActive(true);
@@ -577,7 +578,7 @@ public class MultiManager : MonoBehaviour, IGame
 
         if (GameManager.Instance.IsShutdown) return;
 
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
         Time.timeScale = 1f;
 
         Init();
@@ -606,11 +607,12 @@ public class MultiManager : MonoBehaviour, IGame
 
     public void WarningPanelGoOutButton()
     { // 나가기 1P, 2P 둘다 눌렀을 때 - 나가기
+        AudioManager.Instance.SetAudioClip_BGM(1);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         Time.timeScale = 1f;
 
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
         warningPanel.SetActive(false);
         multiCanvas.Ready.SetActive(true);
         multiCanvas.BackButton.SetActive(true);

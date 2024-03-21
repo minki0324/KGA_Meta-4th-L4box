@@ -70,10 +70,12 @@ public class AudioManager : MonoBehaviour
         // Ω√¿€ Ω√ Audio Setting
         if (PlayerPrefs.HasKey("BGMVolume"))
         {
+            Debug.Log(PlayerPrefs.GetFloat("BGMVolume"));
             audioMixer.SetFloat("BGM", PlayerPrefs.GetFloat("BGMVolume"));
         }
         else
         {
+            Debug.Log("no");
             audioMixer.SetFloat("BGM", -5f);
             PlayerPrefs.SetFloat("BGMVolume", -5f);
         }

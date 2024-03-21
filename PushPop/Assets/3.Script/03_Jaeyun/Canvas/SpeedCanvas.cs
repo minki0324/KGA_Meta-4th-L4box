@@ -9,7 +9,7 @@ public class SpeedCanvas : MonoBehaviour
 {
     [Header("Canvas")]
     [SerializeField] private GameObject mainCanvas = null;
-    [SerializeField] private LoadingPanel loadingCanvas = null;
+
 
     [Header("Side Panel")]
     public GameObject BackButton = null;
@@ -45,7 +45,7 @@ public class SpeedCanvas : MonoBehaviour
     private void ShutdownInit()
     { // shutdown 시 init
         if (!GameManager.Instance.IsShutdown) return;
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
         SelectDifficultyPanel.SetActive(true);
         SelectCategoryPanel.SetActive(false);
         HelpPanel.SetActive(false);
@@ -64,7 +64,7 @@ public class SpeedCanvas : MonoBehaviour
     { // Ready - 게임 시작
         AudioManager.Instance.SetAudioClip_BGM(3);
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
 
         GameManager.Instance.IsGameClear = false;
         PushPop.Instance.BoardSprite = SelectListSetting.BoardIcon; // pushpop
@@ -83,7 +83,7 @@ public class SpeedCanvas : MonoBehaviour
         if (SelectDifficultyPanel.activeSelf)
         { // 난이도 선택 중일 때
             AudioManager.Instance.SetAudioClip_BGM(0);
-            loadingCanvas.gameObject.SetActive(true);
+            LoadingPanel.Instance.gameObject.SetActive(true);
             
             GameManager.Instance.GameMode = GameMode.Lobby;
             GameManager.Instance.InGame = false;

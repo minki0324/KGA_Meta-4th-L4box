@@ -11,7 +11,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     [Header("Canvas")]
     [SerializeField] private MainCanvas mainCanvas = null;
     [SerializeField] private MultiCanvas multiCanvas = null;
-    [SerializeField] private LoadingPanel loadingCanvas = null;
+
     [SerializeField] private MemoryManager memoryManager = null;
 
     [Header("Profile Panel")]
@@ -120,6 +120,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.isUpdate = false;
 
+        BackButton.SetActive(false);
         CreateName.SetActive(true);
         Select.SetActive(false);
     }
@@ -176,6 +177,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         StopAllCoroutines();
 
+        BackButton.SetActive(true);
         inputFieldCheck.WarningLog.gameObject.SetActive(false);
         CreateImage.SetActive(true);
         ProfileIconSelect.SetActive(false);
@@ -299,7 +301,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         else if (GameManager.Instance.GameMode.Equals(GameMode.Title))
         {
             GameManager.Instance.GameMode = GameMode.Lobby;
-            loadingCanvas.gameObject.SetActive(true);
+            LoadingPanel.Instance.gameObject.SetActive(true);
             mainCanvas.TitleText.SetActive(true);
             mainCanvas.OptionButton.SetActive(true);
             mainCanvas.ProfileButton.SetActive(true);

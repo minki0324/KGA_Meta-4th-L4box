@@ -14,7 +14,23 @@ public class AudioOption : MonoBehaviour
         Init();
     }
 
+    private void OnEnable()
+    {
+        VolumeSetting();
+    }
+
     private void Init()
+    {
+        //볼륨 최소값
+        BGM_Slider.minValue = minSound;
+        SFX_Slider.minValue = minSound;
+
+        //볼륨 최대값 조절
+        BGM_Slider.maxValue = maxSound;
+        SFX_Slider.maxValue = maxSound;
+    }
+
+    private void VolumeSetting()
     {
         //볼륨 최소값
         BGM_Slider.minValue = minSound;
@@ -27,11 +43,14 @@ public class AudioOption : MonoBehaviour
         //시작 볼륨값 중간으로 조정
         if (PlayerPrefs.HasKey("BGMVolume"))
         {
+            Debug.Log(PlayerPrefs.GetFloat("BGMVolume"));
+            Debug.Log("받은 전 : " + BGM_Slider.value);
             BGM_Slider.value = PlayerPrefs.GetFloat("BGMVolume");
+            Debug.Log("받은 후 : " + BGM_Slider.value);
         }
         else
         {
-            BGM_Slider.value = BGM_Slider.maxValue;
+            BGM_Slider.value = -15f;
         }
 
         if (PlayerPrefs.HasKey("SFXVolume"))
@@ -40,7 +59,7 @@ public class AudioOption : MonoBehaviour
         }
         else
         {
-            SFX_Slider.value = SFX_Slider.maxValue;
+            SFX_Slider.value = -15f;
         }
     }
 

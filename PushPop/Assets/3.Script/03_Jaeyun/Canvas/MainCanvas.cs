@@ -11,7 +11,7 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] private SpeedCanvas speedCanvas = null;
     [SerializeField] private MemoryCanvas memoryCanvas = null;
     [SerializeField] private MultiCanvas multiCanvas = null;
-    [SerializeField] private LoadingPanel loadingCanvas = null;
+
     public bool isChangeProfile = false;
 
     [Header("Side Panel")]
@@ -111,7 +111,7 @@ public class MainCanvas : MonoBehaviour
         AudioManager.Instance.SetAudioClip_BGM(1);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
 
         switch (GameManager.Instance.GameMode)
         {

@@ -7,7 +7,7 @@ public class MultiCanvas : MonoBehaviour
     [Header("Canvas")]
     [SerializeField] private MainCanvas mainCanvas = null;
     [SerializeField] private ProfileCanvas profileCanvas = null;
-    [SerializeField] private LoadingPanel loadingCanvas = null;
+
 
     [Header("Side Panel")]
     public GameObject BackButton = null;
@@ -42,7 +42,7 @@ public class MultiCanvas : MonoBehaviour
     private void ShutdownInit()
     {
         if (!GameManager.Instance.IsShutdown) return;
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
         StopAllCoroutines();
         profileCanvas.gameObject.SetActive(false);
         HelpPanel.SetActive(false);
@@ -74,7 +74,7 @@ public class MultiCanvas : MonoBehaviour
         StopAllCoroutines();
         GameManager.Instance.IsGameClear = false;
         SQL_Manager.instance.SQL_ProfileListSet();
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
         MultiGame.SetActive(true);
         HelpButton.SetActive(false);
         BackButton.SetActive(false);
@@ -94,7 +94,7 @@ public class MultiCanvas : MonoBehaviour
     { // 뒤로가기
         AudioManager.Instance.SetAudioClip_BGM(0);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
 
         ProfileManager.Instance.SelectPlayer = Player.Player1;
         GameManager.Instance.GameMode = GameMode.Lobby;

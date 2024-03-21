@@ -14,7 +14,7 @@ public class SpeedManager : MonoBehaviour, IGame
 { // speed game
     [Header("Canvas")]
     [SerializeField] private SpeedCanvas speedCanvas = null;
-    [SerializeField] private LoadingPanel loadingCanvas = null;
+
 
     [Header("Panel")]
     [SerializeField] private GameObject resultPanel = null;
@@ -287,7 +287,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
         Time.timeScale = 1f;
 
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
         speedCanvas.SelectCategoryPanel.SetActive(true);
         speedCanvas.HelpButton.SetActive(true);
         speedCanvas.BackButton.SetActive(true);
@@ -301,7 +301,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
         if (GameManager.Instance.IsShutdown) return;
 
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
         resultPanel.SetActive(false);
 
         Time.timeScale = 1f;
@@ -320,7 +320,7 @@ public class SpeedManager : MonoBehaviour, IGame
         Time.timeScale = 1f;
 
         Init();
-        loadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
         warningPanel.SetActive(false);
         speedCanvas.SelectCategoryPanel.SetActive(true);
         speedCanvas.HelpButton.SetActive(true);

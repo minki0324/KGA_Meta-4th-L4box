@@ -129,7 +129,7 @@ public class TitlePanel : MonoBehaviour
         AudioManager.Instance.SetCommonAudioClip_SFX(2);
 
         //LoadingCanvas.gameObject.SetActive(false);
-        LoadingCanvas.gameObject.SetActive(true);
+        LoadingPanel.Instance.gameObject.SetActive(true);
 
         for(int i = 0; i<maxBubble; i++)
         {
@@ -139,5 +139,14 @@ public class TitlePanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-#endregion
+    public void GameQuitButton()
+    { // 게임 종료
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+    #endregion
 }
