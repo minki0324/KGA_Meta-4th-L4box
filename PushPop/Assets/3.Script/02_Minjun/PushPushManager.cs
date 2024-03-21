@@ -73,11 +73,6 @@ public class PushPushManager : MonoBehaviour, IGame
 
         frame.FrameImage.alphaHitTestMinimumThreshold = 0f;
     }
-
-    public void OnPushPushEnd() //푸시푸시가 모두 끝나고 초기화 할것들 모아둔 메소드
-    {
-        AudioManager.Instance.SetCommonAudioClip_SFX(3);
-    }
     #endregion
     #region Game Interface
     public void Init()
@@ -164,14 +159,13 @@ public class PushPushManager : MonoBehaviour, IGame
             List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
             customManager.ResultText.text = DataManager.Instance.iconDict[puzzleManager.CurrentPuzzle.PuzzleID];
             customManager.ResultImage.sprite = DataManager.Instance.pushPopAtlas.GetSprite(pushlist[0].spriteName.ToString());
-            customManager.ResultImage.SetNativeSize();
             customManager.ResultImage.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
             for (int i = 0; i < pushlist[0].childIndex; i++)
             { // button setting
                 GameObject pop = Instantiate(PushPop.Instance.pushPopButtonPrefab, customManager.ResultImage.transform);
                 pop.GetComponent<Image>().sprite = customManager.pushPopButtonSprite[pushlist[0].childSpriteIndex[i]];
-                pop.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                pop.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
                 pop.transform.localPosition = pushlist[0].childPosition[i];
             }
 

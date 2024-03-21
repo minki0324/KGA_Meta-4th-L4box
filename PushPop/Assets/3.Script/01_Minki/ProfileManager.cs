@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -183,8 +184,7 @@ public class ProfileManager : MonoBehaviour
         // _player bool값에 따라 1P를 설정하는지 2P를 설정하는지 결정
         if (!_isIconMode)
         { // 사진 찍기 버튼 클릭 시
-            AddProfileImage();
-
+            Task.Run(() => AddProfileImage());
             return true;
         }
         else
@@ -215,17 +215,17 @@ public class ProfileManager : MonoBehaviour
             }
         }
     }
-    private void AddProfileImage()
+    private async Task AddProfileImage()
     {
         imagePath = $"{Application.persistentDataPath}/Profile/{UID}_{TempUserIndex}.png";
 
         if (!isUpdate)
         { // 첫 등록일 때
-            SQL_Manager.instance.SQL_AddProfileImage(imagePath, UID, TempUserIndex);
+            await Task.Run(() => SQL_Manager.instance.SQL_AddProfileImage(imagePath, UID, TempUserIndex));
         }
         else
         { // 수정모드 일 때
-            SQL_Manager.instance.SQL_UpdateProfile(TempUserIndex, TempProfileName, UID, imagePath);
+            await Task.Run(() => SQL_Manager.instance.SQL_UpdateProfile(TempUserIndex, TempProfileName, UID, imagePath));
         }
     }
 
