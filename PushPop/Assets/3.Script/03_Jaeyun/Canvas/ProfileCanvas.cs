@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -334,7 +335,6 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             memoryManager.CurrentStage= 1;
         }
         mainCanvas.isChangeProfile = false;
-
     }
 
     public void CurrentProfileChangeButton()
@@ -396,6 +396,13 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
     public void ProfileBackButton()
     {
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         gameObject.SetActive(false);
+    }
+
+    public void ProfileResetButton()
+    {
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
     }
 }

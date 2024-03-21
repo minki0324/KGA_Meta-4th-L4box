@@ -26,8 +26,8 @@ public class LoadingPanel : MonoBehaviour
     public int maxBubble = 100;     //최대 버블 수
 
     [Header("비눗방울 올라가는 속도")]
-    public int upSpeed_Min = 15;
-    public int upSpeed_Max = 26;
+    public int upSpeed_Min = 30;
+    public int upSpeed_Max = 52;
 
     [Header("비눗방울 좌우 속도")]
     public float moveRange_Min = -3f;
@@ -51,7 +51,7 @@ public class LoadingPanel : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
         
