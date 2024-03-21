@@ -127,7 +127,7 @@ public class PuzzleLozic : MonoBehaviour
     { // 퍼즐 완료하고 퍼즐 원본 오브젝트 생성
         Image frameImage = PushPop.Instance.pushpushManager.customManager.puzzleBoard.GetComponent<Image>();
         frameImage.sprite = DataManager.Instance.pushPopAtlas.GetSprite(CurrentPuzzle.PuzzleID.ToString()); //퍼즐 사진넣기
-        frameImage.SetNativeSize();
+        frameImage.preserveAspect = true; // sprite 비율 세팅
         frameImage.alphaHitTestMinimumThreshold = 0.1f;
         GameManager.Instance.IsCustomMode = true;
     }
