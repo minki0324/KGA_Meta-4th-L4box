@@ -31,7 +31,7 @@ public class AudioOption : MonoBehaviour
         }
         else
         {
-            BGM_Slider.value = BGM_Slider.maxValue;
+            BGM_Slider.value = -12f;
         }
 
         if (PlayerPrefs.HasKey("SFXVolume"))
@@ -40,7 +40,7 @@ public class AudioOption : MonoBehaviour
         }
         else
         {
-            SFX_Slider.value = SFX_Slider.maxValue;
+            SFX_Slider.value = -12f;
         }
     }
 

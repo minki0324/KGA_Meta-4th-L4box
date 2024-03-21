@@ -27,6 +27,8 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     [Header("Select")]
     public ScrollRect SelectScrollView = null;
     public Transform SelectScrollViewContent = null;
+    public Button ResetButton = null;
+    private Coroutine resetCoroutine = null;
 
     [Header("Create Name")]
     [SerializeField] private InputFieldCheck inputFieldCheck = null;
@@ -403,6 +405,16 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     public void ProfileResetButton()
     {
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        if (resetCoroutine != null) return;
+        resetCoroutine = StartCoroutine(ProfileResetButton_co());
+    }
+
+    public IEnumerator ProfileResetButton_co()
+    {
+        ResetButton.interactable = false;
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
+        yield return new WaitForSeconds(5f);
+        ResetButton.interactable = true;
+        resetCoroutine = null;
     }
 }

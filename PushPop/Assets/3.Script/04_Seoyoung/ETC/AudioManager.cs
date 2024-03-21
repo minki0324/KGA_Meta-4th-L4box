@@ -74,8 +74,8 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            audioMixer.SetFloat("BGM", -5f);
-            PlayerPrefs.SetFloat("BGMVolume", -5f);
+            audioMixer.SetFloat("BGM", -12f);
+            PlayerPrefs.SetFloat("BGMVolume", -12f);
         }
 
         if (PlayerPrefs.HasKey("SFXVolume"))
@@ -84,8 +84,8 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            audioMixer.SetFloat("SFX", -5f);
-            PlayerPrefs.SetFloat("SFXVolume", -5f);
+            audioMixer.SetFloat("SFX", -12f);
+            PlayerPrefs.SetFloat("SFXVolume", -12f);
         }
     }
 
