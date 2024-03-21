@@ -75,6 +75,11 @@ public class CustomPushpopManager : MonoBehaviour
     public void ClickDown()
     { // button 생성
         if (buttonDownCoroutine != null) return;
+        if (Input.touchCount > 1)
+        {
+            // 터치가 1개를 초과할 경우 함수 종료
+            return;
+        }
         buttonDownCoroutine = StartCoroutine(ClickDown_Co());
     }
 
