@@ -179,11 +179,13 @@ public class ProfileManager : MonoBehaviour
         }
     }
 
-    public bool ImageSet(bool _isIconMode, TMP_Text _nameLog = null)
+    public bool ImageSet(bool _isIconMode, TMP_Text _nameLog = null, Transform _parent = null)
     { // Profile에 넣을 Image Setting
         // _player bool값에 따라 1P를 설정하는지 2P를 설정하는지 결정
         if (!_isIconMode)
         { // 사진 찍기 버튼 클릭 시
+            // 비동기 시작
+            // SetActive(true) loading창
             Task.Run(() => AddProfileImage());
             return true;
         }
@@ -227,6 +229,7 @@ public class ProfileManager : MonoBehaviour
         { // 수정모드 일 때
             SQL_Manager.instance.SQL_UpdateProfile(TempUserIndex, TempProfileName, UID, imagePath);
         }
+       
     }
 
     /// <summary>

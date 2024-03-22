@@ -86,6 +86,7 @@ public class MoaMoaManager : MonoBehaviour
 
     public void LikeAndHeartButton(bool _isLikeButton)
     { // 매개변수 Bool값이 True면 좋아요 버튼 False면 싫어요 버튼
+        AudioManager.Instance.SetTalkTalkAudioClic_SFX(1, false);
         HeartAndLike heartAndLikeList = SQL_Manager.instance.SQL_HeartAndLikeListSet(CurrentProfileIndex);
 
         // 신규 등록 혹은 리스트 초기화 로직

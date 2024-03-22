@@ -65,7 +65,7 @@ public class AudioManager : MonoBehaviour
         sfxClipList.Add(speedSfxClip_List);
         sfxClipList.Add(memorySfxClip_List);
         sfxClipList.Add(multiSfxClip_List);
-        sfxClipList.Add(talkSfxClip_List);
+        //sfxClipList.Add(talkSfxClip_List);
 
         // Ω√¿€ Ω√ Audio Setting
         if (PlayerPrefs.HasKey("BGMVolume"))
@@ -111,55 +111,17 @@ public class AudioManager : MonoBehaviour
         if (!bLoop)
         {
             audioSource_arr[sfxIndex].PlayOneShot(sfxClipList[(int)GameManager.Instance.GameMode][index]);
-            /*switch (GameManager.Instance.GameMode)
-            {
-                case GameMode.PushPush:
-                    audioSource_arr[sfxIndex].PlayOneShot(pushSfxClip_List[index]);
-                    break;
-                case GameMode.Speed:
-                    audioSource_arr[sfxIndex].PlayOneShot(speedSfxClip_List[index]);
-                    break;
-                case GameMode.Memory:
-                    audioSource_arr[sfxIndex].PlayOneShot(memorySfxClip_List[index]);
-                    break;
-                case GameMode.Multi:
-                    audioSource_arr[sfxIndex].PlayOneShot(multiSfxClip_List[index]);
-                    break;
-            }*/
         }
         else
         {
-            audioSource_arr[sfxIndex].PlayOneShot(sfxClipList[(int)GameManager.Instance.GameMode][index]);
+            audioSource_arr[sfxIndex].clip = sfxClipList[(int)GameManager.Instance.GameMode][index];
             audioSource_arr[sfxIndex].Play();
             audioSource_arr[sfxIndex].loop = bLoop;
-            /*switch (GameManager.Instance.GameMode)
-            {
-                case GameMode.PushPush:
-                    audioSource_arr[sfxIndex].clip = pushSfxClip_List[index];
-                    audioSource_arr[sfxIndex].Play();
-                    audioSource_arr[sfxIndex].loop = bLoop;
-                    break;
-                case GameMode.Speed:
-                    audioSource_arr[sfxIndex].clip = speedSfxClip_List[index];
-                    audioSource_arr[sfxIndex].Play();
-                    audioSource_arr[sfxIndex].loop = bLoop;
-                    break;
-                case GameMode.Memory:
-                    audioSource_arr[sfxIndex].clip = memorySfxClip_List[index];
-                    audioSource_arr[sfxIndex].Play();
-                    audioSource_arr[sfxIndex].loop = bLoop;
-                    break;
-                case GameMode.Multi:
-                    audioSource_arr[sfxIndex].clip = multiSfxClip_List[index];
-                    audioSource_arr[sfxIndex].Play();
-                    audioSource_arr[sfxIndex].loop = bLoop;
-                    break;
-            }*/
         }
     }
 
 
-    /*public void SetTalkTalkAudioClic_SFX(int index, bool bLoop)
+    public void SetTalkTalkAudioClic_SFX(int index, bool bLoop)
     {
         if (!bLoop)
         {
@@ -171,8 +133,7 @@ public class AudioManager : MonoBehaviour
             audioSource_arr[sfxIndex].Play();
             audioSource_arr[sfxIndex].loop = bLoop;
         }
-
-    }*/
+    }
 
     public void SetCommonAudioClip_SFX(int index)
     {

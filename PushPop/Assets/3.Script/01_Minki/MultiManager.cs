@@ -61,7 +61,7 @@ public class MultiManager : MonoBehaviour, IGame
 
     [Header("Timer")]
     [SerializeField] private GameTimer gameTimer = null;
-    private float upperTimer = 12f;
+    [SerializeField] private float upperTimer = 12f;
     [SerializeField] private TMP_Text feverText = null;
 
     [Header("Quit")]
@@ -104,6 +104,15 @@ public class MultiManager : MonoBehaviour, IGame
         GameManager.Instance.IsGameClear = true;
 
         resultPanel.SetActive(false);
+        feverText.gameObject.SetActive(false);
+        if(GameManager.Instance.GameMode.Equals(GameMode.Lobby))
+        {
+            multiCanvas.ProfileSelectText.SetActive(true);
+            multiCanvas.ReadyProfileSetting.ProfileName2P.gameObject.SetActive(false);
+            multiCanvas.MaskImage.SetActive(false);
+            multiCanvas.ChangeButton.SetActive(false);
+            multiCanvas.SelectButton.SetActive(true);
+        }
 
         // timer setting
         gameTimer.TimerText.color = new Color(0, 0, 0, 1);
@@ -138,16 +147,16 @@ public class MultiManager : MonoBehaviour, IGame
             Destroy(boardTransform[1].transform.GetChild(0).gameObject);
         }
 
-        // lose animation에서 true된 object 비활성화
-        upperWaterfall.SetActive(false);
-        bottomWaterfall.SetActive(false);
-
         // coroutine 초기화
         StopAllCoroutines();
         if(gameTimer.TimerCoroutine != null)
         {
             gameTimer.StopCoroutine(gameTimer.TimerCoroutine);
         }
+
+        // lose animation에서 true된 object 비활성화
+        upperWaterfall.SetActive(false);
+        bottomWaterfall.SetActive(false);
     }
 
     public void GameSetting()

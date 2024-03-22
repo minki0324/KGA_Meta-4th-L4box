@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class CameraManager : MonoBehaviour
 {
     private Texture2D captureTexture; // Create Image
+    [SerializeField] private ProfileCanvas profileCanvas = null;
 
     public void CameraOpen(Image _captureImage) // Camera Open method
     {
@@ -75,11 +76,11 @@ public class CameraManager : MonoBehaviour
                 // Image Setting
                 if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
                 { // Second Player
-                    ProfileManager.Instance.ImageSet(false, null);
+                    ProfileManager.Instance.ImageSet(false, null, profileCanvas.SelectScrollViewContent);
                 }
                 else
                 { // First Player
-                    ProfileManager.Instance.ImageSet(false, null);
+                    ProfileManager.Instance.ImageSet(false, null, profileCanvas.SelectScrollViewContent);
                 }
 
                 Destroy(quad, 5f);

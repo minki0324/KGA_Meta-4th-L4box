@@ -41,6 +41,10 @@ public class MainCanvas : MonoBehaviour
     {
         StartCoroutine(Init());
     }
+    private void Start()
+    {
+        GameManager.Instance.Shutdown += ShutDownPanelSetting;
+    }
 
     private IEnumerator Init()
     {
@@ -49,7 +53,6 @@ public class MainCanvas : MonoBehaviour
         {
             CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;
         }
-        GameManager.Instance.Shutdown += ShutDownPanelSetting;
     }
     #region Button Click Method
     public void GameModeButton(int _gameMode)

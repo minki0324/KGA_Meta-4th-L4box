@@ -277,7 +277,10 @@ public class SpeedManager : MonoBehaviour, IGame
         }
 
         countSlider.value = endValue;
-        GameEndSliderAfter();
+        if(countSlider.value <= 0.9f)
+        {
+            GameEndSliderAfter();
+        }
     }
     #region Result Panel
     public void ResultExitButton()

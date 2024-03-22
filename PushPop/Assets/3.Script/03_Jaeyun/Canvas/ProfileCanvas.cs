@@ -29,6 +29,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     public Transform SelectScrollViewContent = null;
     public Button ResetButton = null;
     private Coroutine resetCoroutine = null;
+    public GameObject ProfileLoadingPanel = null;
 
     [Header("Create Name")]
     [SerializeField] private InputFieldCheck inputFieldCheck = null;
@@ -147,7 +148,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
-        if (ProfileManager.Instance.ImageSet(true, selectProfileIcon.WarningLog))
+        if (ProfileManager.Instance.ImageSet(true, selectProfileIcon.WarningLog, SelectScrollViewContent))
         {
             ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
@@ -206,6 +207,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         
         ProfileManager.Instance.TempImageMode = true;
 
+        ProfileManager.Instance.isImageSelect = false;
         ProfileIconSelect.SetActive(true);
         CreateImage.SetActive(false);
     }
@@ -270,6 +272,11 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
         StopAllCoroutines();
 
+        if (!GameManager.Instance.GameMode.Equals(GameMode.Title))
+        {
+            BackButton.SetActive(true);
+        }
+
         if (!ProfileManager.Instance.isUpdate)
         { // 프로필 생성 시
             Select.SetActive(true);
@@ -277,8 +284,9 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         else
         { // 프로필 수정 시
             CurrentProfile.SetActive(true);
+            BackButton.SetActive(false);
         }
-
+        
         inputFieldCheck.WarningLog.gameObject.SetActive(false);
         CreateName.SetActive(false);
     }
@@ -291,6 +299,16 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         {
             ProfileManager.Instance.isProfileSelected = true;
         }
+
+        Player player = ProfileManager.Instance.SelectPlayer;
+        ProfileManager.Instance.UID = SQL_Manager.instance.UID;
+        ProfileManager.Instance.PlayerInfo[(int)player] = new PlayerInfo(
+            ProfileManager.Instance.TempProfileName,
+            ProfileManager.Instance.TempUserIndex,
+            ProfileManager.Instance.TempImageIndex,
+            ProfileManager.Instance.TempImageMode
+            );
+        ProfileManager.Instance.PlayerInfo[(int)player].profileImage = ProfileManager.Instance.ProfileImageCaching();
 
         if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
         {

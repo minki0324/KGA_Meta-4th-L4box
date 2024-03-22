@@ -157,6 +157,7 @@ public class Connect_Network : MonoBehaviour
     public void Start_Client()
     {
         // SceneManager.LoadScene("02_Async_Loading");
+        AudioManager.Instance.SetAudioClip_BGM(6);
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         Debug.Log($"{manager.networkAddress} : Startclient...");
         manager.StartClient();

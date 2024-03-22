@@ -27,6 +27,7 @@ public class Emotion : NetworkBehaviour
     [Client]
     public void onEmotion(int index)
     {
+        AudioManager.Instance.SetTalkTalkAudioClic_SFX(0, false);
         //spriterenderer.sprite = emotions[index];
         playerEmotion.PlayEmotion(index);
     }

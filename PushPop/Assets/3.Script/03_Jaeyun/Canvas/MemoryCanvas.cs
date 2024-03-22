@@ -63,6 +63,7 @@ public class MemoryCanvas : MonoBehaviour
 
     public void ContinueBtn()
     {
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ContinuePanel.SetActive(true);
         try
         {
@@ -82,6 +83,7 @@ public class MemoryCanvas : MonoBehaviour
 
     public void ExitContinuePanel()
     {
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ContinuePanel.SetActive(false);
         //버튼모두 disable
         //currentStage = 0
@@ -96,6 +98,7 @@ public class MemoryCanvas : MonoBehaviour
     }
     public void SelectContinueStage(int stage)
     {
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         memoryManager.CurrentStage = stage;
     }
     #endregion
@@ -118,7 +121,6 @@ public class MemoryCanvas : MonoBehaviour
         }
         else
         { // 게임 중일 때
-            AudioManager.Instance.SetAudioClip_BGM(1);
             Time.timeScale = 0f;
             WarningPanel.SetActive(true);
         }

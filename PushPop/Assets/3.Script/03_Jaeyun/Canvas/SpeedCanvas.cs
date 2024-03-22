@@ -101,7 +101,6 @@ public class SpeedCanvas : MonoBehaviour
         }
         else if (SpeedGame.activeSelf)
         { // 게임 중일 때
-            AudioManager.Instance.SetAudioClip_BGM(1);
             Time.timeScale = 0f;
             WarningPanel.SetActive(true);
         }

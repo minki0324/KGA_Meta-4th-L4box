@@ -62,7 +62,6 @@ public class MultiCanvas : MonoBehaviour
 
     public void GameStartButton()
     { // 대기 - 게임 시작
-        AudioManager.Instance.SetAudioClip_BGM(5);
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
 
         if (!ProfileManager.Instance.IsSelect)
@@ -70,16 +69,19 @@ public class MultiCanvas : MonoBehaviour
             StartCoroutine(NonePlayerSetting_Co());
             return;
         }
-
-        StopAllCoroutines();
-        GameManager.Instance.IsGameClear = false;
-        SQL_Manager.instance.SQL_ProfileListSet();
-        LoadingPanel.Instance.gameObject.SetActive(true);
-        MultiGame.SetActive(true);
-        HelpButton.SetActive(false);
-        BackButton.SetActive(false);
-        Ready.SetActive(false);
-        multiManager.GameStart();
+        else
+        {
+            AudioManager.Instance.SetAudioClip_BGM(5);
+            StopAllCoroutines();
+            GameManager.Instance.IsGameClear = false;
+            SQL_Manager.instance.SQL_ProfileListSet();
+            LoadingPanel.Instance.gameObject.SetActive(true);
+            MultiGame.SetActive(true);
+            HelpButton.SetActive(false);
+            BackButton.SetActive(false);
+            Ready.SetActive(false);
+            multiManager.GameStart();
+        }
     }
 
     private IEnumerator NonePlayerSetting_Co()

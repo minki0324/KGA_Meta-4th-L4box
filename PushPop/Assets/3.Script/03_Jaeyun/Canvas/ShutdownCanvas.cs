@@ -16,7 +16,7 @@ public class ShutdownCanvas : MonoBehaviour
 
     private void ShutdownInit()
     {
-        gameObject.SetActive(false);
+        GameReadyPanel.SetActive(false);
     }
 
     private void ShutdownAlarm()
