@@ -15,10 +15,10 @@ public class SpeedManager : MonoBehaviour, IGame
     [Header("Canvas")]
     [SerializeField] private SpeedCanvas speedCanvas = null;
 
-
     [Header("Panel")]
     [SerializeField] private GameObject resultPanel = null;
     [SerializeField] private GameObject warningPanel = null;
+    [SerializeField] private GameObject titleText = null;
 
     [Header("Game Info")]
     public Difficulty Difficulty = Difficulty.Easy;
@@ -74,6 +74,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
         gameTimer.gameObject.SetActive(false);
         countSlider.gameObject.SetActive(false);
+        titleText.SetActive(true);
         firstSetting = true;
         isEndGame = false;
 
@@ -131,6 +132,7 @@ public class SpeedManager : MonoBehaviour, IGame
     public IEnumerator GameStart_Co()
     {
         Difficulty = GameManager.Instance.Difficulty;
+        titleText.SetActive(false);
         countSlider.gameObject.SetActive(true);
         gameTimer.gameObject.SetActive(true);
 
