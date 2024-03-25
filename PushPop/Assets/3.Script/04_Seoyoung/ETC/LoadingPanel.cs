@@ -23,11 +23,11 @@ public class LoadingPanel : MonoBehaviour
     [SerializeField] private Image FadeBackground;
 
     [Header("비눗방울 최대 생성 갯수")]
-    public int maxBubble = 100;     //최대 버블 수
+    [SerializeField] private  int maxBubble = 70;     //최대 버블 수
 
     [Header("비눗방울 올라가는 속도")]
-    public int upSpeed_Min = 30;
-    public int upSpeed_Max = 52;
+    [SerializeField] private int upSpeed_Min = 50;
+    [SerializeField] private int upSpeed_Max = 80;
 
     [Header("비눗방울 좌우 속도")]
     public float moveRange_Min = -3f;
@@ -197,25 +197,25 @@ public class LoadingPanel : MonoBehaviour
     {
         GameManager.Instance.IsLoading = true;
 
-        float visibility = 0.001f;
+        float visibility = 0.05f;
         FadeBackground.material.SetFloat("_Visibility", visibility);
 
         yield return new WaitForSeconds(0.5f);
 
-        float cashing1 = 0.1f;
-        float cashing2 = 0.05f;
+        float cashing1 = 0.2f;
+        float cashing2 = 0.1f;
         while (true)
         {
             if (visibility <= 0.35f)
             {
-                visibility += 0.05f;
+                visibility += 0.1f;
                 FadeBackground.material.SetFloat("_Visibility", visibility);
                 // yield return null;
                 yield return new WaitForSeconds(cashing1);
             }
             else if (visibility > 0.3f && visibility < 4f)
             {
-                visibility += 0.15f;
+                visibility += 0.25f;
                 FadeBackground.material.SetFloat("_Visibility", visibility);
                 yield return new WaitForSeconds(cashing2);
             }

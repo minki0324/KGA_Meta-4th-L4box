@@ -40,7 +40,7 @@ public class DebugLog : MonoBehaviour
     private void HandleLog(string logString, string stackTrace, LogType type)
     {
         // 여기서 받은 로그 메시지를 처리합니다. 예를 들어:
-        Adding_Message($"{type}: {logString}");
+        Adding_Message($"{type}: {logString}\n{stackTrace}");
     }
 
     public void Adding_Message(string m)
