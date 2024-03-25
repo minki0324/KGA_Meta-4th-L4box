@@ -57,6 +57,7 @@ public class MultiCanvas : MonoBehaviour
         SelectButton.SetActive(false);
         ChangeButton.SetActive(true);
         profileCanvas.gameObject.SetActive(true);
+        profileCanvas.BackButton.SetActive(true);
         profileCanvas.BlockPanel.SetActive(true);
     }
 

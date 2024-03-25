@@ -89,6 +89,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         yield return null;
         if (GameManager.Instance.GameMode.Equals(GameMode.Lobby) && !mainCanvas.isChangeProfile)
         {
+            ExitButton.SetActive(false);
             gameObject.SetActive(false);
         }
         else if (GameManager.Instance.GameMode.Equals(GameMode.Title))
