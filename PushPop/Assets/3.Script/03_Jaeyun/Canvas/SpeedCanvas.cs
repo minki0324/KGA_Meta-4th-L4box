@@ -57,6 +57,7 @@ public class SpeedCanvas : MonoBehaviour
         GameManager.Instance.Difficulty = (Difficulty)_difficulty;
 
         SelectCategoryPanelScrollView.normalizedPosition = new Vector2(1f, 1f);
+        SelectDifficultyPanel.SetActive(false);
         SelectCategoryPanel.SetActive(true);
     }
 

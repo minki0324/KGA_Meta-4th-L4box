@@ -131,9 +131,16 @@ public class ProfileManager : MonoBehaviour
     }
 
     public void PrintProfileList(Transform parent)
+    {
+        StartCoroutine(PrintProfileList_Co(parent));
+    }
+
+    public IEnumerator PrintProfileList_Co(Transform parent)
     { // scroll view output
         // DB에 UID별로 저장되어있는 Profile들을 SQL_Manager에 List Up 해놓음
         SQL_Manager.instance.SQL_ProfileListSet();
+
+        yield return new WaitForSeconds(0.1f);
 
         for (int i = 0; i < ProfilePanelList.Count; i++)
         { // 출력 전 기존에 출력되어 있는 List가 있다면 초기화

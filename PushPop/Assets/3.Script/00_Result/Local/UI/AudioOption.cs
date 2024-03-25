@@ -45,8 +45,6 @@ public class AudioOption : MonoBehaviour
         {
             SFX_Slider.value = -15f;
         }
-
-        gameObject.SetActive(false);
     }
 
     public void SetVolume(bool _isBgm)

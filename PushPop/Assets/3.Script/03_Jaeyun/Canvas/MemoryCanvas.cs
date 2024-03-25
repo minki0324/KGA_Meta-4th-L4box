@@ -71,7 +71,6 @@ public class MemoryCanvas : MonoBehaviour
         }
         catch (System.Exception)
         {
-            Debug.Log("처음게임하는경우 saveStage : 0");
             memoryManager.saveStage = 1;
         }
         int activebtnCount = memoryManager.saveStage / 5;

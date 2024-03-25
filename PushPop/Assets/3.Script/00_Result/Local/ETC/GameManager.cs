@@ -98,6 +98,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        Application.targetFrameRate = 60;
     }
     private void Update()
     {
