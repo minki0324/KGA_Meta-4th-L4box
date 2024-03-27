@@ -4,55 +4,47 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
+public enum MusicOption
+{
+    BGM = 0,
+    SFX,
+}
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager instance = null;
+    public static AudioManager Instance = null;
 
 
     [Header("AudioMixer")]
-    [SerializeField]
     public AudioMixer audioMixer;
 
-    [Header("0 : 전체 / 1 : 배경 / 2 : 효과음")]
-    [SerializeField]
-    private AudioSource[] audioSource_arr;
-
-    [SerializeField]
-    private List<AudioClip> bgmClip_List;
-
-    [SerializeField]
-    private List<AudioClip> pushSfxClip_List;
-
-    [SerializeField]
-    private List<AudioClip> speedSfxClip_List;
-
-    [SerializeField]
-    private List<AudioClip> memorySfxClip_List;
-
-    [SerializeField]
-    private List<AudioClip> bombSfxClip_List;
-
-    [SerializeField]
-    private List<AudioClip> commonSfxClip_List;
-
-    [SerializeField]
-    private List<Button> btn_List;
+    [Header("0 : 배경 / 1 : 효과음")]
+    public AudioSource[] audioSource_arr;
+    [SerializeField] private List<AudioClip> bgmClip_List;
+    
+    private List<List<AudioClip>> sfxClipList = new List<List<AudioClip>>();
+    [SerializeField] private List<AudioClip> pushSfxClip_List;
+    [SerializeField] private List<AudioClip> speedSfxClip_List;
+    [SerializeField] private List<AudioClip> memorySfxClip_List;
+    [SerializeField] private List<AudioClip> multiSfxClip_List;
+    [SerializeField] private List<AudioClip> talkSfxClip_List;
+    [SerializeField] private List<AudioClip> commonSfxClip_List;
 
     public float startVolume;
     public float fadeTime = 5000f;
 
     public bool bBgmChanging = false;
-    public int playingBgm;
+    public int playingBgm = 0;
     private Coroutine stopMusic = null;
-  
 
-    #region Unity Callback
+    int bgmIndex = (int)MusicOption.BGM;
+    int sfxIndex = (int)MusicOption.SFX;
+
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -60,23 +52,45 @@ public class AudioManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        Init();
+        SetAudioClip_BGM(0);
     }
 
-    private void Start()
+    private void Init()
     {
-       
-        audioSource_arr = GetComponents<AudioSource>();
-        audioSource_arr[1].clip = bgmClip_List[0];
         playingBgm = 0;
+        audioSource_arr[1].clip = bgmClip_List[0];
+
+        sfxClipList.Add(pushSfxClip_List);
+        sfxClipList.Add(speedSfxClip_List);
+        sfxClipList.Add(memorySfxClip_List);
+        sfxClipList.Add(multiSfxClip_List);
+        //sfxClipList.Add(talkSfxClip_List);
+
+        // 시작 시 Audio Setting
+        if (PlayerPrefs.HasKey("BGMVolume"))
+        {
+            audioMixer.SetFloat("BGM", PlayerPrefs.GetFloat("BGMVolume"));
+        }
+        else
+        {
+            audioMixer.SetFloat("BGM", -12f);
+            PlayerPrefs.SetFloat("BGMVolume", -12f);
+        }
+
+        if (PlayerPrefs.HasKey("SFXVolume"))
+        {
+            audioMixer.SetFloat("SFX", PlayerPrefs.GetFloat("SFXVolume"));
+        }
+        else
+        {
+            audioMixer.SetFloat("SFX", -12f);
+            PlayerPrefs.SetFloat("SFXVolume", -12f);
+        }
     }
-
-    #endregion
-
 
     public void SetAudioClip_BGM(int index)
     {
-        
-
         if (bBgmChanging)
         {
             StopCoroutine(stopMusic);
@@ -90,90 +104,53 @@ public class AudioManager : MonoBehaviour
             playingBgm = index;
             stopMusic = StartCoroutine(BGM_Fade(playingBgm));
         }
-
-
-
-
-
-        //audioSource_arr[1].clip = bgmClip_List[index];
-        //audioSource_arr[1].Play();
-        //audioSource_arr[1].loop = true;
     }
 
     public void SetAudioClip_SFX(int index, bool bLoop)
     {
         if (!bLoop)
         {
-            switch (GameManager.Instance.gameMode)
-            {
-                case Mode.PushPush:
-
-                    audioSource_arr[2].PlayOneShot(pushSfxClip_List[index]);
-                    break;
-
-                case Mode.Speed:
-                    audioSource_arr[2].PlayOneShot(speedSfxClip_List[index]);
-                    break;
-
-                case Mode.Memory:
-                    audioSource_arr[2].PlayOneShot(memorySfxClip_List[index]);
-                    break;
-
-                case Mode.Bomb:
-                    audioSource_arr[2].PlayOneShot(bombSfxClip_List[index]);
-                    break;
-
-
-            }
+            audioSource_arr[sfxIndex].PlayOneShot(sfxClipList[(int)GameManager.Instance.GameMode][index]);
         }
         else
         {
-            switch (GameManager.Instance.gameMode)
-            {
-                case Mode.PushPush:
-                    audioSource_arr[2].clip = pushSfxClip_List[index];
-                    audioSource_arr[2].Play();
-                    audioSource_arr[2].loop = bLoop;
-                    break;
+            audioSource_arr[sfxIndex].clip = sfxClipList[(int)GameManager.Instance.GameMode][index];
+            audioSource_arr[sfxIndex].Play();
+            audioSource_arr[sfxIndex].loop = bLoop;
+        }
+    }
 
-                case Mode.Speed:
-                    audioSource_arr[2].clip = speedSfxClip_List[index];
-                    audioSource_arr[2].Play();
-                    audioSource_arr[2].loop = bLoop;
-                    break;
 
-                case Mode.Memory:
-                    audioSource_arr[2].clip = memorySfxClip_List[index];
-                    audioSource_arr[2].Play();
-                    audioSource_arr[2].loop = bLoop;
-                    break;
-
-                case Mode.Bomb:
-                    audioSource_arr[2].clip = bombSfxClip_List[index];
-                    audioSource_arr[2].Play();
-                    audioSource_arr[2].loop = bLoop;
-                    break;
-            }
+    public void SetTalkTalkAudioClic_SFX(int index, bool bLoop)
+    {
+        if (!bLoop)
+        {
+            audioSource_arr[sfxIndex].PlayOneShot(talkSfxClip_List[index]);
+        }
+        else
+        {
+            audioSource_arr[sfxIndex].clip = talkSfxClip_List[index];
+            audioSource_arr[sfxIndex].Play();
+            audioSource_arr[sfxIndex].loop = bLoop;
         }
     }
 
     public void SetCommonAudioClip_SFX(int index)
     {
-        audioSource_arr[2].PlayOneShot(commonSfxClip_List[index]);
+        audioSource_arr[sfxIndex].PlayOneShot(commonSfxClip_List[index]);
     }
 
     public void Stop_SFX()
     {
-        audioSource_arr[2].Stop();
+        audioSource_arr[sfxIndex].Stop();
     }
 
     public void Pause_SFX(bool pause)
     {
         if (pause)
-            audioSource_arr[2].Pause();
+            audioSource_arr[sfxIndex].Pause();
         else
-            audioSource_arr[2].UnPause();
-
+            audioSource_arr[sfxIndex].UnPause();
     }
 
     public IEnumerator BGM_Fade(int index)
@@ -181,39 +158,34 @@ public class AudioManager : MonoBehaviour
         bBgmChanging = true;
         while (true)
         {
-            if(audioSource_arr[1].volume <= 0.5f)
+            if(audioSource_arr[bgmIndex].volume <= 0.5f)
             {
-                audioSource_arr[1].Stop();
-                audioSource_arr[1].volume = 0.5f;
+                audioSource_arr[bgmIndex].Stop();
+                audioSource_arr[bgmIndex].volume = 0.5f;
 
-                audioSource_arr[1].clip = bgmClip_List[index];
-                audioSource_arr[1].Play();
-                audioSource_arr[1].loop = true;
+                audioSource_arr[bgmIndex].clip = bgmClip_List[index];
+                audioSource_arr[bgmIndex].Play();
+                audioSource_arr[bgmIndex].loop = true;
                 break;
             }
 
-            audioSource_arr[1].volume -= (Time.deltaTime / fadeTime);
+            audioSource_arr[bgmIndex].volume -= (Time.deltaTime / fadeTime);
             yield return null;
         }
-
-    
-
+        
         while (true)
         {
-            if(audioSource_arr[1].volume >= 1f)
+            if(audioSource_arr[bgmIndex].volume >= 1f)
             {
-                audioSource_arr[1].volume = 1;
+                audioSource_arr[bgmIndex].volume = 1;
                 bBgmChanging = false;
                 break;
             }
 
-            audioSource_arr[1].volume += Time.deltaTime / fadeTime;
+            audioSource_arr[bgmIndex].volume += Time.deltaTime / fadeTime;
             yield return null;
         }
 
-  
         yield break;
-
     }
-
 }

@@ -1,55 +1,40 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class MemoryPushpop : MonoBehaviour
-{
-    private Image _myImage;
-    public bool isCorrect;
-    private Button button;
-    private MemoryBoard memoryBoard;
-    private Animator ani;
-    private int clearMessage;
-    [SerializeField] private TMP_Text resultText = null;
+{ // Memeory PushPop Button Prefabs
+    private MemoryManager memoryManager = null;
+    [SerializeField] private MemoryBoard memoryBoard;
+    [SerializeField] private Image popButtonImage;
+    [SerializeField] private Button popButton;
+    [SerializeField] private Animator popButtonAnimation;
+    public bool IsCorrect = false; // 정답이면 true 아니면 false
 
-    private void Awake()
+    private void OnEnable()
     {
-        TryGetComponent(out button);
-        //TryGetComponent(out ani);
-         ani =GetComponent<Animator>();
-
+        popButtonImage.alphaHitTestMinimumThreshold = 0.1f; // Sprite에서 Alpha 값이 0.1 이하 일시 인식하지 않게함
         memoryBoard = transform.parent.GetComponent<MemoryBoard>();
+        memoryManager = memoryBoard.memoryManager;
     }
-    private void OnDisable()
-    {
-        isCorrect = false; // 정답버튼인지
-        button.interactable = true; //눌렷던버튼 활성화
-    }
-    void Start()
-    {
-        _myImage = GetComponent<Image>();
-        //Sprite에서 Alpha 값이 0.1 이하 일시 인식하지 않게함
-        _myImage.alphaHitTestMinimumThreshold = 0.1f;
-    }
-    #region onButton에 넣어주는메소드
-    public void onBtnClick()
-    {
-        if (memoryBoard.stage.isSpecialStage)
+
+    #region OnClick Method
+    public void MemoryPopButtonClick()
+    { // prefab onclick method
+        if (memoryBoard.Stage.IsSpecialStage)
         {
-            InOrderBtn();
+            SpecialStage();
         }
         else
         {
-            MemoryBtnClick();
+            DefaultStage();
         }
     }
-    public void MemoryBtnClick()
-    {
-        if (isCorrect)
-        {//정답을 눌렀을때
+
+    public void DefaultStage()
+    { // 일반 스테이지 버튼
+        if (IsCorrect)
+        { // 정답을 눌렀을때
             Correct();
         }
         else
@@ -57,10 +42,11 @@ public class MemoryPushpop : MonoBehaviour
             Incorrect();
         }
     }
-    public void InOrderBtn()
-    {
+
+    public void SpecialStage()
+    { // 스페셜 스테이지 버튼
         if (memoryBoard.IsOrder(this))
-        {
+        { // 순서대로 눌렀을 때
             Correct();
         }
         else
@@ -69,113 +55,80 @@ public class MemoryPushpop : MonoBehaviour
         }
     }
     #endregion
-    #region 정답,오답판정메소드
+    #region Correct, Incorrect
     private void Correct()
-    {//정답메소드
-        AudioManager.instance.SetAudioClip_SFX(3,false);
-
-        //todo 점수주기
-        button.interactable = false; //누른버튼은 비활성화
-        memoryBoard.CurrentCorrectCount++; //정답카운트 증가
-        MemoryManager.Instance.AddScore(); //점수 증가
-        if (memoryBoard.isStageClear())
+    { // 정답 시
+        AudioManager.Instance.SetAudioClip_SFX(3, false);
+        // 점수 주기
+        popButton.interactable = false; // 누른 버튼은 비활성화
+        memoryBoard.CurrentCorrectCount++; // 정답 카운트 증가
+        memoryManager.AddScore(100); // 점수 증가
+        if (memoryBoard.IsStageClear())
         {
-            onStageClear();
+            StartCoroutine(StageClear_Co());
         }
     }
     private void Incorrect()
-    {//오답메소드
-        AudioManager.instance.SetAudioClip_SFX(0, false);
-        PlayShakePush();
-        //라이프 깎기(MemoryManager)
-        MemoryManager.Instance.Life--;
-        MemoryManager.Instance.LifeRemove();
-        //해당 버튼이 흔들리게 설정(애니메이션)
-        //라이프 모두소진시 실패
-        if (MemoryManager.Instance.Life == 0)
-        {//결과창호출
-            //모든라이프가 소진해서 패배
-            MemoryManager.Instance.OnGameEnd();
-            AudioManager.instance.SetAudioClip_SFX(5, false);
-            MemoryManager.Instance.ResultPanel.SetActive(true);
+    { // 오답 시
+        AudioManager.Instance.SetAudioClip_SFX(0, false);
+        PlayShakePush(); // ani
+        memoryManager.Life--;
+        memoryManager.LifeRemove();
+
+        if (memoryManager.Life.Equals(0))
+        { // 라이프 모두 소진 시 게임 종료
+            AudioManager.Instance.SetAudioClip_SFX(5, false);
+            GameManager.Instance.GameEnd?.Invoke();
         }
-
     }
-
-    
     #endregion
-    #region 스테이지 승리콜백메소드
+    #region Stage Clear Method
+    private IEnumerator StageClear_Co()
+    { // Stage Clear
+        AudioManager.Instance.SetAudioClip_SFX(4, false);
+        memoryBoard.ButtonAllStop(); // 버튼 동작 정지
+        memoryManager.PlayStartPanel("훌륭해요!");
 
-
-    private void onStageClear()
-    {//스테이지  클리어시 불리는 메소드
-        Debug.Log(MemoryManager.Instance.currentStage + " : 스테이지클리어");
-
-        //코루틴으로 텀주고 훌륭해요 띄워주기 2초
-        StartCoroutine(Clear_co());
-
-    }
-    private IEnumerator Clear_co()
-    {//클리어 코루틴
-        //훌륭해요 애니메이션
-        memoryBoard.BtnAllStop(); //버튼동작정지
-                
-        AudioManager.instance.SetAudioClip_SFX(4, false);
-        MemoryManager.Instance.PlayStartPanel("훌륭 해요!");//애니메이션 멘트재생
         yield return new WaitForSeconds(2f);
-        MemoryManager.Instance.currentStage++; //스테이지 Index증가
-        Debug.Log(MemoryManager.Instance.currentStage);
-        //준비된 스테이지 < 현재스테이지
-         if(MemoryManager.Instance.endStageIndex < MemoryManager.Instance.currentStage)
-        {
-            //결과창호출
-            //모든스테이지 클리어 했을때
-            MemoryManager.Instance.OnGameEnd();
-            AudioManager.instance.SetAudioClip_SFX(5, false);
-            MemoryManager.Instance.ResultPanel.SetActive(true);
+
+        memoryManager.CurrentStage++; //스테이지 Index 증가
+        if (memoryManager.EndStageIndex < memoryManager.CurrentStage)
+        { // 준비된 스테이지 < 현재 스테이지, 모든 스테이지 클리어 시
+            GameManager.Instance.GameEnd?.Invoke();
             yield break;
         }
-        Destroy(memoryBoard.gameObject); //현재보드 지우기
-        MemoryManager.Instance.SetStageIndex(); //스테이지 텍스트 문구변경
 
-        //다음스테이지?로이동(새로운보드 꺼내주기) manager에서 
-        MemoryManager.Instance.CreatBoard();
+        Destroy(memoryBoard.gameObject); // 현재 스테이지 보드 지우기
+        memoryManager.StageText.text = $"{memoryManager.CurrentStage} 단계";
+
+        // 다음 스테이지로 (새로운 보드 생성) 
+        memoryManager.CreatBoard();
     }
-
-
     #endregion
-
-    #region 버튼클릭애니메이션
-    #endregion
+    #region Button Animation
     //본인이 정답인지 깜빡이는 메소드
     public void PlayBlink()
-    { //게임시작, 혹은 힌트버튼누를때 정답 버튼을 알려주는 메소드
-        ani.SetTrigger("isBlink");
-
-        if (MemoryManager.Instance.currentStage % 5 != 0)
-        {
-            AudioManager.instance.SetAudioClip_SFX(2, false);
+    { // 게임시작, 혹은 힌트 버튼 클릭 시 정답 버튼을 알려주는 메소드
+        popButtonAnimation.SetTrigger("isBlink");
+        if (memoryBoard.Stage.IsSpecialStage)
+        { // 스페셜 스테이지일 때
+            AudioManager.Instance.SetAudioClip_SFX(1, false);
         }
         else
-        {
-            AudioManager.instance.SetAudioClip_SFX(1, false);
+        { // 스페셜 스테이지가 아닐 때
+            AudioManager.Instance.SetAudioClip_SFX(2, false);
         }
-
     }
+
     private void PlayShakePush()
-    {//버튼이 틀렸을때 흔들리는 애니메이션
-        ani.SetTrigger("isShake");
-        //흔들리는 동안 터치 안되게
-        _myImage.raycastTarget = false;
+    { // 오답 버튼 선택 시 흔들리는 애니메이션
+        popButtonAnimation.SetTrigger("isShake");
+        popButtonImage.raycastTarget = false;
     }
+
     public void ShakeEndAfter()
-    {//애니메이션 Event로 추가되있음
-        // 흔들림이 끝나고 다시 터치 가능하게 만듬
-        _myImage.raycastTarget = true;
-        Debug.Log("11");
+    { // 애니메이션 Event로 추가되어 있음
+        popButtonImage.raycastTarget = true;
     }
-    #region
     #endregion
-
-
 }

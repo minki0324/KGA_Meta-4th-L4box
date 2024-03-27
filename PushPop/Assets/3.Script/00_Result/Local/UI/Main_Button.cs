@@ -27,16 +27,15 @@ public class Main_Button : MonoBehaviour
     [SerializeField] private GameObject gameModePanel;
   
 
-    [Header("모드별 캔버스")]
 
-    [SerializeField] private Help_Canvas help_Cavas;
+    [SerializeField] private HelpScriptManager help_Cavas;
 
     #region Unity Callback
     private void OnEnable()
     {
         Enable_Button();
         help_Cavas.gameObject.SetActive(false);
-        GameManager.Instance.shutdownTimer = 0;
+        // GameManager.Instance.ShutdownTimer = 0;
     }
     #endregion
 
@@ -44,51 +43,51 @@ public class Main_Button : MonoBehaviour
     public void PushPushBtn_Clicked()
     { // GameMode PushPushBtn 연동 Method
         timesetPanel.SetActive(true);
-        GameManager.Instance.GameModeSetting(0);
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        //GameManager.Instance.GameModeSetting(0);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
     }
 
     public void SpeedBtn_Clicked()
     { // GameMOde SpeedBtn 연동 Method
         timesetPanel.SetActive(true);
-        GameManager.Instance.GameModeSetting(1);
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        //GameManager.Instance.GameModeSetting(1);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
     }
 
     public void MemoryBtn_Clicked()
     { // GameMode Memory 연동 Method
         timesetPanel.SetActive(true);
-        GameManager.Instance.GameModeSetting(2);
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        //GameManager.Instance.GameModeSetting(2);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
     }
 
     public void BombBtn_Clicked()
     { // GameMode MultiBtn 연동 Method
         timesetPanel.SetActive(true);
-        GameManager.Instance.GameModeSetting((int)Mode.Bomb);
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        //GameManager.Instance.GameModeSetting((int)GameMode.Multi);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
     }
-
+/*
     public void Profile_Btn_Clicked()
     { // MainLobby ProfileIconBtn 연동 Method
         NewProfileCanvas profile = profilePanel.GetComponent<NewProfileCanvas>();
         profilePanel.SetActive(true);
         profileReturnBtn.gameObject.SetActive(true);
-        ProfileManager.Instance.PrintProfileList(profile.profileParent, ProfileManager.Instance.ProfileIndex1P, null);
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        ProfileManager.Instance.PrintProfileList(profile.profileParent);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
     }
-
+*/
     public void ProfileReturnBtn_Clicked()
     { // Profile Return Btn
         profilePanel.SetActive(false);
         profileReturnBtn.gameObject.SetActive(false);
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
     }
 
     public void OptionBtn_Clicked()
     { // MainLobby OptionBtn 연동 Method
         optionPanel.SetActive(true);
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
     }
 
     public void CollectionBtn_Clicked()
@@ -96,13 +95,13 @@ public class Main_Button : MonoBehaviour
         //네트워크 씬으로 이동 + 필요한 함수 호출해주세요 :)
         
         Debug.Log("네트워크 씬으로 넘어가기");
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
     }
     
     public void HomeBtn_Clicked()
     { // MainLobby HomeBtn 연동 Method
         Application.OpenURL("https://www.l4box.com/");
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
     }
 
 

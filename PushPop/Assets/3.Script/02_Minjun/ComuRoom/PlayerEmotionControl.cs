@@ -7,19 +7,34 @@ public class PlayerEmotionControl : NetworkBehaviour
 {
 
     private Animator animator;
-    private NetworkIdentity networkIdentity;
-
+    [SerializeField]private NetworkIdentity networkIdentity;
+    private WaitForSeconds waitTime = new WaitForSeconds(2);
+    [SerializeField] private GameObject[] emojis; 
+    private Coroutine emojiCo;
+    private Vector3 myScale;
+    private Vector3 myPos;
+    float tempScaleX;
     //이모션 사진 직접참조
-    [SerializeField] private SpriteRenderer spriterenderer;
+    [SerializeField] private GameObject currentEmoji;
     void Start()
     {
         TryGetComponent(out animator);
-        transform.root.TryGetComponent(out networkIdentity);
+        if (isLocalPlayer)
+        {
+            Emotion.instance.playerEmotion = this;
+        }
+
     }
-    
     public void EMotionChange(int index)
     {
-        spriterenderer.sprite = Emotion.instance.emotions[index];
+        if(currentEmoji != null)
+        {
+            StopCoroutine(emojiCo);
+            currentEmoji.SetActive(false);
+        }
+        currentEmoji = emojis[index];
+      
+       
     }
     [Client]
     public void PlayEmotion(int index)
@@ -39,9 +54,13 @@ public class PlayerEmotionControl : NetworkBehaviour
         PlayerEmotionControl targetEmotionControl = targetObject.GetComponentInChildren<PlayerEmotionControl>();
         //선택한 이모션 Sprite로 교체
         targetEmotionControl.EMotionChange(index);
-        //이모션 Play
-        targetEmotionControl.animator.SetTrigger("onEmotion");
+        emojiCo = StartCoroutine(EmojiPlay_co());
     }
-
+    public IEnumerator EmojiPlay_co()
+    {
+        currentEmoji.SetActive(true);
+       yield return waitTime;
+        currentEmoji.SetActive(false);
+    }
 
 }

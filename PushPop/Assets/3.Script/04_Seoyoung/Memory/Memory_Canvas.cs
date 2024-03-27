@@ -23,7 +23,7 @@ public class Memory_Canvas : MonoBehaviour
     [SerializeField] private Canvas main_Canvas;
     [SerializeField] private GameObject gameSet_Panel; 
     [SerializeField] private GameObject memoryGame_Canvas;
-    [SerializeField] private Help_Canvas help_Canvas;
+    [SerializeField] private HelpScriptManager help_Canvas;
 
     [Header("개인 기록")] 
     [SerializeField] private Image profile_Image;
@@ -49,7 +49,7 @@ public class Memory_Canvas : MonoBehaviour
     #region Unity Callback
     private void OnEnable()
     {
-        AudioManager.instance.SetAudioClip_BGM(1);
+        AudioManager.Instance.SetAudioClip_BGM(1);
         if (!gameSet_Panel.activeSelf)
         {
             gameSet_Panel.SetActive(true);
@@ -80,7 +80,7 @@ public class Memory_Canvas : MonoBehaviour
     //게임 시작 버튼 클릭 시 호출되는 함수
     public void GameStartBtn_Clicked()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(0);
+        AudioManager.Instance.SetCommonAudioClip_SFX(0);
         gameSet_Panel.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
         memoryGame_Canvas.gameObject.SetActive(true);    
@@ -89,11 +89,11 @@ public class Memory_Canvas : MonoBehaviour
 
     public void BackBtn_Clicked()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         gameSet_Panel.gameObject.SetActive(false);
         help_Canvas.gameObject.SetActive(false);
 
-        AudioManager.instance.SetAudioClip_BGM(0);
+        AudioManager.Instance.SetAudioClip_BGM(0);
         main_Canvas.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
@@ -111,7 +111,6 @@ public class Memory_Canvas : MonoBehaviour
     public void RankingLoad()
     {
         Ranking.Instance.LoadScore(scoreText_Array, profileImage_Array, profileName_Array);
-        Ranking.Instance.LoadScore_Personal(profileName_Personal, scoreText_Personal, progileImage_Personal);
     }
 
     #endregion

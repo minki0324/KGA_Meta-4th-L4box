@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 188034972269089523}
   - component: {fileID: 188034972269089516}
   - component: {fileID: 188034972269089517}
-  - component: {fileID: 188034972269089519}
-  - component: {fileID: 188034972269089522}
   - component: {fileID: -2222827108776236891}
+  - component: {fileID: 188034972269089522}
+  - component: {fileID: 188034972269089519}
   m_Layer: 5
   m_Name: MemoryButton
   m_TagString: Untagged
@@ -79,20 +79,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &188034972269089519
-MonoBehaviour:
+--- !u!95 &-2222827108776236891
+Animator:
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 188034972269089520}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3dbd9b6b12b458d4eb3e855c4e8e7d83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isCorrect: 0
-  resultText: {fileID: 0}
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 77d493deb05c745438ab790a29ab57c1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &188034972269089522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,7 +145,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 188034972269089519}
         m_TargetAssemblyTypeName: MemoryPushpop, Assembly-CSharp
-        m_MethodName: onBtnClick
+        m_MethodName: MemoryPopButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -149,23 +155,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!95 &-2222827108776236891
-Animator:
-  serializedVersion: 4
+--- !u!114 &188034972269089519
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 188034972269089520}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 77d493deb05c745438ab790a29ab57c1, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dbd9b6b12b458d4eb3e855c4e8e7d83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popButtonImage: {fileID: 188034972269089517}
+  popButton: {fileID: 188034972269089522}
+  popButtonAnimation: {fileID: -2222827108776236891}
+  IsCorrect: 0

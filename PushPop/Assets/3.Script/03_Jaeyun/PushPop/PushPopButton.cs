@@ -11,18 +11,18 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
 
     private void OnEnable()
     {
-        switch (GameManager.Instance.gameMode)
+        switch (GameManager.Instance.GameMode)
         {
-            case Mode.PushPush:
-                CustomPushpopManager.Instance.StackPops.Push(gameObject);
+            case GameMode.PushPush:
+                PushPop.Instance.StackPops.Push(gameObject);
                 break;
-            case Mode.Memory:
+            case GameMode.Memory:
                 break;
 
         }
         Button btn = transform.GetComponent<Button>();
         btn.interactable = true;
-        if (!GameManager.Instance.gameMode.Equals(Mode.PushPush))
+        if (!GameManager.Instance.GameMode.Equals(GameMode.PushPush))
         {
             gameObject.GetComponent<Image>().raycastTarget = true;
         }
@@ -36,30 +36,34 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
     // Push Pop Button click method
     public void PushPopClick()
     {
-       
         GameObject clickButton = this.gameObject;
-        if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
+        switch (GameManager.Instance.GameMode)
         {
-            PushPop.Instance.pushPopButton.Remove(clickButton);
+            case GameMode.PushPush:
+                PushPop.Instance.PushCount++;
+                gameObject.GetComponent<Image>().raycastTarget = false;
+                break;
+            case GameMode.Speed:
+                break;
+            case GameMode.Multi:
+                if (player.Equals(0))
+                { // 1P ¼ÒÀ¯ ÆË ¹öÆ°
+                    PushPop.Instance.popButtonList1P.Remove(clickButton);
+                }
+                else if (player.Equals(1))
+                { // 2P ¼ÒÀ¯ ÆË ¹öÆ°
+                    PushPop.Instance.popButtonList2P.Remove(clickButton);
+                }
+                break;
         }
-        if (GameManager.Instance.gameMode.Equals(Mode.Bomb))
-        {
-            if (player.Equals(0))
-            { // 1P ¼ÒÀ¯ ÆË ¹öÆ°
-                GameManager.Instance.bombScript.popList1P.Remove(clickButton);
-            }
-            else if (player.Equals(1))
-            { // 2P ¼ÒÀ¯ ÆË ¹öÆ°
-                GameManager.Instance.bombScript.popList2P.Remove(clickButton);
-            }
-        }
+
         if (clickButton.GetComponent<Button>().interactable)
         {
-            AudioManager.instance.SetCommonAudioClip_SFX(4);
-            GameManager.Instance.buttonActive--;
+            AudioManager.Instance.SetCommonAudioClip_SFX(4);
+            PushPop.Instance.ActivePosCount--;
             clickButton.GetComponent<Button>().interactable = false;
         }
-        GameManager.Instance.GameClear();
+        
+        GameManager.Instance.GameEnd?.Invoke();
     }
-
 }

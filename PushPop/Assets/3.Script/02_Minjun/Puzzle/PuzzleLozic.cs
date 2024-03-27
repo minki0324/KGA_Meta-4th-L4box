@@ -7,50 +7,31 @@ using UnityEngine.EventSystems;
 using System;
 
 public class PuzzleLozic : MonoBehaviour
-{
-    [Header("맞추는 퍼즐 오브젝트")]
-    public GameObject PieceObject;
-    [Header("프레임 오브젝트")]
-    public GameObject FrameObject;
-    [Header("퍼즐상속시킬 오브젝트")] 
-    public GameObject PuzzleParent;
-    public GameObject FrameParent;
+{ // puzzle Prefab
+    [Header("Prefab")]
+    [SerializeField] private GameObject frameObject = null;
+    [SerializeField] private GameObject pieceObject = null;
 
-    [Header("프레임 설정 위치")]
-    public Transform frampPos;
-    [Header("피스들 설정 위치")] //임시
+    [Header("Puzzle Mode Info")] 
+    [SerializeField] private List<Puzzle> puzzles = new List<Puzzle>(); // puzzle scriptableObject list
+    [SerializeField] private Transform puzzleTrans = null; // puzzle이 생성되는 곳
+    public Transform framePos;
     public Transform failPiecePos;
-    public Vector2 _piecePos;
-    private float puzzleJudgmentDistance = 60; // 퍼즐 판정 거리.
-    public List<Puzzle> puzzles = new List<Puzzle>(); //모든 퍼즐 종류를 담아놓는 리스트
+    private Vector2 piecePos = Vector2.zero;
+
+    public Puzzle CurrentPuzzle; // Player가 고른 퍼즐 종류
+    private List<GameObject> pieceList = new List<GameObject>(); // 생성된 조각
+    private float puzzleJudgmentDistance = 60f; // 퍼즐 판정 거리.
     public int ClearCount=0; //맞춰야하는 퍼즐 갯수
-    public int successCount= 0; //맞춘 갯수
-    public Puzzle currentPuzzle; //Player가 고른 퍼즐 종류
-    [SerializeField] CustomPushpopManager costom;
-    public Action onPuzzleClear; //퍼즐을 모두 맞췄을때 부르는 콜백이벤트
-    public List<PuzzlePiece> pieceList = new List<PuzzlePiece>();
-    public SpriteAtlas atlas;
-    [SerializeField] private GameObject DecorationPanel;
+    public int SuccessCount= 0; //맞춘 갯수
 
-    private GameObject shadow = null;
+    //public Action onPuzzleClear; //퍼즐을 모두 맞췄을때 부르는 콜백이벤트
+    // public SpriteAtlas atlas;
+    public List<PuzzleObject> puzzleList = new List<PuzzleObject>(); // 생성된 puzzle
 
-    private void OnEnable()
-    {
-        onPuzzleClear += ActiveCustomPanel; //커스텀판넬 활성화
-        onPuzzleClear += DestroyChildren; //퍼즐완료시 프레임 , 피스들 모두삭제
-        onPuzzleClear += CraetBoard; //완성된 퍼즐보드 생산
-        onPuzzleClear += AtiveOnDecoPanel; //데코판넬활성화
-    }
-    private void OnDisable()
-    {
-        onPuzzleClear -= ActiveCustomPanel;
-        onPuzzleClear -= DestroyChildren;
-        onPuzzleClear -= CraetBoard;
-        onPuzzleClear -= AtiveOnDecoPanel; //데코판넬활성화
-    }
-    public bool checkdistance(Vector3 currentPosition )
-    {//퍼즐을 놓았을때 맞춰야하는 위치와 현재위치 비교
-        if (Vector3.Distance(currentPosition, frampPos.position) < puzzleJudgmentDistance)
+    public bool CheckDistance(Vector3 _currentPosition)
+    { // 퍼즐을 놓았을때 맞춰야하는 위치와 현재위치 비교
+        if (Vector3.Distance(_currentPosition, framePos.position) < puzzleJudgmentDistance)
         {
             return true;
         }
@@ -60,112 +41,100 @@ public class PuzzleLozic : MonoBehaviour
         }
     }
 
-    public void SelectPuzzleButton(int PuzzleIDIndex)
-    {//버튼참조 메소드
-        foreach (var Kind in puzzles)
+    #region Puzzle Mode
+    public void SettingPuzzleInfo()
+    { // scriptableObject setting, 선택한 카테고리에 맞는 퍼즐찾기
+        foreach (Puzzle kind in puzzles)
         {
-            //매개변수로받은 String과 List에 들어있는 퍼즐들중 Enum.toString()과 같은 퍼즐 찾기
-            if (Kind.PuzzleID == PuzzleIDIndex)
-            {
-                currentPuzzle = Kind;
-                //todo 게임매니저에 현재퍼즐 보내줘...
-
-
-                //클리어카운트는 퍼즐갯수 (Sprite)
-                ClearCount = currentPuzzle.sprites.Length;
-                //SettingPuzzle();
+            if (kind.PuzzleID.Equals(GameManager.Instance.CurrentIconName))
+            { // 선택한 Board
+                CurrentPuzzle = kind;
+                ClearCount = CurrentPuzzle.sprites.Length; // clear count = puzzle count
                 break;
             }
         }
-        if (currentPuzzle == null)
-        {
-            Debug.Log("일치하는 퍼즐이 없습니다. ScriptableObject를 추가해 주세요");
-        }
-       
     }
 
-    public void SettingGame()
-    {
-        for(int i = 0; i < pieceList.Count; i++)
+    public void SettingPuzzlePos()
+    { // 퍼즐기준 랜덤 위치에 bubble puzzle 생성
+        for (int i = 0; i < CurrentPuzzle.sprites.Length; i++)
         {
-            
-            pieceList[i].transform.GetComponent<Image>().raycastTarget = true;
-            PieceDragAndDrop dragAndDrop = pieceList[i].transform.GetComponent<PieceDragAndDrop>();
-            dragAndDrop.enabled = true;
-            dragAndDrop.puzzleLozic = this;
-            dragAndDrop.FailToSolvePuzzle();
-        }
-
-
-
-        if (shadow != null) return;
-        shadow = PuzzleInstantiate(FrameObject, frampPos.position, currentPuzzle.shadow, false);
-    }
-
-    public  void SettingPuzzle()
-    {//정해진 퍼즐 프레임,퍼즐 생성
-        for (int i = 0; i < currentPuzzle.sprites.Length; i++)
-        {
-            Texture2D puzzleTexture = currentPuzzle.sprites[i].texture;
+            Texture2D puzzleTexture = CurrentPuzzle.sprites[i].texture;
             float bigger = puzzleTexture.width > puzzleTexture.height ? puzzleTexture.width : puzzleTexture.height;
             //퍼즐위치 랜덤한 위치에 생성
-            float X = UnityEngine.Random.Range(bigger*1.2f, Screen.width- bigger * 1.2f);
-            float Y = UnityEngine.Random.Range(bigger * 1.2f, Screen.height- bigger * 1.2f);
-            _piecePos= new Vector2(X, Y);
-            GameObject piece = PuzzleInstantiate(PieceObject, _piecePos, currentPuzzle.sprites[i], true);
-            pieceList.Add(piece.GetComponent<PuzzlePiece>());
+            float X = UnityEngine.Random.Range(bigger * 1.2f, Screen.width - bigger * 1.2f);
+            float Y = UnityEngine.Random.Range(bigger * 1.2f, Screen.height - bigger * 1.2f);
+            piecePos = new Vector2(X, Y);
+            PuzzleInstantiate(pieceObject, piecePos, CurrentPuzzle.sprites[i], true); // puzzle 생성
+        }
+
+        for (int i = 0; i < puzzleList.Count; i++)
+        { // bubble 생성
+            GameManager.Instance.CreateBubble(puzzleList[i].puzzleArea, puzzleList[i].puzzleCenter, puzzleList[i].puzzleObject);
+            GameManager.Instance.LiveBubbleCount++;
         }
     }
-    private GameObject PuzzleInstantiate(GameObject puzzle , Vector3 position , Sprite puzzleSprite, bool _isPiece)
-    {//퍼즐생성
-        GameObject board = null;
-        board = Instantiate(puzzle, position, Quaternion.identity, FrameParent.transform);
-        PuzzleSetting(board, puzzleSprite);
-        //newPiecePuzle
-        if(_isPiece)
-        {//생성하는 퍼즐이 맞추는 조각일때
-            AlphaCalculate(puzzleSprite, board);
+
+    private void PuzzleInstantiate(GameObject _puzzle, Vector3 _position, Sprite _puzzleSprite, bool _isPiece)
+    { // 퍼즐 생성
+        GameObject board = Instantiate(_puzzle, _position, Quaternion.identity, puzzleTrans);
+        PuzzleSpriteSetting(board, _puzzleSprite);
+        pieceList.Add(board); // piceList 추가
+        if (_isPiece)
+        { // 생성하는 퍼즐이 맞추는 조각일때
+            AlphaCalculate(_puzzleSprite, board);
         }
         else
-        {//생성하는 퍼즐이 퍼즐 틀일때.
+        { // 생성하는 퍼즐이 퍼즐 프레임일 때
             //생성할 시 조각들보다 위로 세팅해주면서 조각이 틀에 안가려지게하기위함.
             board.transform.SetAsFirstSibling();
         }
-
-        return board;
+    }
+    
+    private void PuzzleSpriteSetting(GameObject _puzzle, Sprite _sprite)
+    { // sprite setting
+        Image frameImage = _puzzle.GetComponent<Image>();
+        frameImage.sprite = _sprite;
+        frameImage.preserveAspect = true; // sprite 비율 세팅
     }
 
-    private void PuzzleSetting(GameObject puzzle , Sprite sprite)
-    {//UI 캔버스에 상속, 정해진 사진으로 넣어주기 , 사진크기 세팅.
-        Image frameImage = puzzle.GetComponent<Image>(); 
-        frameImage.sprite = sprite; //퍼즐 사진넣기
-        frameImage.preserveAspect = true; //사진사이즈 세팅
+    public void SettingGame()
+    { // puzzle mode 진입
+        for (int i = 0; i < pieceList.Count; i++)
+        { // 막은 클릭 초기화
+            PieceDragAndDrop dragAndDrop = pieceList[i].GetComponent<PieceDragAndDrop>();
+            dragAndDrop.enabled = true;
+            dragAndDrop.PieceImage.raycastTarget = true;
+            dragAndDrop.FailToSolvePuzzle();
+        }
+
+        PuzzleInstantiate(frameObject, framePos.position, CurrentPuzzle.shadow, false);
     }
-    private void DestroyChildren()
-    {//퍼즐을 완료했을때 생성되있던 퍼즐 삭제하기위한 메소드
-        foreach (Transform child in PuzzleParent.transform.GetChild(0))
+    #endregion
+    #region 퍼즐완성 콜백 메소드들
+    public void DestroyChildren()
+    { // 퍼즐을 완료했을때 생성되있던 퍼즐,프레임 삭제하기위한 메소드
+        if (puzzleTrans.childCount > 0)
         {
-            Destroy(child.gameObject);
+            for (int i = 0; i < puzzleTrans.childCount; i++)
+            {
+                Destroy(puzzleTrans.GetChild(i).gameObject);
+            }
         }
     }
-    private void CraetBoard()
-    {//퍼즐완료하고 퍼즐 원본 오브젝트 생성해주기
-        Image frameImage = costom.puzzleBoard.GetComponent<Image>();
-        frameImage.sprite = atlas.GetSprite(currentPuzzle.PuzzleID.ToString()); //퍼즐 사진넣기
-        frameImage.SetNativeSize();
+
+    public void CraetBoard()
+    { // 퍼즐 완료하고 퍼즐 원본 오브젝트 생성
+        Image frameImage = PushPop.Instance.pushpushManager.customManager.puzzleBoard.GetComponent<Image>();
+        frameImage.sprite = DataManager.Instance.pushPopAtlas.GetSprite(CurrentPuzzle.PuzzleID.ToString()); //퍼즐 사진넣기
+        frameImage.preserveAspect = true; // sprite 비율 세팅
         frameImage.alphaHitTestMinimumThreshold = 0.1f;
-        //커스텀모드 활성화
-        costom.EnableThisComponent();
-        costom.isCustomMode = true;
-        shadow = null; // shadow 중복 안되도록
+        GameManager.Instance.IsCustomMode = true;
     }
-    private void ActiveCustomPanel()
-    {
-        costom.gameObject.SetActive(true);
-    }
+    #endregion
 
     public void AlphaCalculate(Sprite sprite , GameObject puzzle)
-    {
+    { // alpha 값 계산해서 퍼즐 센터 찾기
         Texture2D texture = sprite.texture;
         Color32[] pixels = texture.GetPixels32();
 
@@ -206,18 +175,17 @@ public class PuzzleLozic : MonoBehaviour
 
         // 중심점 위치 계산
         Vector2 finalCenter = new Vector2(center.x - spriteCenter.x, center.y - spriteCenter.y);
-        PuzzleObject obj = new PuzzleObject(puzzle, sprite, Area, finalCenter);
+        PuzzleObject puzzleObj = new PuzzleObject(puzzle, sprite, Area, finalCenter);
 
-        GameManager.Instance.puzzleClass.Add(obj);
-        puzzle.GetComponent<PuzzlePiece>().puzzle = obj;
+        puzzleList.Add(puzzleObj);
+        puzzle.GetComponent<PuzzlePiece>().Puzzle = puzzleObj;
     }
-    public void ClearPieceList()
+
+    public void PuzzleModeInit()
     {
         pieceList.Clear();
+        puzzleList.Clear();
+        SuccessCount = 0;
         DestroyChildren();
-    }
-    public void AtiveOnDecoPanel()
-    {
-        DecorationPanel.SetActive(true);
     }
 }

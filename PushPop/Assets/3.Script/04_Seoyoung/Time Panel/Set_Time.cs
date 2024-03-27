@@ -79,17 +79,6 @@ public class Set_Time : MonoBehaviour
     #endregion
 
     #region Other Method
-    private void Init()
-    {
-        
-        Confirm_Btn.onClick.AddListener(ConfirmBtn_Clicked);
-        Back_Btn.onClick.AddListener(() => {
-            gameObject.SetActive(false);
-            
-
-        });
-    }
-
     private void Calculate_Time()
     {
         sec = time % 60;    //60으로 나눈 나머지 = 초
@@ -102,100 +91,55 @@ public class Set_Time : MonoBehaviour
         {
             TimeText.text = $"{string.Format("{0:0}", min)}분 {sec}초";
         }
-      
     }
-
 
     public void IncreaseTimeBtn_Clicked()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         time += 60;
         Calculate_Time();
     }
 
     public void DecreaseTimeBtn_Clicked()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         time -= 60;
         Calculate_Time();
     }
 
-
-    //InputField에 시간 직접 입력
-    public void TextFieldValue_Changed(string text)
-    {
-        int InputNum = 0;
-        bool bIsNumber;
-
-        bIsNumber = int.TryParse(text, out InputNum);
-
-        if (bIsNumber)
-        {
-            time = InputNum;
-        }
-        else
-        {
-            if (TimeText.text == $"{string.Format("{0:0}", min)}분 {sec}초")
-            {
-
-            }
-            else
-            {
-                Debug.Log("숫자가 아닙니다");
-                time = 300;
-                Calculate_Time();
-            }
-
-
-            if (TimeText.text == string.Empty || time < 60)
-            {
-                Debug.Log("시간 미입력 시");
-                time = 60;
-                Calculate_Time();
-            }
-
-            if (time > 900)
-            {
-                time = 900;
-                Calculate_Time();
-            }
-        }
-    }
-
-
     public void ConfirmBtn_Clicked()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
-        GameManager.Instance.shutdownTimer = time;
-        if (GameManager.Instance.gameMode.Equals(Mode.PushPush))
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        GameManager.Instance.ShutdownTimer = time;
+        if (GameManager.Instance.GameMode.Equals(GameMode.PushPush))
         { // 푸시푸시 시작
             pushpushMode_Canvas.SetActive(true);
+            help_Canvas.SetActive(true);
+            // GameManager.Instance.pushPush.TitleSet("비눗방울을 터트려보세요!");
             help_Canvas.transform.SetParent(pushpushMode_Canvas.transform);
             help_Canvas.transform.SetSiblingIndex(3);
         }
-        else if (GameManager.Instance.gameMode.Equals(Mode.Speed))
+        else if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
         { // 스피드 시작
             speedMode_Canvas.SetActive(true);
         }
-        else if (GameManager.Instance.gameMode.Equals(Mode.Memory))
+        else if (GameManager.Instance.GameMode.Equals(GameMode.Memory))
         { // 메모리 시작
             memoryMode_Canvas.SetActive(true);
             memoryMode_Canvas.GetComponent<Memory_Canvas>().RankingLoad();
         }
-        else if (GameManager.Instance.gameMode.Equals(Mode.Bomb))
+        else if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
         { // 2인모드 시작
             bombMode_Canvas.SetActive(true);
-            bombMode_Canvas.transform.GetComponent<Bomb>().PrintVersus();
+            //bombMode_Canvas.transform.GetComponent<MultiManager>().PrintVersus();
         }     
-        help_Canvas.SetActive(true);
         main_Canvas.gameObject.SetActive(false);
         gameObject.SetActive(false);
     }
 
-
     public void BackBtnClicked()
     {
-        AudioManager.instance.SetCommonAudioClip_SFX(3);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         gameObject.SetActive(false);
     }
 

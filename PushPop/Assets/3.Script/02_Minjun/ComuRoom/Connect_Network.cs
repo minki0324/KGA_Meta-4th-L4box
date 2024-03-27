@@ -7,6 +7,7 @@ using kcp2k;
 using LitJson;
 using System;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public enum Type
 {
@@ -31,6 +32,8 @@ public class Item
 
 public class Connect_Network : MonoBehaviour
 {
+
+    [SerializeField] AsyncLoading asyncLoading;
     public static Connect_Network instance;
 
     public Type type;
@@ -62,7 +65,7 @@ public class Connect_Network : MonoBehaviour
 
         if (Path.Equals(string.Empty))
         {
-            Path = Application.dataPath + "/License";
+            Path = Application.persistentDataPath + "/License";
         }
         if (!File.Exists(Path)) //폴더 검사
         {
@@ -133,22 +136,29 @@ public class Connect_Network : MonoBehaviour
 
     public void Start_Server()
     {
-        
-            manager.StartServer();
-            Debug.Log($"{manager.networkAddress} StartServer....");
-            NetworkServer.OnConnectedEvent += (NetworkConnectionToClient) =>
-            {
-                Debug.Log($"New client Connect : {NetworkConnectionToClient.address}");
-            };
-            NetworkServer.OnDisconnectedEvent += (NetworkConnectionToClient) =>
-            {
-                Debug.Log($"client DisConnect : {NetworkConnectionToClient.address}");
-            };
+        manager.StartServer();
+        Debug.Log($"{manager.networkAddress} StartServer....");
+        NetworkServer.OnConnectedEvent += (NetworkConnectionToClient) =>
+        {
+            Debug.Log($"New client Connect : {NetworkConnectionToClient.address}");
+        };
+        NetworkServer.OnDisconnectedEvent += (NetworkConnectionToClient) =>
+        {
+            Debug.Log($"client DisConnect : {NetworkConnectionToClient.address}");
+        };
     }
 
 
+    public void NetworkStart()
+    {
+        SceneManager.LoadScene("02_Async_Loading");       
+    }
+
     public void Start_Client()
     {
+        // SceneManager.LoadScene("02_Async_Loading");
+        AudioManager.Instance.SetAudioClip_BGM(6);
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         Debug.Log($"{manager.networkAddress} : Startclient...");
         manager.StartClient();
     }
@@ -163,6 +173,7 @@ public class Connect_Network : MonoBehaviour
 
         if (NetworkServer.active)
         {
+            SQL_Manager.instance.SQL_OnServerDisconnected();
             manager.StopServer();
         }
     }
