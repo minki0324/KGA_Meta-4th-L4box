@@ -6,18 +6,18 @@ public class Bubble : MonoBehaviour, IPointerDownHandler
 { // bubble prefab's script
     private GameMode gameMode;
     [SerializeField] private RectTransform bubbleRectTrans;
+    [HideInInspector] public int TouchCount = 0;
     private Vector2 bubbleSize = Vector2.zero;
-    public int TouchCount = 0;
     private Vector2 localPos = Vector2.zero;
     private Vector2 puzzleSize = Vector2.zero;
 
     [Header("Move Parameter")]
     // Bubble moving
-    public float currentSpeed = 0f;
+    private float currentSpeed = 0f;
     private Coroutine moveCoroutine = null;
     [SerializeField] private AnimationCurve decelOverTime;
-    [SerializeField] private float decel = 250f; // move 속도 감소
-    [SerializeField] private float speedRate = 10f;
+    private float decel = 250f; // move 속도 감소
+    private float speedRate = 10f;
 
     private void OnEnable()
     {

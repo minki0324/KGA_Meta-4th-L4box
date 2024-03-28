@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class MemoryPushpop : MonoBehaviour
 { // Memeory PushPop Button Prefabs
     private MemoryManager memoryManager = null;
-    [SerializeField] private MemoryBoard memoryBoard;
+    private MemoryBoard memoryBoard;
     [SerializeField] private Image popButtonImage;
     [SerializeField] private Button popButton;
     [SerializeField] private Animator popButtonAnimation;

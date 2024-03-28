@@ -46,6 +46,11 @@ public class MainCanvas : MonoBehaviour
         GameManager.Instance.Shutdown += ShutDownPanelSetting;
     }
 
+    private void OnDestroy()
+    {
+        GameManager.Instance.Shutdown -= ShutDownPanelSetting;
+    }
+
     private IEnumerator Init()
     {
         yield return null;

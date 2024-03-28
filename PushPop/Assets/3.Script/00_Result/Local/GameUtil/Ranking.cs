@@ -77,7 +77,7 @@ public class Ranking : MonoBehaviour
     private VersusData versusData = new VersusData();
 
     // before game clear
-    [SerializeField] private int previousScore = 0;
+    private int previousScore = 0;
     public DialogData ResultDialog;
 
     #region Unity Callback

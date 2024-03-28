@@ -27,38 +27,36 @@ public class PlayerInfo
 /// </summary>
 public class ProfileManager : MonoBehaviour
 {
-    public static ProfileManager Instance;
-    public List<Profile> profileList = new List<Profile>();
+    public static ProfileManager Instance = null;
     public Profile myProfile;
-    [Header("UID")]
-    [Space(5)]
+
+    [Header("UID")] 
     private string uniqueID = string.Empty; // PlayerPrefs에 저장되는 고유 GUID;
-    public int UID = 0; // 기기별 고유 번호 > SQL과 연동
+     [HideInInspector] public int UID = 0; // 기기별 고유 번호 > SQL과 연동
 
     [Header("Player Info")]
-    public Player SelectPlayer = Player.Player1;
+    [HideInInspector] public Player SelectPlayer = Player.Player1;
+    [HideInInspector] public bool IsSelect = false;
     public PlayerInfo[] PlayerInfo = new PlayerInfo[2]; // Player1, Player2
-    public bool IsSelect = false;
 
     [Header("Profile Component")]
     public Sprite[] ProfileImages = null; // ProfileImage Sprites
     public Sprite NoneBackground = null; // Profile None Sprite
     public GameObject ProfilePanel = null; // Profile Panel
-    public List<GameObject> ProfilePanelList = new List<GameObject>(); // Profile Panel List
+    [HideInInspector] public List<GameObject> ProfilePanelList = new List<GameObject>(); // Profile Panel List
 
     [Header("Other Request")]
-    private string imagePath = string.Empty; // Image Saving Path
-    public bool isUpdate = false; // Profile 추가 시 false, 수정 시 true
-    public bool isImageSelect = false; // Profile Image Icon 선택 시 true, 아닐 시 false
-    public bool isProfileSelected = false; // is Profile Select ?
+    private string imagePath = string.Empty; // Image Saving Path1
+    [HideInInspector] public bool isUpdate = false; // Profile 추가 시 false, 수정 시 true
+    [HideInInspector] public bool isImageSelect = false; // Profile Image Icon 선택 시 true, 아닐 시 false
+    [HideInInspector] public bool isProfileSelected = false; // is Profile Select ?
 
-    [Header("Temp Info")]
-    public int TempImageIndex = 0; // profile 등록 시 이미지 고르기에서 선택한 index
-    public int TempUserIndex = -1; // Profile 등록할 때 사용할 임시 ProfileIndex
-    public string TempProfileName = string.Empty; // Profile 등록할 때 사용할 임시 ProfileName
-    public bool TempImageMode = true; // profile 이미지 등록 시 true, 사진 찍기 시 false
+    [Header("Temp Info")] 
+    [HideInInspector] public int TempImageIndex = 0; // profile 등록 시 이미지 고르기에서 선택한 index
+    [HideInInspector] public int TempUserIndex = -1; // Profile 등록할 때 사용할 임시 ProfileIndex
+    [HideInInspector] public string TempProfileName = string.Empty; // Profile 등록할 때 사용할 임시 ProfileName
+    [HideInInspector] public bool TempImageMode = true; // profile 이미지 등록 시 true, 사진 찍기 시 false
 
-    public bool IsUsingProfile = false; // title에서 network 다녀오면 true
 
     #region Unity Callback
     private void Awake()

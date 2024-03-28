@@ -64,35 +64,35 @@ public class DataManager : MonoBehaviour
     public SpriteAtlas pushPopAtlas = null;
 
     //딕셔너리용
-    public List<CategoryDict> categoryDicts_List = new List<CategoryDict>();
-    public List<Scripts> scipts_List = new List<Scripts>();
-    public List<IconDict> iconDicts_List = new List<IconDict>();
+    public List<CategoryDict> CategoryDictsList = new List<CategoryDict>();
+    public List<Scripts> SciptsList = new List<Scripts>();
+    public List<IconDict> IconDictsList = new List<IconDict>();
     //파싱한 정보 저장할 딕셔너리
-    public Dictionary<int, string> categoryDict = new Dictionary<int, string>();
-    public Dictionary<int, string> iconDict = new Dictionary<int, string>();
+    public Dictionary<int, string> CategoryDict = new Dictionary<int, string>();
+    public Dictionary<int, string> IconDict = new Dictionary<int, string>();
 
 
     //도움말 스크립트용
-    public List<HelpScript> helpScripts_List = new List<HelpScript>();
+    public List<HelpScript> HelpScriptsList = new List<HelpScript>();
 
 
     //욕설방지용
-    public BadWord[] badWord_Arr;      //vulgarsim.json 파일이 켜는순간 컴퓨터가 멈춰서 일단 따로
-    public string[] vulgarism_Arr;
+    public BadWord[] BadWordArray;      //vulgarsim.json 파일이 켜는순간 컴퓨터가 멈춰서 일단 따로
+    public string[] VulgarismArray;
 
 
     //파일 이름 (이 친구들은 Assets/StreamingAssets 폴더에 미리 담겨져 있어야 합니다)
-    private string categoryDict_fileName = "category.json"; // only pushpush
-    private string iconDict_fileName = "icon.json"; // pushpush, speed
+    private string categoryDictFileName = "category.json"; // only pushpush
+    private string iconDictFileName = "icon.json"; // pushpush, speed
     // help
-    private string helpScript_fileName = "helpme.json";
+    private string helpScriptFileName = "helpme.json";
     // nickname
-    private string badWord_fileName = "badword.json";
-    private string vulgarism_fileName = "vulgarism.json";
+    private string badWordFileName = "badword.json";
+    private string vulgarismFileName = "vulgarism.json";
 
     //경로
-    public string Datapath = string.Empty;      //persistentDataPath
-    public string path = string.Empty;      //StreamingDataPath;
+    private string dataPath = string.Empty;      //persistentDataPath
+    private string path = string.Empty;      //StreamingDataPath;
 
 
     #region Unity Callback
@@ -109,13 +109,13 @@ public class DataManager : MonoBehaviour
         }
 
 
-        Datapath = Application.persistentDataPath + "/gameData";
+        dataPath = Application.persistentDataPath + "/gameData";
         path = Application.streamingAssetsPath;
 
         //폴더 생성
-        if (!File.Exists(Datapath))
+        if (!File.Exists(dataPath))
         {
-            Directory.CreateDirectory(Datapath);
+            Directory.CreateDirectory(dataPath);
         }
 
         Read_HelpScript();  //도움말 읽기
@@ -147,8 +147,8 @@ public class DataManager : MonoBehaviour
         //2. List를 Dictinory로 변환
         //categoryDict.Clear();
 
-        string oriPath = Path.Combine(path, categoryDict_fileName);
-        string realPath = Datapath + "/" + categoryDict_fileName;
+        string oriPath = Path.Combine(path, categoryDictFileName);
+        string realPath = dataPath + "/" + categoryDictFileName;
 
         if(!File.Exists(realPath))
         {
@@ -172,7 +172,7 @@ public class DataManager : MonoBehaviour
 
         for (int i = 0; i < jsonData.Count; i++)
         {
-            categoryDict.Add(int.Parse(jsonData[i]["number"].ToString()), jsonData[i]["name"].ToString()); ;
+            CategoryDict.Add(int.Parse(jsonData[i]["number"].ToString()), jsonData[i]["name"].ToString()); ;
 
         }
 
@@ -184,8 +184,8 @@ public class DataManager : MonoBehaviour
     //icon.json 읽어와서 Dictionary로 변환하는 메소드
     public void Read_Icon()
     {//icon.json파일 읽어와 persistentDataPath에 저장 밑 json데이터 Dictionary로 파싱하는 메소드      
-        string oriPath = Path.Combine(path, iconDict_fileName);
-        string realPath = Datapath + "/" + iconDict_fileName;
+        string oriPath = Path.Combine(path, iconDictFileName);
+        string realPath = dataPath + "/" + iconDictFileName;
 
         if(!File.Exists(realPath))
         {
@@ -208,14 +208,14 @@ public class DataManager : MonoBehaviour
 
         for (int i = 0; i < jsonData.Count; i++)
         {
-            iconDict.Add(int.Parse(jsonData[i]["number"].ToString()), jsonData[i]["name"].ToString());
+            IconDict.Add(int.Parse(jsonData[i]["number"].ToString()), jsonData[i]["name"].ToString());
         }
 
     }
 
     public void Save_HelpScript()
     {
-        string oriPath = Path.Combine(Application.streamingAssetsPath, helpScript_fileName);
+        string oriPath = Path.Combine(Application.streamingAssetsPath, helpScriptFileName);
 
         //UnityWebRequest reader = new UnityWebRequest()
 
@@ -225,7 +225,7 @@ public class DataManager : MonoBehaviour
             ;
         }
 
-        string realPath = Datapath + "/" + helpScript_fileName;
+        string realPath = dataPath + "/" + helpScriptFileName;
 
         byte[] data = reader.bytes;
         string resultData = System.Text.Encoding.UTF8.GetString(data);
@@ -238,8 +238,8 @@ public class DataManager : MonoBehaviour
     public void Read_HelpScript()
     {//helpscript.json파일 읽어와 persistentDataPath에 저장 밑 json데이터를 파싱하는 메소드
 
-        string oriPath = Path.Combine(Application.streamingAssetsPath, helpScript_fileName);
-        string realPath = Datapath + "/" + helpScript_fileName;
+        string oriPath = Path.Combine(Application.streamingAssetsPath, helpScriptFileName);
+        string realPath = dataPath + "/" + helpScriptFileName;
 
         if(!File.Exists(realPath))
         {
@@ -256,7 +256,7 @@ public class DataManager : MonoBehaviour
         }
 
 
-        helpScripts_List.Clear();
+        HelpScriptsList.Clear();
         string JsonString = File.ReadAllText(realPath);
         var jsonData = JsonMapper.ToObject(JsonString);
 
@@ -278,7 +278,7 @@ public class DataManager : MonoBehaviour
                 helpScript.script.Add(script);     
             }
 
-            helpScripts_List.Add(helpScript);
+            HelpScriptsList.Add(helpScript);
         }
 
 
@@ -287,8 +287,8 @@ public class DataManager : MonoBehaviour
     public void Read_BadWord()
     {//badword.json파일 읽어와 persistentDataPath에 저장 및 json데이터 배열로 파싱하는 메소드
 
-        string oriPath = Path.Combine(path, badWord_fileName);
-        string realPath = Datapath + "/" + badWord_fileName;
+        string oriPath = Path.Combine(path, badWordFileName);
+        string realPath = dataPath + "/" + badWordFileName;
 
         if (!File.Exists(realPath))
         {
@@ -310,7 +310,7 @@ public class DataManager : MonoBehaviour
 
         JsonData jsonData = JsonMapper.ToObject(JsonString);
 
-        badWord_Arr = new BadWord[jsonData.Count];
+        BadWordArray = new BadWord[jsonData.Count];
 
         for (int i = 0; i < jsonData.Count; i++)
         {
@@ -318,7 +318,7 @@ public class DataManager : MonoBehaviour
 
             badword.index = i;
             badword.badword = jsonData[i]["badword"].ToString();           
-            badWord_Arr[i] = badword;
+            BadWordArray[i] = badword;
         }
 
     }
@@ -327,8 +327,8 @@ public class DataManager : MonoBehaviour
     public void Read_Vulgarism()
     {//vulgarism.json파일 읽어와 persistentDataPath에 저장 및 json데이터를 배열로 파싱하는 메소드
 
-        string oriPath = Path.Combine(path, vulgarism_fileName);
-        string realPath = Datapath + "/" + vulgarism_fileName;
+        string oriPath = Path.Combine(path, vulgarismFileName);
+        string realPath = dataPath + "/" + vulgarismFileName;
 
         if(!File.Exists(realPath))
         {
@@ -348,11 +348,11 @@ public class DataManager : MonoBehaviour
         JsonData jsonData = JsonMapper.ToObject(JsonString);
 
         string oneData = jsonData[0]["vulgarism"].ToString();
-        vulgarism_Arr = oneData.Split(",");
+        VulgarismArray = oneData.Split(",");
 
-        for (int i =0; i<vulgarism_Arr.Length; i++)
+        for (int i =0; i<VulgarismArray.Length; i++)
         {
-            vulgarism_Arr[i].Replace(" ", ""); 
+            VulgarismArray[i].Replace(" ", ""); 
         }
 
 

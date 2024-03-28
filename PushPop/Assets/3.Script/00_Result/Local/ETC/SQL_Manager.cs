@@ -83,11 +83,10 @@ public class SQL_Manager : MonoBehaviour
 {
     public static SQL_Manager instance = null;
 
-    public MySqlConnection connection;
-    public MySqlDataReader reader;
+    private MySqlConnection connection;
+    private MySqlDataReader reader;
 
-
-    public string DB_path = string.Empty;   // Json Path (DB)
+    private string DB_path = string.Empty;   // Json Path (DB)
     public int UID;                         
     public List<Profile> ProfileList = new List<Profile>();
     #region Unity Callback
@@ -117,12 +116,6 @@ public class SQL_Manager : MonoBehaviour
         // if문에서 오류가 없이 지나왔다면 SQL 열어주기
         connection = new MySqlConnection(serverinfo);
         connection.Open(); // 시도: 데이터베이스 연결
-        Debug.Log($"SQL Awake : {connection.State}");
-    }
-
-    private void OnApplicationQuit()
-    {
-
     }
     #endregion
 

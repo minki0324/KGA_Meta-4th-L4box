@@ -8,7 +8,6 @@ public class MultiCanvas : MonoBehaviour
     [SerializeField] private MainCanvas mainCanvas = null;
     [SerializeField] private ProfileCanvas profileCanvas = null;
 
-
     [Header("Side Panel")]
     public GameObject BackButton = null;
     public GameObject HelpButton = null;

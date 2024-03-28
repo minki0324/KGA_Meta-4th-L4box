@@ -4,8 +4,8 @@ using UnityEngine.UI;
 public class AudioOption : MonoBehaviour
 {
     [Header("Slider")]
-    public Slider BGM_Slider;
-    public Slider SFX_Slider;
+    [SerializeField] private Slider bgm_Slider;
+    [SerializeField] private Slider sfx_Slider;
     private float minSound = -20f;
     private float maxSound = -5f;
 
@@ -17,33 +17,33 @@ public class AudioOption : MonoBehaviour
     private void Init()
     {
         //볼륨 최소값
-        BGM_Slider.minValue = minSound;
-        SFX_Slider.minValue = minSound;
+        bgm_Slider.minValue = minSound;
+        sfx_Slider.minValue = minSound;
 
         //볼륨 최대값 조절
-        BGM_Slider.maxValue = maxSound;
-        SFX_Slider.maxValue = maxSound;
+        bgm_Slider.maxValue = maxSound;
+        sfx_Slider.maxValue = maxSound;
 
-        BGM_Slider.onValueChanged.AddListener(delegate { SetVolume(true); });
-        SFX_Slider.onValueChanged.AddListener(delegate { SetVolume(false); });
+        bgm_Slider.onValueChanged.AddListener(delegate { SetVolume(true); });
+        sfx_Slider.onValueChanged.AddListener(delegate { SetVolume(false); });
 
         //시작 볼륨값 중간으로 조정
         if (PlayerPrefs.HasKey("BGMVolume"))
         {
-            BGM_Slider.value = PlayerPrefs.GetFloat("BGMVolume");
+            bgm_Slider.value = PlayerPrefs.GetFloat("BGMVolume");
         }
         else
         {
-            BGM_Slider.value = -15f;
+            bgm_Slider.value = -15f;
         }
 
         if (PlayerPrefs.HasKey("SFXVolume"))
         {
-            SFX_Slider.value = PlayerPrefs.GetFloat("SFXVolume");
+            sfx_Slider.value = PlayerPrefs.GetFloat("SFXVolume");
         }
         else
         {
-            SFX_Slider.value = -15f;
+            sfx_Slider.value = -15f;
         }
     }
 
@@ -53,13 +53,13 @@ public class AudioOption : MonoBehaviour
         string soundType = "BGM";
         if (_isBgm)
         {
-            volume = BGM_Slider.value;
+            volume = bgm_Slider.value;
             soundType = "BGM";
             PlayerPrefs.SetFloat("BGMVolume", volume);
         }
         else
         {
-            volume = SFX_Slider.value;
+            volume = sfx_Slider.value;
             soundType = "SFX";
             PlayerPrefs.SetFloat("SFXVolume", volume);
         }
@@ -67,11 +67,11 @@ public class AudioOption : MonoBehaviour
 
         if (volume.Equals(minSound))
         {
-            AudioManager.Instance.audioMixer.SetFloat(soundType, -80f);
+            AudioManager.Instance.AudioMixer.SetFloat(soundType, -80f);
         }
         else
         {
-            AudioManager.Instance.audioMixer.SetFloat(soundType, volume);
+            AudioManager.Instance.AudioMixer.SetFloat(soundType, volume);
         }
     }
 
@@ -79,15 +79,15 @@ public class AudioOption : MonoBehaviour
     {
         if (_isBgm)
         {
-            BGM_Slider.value = minSound;
+            bgm_Slider.value = minSound;
             PlayerPrefs.SetFloat("BGMVolume", -80f);
-            AudioManager.Instance.audioMixer.SetFloat("BGM", -80f);
+            AudioManager.Instance.AudioMixer.SetFloat("BGM", -80f);
         }
         else
         {
-            SFX_Slider.value = minSound;
+            sfx_Slider.value = minSound;
             PlayerPrefs.SetFloat("SFXVolume", -80f);
-            AudioManager.Instance.audioMixer.SetFloat("SFX", -80f);
+            AudioManager.Instance.AudioMixer.SetFloat("SFX", -80f);
         }
         PlayerPrefs.Save();
     }
@@ -96,15 +96,15 @@ public class AudioOption : MonoBehaviour
     {
         if (_isBgm)
         {
-            BGM_Slider.value = maxSound;
+            bgm_Slider.value = maxSound;
             PlayerPrefs.SetFloat("BGMVolume", maxSound);
-            AudioManager.Instance.audioMixer.SetFloat("BGM", maxSound);
+            AudioManager.Instance.AudioMixer.SetFloat("BGM", maxSound);
         }
         else
         {
-            SFX_Slider.value = maxSound;
+            sfx_Slider.value = maxSound;
             PlayerPrefs.SetFloat("SFXVolume", maxSound);
-            AudioManager.Instance.audioMixer.SetFloat("SFX", maxSound);
+            AudioManager.Instance.AudioMixer.SetFloat("SFX", maxSound);
         }
         PlayerPrefs.Save();
     }

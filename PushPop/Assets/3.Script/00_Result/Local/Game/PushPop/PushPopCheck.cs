@@ -5,7 +5,7 @@ using UnityEngine;
 public class PushPopCheck : MonoBehaviour
 { // Pos Prefabs¿¡ ÂüÁ¶
     private Transform[] point = new Transform[4]; // position gameObject
-    public int spriteIndex;
+    public int SpriteIndex;
 
     private void Awake()
     {

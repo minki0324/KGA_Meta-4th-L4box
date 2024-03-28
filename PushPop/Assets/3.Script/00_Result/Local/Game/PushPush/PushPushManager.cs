@@ -10,7 +10,6 @@ public class PushPushManager : MonoBehaviour, IGame
     [Header("Canvas")]
     [SerializeField] private PushPushCanvas pushpushCanvas = null;
 
-
     [Header("Panel")]
     [SerializeField] private GameObject resultPanel = null;
     [SerializeField] private GameObject warningPanel = null;
@@ -20,9 +19,7 @@ public class PushPushManager : MonoBehaviour, IGame
     public PuzzleLozic puzzleManager = null;
 
     [Header("PushPop Object")]
-    public Stack<GameObject> StackPops = new Stack<GameObject>(); //UI상 보이는 버튼담는 스택
     [SerializeField] private FramePuzzle frame;
-    public int PushCount;
 
     private void OnEnable()
     {
@@ -141,12 +138,12 @@ public class PushPushManager : MonoBehaviour, IGame
             PushPop.Instance.PushCount = 0;
             PushPop.Instance.pushPopButton.Clear();
 
-            int[] spriteIndexs = new int[customManager.puzzleBoard.transform.childCount];
-            Vector2[] childPos = new Vector2[customManager.puzzleBoard.transform.childCount];
-            for (int i = 0; i < customManager.puzzleBoard.transform.childCount; i++)
+            int[] spriteIndexs = new int[customManager.PuzzleBoard.transform.childCount];
+            Vector2[] childPos = new Vector2[customManager.PuzzleBoard.transform.childCount];
+            for (int i = 0; i < customManager.PuzzleBoard.transform.childCount; i++)
             {
-                PushPopButton pop = customManager.puzzleBoard.transform.GetChild(i).GetComponent<PushPopButton>();
-                spriteIndexs[i] = pop.spriteIndex;
+                PushPopButton pop = customManager.PuzzleBoard.transform.GetChild(i).GetComponent<PushPopButton>();
+                spriteIndexs[i] = pop.SpriteIndex;
                 childPos[i] = pop.transform.localPosition;
             }
 
@@ -157,23 +154,23 @@ public class PushPushManager : MonoBehaviour, IGame
 
             // Result Setting
             List<PushPushObject> pushlist = SQL_Manager.instance.SQL_SetPushPush(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
-            customManager.ResultText.text = DataManager.Instance.iconDict[puzzleManager.CurrentPuzzle.PuzzleID];
+            customManager.ResultText.text = DataManager.Instance.IconDict[puzzleManager.CurrentPuzzle.PuzzleID];
             customManager.ResultImage.sprite = DataManager.Instance.pushPopAtlas.GetSprite(pushlist[0].spriteName.ToString());
             customManager.ResultImage.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
             for (int i = 0; i < pushlist[0].childIndex; i++)
             { // button setting
-                GameObject pop = Instantiate(PushPop.Instance.pushPopButtonPrefab, customManager.ResultImage.transform);
-                pop.GetComponent<Image>().sprite = customManager.pushPopButtonSprite[pushlist[0].childSpriteIndex[i]];
+                GameObject pop = Instantiate(PushPop.Instance.PushPopButtonPrefab, customManager.ResultImage.transform);
+                pop.GetComponent<Image>().sprite = customManager.PushPopButtonSprite[pushlist[0].childSpriteIndex[i]];
                 pop.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
                 pop.transform.localPosition = pushlist[0].childPosition[i];
             }
 
             // end setting
             customManager.ResultImage.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-            for (int i = 0; i < customManager.puzzleBoard.transform.childCount; i++)
+            for (int i = 0; i < customManager.PuzzleBoard.transform.childCount; i++)
             {
-                customManager.puzzleBoard.transform.GetChild(i).GetComponent<Button>().interactable = true;
+                customManager.PuzzleBoard.transform.GetChild(i).GetComponent<Button>().interactable = true;
             }
 
             resultPanel.SetActive(true);

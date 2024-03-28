@@ -16,19 +16,19 @@ public class AudioManager : MonoBehaviour
 
 
     [Header("AudioMixer")]
-    public AudioMixer audioMixer;
+    public AudioMixer AudioMixer;
 
     [Header("0 : 배경 / 1 : 효과음")]
-    public AudioSource[] audioSource_arr;
-    [SerializeField] private List<AudioClip> bgmClip_List;
+    public AudioSource[] AudioSourceArray;
+    [SerializeField] private List<AudioClip> bgmClipList;
     
     private List<List<AudioClip>> sfxClipList = new List<List<AudioClip>>();
-    [SerializeField] private List<AudioClip> pushSfxClip_List;
-    [SerializeField] private List<AudioClip> speedSfxClip_List;
-    [SerializeField] private List<AudioClip> memorySfxClip_List;
-    [SerializeField] private List<AudioClip> multiSfxClip_List;
-    [SerializeField] private List<AudioClip> talkSfxClip_List;
-    [SerializeField] private List<AudioClip> commonSfxClip_List;
+    [SerializeField] private List<AudioClip> pushSfxClipList;
+    [SerializeField] private List<AudioClip> speedSfxClipList;
+    [SerializeField] private List<AudioClip> memorySfxClipList;
+    [SerializeField] private List<AudioClip> multiSfxClipList;
+    [SerializeField] private List<AudioClip> talkSfxClipList;
+    [SerializeField] private List<AudioClip> commonSfxClipList;
 
     public float startVolume;
     public float fadeTime = 5000f;
@@ -59,32 +59,32 @@ public class AudioManager : MonoBehaviour
     private void Init()
     {
         playingBgm = 0;
-        audioSource_arr[1].clip = bgmClip_List[0];
+        AudioSourceArray[1].clip = bgmClipList[0];
 
-        sfxClipList.Add(pushSfxClip_List);
-        sfxClipList.Add(speedSfxClip_List);
-        sfxClipList.Add(memorySfxClip_List);
-        sfxClipList.Add(multiSfxClip_List);
+        sfxClipList.Add(pushSfxClipList);
+        sfxClipList.Add(speedSfxClipList);
+        sfxClipList.Add(memorySfxClipList);
+        sfxClipList.Add(multiSfxClipList);
         //sfxClipList.Add(talkSfxClip_List);
 
         // 시작 시 Audio Setting
         if (PlayerPrefs.HasKey("BGMVolume"))
         {
-            audioMixer.SetFloat("BGM", PlayerPrefs.GetFloat("BGMVolume"));
+            AudioMixer.SetFloat("BGM", PlayerPrefs.GetFloat("BGMVolume"));
         }
         else
         {
-            audioMixer.SetFloat("BGM", -12f);
+            AudioMixer.SetFloat("BGM", -12f);
             PlayerPrefs.SetFloat("BGMVolume", -12f);
         }
 
         if (PlayerPrefs.HasKey("SFXVolume"))
         {
-            audioMixer.SetFloat("SFX", PlayerPrefs.GetFloat("SFXVolume"));
+            AudioMixer.SetFloat("SFX", PlayerPrefs.GetFloat("SFXVolume"));
         }
         else
         {
-            audioMixer.SetFloat("SFX", -12f);
+            AudioMixer.SetFloat("SFX", -12f);
             PlayerPrefs.SetFloat("SFXVolume", -12f);
         }
     }
@@ -110,13 +110,13 @@ public class AudioManager : MonoBehaviour
     {
         if (!bLoop)
         {
-            audioSource_arr[sfxIndex].PlayOneShot(sfxClipList[(int)GameManager.Instance.GameMode][index]);
+            AudioSourceArray[sfxIndex].PlayOneShot(sfxClipList[(int)GameManager.Instance.GameMode][index]);
         }
         else
         {
-            audioSource_arr[sfxIndex].clip = sfxClipList[(int)GameManager.Instance.GameMode][index];
-            audioSource_arr[sfxIndex].Play();
-            audioSource_arr[sfxIndex].loop = bLoop;
+            AudioSourceArray[sfxIndex].clip = sfxClipList[(int)GameManager.Instance.GameMode][index];
+            AudioSourceArray[sfxIndex].Play();
+            AudioSourceArray[sfxIndex].loop = bLoop;
         }
     }
 
@@ -125,32 +125,32 @@ public class AudioManager : MonoBehaviour
     {
         if (!bLoop)
         {
-            audioSource_arr[sfxIndex].PlayOneShot(talkSfxClip_List[index]);
+            AudioSourceArray[sfxIndex].PlayOneShot(talkSfxClipList[index]);
         }
         else
         {
-            audioSource_arr[sfxIndex].clip = talkSfxClip_List[index];
-            audioSource_arr[sfxIndex].Play();
-            audioSource_arr[sfxIndex].loop = bLoop;
+            AudioSourceArray[sfxIndex].clip = talkSfxClipList[index];
+            AudioSourceArray[sfxIndex].Play();
+            AudioSourceArray[sfxIndex].loop = bLoop;
         }
     }
 
     public void SetCommonAudioClip_SFX(int index)
     {
-        audioSource_arr[sfxIndex].PlayOneShot(commonSfxClip_List[index]);
+        AudioSourceArray[sfxIndex].PlayOneShot(commonSfxClipList[index]);
     }
 
     public void Stop_SFX()
     {
-        audioSource_arr[sfxIndex].Stop();
+        AudioSourceArray[sfxIndex].Stop();
     }
 
     public void Pause_SFX(bool pause)
     {
         if (pause)
-            audioSource_arr[sfxIndex].Pause();
+            AudioSourceArray[sfxIndex].Pause();
         else
-            audioSource_arr[sfxIndex].UnPause();
+            AudioSourceArray[sfxIndex].UnPause();
     }
 
     public IEnumerator BGM_Fade(int index)
@@ -158,31 +158,31 @@ public class AudioManager : MonoBehaviour
         bBgmChanging = true;
         while (true)
         {
-            if(audioSource_arr[bgmIndex].volume <= 0.5f)
+            if(AudioSourceArray[bgmIndex].volume <= 0.5f)
             {
-                audioSource_arr[bgmIndex].Stop();
-                audioSource_arr[bgmIndex].volume = 0.5f;
+                AudioSourceArray[bgmIndex].Stop();
+                AudioSourceArray[bgmIndex].volume = 0.5f;
 
-                audioSource_arr[bgmIndex].clip = bgmClip_List[index];
-                audioSource_arr[bgmIndex].Play();
-                audioSource_arr[bgmIndex].loop = true;
+                AudioSourceArray[bgmIndex].clip = bgmClipList[index];
+                AudioSourceArray[bgmIndex].Play();
+                AudioSourceArray[bgmIndex].loop = true;
                 break;
             }
 
-            audioSource_arr[bgmIndex].volume -= (Time.deltaTime / fadeTime);
+            AudioSourceArray[bgmIndex].volume -= (Time.deltaTime / fadeTime);
             yield return null;
         }
         
         while (true)
         {
-            if(audioSource_arr[bgmIndex].volume >= 1f)
+            if(AudioSourceArray[bgmIndex].volume >= 1f)
             {
-                audioSource_arr[bgmIndex].volume = 1;
+                AudioSourceArray[bgmIndex].volume = 1;
                 bBgmChanging = false;
                 break;
             }
 
-            audioSource_arr[bgmIndex].volume += Time.deltaTime / fadeTime;
+            AudioSourceArray[bgmIndex].volume += Time.deltaTime / fadeTime;
             yield return null;
         }
 

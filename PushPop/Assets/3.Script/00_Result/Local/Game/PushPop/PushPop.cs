@@ -9,47 +9,44 @@ public class PushPop : MonoBehaviour
     public GameObject PopParent = null; // 민기 추가 Bomb모드에서 필요
 
     [Header("PushPop Canvas")]
-    public Transform pushPopCanvas = null; // Canvas_PushPop
-    public GameObject pushPopButtonPrefab = null; // PushPop Button Prefab
+    public GameObject PushPopButtonPrefab = null; // PushPop Button Prefab
     public GameObject BoardPrefabUI = null; // PushPop Board Canvas Prefab
+    [HideInInspector] public Vector2 BoardSize = Vector2.zero;
+    [HideInInspector] public Vector2 BoardPos = Vector2.zero;
+    [HideInInspector] public List<GameObject> PushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
     private RectTransform boardSizeUI;
-    public Vector2 BoardSize = Vector2.zero;
-    public Vector2 BoardPos = Vector2.zero;
-    public List<GameObject> PushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
 
     [Header("PushPush")]
-    public PushPushManager pushpushManager = null;
+    public PushPushManager PushpushManager = null;
     public Stack<GameObject> StackPops = new Stack<GameObject>(); // UI상 보이는 버튼담는 스택
     public Stack<GameObject> StackFakePops = new Stack<GameObject>(); // OverLap 검사를 하기위한 gameObject 스택
 
-    [Header("Mulit")]
-    public List<GameObject> popButtonList1P = new List<GameObject>(); // 1P 의 Pushpop button list
-    public List<GameObject> popButtonList2P = new List<GameObject>(); // 2P 의 Pushpop List
+    [Header("Multi")]
+    [HideInInspector] public List<GameObject> popButtonList1P = new List<GameObject>(); // 1P 의 Pushpop button list
+    [HideInInspector] public List<GameObject> popButtonList2P = new List<GameObject>(); // 2P 의 Pushpop List
 
     [Header("PushPop GameObject")]
-    [SerializeField] private SpriteAtlas pushPopSpriteAtlas; // pushPop Atlas 참조
-    public GameObject boardPrefab = null; // PushPop Prefab
-    public Sprite BoardSprite = null;
+    [SerializeField] private GameObject boardPrefab = null; // PushPop Prefab
+    [HideInInspector] public Sprite BoardSprite = null;
     private Vector3 boardObjectSize;
     private PolygonCollider2D boardCollider;
-    public List<GameObject> PushPopBoardObject = new List<GameObject>(); // pushPopBoard의 GameObject List
+    [HideInInspector] public List<GameObject> PushPopBoardObject = new List<GameObject>(); // pushPopBoard의 GameObject List
 
     [Header("Grid Setting")]
-    public Transform buttonCanvas = null;
     private Vector2 grid = Vector2.zero;
-    public float Percentage = 0; // gameobject에 따른 gird 비율
-    public Vector2 ButtonSize = Vector2.zero; // x, y 동일
-    public GameObject PosPrefab = null; // grid에 지정할 pos prefab
+    [HideInInspector] public float Percentage = 0; // gameobject에 따른 gird 비율
+    [HideInInspector] public Vector2 ButtonSize = Vector2.zero; // x, y 동일
+    [SerializeField] private GameObject posPrefab = null; // grid에 지정할 pos prefab
     private List<GameObject> pos = new List<GameObject>(); // grid 배치된 posPrefab
 
-    public List<GameObject> pushPopButton = new List<GameObject>(); // object pooling 때문에 필요
-    public List<GameObject> activePos = new List<GameObject>();
-    public int ActivePosCount = 0;
+    [HideInInspector] public List<GameObject> pushPopButton = new List<GameObject>(); // object pooling 때문에 필요
+    [HideInInspector] public List<GameObject> activePos = new List<GameObject>();
+    [HideInInspector] public int ActivePosCount = 0;
 
-    public Sprite[] pushPopBtnSprites;
-    public GameObject pushPopAni = null;
-    public bool Turning = false;
-    public int PushCount = 0; // only pushpush mode, 버튼눌렀을때 + 되는 카운트, 버튼리스트.Count 비교해서 동일시 클리어 판정(GameManager)
+    [SerializeField] private Sprite[] pushPopBtnSprites;
+    private GameObject pushPopAni = null;
+    [HideInInspector] public bool Turning = false;
+    [HideInInspector] public int PushCount = 0; // only pushpush mode, 버튼눌렀을때 + 되는 카운트, 버튼리스트.Count 비교해서 동일시 클리어 판정(GameManager)
 
     private void Awake()
     {
@@ -174,7 +171,7 @@ public class PushPop : MonoBehaviour
             {
                 float posX = -boardObjectSize.x / grid.x * x;
                 float posY = -boardObjectSize.y / grid.y * y;
-                GetPushPopPos(pos, PosPrefab, _pushPopBoardObject.transform, posX, posY, y);
+                GetPushPopPos(pos, posPrefab, _pushPopBoardObject.transform, posX, posY, y);
             }
         }
     }
@@ -183,13 +180,13 @@ public class PushPop : MonoBehaviour
     public void PushPopButtonSetting(Transform parent)
     {
         PushPopCheck pos = activePos[0].GetComponent<PushPopCheck>();
-        int index = pos.spriteIndex;
+        int index = pos.SpriteIndex;
 
         for (int i = 0; i < activePos.Count; i++)
         {
-            GameObject pushpop = GetPushPopButton(pushPopButton, pushPopButtonPrefab, parent);
+            GameObject pushpop = GetPushPopButton(pushPopButton, PushPopButtonPrefab, parent);
             pushpop.GetComponent<RectTransform>().sizeDelta = ButtonSize;
-            pushpop.GetComponent<Image>().sprite = pushPopBtnSprites[activePos[i].GetComponent<PushPopCheck>().spriteIndex - index];
+            pushpop.GetComponent<Image>().sprite = pushPopBtnSprites[activePos[i].GetComponent<PushPopCheck>().SpriteIndex - index];
             pushpop.transform.position = Camera.main.WorldToScreenPoint(activePos[i].transform.position);
         }
 
@@ -212,7 +209,7 @@ public class PushPop : MonoBehaviour
         _pos.Add(newPos);
         _pos[_pos.Count - 1].transform.position = boardPrefab.transform.position + new Vector3(boardObjectSize.x / 2, boardObjectSize.y / 2, 0f) + new Vector3(_posX, _posY, 1f); // grid 배치
         _pos[_pos.Count - 1].GetComponent<PushPopCheck>().PointContains(); // collider chekc
-        _pos[_pos.Count - 1].GetComponent<PushPopCheck>().spriteIndex = _spriteIndex;
+        _pos[_pos.Count - 1].GetComponent<PushPopCheck>().SpriteIndex = _spriteIndex;
         return newPos;
     }
     #endregion

@@ -17,7 +17,7 @@ public class SelectListSetting : MonoBehaviour
 
     [Header("Ready (Selected List Panel)")]
     public GameObject Ready = null;
-    [SerializeField] ReadyProfileSetting readyProfileSetting = null;
+    [SerializeField] private ReadyProfileSetting readyProfileSetting = null;
     [SerializeField] private TMP_Text selectCategory = null;
     [SerializeField] private Image selectIconImage = null;
     [SerializeField] private TMP_Text selectIconText = null;
@@ -89,7 +89,7 @@ public class SelectListSetting : MonoBehaviour
 
             iconButtonList.Add(selectIconInfo.IconButton); // button list
             selectIconInfo.IconImage.sprite = selectList[i]; // sprite change
-            selectIconInfo.IconText.text = DataManager.Instance.categoryDict[int.Parse(selectList[i].name)]; // sprite name key dictionary, 한글 텍스트 갖고오기
+            selectIconInfo.IconText.text = DataManager.Instance.CategoryDict[int.Parse(selectList[i].name)]; // sprite name key dictionary, 한글 텍스트 갖고오기
         }
 
         for (int i = 0; i < iconButtonList.Count; i++)
@@ -131,7 +131,7 @@ public class SelectListSetting : MonoBehaviour
 
             iconButtonList.Add(selectIconInfo.IconButton); // button list
             selectIconInfo.IconImage.sprite = selectList[i]; // sprite change
-            selectIconInfo.IconText.text = DataManager.Instance.iconDict[int.Parse(selectList[i].name)]; // sprite name key dictionary, 한글 텍스트 갖고오기
+            selectIconInfo.IconText.text = DataManager.Instance.IconDict[int.Parse(selectList[i].name)]; // sprite name key dictionary, 한글 텍스트 갖고오기
         }
 
         for (int i = 0; i < iconButtonList.Count; i++)
@@ -147,9 +147,9 @@ public class SelectListSetting : MonoBehaviour
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
 
         selectIcon = this.GetType().GetField($"IconList{_selectList}").GetValue(this) as List<Sprite>;
-        categorySelectTitle.text = DataManager.Instance.categoryDict[_selectList];
+        categorySelectTitle.text = DataManager.Instance.CategoryDict[_selectList];
         selectIconImage.sprite = selectIcon[0];
-        selectIconText.text = DataManager.Instance.iconDict[int.Parse(selectIcon[0].name)];
+        selectIconText.text = DataManager.Instance.IconDict[int.Parse(selectIcon[0].name)];
         BoardIcon = selectIconImage.sprite;
         GameManager.Instance.CurrentIcon = 0;
         GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
@@ -189,7 +189,7 @@ public class SelectListSetting : MonoBehaviour
                     pageText.text = $"{currentPage}/{maxPage}";
 
                     selectIconImage.sprite = selectIcon[GameManager.Instance.CurrentIcon];
-                    selectIconText.text = DataManager.Instance.iconDict[int.Parse(selectIcon[GameManager.Instance.CurrentIcon].name)];
+                    selectIconText.text = DataManager.Instance.IconDict[int.Parse(selectIcon[GameManager.Instance.CurrentIcon].name)];
                     BoardIcon = selectIconImage.sprite;
 
                     GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);
@@ -227,7 +227,7 @@ public class SelectListSetting : MonoBehaviour
                     pageText.text = $"{currentPage}/{maxPage}";
 
                     selectIconImage.sprite = selectIcon[GameManager.Instance.CurrentIcon];
-                    selectIconText.text = DataManager.Instance.iconDict[int.Parse(selectIcon[GameManager.Instance.CurrentIcon].name)];
+                    selectIconText.text = DataManager.Instance.IconDict[int.Parse(selectIcon[GameManager.Instance.CurrentIcon].name)];
                     BoardIcon = selectIconImage.sprite;
 
                     GameManager.Instance.CurrentIconName = int.Parse(BoardIcon.name);

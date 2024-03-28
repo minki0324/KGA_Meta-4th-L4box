@@ -13,14 +13,12 @@ public class MemoryCanvas : MonoBehaviour
 
     [Header("Ready")]
     public GameObject Ready = null;
-    public ReadyProfileSetting ReadyProfileSetting = null;
 
     [Header("Memory Game")]
     public GameObject MemoryGame = null;
     [SerializeField] private MemoryManager memoryManager = null;
 
     [Header("Panel")]
-    public GameObject ResultPanel = null;
     public GameObject WarningPanel = null;
     public GameObject GameReadyPanel = null;
     public GameObject HelpPanel = null;

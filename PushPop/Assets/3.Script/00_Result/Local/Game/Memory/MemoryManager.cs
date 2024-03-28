@@ -6,9 +6,11 @@ using TMPro;
 
 public class MemoryManager : MonoBehaviour, IGame
 {
+    [Header("Other Component")]
+    [SerializeField] private SavePoint savePoint = null;
+    
     [Header("Canvas")]
     [SerializeField] private MemoryCanvas memoryCanvas = null;
-
 
     [Header("Panel")]
     [SerializeField] private GameObject resultPanel = null;
@@ -127,7 +129,7 @@ public class MemoryManager : MonoBehaviour, IGame
         if (isSave)
         {
             isSave = false;
-            SavePoint.Instance.SetStage(ProfileManager.Instance.myProfile.name, ProfileManager.Instance.myProfile.index, CurrentStage - 1);
+            savePoint.SetStage(ProfileManager.Instance.myProfile.name, ProfileManager.Instance.myProfile.index, CurrentStage - 1);
         }
         // 게임 종료, 결과 저장
         Ranking.Instance.SetScore(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex, Score);
@@ -211,7 +213,7 @@ public class MemoryManager : MonoBehaviour, IGame
         if (isSave)
         {
             isSave = false;
-            SavePoint.Instance.SetStage(ProfileManager.Instance.myProfile.name, ProfileManager.Instance.myProfile.index, CurrentStage - 1);
+            savePoint.SetStage(ProfileManager.Instance.myProfile.name, ProfileManager.Instance.myProfile.index, CurrentStage - 1);
         }
 
     }

@@ -21,12 +21,12 @@ public class SpeedManager : MonoBehaviour, IGame
     [SerializeField] private GameObject titleText = null;
 
     [Header("Game Info")]
-    public Difficulty Difficulty = Difficulty.Easy;
-    public float difficultyCount = 0;
+    [HideInInspector] public Difficulty Difficulty = Difficulty.Easy;
+    private float difficultyCount = 0;
     [SerializeField] private Transform boardTrans = null;
     [SerializeField] private Transform buttonTrans = null;
     private GameObject touchBubble = null;
-    private bool firstSetting = true;
+    private bool isFirstSetting = true;
     private Vector2[] bubblePos = { new Vector2(0f, 0f), new Vector2(0f, -20f) };
 
     [Header("Game Result")]
@@ -68,14 +68,14 @@ public class SpeedManager : MonoBehaviour, IGame
         GameManager.Instance.bubbleObject.Clear();
 
         gameTimer.TimerText.color = new Color(0, 0, 0, 1);
-        gameTimer.TenCount = false;
-        gameTimer.EndTimer = false;
+        gameTimer.isTenCount = false;
+        gameTimer.isEndTimer = false;
         countSlider.value = 0f;
 
         gameTimer.gameObject.SetActive(false);
         countSlider.gameObject.SetActive(false);
         titleText.SetActive(true);
-        firstSetting = true;
+        isFirstSetting = true;
         isEndGame = false;
 
         PushPop.Instance.BoardPos = Vector2.zero;
@@ -164,9 +164,9 @@ public class SpeedManager : MonoBehaviour, IGame
 
     public void GameEnd()
     {
-        if (PushPop.Instance.ActivePosCount.Equals(0) && !firstSetting)
+        if (PushPop.Instance.ActivePosCount.Equals(0) && !isFirstSetting)
         {
-            if (!gameTimer.EndTimer)
+            if (!gameTimer.isEndTimer)
             { // timer true or countslider.value >= 0.9f일 경우 게임 종료
                 StartCoroutine(SpeedSlider_Co());
                 StartCoroutine(BoardCreate_Co());
@@ -176,7 +176,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
     public void GameEndSliderAfter()
     {
-        if (gameTimer.EndTimer || countSlider.value >= 0.9f)
+        if (gameTimer.isEndTimer || countSlider.value >= 0.9f)
         {
             AudioManager.Instance.Stop_SFX();
             AudioManager.Instance.SetCommonAudioClip_SFX(6);
@@ -218,7 +218,7 @@ public class SpeedManager : MonoBehaviour, IGame
 
     private IEnumerator BoardCreate_Co()
     {
-        if (!firstSetting)
+        if (!isFirstSetting)
         {
             for (int i = 0; i < PushPop.Instance.PushPopBoardObject.Count; i++)
             {
@@ -254,7 +254,7 @@ public class SpeedManager : MonoBehaviour, IGame
         PushPop.Instance.CreatePushPopBoard(boardTrans);
         PushPop.Instance.CreateGrid(PushPop.Instance.PushPopBoardObject[0]);
         PushPop.Instance.PushPopButtonSetting(buttonTrans);
-        firstSetting = false;
+        isFirstSetting = false;
         PushPop.Instance.Turning = !PushPop.Instance.Turning; // prefab 생성 시 rotation 결정
     }
 

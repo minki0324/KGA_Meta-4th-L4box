@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class ShutdownCanvas : MonoBehaviour
 {
-    [SerializeField] private TMP_Text GameReadyPanelText = null;
-    [SerializeField] private GameObject GameReadyPanel = null;
+    [SerializeField] private TMP_Text gameReadyPanelText = null;
+    [SerializeField] private GameObject gameReadyPanel = null;
 
     private void Start()
     {
@@ -22,16 +22,15 @@ public class ShutdownCanvas : MonoBehaviour
 
     private void ShutdownInit()
     {
-        GameReadyPanel.SetActive(false);
+        gameReadyPanel.SetActive(false);
     }
 
     private void ShutdownAlarm()
     {
         GameManager.Instance.OnShutdownAlarm = false;
         float shutdownTime = GameManager.Instance.ShutdownTimer / 60f;
-        GameReadyPanelText.text = $"게임 시간이 {string.Format("{0:0}", shutdownTime)}분 남았습니다.";
-        Debug.Log(GameReadyPanel);
-        GameReadyPanel.SetActive(true);
+        gameReadyPanelText.text = $"게임 시간이 {string.Format("{0:0}", shutdownTime)}분 남았습니다.";
+        gameReadyPanel.SetActive(true);
         AudioManager.Instance.Pause_SFX(true);
         Time.timeScale = 0f;
     }

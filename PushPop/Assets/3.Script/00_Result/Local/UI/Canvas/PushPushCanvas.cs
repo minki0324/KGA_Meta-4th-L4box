@@ -6,26 +6,23 @@ public class PushPushCanvas : MonoBehaviour
     [Header("Canvas")]
     [SerializeField] private MainCanvas mainCanvas = null;
 
-
     [Header("Side Panel")]
     public GameObject BackButton = null;
     public GameObject HelpButton = null;
 
     [Header("PushPush Game")]
     [SerializeField] private PushPushManager pushpushManager = null;
-    public SelectListSetting SelectListSetting = null;
-    public GameObject PushpushGame = null;
-    public GameObject CustomMode = null;
+    [SerializeField] private SelectListSetting selectListSetting = null;
+    [SerializeField] private GameObject pushpushGame = null;
 
     [Header("Select Panel")]
+    [SerializeField] private GameObject selectBoardPanel = null;
     public GameObject SelectCategoryPanel = null;
-    public GameObject SelectBoardPanel = null;
 
     [Header("Panel")]
-    public GameObject ResultPanel = null;
-    public GameObject WarningPanel = null;
+    [SerializeField] private GameObject warningPanel = null;
+    [SerializeField] private GameObject helpPanel = null;
     public GameObject GameReadyPanel = null;
-    public GameObject HelpPanel = null;
     public TMP_Text GameReadyPanelText = null;
 
     private void OnDisable()
@@ -37,8 +34,8 @@ public class PushPushCanvas : MonoBehaviour
     {
         if (!GameManager.Instance.IsShutdown) return;
         LoadingPanel.Instance.gameObject.SetActive(true);
-        SelectBoardPanel.SetActive(false);
-        HelpPanel.SetActive(false);
+        selectBoardPanel.SetActive(false);
+        helpPanel.SetActive(false);
     }
     public void GameStartButton()
     {
@@ -48,9 +45,9 @@ public class PushPushCanvas : MonoBehaviour
 
         GameManager.Instance.IsGameClear = false;
         SelectCategoryPanel.SetActive(false);
-        SelectBoardPanel.SetActive(false);
+        selectBoardPanel.SetActive(false);
         HelpButton.SetActive(false);
-        PushpushGame.SetActive(true);
+        pushpushGame.SetActive(true);
         pushpushManager.GameStart();
     }
 
@@ -69,27 +66,27 @@ public class PushPushCanvas : MonoBehaviour
             mainCanvas.gameObject.SetActive(true);
             gameObject.SetActive(false);
         }
-        else if (PushpushGame.activeSelf)
+        else if (pushpushGame.activeSelf)
         { // 게임 중일 때
             Time.timeScale = 0f;
-            WarningPanel.SetActive(true);
+            warningPanel.SetActive(true);
         }
     }
     public void ReadyPanelExitButton()
     { // Ready panel
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        SelectListSetting.Ready.SetActive(false);
+        selectListSetting.Ready.SetActive(false);
     }
 
     public void HelpPanelButton()
     { // 도움말
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        HelpPanel.SetActive(true);
+        helpPanel.SetActive(true);
     }
 
     public void HelpPanelBackButton()
     {
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        HelpPanel.SetActive(false);
+        helpPanel.SetActive(false);
     }
 }

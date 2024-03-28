@@ -6,9 +6,9 @@ using TMPro;
 public class GameTimer : MonoBehaviour
 { // speed, multi game timer
     public TMP_Text TimerText = null;
-    public float CurrentTime = 60f; // 현재 시간
-    public bool TenCount = false; // 남은 시간이 10초 이하인지 체크
-    public bool EndTimer = false;
+    [HideInInspector] public float CurrentTime = 60f; // 현재 시간
+    [HideInInspector] public bool isTenCount = false; // 남은 시간이 10초 이하인지 체크
+    [HideInInspector] public bool isEndTimer = false;
 
     private float compareTime = 0;
     private int setSign = 0;
@@ -44,9 +44,9 @@ public class GameTimer : MonoBehaviour
                 {
                     TimerText.color = TimerCountColorChange("#FF0000");
 
-                    if (!TenCount)
+                    if (!isTenCount)
                     { // 10초 이하일 때 타이머 소리 한 번 재생
-                        TenCount = true;
+                        isTenCount = true;
                         AudioManager.Instance.SetAudioClip_SFX((int)GameMode.Speed, true);
                     }
                 }
@@ -58,9 +58,9 @@ public class GameTimer : MonoBehaviour
                 { 
                     TimerText.color = TimerCountColorChange("#FF0000");
 
-                    if (!TenCount)
+                    if (!isTenCount)
                     { // 10초 이하일 때 타이머 소리 한 번 재생
-                        TenCount = true;
+                        isTenCount = true;
                         AudioManager.Instance.SetAudioClip_SFX((int)GameMode.Multi, true);
                     }
                 }
@@ -70,7 +70,7 @@ public class GameTimer : MonoBehaviour
             yield return null;
         }
 
-        EndTimer = true; // game end
+        isEndTimer = true; // game end
         TimerCoroutine = null;
     }
 

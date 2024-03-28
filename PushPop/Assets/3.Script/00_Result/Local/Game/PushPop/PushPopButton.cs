@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class PushPopButton : MonoBehaviour, IPointerDownHandler
 {
-    public int spriteIndex;
-    public int player = 0;
+    public int SpriteIndex = 0;
+    public int Player = 0;
 
     private void OnEnable()
     {
@@ -46,11 +46,11 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
             case GameMode.Speed:
                 break;
             case GameMode.Multi:
-                if (player.Equals(0))
+                if (Player.Equals(0))
                 { // 1P 소유 팝 버튼
                     PushPop.Instance.popButtonList1P.Remove(clickButton);
                 }
-                else if (player.Equals(1))
+                else if (Player.Equals(1))
                 { // 2P 소유 팝 버튼
                     PushPop.Instance.popButtonList2P.Remove(clickButton);
                 }

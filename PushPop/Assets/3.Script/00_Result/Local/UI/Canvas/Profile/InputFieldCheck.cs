@@ -6,54 +6,54 @@ using System.Text.RegularExpressions;
 
 public class InputFieldCheck : MonoBehaviour
 { // Create Name InputField Check
-    public TMP_InputField profileNameInputField = null;
+    [SerializeField] private TMP_InputField ProfileNameInputField = null;
     public TMP_Text WarningLog = null;
 
     private void OnEnable()
     {
-        profileNameInputField.text = string.Empty;
-        profileNameInputField.onValidateInput += ValidateInput;
+        ProfileNameInputField.text = string.Empty;
+        ProfileNameInputField.onValidateInput += ValidateInput;
     }
 
     private void OnDisable()
     {
-        profileNameInputField.onValidateInput -= ValidateInput;
+        ProfileNameInputField.onValidateInput -= ValidateInput;
     }
 
     public bool ProfileNameCheck()
     { // °¢ Á¶°ÇµéÀ» Åë°úÇÏ¸é (ºñ¼Ó¾î, ÃÊ¼º, ±ÛÀÚ¼ö Á¦ÇÑ µî) µî·Ï °¡´ÉÇÑ NameÀ¸·Î ÆÇÁ¤ÇÏ°í Profile ManagerÀÇ °¢ ÇÃ·¹ÀÌ¾îÀÇ name º¯¼ö¿¡ Ãß°¡
         // ºñ¼Ó¾î Ã¼Å©
-        for (int i = 0; i < DataManager.Instance.vulgarism_Arr.Length; i++)
+        for (int i = 0; i < DataManager.Instance.VulgarismArray.Length; i++)
         {
-            if (profileNameInputField.text.Contains(DataManager.Instance.vulgarism_Arr[i]))
+            if (ProfileNameInputField.text.Contains(DataManager.Instance.VulgarismArray[i]))
             {
-                if (DataManager.Instance.vulgarism_Arr[i] != string.Empty)
+                if (DataManager.Instance.VulgarismArray[i] != string.Empty)
                 {
                     ProfileManager.Instance.PrintErrorLog(WarningLog, "ºñ¼Ó¾î´Â Æ÷ÇÔ½ÃÅ³ ¼ö ¾ø½À´Ï´Ù.");
-                    profileNameInputField.text = string.Empty;
+                    ProfileNameInputField.text = string.Empty;
                     return false;
                 }
             }
         }
         // ÃÊ¼º Ã¼Å©
-        for (int i = 0; i < profileNameInputField.text.Length; i++)
+        for (int i = 0; i < ProfileNameInputField.text.Length; i++)
         {
-            if (Regex.IsMatch(profileNameInputField.text[i].ToString(), @"[^0-9a-zA-Z°¡-ÆR]"))
+            if (Regex.IsMatch(ProfileNameInputField.text[i].ToString(), @"[^0-9a-zA-Z°¡-ÆR]"))
             {
                 ProfileManager.Instance.PrintErrorLog(WarningLog, "ÃÊ¼ºÀº ÀÔ·ÂÀÌ ºÒ°¡´ÉÇÕ´Ï´Ù.");
-                profileNameInputField.text = string.Empty;
+                ProfileNameInputField.text = string.Empty;
                 return false;
             }
         }
         // ±ÛÀÚ¼ö Ã¼Å©
-        if (profileNameInputField.text.Length < 2)
+        if (ProfileNameInputField.text.Length < 2)
         {
             ProfileManager.Instance.PrintErrorLog(WarningLog, "2~6 ±ÛÀÚÀÇ ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä.");
-            profileNameInputField.text = string.Empty;
+            ProfileNameInputField.text = string.Empty;
             return false;
         }
 
-        ProfileManager.Instance.TempProfileName = profileNameInputField.text; // profile temp name save
+        ProfileManager.Instance.TempProfileName = ProfileNameInputField.text; // profile temp name save
         return true;
     }
 

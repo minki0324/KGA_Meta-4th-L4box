@@ -16,7 +16,7 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 
     private void Awake()
     {
-        puzzleLozic = PushPop.Instance.pushpushManager.puzzleManager;
+        puzzleLozic = PushPop.Instance.PushpushManager.puzzleManager;
     }
 
     private void Start()
@@ -50,7 +50,7 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         else
         { // fit clear
             AudioManager.Instance.SetAudioClip_SFX(2, false);
-            pieceRectTrans.position = puzzleLozic.framePos.position; // 프레임 위치로 보정
+            pieceRectTrans.position = puzzleLozic.FramePos.position; // 프레임 위치로 보정
             puzzleLozic.SuccessCount++;
             canvasGroup.alpha = 1f;
             canvasGroup.blocksRaycasts = false;
@@ -77,7 +77,7 @@ public class PieceDragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, 
     public void FailToSolvePuzzle()
     { // 퍼즐 위치 초기화 버블을 모두 터트렸을때도 한번 불러줌
         // 오른쪽 특정기준 랜덤값으로 이동시킵니다.
-        float posX = UnityEngine.Random.Range(puzzleLozic.failPiecePos.position.x - 100f, puzzleLozic.failPiecePos.position.x + 100f);
+        float posX = UnityEngine.Random.Range(puzzleLozic.FailPiecePos.position.x - 100f, puzzleLozic.FailPiecePos.position.x + 100f);
         float posY = UnityEngine.Random.Range(Screen.height / 5, Screen.height - Screen.height / 5);
         pieceRectTrans.position = new Vector2(posX, posY);
     }

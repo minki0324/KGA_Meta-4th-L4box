@@ -15,23 +15,21 @@ public class PuzzleLozic : MonoBehaviour
     [Header("Puzzle Mode Info")] 
     [SerializeField] private List<PuzzleData> puzzles = new List<PuzzleData>(); // puzzle scriptableObject list
     [SerializeField] private Transform puzzleTrans = null; // puzzle이 생성되는 곳
-    public Transform framePos;
-    public Transform failPiecePos;
+    public Transform FramePos;
+    public Transform FailPiecePos;
     private Vector2 piecePos = Vector2.zero;
 
-    public PuzzleData CurrentPuzzle; // Player가 고른 퍼즐 종류
+    [HideInInspector] public PuzzleData CurrentPuzzle; // Player가 고른 퍼즐 종류
     private List<GameObject> pieceList = new List<GameObject>(); // 생성된 조각
     private float puzzleJudgmentDistance = 60f; // 퍼즐 판정 거리.
-    public int ClearCount=0; //맞춰야하는 퍼즐 갯수
-    public int SuccessCount= 0; //맞춘 갯수
+    [HideInInspector] public int ClearCount=0; //맞춰야하는 퍼즐 갯수
+    [HideInInspector] public int SuccessCount= 0; //맞춘 갯수
 
-    //public Action onPuzzleClear; //퍼즐을 모두 맞췄을때 부르는 콜백이벤트
-    // public SpriteAtlas atlas;
-    public List<PuzzleObject> puzzleList = new List<PuzzleObject>(); // 생성된 puzzle
+    private List<PuzzleObject> puzzleList = new List<PuzzleObject>(); // 생성된 puzzle
 
     public bool CheckDistance(Vector3 _currentPosition)
     { // 퍼즐을 놓았을때 맞춰야하는 위치와 현재위치 비교
-        if (Vector3.Distance(_currentPosition, framePos.position) < puzzleJudgmentDistance)
+        if (Vector3.Distance(_currentPosition, FramePos.position) < puzzleJudgmentDistance)
         {
             return true;
         }
@@ -108,7 +106,7 @@ public class PuzzleLozic : MonoBehaviour
             dragAndDrop.FailToSolvePuzzle();
         }
 
-        PuzzleInstantiate(frameObject, framePos.position, CurrentPuzzle.shadow, false);
+        PuzzleInstantiate(frameObject, FramePos.position, CurrentPuzzle.shadow, false);
     }
     #endregion
     #region 퍼즐완성 콜백 메소드들
@@ -125,7 +123,7 @@ public class PuzzleLozic : MonoBehaviour
 
     public void CraetBoard()
     { // 퍼즐 완료하고 퍼즐 원본 오브젝트 생성
-        Image frameImage = PushPop.Instance.pushpushManager.customManager.puzzleBoard.GetComponent<Image>();
+        Image frameImage = PushPop.Instance.PushpushManager.customManager.PuzzleBoard.GetComponent<Image>();
         frameImage.sprite = DataManager.Instance.pushPopAtlas.GetSprite(CurrentPuzzle.PuzzleID.ToString()); //퍼즐 사진넣기
         frameImage.preserveAspect = true; // sprite 비율 세팅
         frameImage.alphaHitTestMinimumThreshold = 0.1f;

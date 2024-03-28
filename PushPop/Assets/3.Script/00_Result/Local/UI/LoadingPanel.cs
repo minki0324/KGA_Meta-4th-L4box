@@ -36,7 +36,7 @@ public class LoadingPanel : MonoBehaviour
 
     [Header("ETC")]
     private bool isLoadingEnd = false;   //로딩이 끝났는가
-    public bool bisStart = false;
+    public bool isStart = false;
    
 
     private void Awake()
@@ -57,10 +57,10 @@ public class LoadingPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!bisStart)
+        if (!isStart)
         {
             gameObject.SetActive(false);
-            bisStart = !bisStart;
+            isStart = !isStart;
             return;
         }
         Loading();
@@ -86,7 +86,7 @@ public class LoadingPanel : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
-        else if (scene.name.Equals("00_Maingame") && bisStart)
+        else if (scene.name.Equals("00_Maingame") && isStart)
         {
             gameObject.SetActive(true);
         }
@@ -118,16 +118,16 @@ public class LoadingPanel : MonoBehaviour
 
         for (int i = 0; i < maxBubble; i++)
         {
-            bubble_Array[i].moveMode = MoveMode.Loading;
+            bubble_Array[i].MoveMode = MoveMode.Loading;
             bubble_Array[i].transform.position = new Vector3(Random.Range(0, Camera.main.pixelWidth - 100), Random.Range(-850f, -150f), 0f);
-            bubble_Array[i].upSpeedMin = upSpeed_Min;
-            bubble_Array[i].upSpeedMax = upSpeed_Max;
+            bubble_Array[i].UpSpeedMin = upSpeed_Min;
+            bubble_Array[i].UpSpeedMax = upSpeed_Max;
 
-            bubble_Array[i].moveRangeMin = moveRange_Min;
-            bubble_Array[i].moveRangeMax = moveRange_Max;
+            bubble_Array[i].MoveRangeMin = moveRange_Min;
+            bubble_Array[i].MoveRangeMax = moveRange_Max;
 
-            bubble_Array[i].sizeRandomMin = sizeRandom_Min;
-            bubble_Array[i].sizeRandomMax = sizeRandom_Max;
+            bubble_Array[i].SizeRandomMin = sizeRandom_Min;
+            bubble_Array[i].SizeRandomMax = sizeRandom_Max;
 
             bubble_Array[i].gameObject.SetActive(true);
         }

@@ -20,7 +20,7 @@ public class FramePuzzle : MonoBehaviour,  IPointerDownHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         if (!GameManager.Instance.IsCustomMode) return;
-        PushPop.Instance.pushpushManager.customManager.ClickDown();
+        PushPop.Instance.PushpushManager.customManager.ClickDown();
     }
 
     public void ImageAlphaHitSet(float value)

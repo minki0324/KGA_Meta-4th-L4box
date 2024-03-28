@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class OverlabCheckPushPop : MonoBehaviour
 {
-    public bool isSet = false;
-    public bool isTrigger = false;
+    private bool isSet = false;
+    private bool isTrigger = false;
     public int createIndex = 0;
-    public GameObject RectPush;
+    public GameObject OverlabCheckCircle;
 
     private void OnEnable()
     {
@@ -34,7 +34,7 @@ public class OverlabCheckPushPop : MonoBehaviour
         Destroy(lastFakeStack);
 
         GameObject lastStack = PushPop.Instance.StackPops.Pop(); // ui gameobject
-        PushPop.Instance.pushPopButton.Remove(RectPush);
+        PushPop.Instance.pushPopButton.Remove(OverlabCheckCircle);
         Destroy(lastStack);
     }
 }

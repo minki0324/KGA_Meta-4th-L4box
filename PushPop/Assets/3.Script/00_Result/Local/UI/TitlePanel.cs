@@ -92,17 +92,17 @@ public class TitlePanel : MonoBehaviour
             bub.transform.SetParent(Bubbles.transform);
 
             bubble_Array[i] = bub.GetComponent<Loading_Bubble>();
-            bubble_Array[i].moveMode = MoveMode.Main;
+            bubble_Array[i].MoveMode = MoveMode.Main;
 
-            bubble_Array[i].upSpeedMin = upSpeed_Min;
-            bubble_Array[i].upSpeedMax = upSpeed_Max;
-            bubble_Array[i].upSpeed = Random.Range(upSpeed_Min, upSpeed_Max);
+            bubble_Array[i].UpSpeedMin = upSpeed_Min;
+            bubble_Array[i].UpSpeedMax = upSpeed_Max;
+            bubble_Array[i].UpSpeed = Random.Range(upSpeed_Min, upSpeed_Max);
 
-            bubble_Array[i].moveRangeMin = moveRange_Min;
-            bubble_Array[i].moveRangeMax = moveRange_Max;
+            bubble_Array[i].MoveRangeMin = moveRange_Min;
+            bubble_Array[i].MoveRangeMax = moveRange_Max;
 
-            bubble_Array[i].sizeRandomMin = sizeRandom_Min;
-            bubble_Array[i].sizeRandomMax = sizeRandom_Max;
+            bubble_Array[i].SizeRandomMin = sizeRandom_Min;
+            bubble_Array[i].SizeRandomMax = sizeRandom_Max;
 
             //bubble_Array[i].gameObject.SetActive(false);
             bubble_Array[i].gameObject.SetActive(true);

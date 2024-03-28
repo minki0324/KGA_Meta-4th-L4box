@@ -76,12 +76,12 @@ public class HelpScriptManager : MonoBehaviour
 
     private void HelpSetting()
     {
-        maxPage = DataManager.Instance.helpScripts_List[(int)GameManager.Instance.GameMode].script.Count;
-        for (int i = 0; i < DataManager.Instance.helpScripts_List[(int)GameManager.Instance.GameMode].script.Count; i++)
+        maxPage = DataManager.Instance.HelpScriptsList[(int)GameManager.Instance.GameMode].script.Count;
+        for (int i = 0; i < DataManager.Instance.HelpScriptsList[(int)GameManager.Instance.GameMode].script.Count; i++)
         {
-            if (currentPage.Equals(DataManager.Instance.helpScripts_List[(int)GameManager.Instance.GameMode].script[i].pageNum))
+            if (currentPage.Equals(DataManager.Instance.HelpScriptsList[(int)GameManager.Instance.GameMode].script[i].pageNum))
             {
-                helpDescription.text = $"{currentPage + 1}.{DataManager.Instance.helpScripts_List[(int)GameManager.Instance.GameMode].script[i].content}";
+                helpDescription.text = $"{currentPage + 1}.{DataManager.Instance.HelpScriptsList[(int)GameManager.Instance.GameMode].script[i].content}";
                 helpImage.sprite = selectList[i];
             }
         }
@@ -92,7 +92,7 @@ public class HelpScriptManager : MonoBehaviour
         //도움말 텍스트는 json 파일에
         //도움말 이미지의 경우 리스트에 순차적으로 넣어주세요 :)
         helpImage.sprite = selectList[currentPage];
-        helpDescription.text = $"{currentPage + 1}.{DataManager.Instance.helpScripts_List[(int)GameManager.Instance.GameMode].script[currentPage].content}";
+        helpDescription.text = $"{currentPage + 1}.{DataManager.Instance.HelpScriptsList[(int)GameManager.Instance.GameMode].script[currentPage].content}";
         pageText.text = $"{currentPage + 1}/{maxPage}";
     }
 }

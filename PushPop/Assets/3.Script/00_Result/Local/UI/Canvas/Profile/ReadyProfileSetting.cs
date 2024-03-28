@@ -12,7 +12,6 @@ public enum Player
 public class ReadyProfileSetting : MonoBehaviour
 { // Ready
     [HideInInspector] public int PlayerScore = 0; // score & time
-    [HideInInspector] public bool IsSelect = false; // multi profile select ½Ã true
 
     [Header("Profile 1P Info")]
     [SerializeField] private Image profileImage1P = null;

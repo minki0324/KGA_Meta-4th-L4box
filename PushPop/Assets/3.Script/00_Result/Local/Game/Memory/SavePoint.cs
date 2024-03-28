@@ -24,31 +24,13 @@ public class CompletedStage
 
 public class SavePoint : MonoBehaviour
 {
-
-    public static SavePoint Instance = null;
-
-    public string savePath = string.Empty;
-    public int saveStage;
+    private string savePath = string.Empty;
     public List<CompletedStage> completedStageList = new List<CompletedStage>();
-    // Start is called before the first frame update
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-    }
-    void Start()
+    private void Start()
     {
         savePath = Application.persistentDataPath + "/MemorySave.json";
         LoadStage();
-     
     }
 
     public void SaveStage()
@@ -79,7 +61,6 @@ public class SavePoint : MonoBehaviour
         { // 새로운 랭크 추가, 이때 timer는 빈 리스트로 초기화
             completedStageList.Add(new CompletedStage(_name, _index, _stage));
             GameManager.Instance.myMeomoryStageInfo = completedStageList.FirstOrDefault(stage => stage.profileName == ProfileManager.Instance.myProfile.name);
-
         }
         // 저장
         SaveStage();

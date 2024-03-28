@@ -22,7 +22,6 @@ public class MultiManager : MonoBehaviour, IGame
     [Header("Canvas")]
     [SerializeField] private MultiCanvas multiCanvas = null;
 
-
     [Header("Panel")]
     [SerializeField] private GameObject warningPanel = null;
     [SerializeField] private GameObject resultPanel = null;
@@ -33,12 +32,12 @@ public class MultiManager : MonoBehaviour, IGame
     private bool[] quitButtonClick = { false, false }; // 1P, 2P 뒤로가기 버튼 클릭 시 true
 
     [Header("Game Info")]
-    [SerializeField] private Turn playerTurn = Turn.Turn1P; // 현재 턴 기준
     [SerializeField] private List<Sprite> easyList = new List<Sprite>();
     [SerializeField] private List<Sprite> normalList = new List<Sprite>();
     [SerializeField] private List<Sprite> hardList = new List<Sprite>();
-    [SerializeField] private List<int> spriteList1P = new List<int>() { 0, 1, 2 };
-    [SerializeField] private List<int> spriteList2P = new List<int>() { 0, 1, 2 };
+    private List<int> spriteList1P = new List<int>() { 0, 1, 2 };
+    private List<int> spriteList2P = new List<int>() { 0, 1, 2 };
+    private Turn playerTurn = Turn.Turn1P; // 현재 턴 기준
     private bool isFever = false;
 
     [Header("Bubble Info")]
@@ -61,7 +60,7 @@ public class MultiManager : MonoBehaviour, IGame
 
     [Header("Timer")]
     [SerializeField] private GameTimer gameTimer = null;
-    [SerializeField] private float upperTimer = 12f;
+    private float upperTimer = 12f;
     [SerializeField] private TMP_Text feverText = null;
 
     [Header("Quit")]
@@ -73,9 +72,9 @@ public class MultiManager : MonoBehaviour, IGame
     private float rotationZ = 0f; // 현재 Z 축 회전 각도
     private Coroutine upperBubbleCoroutine = null; // 물 차오르는 코루틴
     private Coroutine bottomBubbleCoroutine = null; // 물 차오르는 코루틴
-    public Coroutine FeverCoroutine = null;
-
+    private Coroutine feverCoroutine = null;
     private bool isGameStart = false;
+
 
     private void OnEnable()
     {
@@ -85,9 +84,9 @@ public class MultiManager : MonoBehaviour, IGame
     private void Update()
     {
         if (isEndGame) return;
-        if(gameTimer.TenCount && !isFever)
+        if(gameTimer.isTenCount && !isFever)
         {
-            FeverCoroutine = StartCoroutine(FeverMode());
+            feverCoroutine = StartCoroutine(FeverMode());
         }
         GameEnd();
     }
@@ -116,8 +115,8 @@ public class MultiManager : MonoBehaviour, IGame
 
         // timer setting
         gameTimer.TimerText.color = new Color(0, 0, 0, 1);
-        gameTimer.TenCount = false;
-        gameTimer.EndTimer = false;
+        gameTimer.isTenCount = false;
+        gameTimer.isEndTimer = false;
         upperTimer = 12f;
         isEndGame = false;
         isFever = false;
@@ -223,7 +222,7 @@ public class MultiManager : MonoBehaviour, IGame
 
     public void GameEnd()
     {
-        if (gameTimer.EndTimer) // timer 종료 시 gameTimer.EndTimer true
+        if (gameTimer.isEndTimer) // timer 종료 시 gameTimer.EndTimer true
         {
             AudioManager.Instance.SetAudioClip_SFX(1, false);
             WaterfallAnimatorSet(playerTurn, true);
@@ -247,7 +246,7 @@ public class MultiManager : MonoBehaviour, IGame
     private IEnumerator Result_Co()
     { // 결과창 출력 코루틴
         yield return new WaitForSeconds(2f); // waterfall animation 기다림 
-        AudioManager.Instance.audioSource_arr[1].pitch = 1f;
+        AudioManager.Instance.AudioSourceArray[1].pitch = 1f;
         WaterfallAnimatorSet(playerTurn, false);
         feverText.gameObject.SetActive(false);
         AudioManager.Instance.Stop_SFX();
@@ -288,7 +287,7 @@ public class MultiManager : MonoBehaviour, IGame
     private Sprite GetSpriteName(int _player)
     {
         Sprite sprite;
-        if(!gameTimer.TenCount)
+        if(!gameTimer.isTenCount)
         {
             int randomList = -1;
             // 스프라이트 리스트를 저장하는 변수
@@ -368,7 +367,7 @@ public class MultiManager : MonoBehaviour, IGame
             StopCoroutine(upperBubbleCoroutine);
         }
         // TenCount가 true면 10초 미만이 남은 상태로 피버모드 돌입
-        upperTimer = gameTimer.TenCount ? 8f : 12f;
+        upperTimer = gameTimer.isTenCount ? 8f : 12f;
         upperBubbleCoroutine = StartCoroutine(UpperBubble_Co());
     }
 
@@ -417,7 +416,7 @@ public class MultiManager : MonoBehaviour, IGame
             for (int i = 0; i < PushPop.Instance.popButtonList1P.Count; i++)
             {
                 PushPop.Instance.popButtonList1P[i].GetComponent<Button>().interactable = true;
-                PushPop.Instance.popButtonList1P[i].GetComponent<PushPopButton>().player = 0;
+                PushPop.Instance.popButtonList1P[i].GetComponent<PushPopButton>().Player = 0;
             }
         }
         else if (playerTurn.Equals(Turn.Turn2P))
@@ -429,7 +428,7 @@ public class MultiManager : MonoBehaviour, IGame
             for (int i = 0; i < PushPop.Instance.popButtonList2P.Count; i++)
             {
                 PushPop.Instance.popButtonList2P[i].GetComponent<Button>().interactable = true;
-                PushPop.Instance.popButtonList2P[i].GetComponent<PushPopButton>().player = 1;
+                PushPop.Instance.popButtonList2P[i].GetComponent<PushPopButton>().Player = 1;
             }
         }
     }
@@ -438,7 +437,7 @@ public class MultiManager : MonoBehaviour, IGame
     {
         isFever = true;
         Vector2 shakePos;
-        while(gameTimer.TenCount)
+        while(gameTimer.isTenCount)
         {
             float shakePosX = UnityEngine.Random.Range(-5, 6);
             float shakePosY = UnityEngine.Random.Range(-5, 6);
@@ -446,7 +445,7 @@ public class MultiManager : MonoBehaviour, IGame
             upperBubbleObject.transform.localPosition = upperPos[(int)playerTurn] + shakePos;
             yield return null;
         }
-        FeverCoroutine = null;
+        feverCoroutine = null;
     }
     #endregion
     #region UpperBubble
@@ -465,10 +464,10 @@ public class MultiManager : MonoBehaviour, IGame
                 lastSpriteIndex = spriteIndex; // 마지막으로 변경된 스프라이트 인덱스 업데이트
             }
 
-            float rotSpeed = gameTimer.TenCount ? 360f : 30f;
-            float rotAngle = gameTimer.TenCount ? 360f : 15f;
-            AudioManager.Instance.audioSource_arr[1].pitch = gameTimer.TenCount ? 1.5f : 1f;
-            if(gameTimer.TenCount)
+            float rotSpeed = gameTimer.isTenCount ? 360f : 30f;
+            float rotAngle = gameTimer.isTenCount ? 360f : 15f;
+            AudioManager.Instance.AudioSourceArray[1].pitch = gameTimer.isTenCount ? 1.5f : 1f;
+            if(gameTimer.isTenCount)
             {
                 feverText.gameObject.SetActive(true);
             }
@@ -496,14 +495,14 @@ public class MultiManager : MonoBehaviour, IGame
         }
 
         upperBubbleCoroutine = null;
-        gameTimer.EndTimer = true; // 게임 종료
+        gameTimer.isEndTimer = true; // 게임 종료
         
         AudioManager.Instance.SetAudioClip_SFX(0, false);
     }
 
     private int GetSpriteIndexByTimer(float timer)
     { // upperBubble sprite index return
-        float fever = gameTimer.TenCount ? 0.7f : 1f;
+        float fever = gameTimer.isTenCount ? 0.7f : 1f;
         if (timer < 2 * fever) return 5;
         if (timer < 4 * fever) return 4;
         if (timer < 6 * fever) return 3;
@@ -606,7 +605,7 @@ public class MultiManager : MonoBehaviour, IGame
         if (quitButtonClick[(int)Player.Player1] && quitButtonClick[(int)Player.Player2])
         {
             Time.timeScale = 0f;
-            if (gameTimer.TenCount)
+            if (gameTimer.isTenCount)
             {
                 AudioManager.Instance.Pause_SFX(true);
             }

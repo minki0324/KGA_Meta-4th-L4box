@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class CustomColorSet : MonoBehaviour
 {
-    public GameObject[] ring;
+    public GameObject[] Ring;
     [SerializeField] private CustomPushpopManager customPushpopManager = null;
 
     public void ChildActive(int _index)
     {
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        for (int i = 0; i < ring.Length; i++)
+        for (int i = 0; i < Ring.Length; i++)
         {
-            ring[i].SetActive(false);
+            Ring[i].SetActive(false);
         }
-        ring[_index].SetActive(true);
+        Ring[_index].SetActive(true);
         customPushpopManager.SpriteIndex = _index;
     }
 }
