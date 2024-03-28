@@ -99,7 +99,7 @@ public class Loading_Bubble : MonoBehaviour
     private IEnumerator MoveUp_co()
     {//비눗방을 상승 코루틴
 
-        float cashing = 0.005f;
+        float cashing = 0.01f;
 
         float moveTime = 0f;    //움직이는 방향, 올라가는속도 바꾸는 시간
         float sizeTime = 0f;    //커짐/작아짐 바꾸는 시간
