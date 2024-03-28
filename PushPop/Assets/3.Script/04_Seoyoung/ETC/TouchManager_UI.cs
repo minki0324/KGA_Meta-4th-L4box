@@ -48,7 +48,7 @@ public class TouchManager_UI : MonoBehaviour
     private void Awake()
     {
         //프레임 속도 고정
-        Application.targetFrameRate = 300;
+        Application.targetFrameRate = 60;
         Screen.SetResolution(1920, 1080, false);
 
     }

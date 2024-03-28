@@ -23,11 +23,11 @@ public class LoadingPanel : MonoBehaviour
     [SerializeField] private Image FadeBackground;
 
     [Header("비눗방울 최대 생성 갯수")]
-    [SerializeField] private  int maxBubble = 70;     //최대 버블 수
+    [SerializeField] private  int maxBubble = 100;     //최대 버블 수
 
     [Header("비눗방울 올라가는 속도")]
-    [SerializeField] private int upSpeed_Min = 50;
-    [SerializeField] private int upSpeed_Max = 80;
+    [SerializeField] private int upSpeed_Min = 40;
+    [SerializeField] private int upSpeed_Max = 65;
 
     [Header("비눗방울 좌우 속도")]
     public float moveRange_Min = -3f;
@@ -202,8 +202,8 @@ public class LoadingPanel : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        float cashing1 = 0.2f;
-        float cashing2 = 0.1f;
+        float cashing1 = 0.1f;
+        float cashing2 = 0.05f;
         while (true)
         {
             if (visibility <= 0.35f)
