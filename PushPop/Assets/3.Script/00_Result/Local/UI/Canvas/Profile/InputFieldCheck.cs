@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 using System.Text.RegularExpressions;
+using TMPro;
+using UnityEngine;
 
 public class InputFieldCheck : MonoBehaviour
 { // Create Name InputField Check

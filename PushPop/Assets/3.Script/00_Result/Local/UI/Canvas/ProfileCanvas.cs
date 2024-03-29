@@ -105,7 +105,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     }
 
     private void ShutdownInit()
-    {
+    { // shutdown 시 초기화되는 목록
         if (!GameManager.Instance.IsShutdown) return;
         Select.SetActive(true);
         createName.SetActive(false);

@@ -131,7 +131,6 @@ public class PushPopTest : MonoBehaviour
         }
     }
 
-    // PushPop Button Object Pooling
     private void GetPushPopButton(List<GameObject> _pos, GameObject _prefab, Transform _parent)
     {
         for (int i = 0; i < _pos.Count; i++)
@@ -148,7 +147,6 @@ public class PushPopTest : MonoBehaviour
         return;
     }
 
-    // PushPop position Object Pooling
     private void GetPushPopButton(List<GameObject> _pos, GameObject _prefab, Transform _parent, float _posX, float _posY)
     {
         GameObject newPos = Instantiate(_prefab, _parent); // Button이 더 필요하다면 새로 생성

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -43,8 +41,6 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
                 PushPop.Instance.PushCount++;
                 gameObject.GetComponent<Image>().raycastTarget = false;
                 break;
-            case GameMode.Speed:
-                break;
             case GameMode.Multi:
                 if (Player.Equals(0))
                 { // 1P ¼ÒÀ¯ ÆË ¹öÆ°
@@ -63,7 +59,7 @@ public class PushPopButton : MonoBehaviour, IPointerDownHandler
             PushPop.Instance.ActivePosCount--;
             clickButton.GetComponent<Button>().interactable = false;
         }
-        
+
         GameManager.Instance.GameEnd?.Invoke();
     }
 }

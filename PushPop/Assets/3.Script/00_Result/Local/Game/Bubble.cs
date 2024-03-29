@@ -8,13 +8,10 @@ public class Bubble : MonoBehaviour, IPointerDownHandler
     [SerializeField] private RectTransform bubbleRectTrans;
     [HideInInspector] public int TouchCount = 0;
     private Vector2 bubbleSize = Vector2.zero;
-    private Vector2 localPos = Vector2.zero;
-    private Vector2 puzzleSize = Vector2.zero;
 
     [Header("Move Parameter")]
     // Bubble moving
     private float currentSpeed = 0f;
-    private Coroutine moveCoroutine = null;
     [SerializeField] private AnimationCurve decelOverTime;
     private float decel = 250f; // move 속도 감소
     private float speedRate = 10f;
@@ -55,7 +52,6 @@ public class Bubble : MonoBehaviour, IPointerDownHandler
         bubbleRectTrans.anchoredPosition = _puzzlePos;
         // size setting
         float bigger = _puzzleSize.x > _puzzleSize.y ? _puzzleSize.x : _puzzleSize.y;
-        puzzleSize = _puzzleSize;
 
         if (gameMode.Equals(GameMode.PushPush))
         {
@@ -66,11 +62,10 @@ public class Bubble : MonoBehaviour, IPointerDownHandler
     }
 
     private void BubbleTouch(Vector2 _bubblePosition, Vector2 _touchPosition)
-    {
-        // Bubble Move
+    { // Bubble Move
         Vector2 dir = (_bubblePosition - _touchPosition).normalized;// Touch Position의 반대 방향
         float speed = (_bubblePosition - _touchPosition).magnitude;
-        moveCoroutine = StartCoroutine(BubbleMove_Co(dir, speed));
+        StartCoroutine(BubbleMove_Co(dir, speed));
 
         // bubble 터트렸을 때
         TouchCount--;
@@ -86,7 +81,7 @@ public class Bubble : MonoBehaviour, IPointerDownHandler
         currentSpeed = _maxSpeed; // maxSpeed 초기화
         float bubbleScale = bubbleRectTrans.lossyScale.x; // x, y 같음
 
-        // 속도가 0이 되었을 때까지 이동
+        // 속도 0 될 때까지 이동
         while (currentSpeed >= 0)
         {
             if (0f + (bubbleSize.x * bubbleScale / 2f) > transform.position.x)
@@ -114,11 +109,5 @@ public class Bubble : MonoBehaviour, IPointerDownHandler
 
             yield return null;
         }
-    }
-
-    private IEnumerator CenterSave_Co()
-    {
-        yield return null;
-        localPos = GetComponent<RectTransform>().localPosition;
     }
 }

@@ -31,14 +31,14 @@ public class PushPushCanvas : MonoBehaviour
     }
 
     private void ShutdownInit()
-    {
+    { // shutdown 시 초기화되는 목록
         if (!GameManager.Instance.IsShutdown) return;
         LoadingPanel.Instance.gameObject.SetActive(true);
         selectBoardPanel.SetActive(false);
         helpPanel.SetActive(false);
     }
     public void GameStartButton()
-    {
+    { // 게임 시작 버튼
         AudioManager.Instance.SetAudioClip_BGM(3);
         AudioManager.Instance.SetCommonAudioClip_SFX(0);
         LoadingPanel.Instance.gameObject.SetActive(true);

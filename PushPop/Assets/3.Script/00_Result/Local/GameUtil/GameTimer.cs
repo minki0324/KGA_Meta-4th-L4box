@@ -7,8 +7,8 @@ public class GameTimer : MonoBehaviour
 { // speed, multi game timer
     public TMP_Text TimerText = null;
     [HideInInspector] public float CurrentTime = 60f; // 현재 시간
-    [HideInInspector] public bool isTenCount = false; // 남은 시간이 10초 이하인지 체크
-    [HideInInspector] public bool isEndTimer = false;
+    [HideInInspector] public bool isTenCount = false; // 남은 시간이 10초 이하일 때 true
+    [HideInInspector] public bool isEndTimer = false; // 게임 종료시 true
 
     private float compareTime = 0;
     private int setSign = 0;
@@ -75,7 +75,7 @@ public class GameTimer : MonoBehaviour
     }
 
     private void SetTime()
-    {
+    { // 남은시간 표시
         if (GameManager.Instance.GameMode.Equals(GameMode.Speed))
         {
             int sec = (int)CurrentTime % 60; // 60으로 나눈 나머지 = 초
@@ -90,7 +90,6 @@ public class GameTimer : MonoBehaviour
 
     private Color TimerCountColorChange(string _colorCode)
     { // text color change
-        // Color newColor = new Color(0, 0, 0, 1);
         if (ColorUtility.TryParseHtmlString(_colorCode, out Color newColor))
         {
             return newColor;

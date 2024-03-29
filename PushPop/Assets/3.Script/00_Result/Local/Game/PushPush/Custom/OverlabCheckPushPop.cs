@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class OverlabCheckPushPop : MonoBehaviour
 {
-    private bool isSet = false;
     private bool isTrigger = false;
     public int createIndex = 0;
     public GameObject OverlabCheckCircle;
@@ -14,17 +13,13 @@ public class OverlabCheckPushPop : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-       if (collision.CompareTag("PushPop") /*&& !isSet*/ && !isTrigger)
+       if (collision.CompareTag("PushPop") && !isTrigger)
         {
             isTrigger = true;
             if (createIndex > collision.GetComponent<OverlabCheckPushPop>().createIndex)
             {
                 CheckOverlap();
             }
-            else
-            {
-                isSet = true;
-            } 
         }
     }
 

@@ -39,7 +39,7 @@ public class MultiCanvas : MonoBehaviour
     }
 
     private void ShutdownInit()
-    {
+    { // shutdown 시 초기화되는 목록
         if (!GameManager.Instance.IsShutdown) return;
         LoadingPanel.Instance.gameObject.SetActive(true);
         StopAllCoroutines();

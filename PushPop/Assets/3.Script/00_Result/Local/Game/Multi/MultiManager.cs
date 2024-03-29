@@ -331,7 +331,7 @@ public class MultiManager : MonoBehaviour, IGame
         {
             GameManager.Instance.PushPopStage = spriteNumber;
             PushPop.Instance.CreatePushPopBoard(_parent);
-            PushPop.Instance.CreateGrid(PushPop.Instance.PushPopBoardObject[0]);
+            PushPop.Instance.CreateGrid();
             PushPop.Instance.PushPopButtonSetting(PushPop.Instance.PopParent.transform);
             for (int i = 0; i < PushPop.Instance.PopParent.transform.childCount; i++)
             {

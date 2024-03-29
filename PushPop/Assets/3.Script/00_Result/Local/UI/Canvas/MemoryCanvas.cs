@@ -36,7 +36,7 @@ public class MemoryCanvas : MonoBehaviour
     }
 
     private void ShutdownInit()
-    {
+    { // shutdown 시 초기화되는 목록
         if (!GameManager.Instance.IsShutdown) return;
         LoadingPanel.Instance.gameObject.SetActive(true);
         ContinuePanel.SetActive(false);
@@ -60,7 +60,7 @@ public class MemoryCanvas : MonoBehaviour
     }
 
     public void ContinueBtn()
-    {
+    { // 즉시 이동 버튼
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ContinuePanel.SetActive(true);
         try
@@ -79,7 +79,7 @@ public class MemoryCanvas : MonoBehaviour
     }
 
     public void ExitContinuePanel()
-    {
+    { // 즉시 이동 나가기 버튼
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ContinuePanel.SetActive(false);
         //버튼모두 disable
@@ -94,7 +94,7 @@ public class MemoryCanvas : MonoBehaviour
         memoryManager.CurrentStage = 1;
     }
     public void SelectContinueStage(int stage)
-    {
+    { // stage button
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         memoryManager.CurrentStage = stage;
     }

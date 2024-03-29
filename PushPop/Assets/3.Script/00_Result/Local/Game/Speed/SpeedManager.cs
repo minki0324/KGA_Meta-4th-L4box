@@ -26,7 +26,7 @@ public class SpeedManager : MonoBehaviour, IGame
     [SerializeField] private Transform boardTrans = null;
     [SerializeField] private Transform buttonTrans = null;
     private GameObject touchBubble = null;
-    private bool isFirstSetting = true;
+    private bool isFirstSetting = true; // 버블 터트릴 때 true, 터트린 이후에 false
     private Vector2[] bubblePos = { new Vector2(0f, 0f), new Vector2(0f, -20f) };
 
     [Header("Game Result")]
@@ -39,8 +39,8 @@ public class SpeedManager : MonoBehaviour, IGame
     [SerializeField] private GameTimer gameTimer = null;
     [SerializeField] private Slider countSlider = null;
 
-    private int clearMessage = 0;
-    private bool isEndGame = false;
+    private int clearMessage = 0; // 점수 비교시 필요한 index
+    private bool isEndGame = false; // 게임 종료시 true
 
     private void OnEnable()
     {
@@ -150,7 +150,7 @@ public class SpeedManager : MonoBehaviour, IGame
         yield return new WaitForSeconds(0.8f);
 
         speedCanvas.GameReadyPanel.SetActive(false);
-        
+
         GameReadyStart();
     }
 
@@ -175,7 +175,7 @@ public class SpeedManager : MonoBehaviour, IGame
     }
 
     public void GameEndSliderAfter()
-    {
+    { // speed는 slider 이후 end 판정되므로 slider value 추가 이후에 호출할 gameEnd
         if (gameTimer.isEndTimer || countSlider.value >= 0.9f)
         {
             AudioManager.Instance.Stop_SFX();
@@ -217,7 +217,7 @@ public class SpeedManager : MonoBehaviour, IGame
     }
 
     private IEnumerator BoardCreate_Co()
-    {
+    { // bubble과 같이 생기는 이미지 생성
         if (!isFirstSetting)
         {
             for (int i = 0; i < PushPop.Instance.PushPopBoardObject.Count; i++)
@@ -252,14 +252,14 @@ public class SpeedManager : MonoBehaviour, IGame
 
         PushPop.Instance.BoardPos = bubblePos[1];
         PushPop.Instance.CreatePushPopBoard(boardTrans);
-        PushPop.Instance.CreateGrid(PushPop.Instance.PushPopBoardObject[0]);
+        PushPop.Instance.CreateGrid();
         PushPop.Instance.PushPopButtonSetting(buttonTrans);
         isFirstSetting = false;
         PushPop.Instance.Turning = !PushPop.Instance.Turning; // prefab 생성 시 rotation 결정
     }
 
     private void BoardTurningAnimation()
-    {
+    { // board 회전 animation
         Animator boardAni = PushPop.Instance.PushPopBoardUIObject[0].GetComponent<Animator>();
         boardAni.SetTrigger("Turning");
     }
@@ -279,7 +279,7 @@ public class SpeedManager : MonoBehaviour, IGame
         }
 
         countSlider.value = endValue;
-        if(countSlider.value <= 0.9f)
+        if (countSlider.value <= 0.9f)
         {
             GameEndSliderAfter();
         }

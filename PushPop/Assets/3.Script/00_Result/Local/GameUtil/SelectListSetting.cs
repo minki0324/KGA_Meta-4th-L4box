@@ -22,7 +22,7 @@ public class SelectListSetting : MonoBehaviour
     [SerializeField] private Image selectIconImage = null;
     [SerializeField] private TMP_Text selectIconText = null;
 
-    [Header("PushPush Icon List")] // sprite atlas로 바꿀 수 있다면... todo
+    [Header("PushPush Icon List")]
     private int maxPage = 0; // category list count
     private int currentPage = 1; // category list current count
     [SerializeField] private TMP_Text pageText = null;
