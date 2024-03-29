@@ -63,20 +63,16 @@ public class DataManager : MonoBehaviour
 
     public SpriteAtlas pushPopAtlas = null;
 
-    //딕셔너리용
-    public List<CategoryDict> CategoryDictsList = new List<CategoryDict>();
-    public List<Scripts> SciptsList = new List<Scripts>();
-    public List<IconDict> IconDictsList = new List<IconDict>();
     //파싱한 정보 저장할 딕셔너리
     public Dictionary<int, string> CategoryDict = new Dictionary<int, string>();
     public Dictionary<int, string> IconDict = new Dictionary<int, string>();
 
 
-    //도움말 스크립트용
+    //도움말 스크립트용 리스트
     public List<HelpScript> HelpScriptsList = new List<HelpScript>();
 
 
-    //욕설방지용
+    //욕설방지용 배열
     public BadWord[] BadWordArray;      //vulgarsim.json 파일이 켜는순간 컴퓨터가 멈춰서 일단 따로
     public string[] VulgarismArray;
 
@@ -143,31 +139,34 @@ public class DataManager : MonoBehaviour
     //category.json 읽어와서 Dictionary로 변환하는 메소드
     public void Read_Category()
     {//category.json파일 읽어와 persistentDataPath에 저장 밑 json데이터 Dictionary로 파싱하는 메소드   
-        //1. JSON 데이터를 Category형 List로 받아옴
-        //2. List를 Dictinory로 변환
-        //categoryDict.Clear();
+
 
         string oriPath = Path.Combine(path, categoryDictFileName);
         string realPath = dataPath + "/" + categoryDictFileName;
 
-        if(!File.Exists(realPath))
+        if (!File.Exists(realPath))
         {
-#pragma warning disable 0618
-            WWW reader = new WWW(oriPath);
-            while (!reader.isDone)
-            {
-
-            }
-
-            byte[] data = reader.bytes;
-            string resultData = System.Text.Encoding.UTF8.GetString(data);
-
-            //File.WriteAllBytes(realPath, reader.bytes);
-            File.WriteAllText(realPath, resultData);
+            SaveInPath(oriPath, realPath);
         }
 
-
         string JsonString = File.ReadAllText(realPath);
+
+        while (true)
+        {
+            if (SaveInPath(oriPath, realPath) == JsonString)
+            {
+                break;
+            }
+            else
+            {
+                File.Delete(realPath);
+                SaveInPath(oriPath, realPath);
+                break;
+            }
+        }
+
+        JsonString = File.ReadAllText(realPath);
+
         JsonData jsonData = JsonMapper.ToObject(JsonString);
 
         for (int i = 0; i < jsonData.Count; i++)
@@ -176,33 +175,36 @@ public class DataManager : MonoBehaviour
 
         }
 
-
-
-
     }
 
-    //icon.json 읽어와서 Dictionary로 변환하는 메소드
+    
     public void Read_Icon()
-    {//icon.json파일 읽어와 persistentDataPath에 저장 밑 json데이터 Dictionary로 파싱하는 메소드      
+    {//icon.json파일 읽어와 최초 실행 시 persistentDataPath에 저장 및 json데이터 Dictionary로 파싱하는 메소드      
         string oriPath = Path.Combine(path, iconDictFileName);
         string realPath = dataPath + "/" + iconDictFileName;
 
-        if(!File.Exists(realPath))
+        if (!File.Exists(realPath))
         {
-            WWW reader = new WWW(oriPath);
-            while (!reader.isDone)
-            {
-
-            }
-
-            byte[] data = reader.bytes;
-            string resultData = System.Text.Encoding.UTF8.GetString(data);
-
-            File.WriteAllText(realPath, resultData);
-
+            SaveInPath(oriPath, realPath);
         }
 
         string JsonString = File.ReadAllText(realPath);
+
+        while (true)
+        {
+            if (SaveInPath(oriPath, realPath) == JsonString)
+            {
+                break;
+            }
+            else
+            {
+                File.Delete(realPath);
+                SaveInPath(oriPath, realPath);
+                break;
+            }
+        }
+
+        JsonString = File.ReadAllText(realPath);
 
         JsonData jsonData = JsonMapper.ToObject(JsonString);
 
@@ -213,51 +215,37 @@ public class DataManager : MonoBehaviour
 
     }
 
-    public void Save_HelpScript()
-    {
-        string oriPath = Path.Combine(Application.streamingAssetsPath, helpScriptFileName);
-
-        //UnityWebRequest reader = new UnityWebRequest()
-
-        WWW reader = new WWW(oriPath);
-        while (!reader.isDone)
-        {
-            ;
-        }
-
-        string realPath = dataPath + "/" + helpScriptFileName;
-
-        byte[] data = reader.bytes;
-        string resultData = System.Text.Encoding.UTF8.GetString(data);
-
-        //File.WriteAllBytes(realPath, reader.bytes);
-
-        File.WriteAllText(realPath, resultData);
-    }
 
     public void Read_HelpScript()
-    {//helpscript.json파일 읽어와 persistentDataPath에 저장 밑 json데이터를 파싱하는 메소드
+    {//helpscript.json파일 읽어와 최초 실행 시 persistentDataPath에 저장 및 json데이터를 파싱하는 메소드
 
         string oriPath = Path.Combine(Application.streamingAssetsPath, helpScriptFileName);
         string realPath = dataPath + "/" + helpScriptFileName;
 
-        if(!File.Exists(realPath))
+        if (!File.Exists(realPath))
         {
-            WWW reader = new WWW(oriPath);
-            while (!reader.isDone)
-            {
-            
-            }
-
-            byte[] data = reader.bytes;
-            string resultData = System.Text.Encoding.UTF8.GetString(data);
-
-            File.WriteAllText(realPath, resultData);
+            SaveInPath(oriPath, realPath);
         }
-
 
         HelpScriptsList.Clear();
         string JsonString = File.ReadAllText(realPath);
+
+        while (true)
+        {
+            if (SaveInPath(oriPath, realPath) == JsonString)
+            {
+                break;
+            }
+            else
+            {
+                File.Delete(realPath);
+                SaveInPath(oriPath, realPath);
+                break;
+            }
+        }
+
+        JsonString = File.ReadAllText(realPath);
+
         var jsonData = JsonMapper.ToObject(JsonString);
 
         for (int i = 0; i < jsonData.Count; i++)
@@ -265,8 +253,6 @@ public class DataManager : MonoBehaviour
             HelpScript helpScript = new HelpScript();
 
             helpScript.type = (string)jsonData[i]["type"];
-
-            //Debug.Log(jsonData[i]["script"]); //Json Data Array로 나옴 -> 안풀림..
 
             for (int j = 0; j < jsonData[i]["script"].Count; j++)
             {
@@ -292,21 +278,25 @@ public class DataManager : MonoBehaviour
 
         if (!File.Exists(realPath))
         {
-
-            WWW reader = new WWW(oriPath);
-            while (!reader.isDone)
-            {
-
-            }
-
-            byte[] data = reader.bytes;
-            string resultData = System.Text.Encoding.UTF8.GetString(data);
-
-            File.WriteAllText(realPath, resultData);
+            SaveInPath(oriPath, realPath);
         }
- 
-
         string JsonString = File.ReadAllText(realPath);
+
+        while(true)
+        {
+            if (SaveInPath(oriPath, realPath) == JsonString)
+            {
+                break;
+            }
+            else
+            {
+                File.Delete(realPath);
+                SaveInPath(oriPath, realPath);
+                break;
+            }
+        }
+
+        JsonString = File.ReadAllText(realPath);
 
         JsonData jsonData = JsonMapper.ToObject(JsonString);
 
@@ -330,21 +320,29 @@ public class DataManager : MonoBehaviour
         string oriPath = Path.Combine(path, vulgarismFileName);
         string realPath = dataPath + "/" + vulgarismFileName;
 
-        if(!File.Exists(realPath))
+        if (!File.Exists(realPath))
         {
-
-            WWW reader = new WWW(oriPath);
-            while (!reader.isDone)
-            {
-
-            }
-            byte[] data = reader.bytes;
-            string resultData = System.Text.Encoding.UTF8.GetString(data);
-            File.WriteAllText(realPath, resultData);
-
+            SaveInPath(oriPath, realPath);
         }
 
         string JsonString = File.ReadAllText(realPath);
+
+        while (true)
+        {
+            if (SaveInPath(oriPath, realPath) == JsonString)
+            {
+                break;
+            }
+            else
+            {
+                File.Delete(realPath);
+                SaveInPath(oriPath, realPath);
+                break;
+            }
+        }
+
+        JsonString = File.ReadAllText(realPath);
+
         JsonData jsonData = JsonMapper.ToObject(JsonString);
 
         string oneData = jsonData[0]["vulgarism"].ToString();
@@ -355,8 +353,27 @@ public class DataManager : MonoBehaviour
             VulgarismArray[i].Replace(" ", ""); 
         }
 
-
     }
+
+
+    private string SaveInPath(string _oriPath, string _realPath)
+    {//PersistantDataPath에 저장하는 메소드
+
+        WWW reader = new WWW(_oriPath);
+        while (!reader.isDone)
+        {
+
+        }
+
+        byte[] data = reader.bytes;
+        string resultData = System.Text.Encoding.UTF8.GetString(data);
+
+        File.WriteAllText(_realPath, resultData);
+        
+        string JsonString = File.ReadAllText(_realPath);
+        return JsonString;
+    }
+
 
 
 
