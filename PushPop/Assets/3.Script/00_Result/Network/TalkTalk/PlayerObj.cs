@@ -118,9 +118,9 @@ public class PlayerObj : NetworkBehaviour
     private void Init()
     {
         playerManager = FindObjectOfType<PlayerManager>();
-        playerManager.ConnectPrefabs = myIdentity;
         playerManager.NowObj = this;
         myIdentity = GetComponent<NetworkIdentity>();
+        playerManager.ConnectPrefabs = myIdentity;
         playerName = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileName + "#" + ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex;
         if (myIdentity == null)
         {

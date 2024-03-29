@@ -9,62 +9,28 @@ public class SPUM_Prefabs : MonoBehaviour
     public float _version;
     public SPUM_SpriteList _spriteOBj;
     public bool EditChk;
-    public string _code;
     public Animator _anim;
-    public RuntimeAnimatorController _anicon;
-    public bool _horse;
-    
-
-    public bool isRideHorse{
-        get => _horse;
-        set {
-            _horse = value;
-            UnitTypeChanged?.Invoke();
-        }
-    }
-    public string _horseString;
-
-    public UnityEvent UnitTypeChanged = new UnityEvent();
-    private AnimationClip[] _animationClips;
-    public AnimationClip[] AnimationClips => _animationClips;
-    private Dictionary<string, int> _nameToHashPair = new Dictionary<string, int>();
-    //private void InitAnimPair()
-    //{
-    //    _nameToHashPair.Clear();
-    //    _animationClips = _anim.runtimeAnimatorController.animationClips;
-    //    foreach (var clip in _animationClips)
-    //    {
-    //        int hash = Animator.StringToHash(clip.name);
-    //        _nameToHashPair.Add(clip.name, hash);
-    //    }
-    //}
 
     private void OnEnable()
     {
-
+        PlayerObj playerObj = transform.parent.GetComponent<PlayerObj>();
+        if (playerObj != null)
+        {
             transform.parent.GetComponent<PlayerObj>()._prefabs = this;
-
+        }
     }
-    //private void Start()
-    //{
 
-    //        UnitTypeChanged.AddListener(InitAnimPair);
-    //}
     // 이름으로 애니메이션 실행
-    public void PlayAnimation(string name){
-
-
-        switch(name)
+    public void PlayAnimation(string name)
+    {
+        switch (name)
         {
             case "idle":
-                _anim.SetBool("Move",false);
-            break;
-
+                _anim.SetBool("Move", false);
+                break;
             case "run":
-                _anim.SetBool("Move",true);
-            break;
-
-            
+                _anim.SetBool("Move", true);
+                break;
         }
     }
 }

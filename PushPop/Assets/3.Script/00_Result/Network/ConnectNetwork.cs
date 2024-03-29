@@ -39,7 +39,7 @@ public class ConnectNetwork : MonoBehaviour
     private NetworkManager manager;
     private KcpTransport kcp;
 
-    private string Path = string.Empty;
+    private string path = string.Empty;
     public string Server_Ip { get; private set; }
     public string Server_Port { get; private set; }
 
@@ -61,17 +61,17 @@ public class ConnectNetwork : MonoBehaviour
         }
 
 
-        if (Path.Equals(string.Empty))
+        if (path.Equals(string.Empty))
         {
-            Path = Application.persistentDataPath + "/License";
+            path = Application.persistentDataPath + "/License";
         }
-        if (!File.Exists(Path)) //폴더 검사
+        if (!File.Exists(path)) //폴더 검사
         {
-            Directory.CreateDirectory(Path);
+            Directory.CreateDirectory(path);
         }
-        if (!File.Exists(Path + "/License.json")) //파일 검사
+        if (!File.Exists(path + "/License.json")) //파일 검사
         {
-            Default_Data(Path);
+            Default_Data(path);
         }
         manager = GetComponent<NetworkManager>();
         kcp = (KcpTransport)manager.transport;
@@ -110,7 +110,7 @@ public class ConnectNetwork : MonoBehaviour
 
         try
         {
-            string Json_string = File.ReadAllText(Path + "/License.json");
+            string Json_string = File.ReadAllText(path + "/License.json");
             JsonData itemdata = JsonMapper.ToObject(Json_string);
             string string_type = itemdata[0]["License"].ToString();
             string str_serverIP = itemdata[0]["Server_IP"].ToString();
