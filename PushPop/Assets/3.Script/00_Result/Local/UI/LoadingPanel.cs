@@ -20,23 +20,23 @@ public class LoadingPanel : MonoBehaviour
     [SerializeField] private Image FadeBackground;
 
     [Header("비눗방울 최대 생성 갯수")]
-    [SerializeField] private  int maxBubble = 100;     //최대 버블 수
+    [SerializeField] private  int maxBubble = 100;     //생성할 비눗방울 갯수
 
     [Header("비눗방울 올라가는 속도")]
-    [SerializeField] private int upSpeed_Min = 40;
-    [SerializeField] private int upSpeed_Max = 65;
+    [SerializeField] private int upSpeed_Min = 40;   //비눗방울 올라가는 속도 : 최소 속도
+    [SerializeField] private int upSpeed_Max = 65;    //비눗방울 올라가는 속도 : 최대 속도
 
     [Header("비눗방울 좌우 속도")]
-    public float moveRange_Min = -3f;
-    public float moveRange_Max = 3f;
+    public float moveRange_Min = -3f;    //비눗방울 좌우 이동 속도 : 최소 속도
+    public float moveRange_Max = 3f;     //비눗방울 좌우 이동 속도 : 최대 속도
 
     [Header("비눗방울 커지고 작아지는 정도")]
-    public float sizeRandom_Min = 0.1f;
-    public float sizeRandom_Max = 0.3f;
+    public float sizeRandom_Min = 0.1f;     //비눗방울 크기 조절 : 최소 크기 (width, height 값)
+    public float sizeRandom_Max = 0.3f;     //비눗방울 크기 조절 : 최대 크기 (width, height 값)
 
     [Header("ETC")]
     private bool isLoadingEnd = false;   //로딩이 끝났는가
-    public bool isStart = false;
+    public bool isStart = false;    //처음 시작인가
    
 
     private void Awake()

@@ -4,10 +4,10 @@ using UnityEngine.UI;
 public class AudioOption : MonoBehaviour
 {
     [Header("Slider")]
-    [SerializeField] private Slider bgm_Slider;
-    [SerializeField] private Slider sfx_Slider;
-    private float minSound = -20f;
-    private float maxSound = -5f;
+    [SerializeField] private Slider bgm_Slider; //옵션창의 BGM슬라이더
+    [SerializeField] private Slider sfx_Slider; //옵션창의 SFX슬라이더
+    private float minSound = -20f;  //AudioMixer의 최소 음량
+    private float maxSound = -5f;   //AudioMixer의 최대 음량
 
     private void Start()
     {
@@ -15,7 +15,8 @@ public class AudioOption : MonoBehaviour
     }
 
     private void Init()
-    {
+    {//값 초기화
+
         //볼륨 최소값
         bgm_Slider.minValue = minSound;
         sfx_Slider.minValue = minSound;
@@ -48,7 +49,9 @@ public class AudioOption : MonoBehaviour
     }
 
     public void SetVolume(bool _isBgm)
-    {
+    {//Slider들의 onValueChange에 호출될 함수,
+     //음량 조절 함수
+
         float volume = 0f;
         string soundType = "BGM";
         if (_isBgm)
@@ -76,7 +79,7 @@ public class AudioOption : MonoBehaviour
     }
 
     public void VolumeOffButton(bool _isBgm)
-    {
+    {//볼륨 끄는 버튼 함수
         if (_isBgm)
         {
             bgm_Slider.value = minSound;
@@ -93,7 +96,7 @@ public class AudioOption : MonoBehaviour
     }
 
     public void VolumeOnButton(bool _isBgm)
-    {
+    {//볼륨 켜는 버튼 함수
         if (_isBgm)
         {
             bgm_Slider.value = maxSound;
