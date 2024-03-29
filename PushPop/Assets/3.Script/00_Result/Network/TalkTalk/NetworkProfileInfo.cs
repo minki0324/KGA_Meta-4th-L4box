@@ -11,10 +11,7 @@ public class NetworkProfileInfo : MonoBehaviour
     public Profile profile; // SQL Manager에 저장되어 있는 Profile
     [SerializeField] private TMP_Text profileNameText; // Profile에 따른 Name
     [SerializeField] private Image profileImage; // Profile에 따른 Image
-    public Image favoriteStar; // 즐겨찾기 버튼 Image
-
-    #region Unity Callback
-    #endregion
+    [SerializeField] private Image favoriteStar; // 즐겨찾기 버튼 Image
 
     #region Other Method
     public void PrintInfomation()

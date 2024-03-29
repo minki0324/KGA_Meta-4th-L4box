@@ -12,8 +12,8 @@ using Mirror;
 public class MoaMoaManager : MonoBehaviour
 {
     [Header("Current MoaMoa Profile Info")] [Space(5)]
-    public int CurrentProfileIndex; // MoaMoa 剁况林绰 Profile Index
-    public string CurrentProfileName;
+    [HideInInspector] public int CurrentProfileIndex; // MoaMoa 剁况林绰 Profile Index
+    [HideInInspector] public string CurrentProfileName;
     [SerializeField] private TMP_Text profileNameText;
 
     [Header("Heart And Like")] [Space(5)]

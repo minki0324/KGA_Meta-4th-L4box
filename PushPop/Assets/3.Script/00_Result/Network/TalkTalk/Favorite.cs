@@ -13,26 +13,26 @@ public class Favorite : MonoBehaviour
     [SerializeField] private GameObject favoriteCanvasPanel = null;
 
     [Header("Instantiate Panel")] [Space(5)]
-    [SerializeField] private Transform networkProfileParent = null;
-    [SerializeField] private GameObject networkProfile = null;
+    [SerializeField] private Transform networkProfileParent = null; // 온라인 패널에서 출력되는 Network Profile Info의 부모
+    [SerializeField] private GameObject networkProfile = null; // Network Profile Info
 
     [Header("UID, Info Text")] [Space(5)]
-    [SerializeField] private TMP_Text infoText = null;
+    [SerializeField] private TMP_Text infoText = null; // TalkTalk 화면 좌상단의 이름#UID
 
     [Header("List")] [Space(5)]
-    [SerializeField] private List<Profile> ConnectList;
-    public FavoriteList favoriteLists = null; // 즐겨찾기 목록 List
+    private List<Profile> connectList; // 온라인 중인 Profile List
     private List<NetworkProfileInfo> profilePanels = new List<NetworkProfileInfo>(); // 각 프로필 판넬들마다 가지고 있는 Script
+    public FavoriteList favoriteLists = null; // 즐겨찾기 목록 List
 
     [Header("Favorite Sprite")] [Space(5)]
-    public Sprite[] favoriteStars;
+    public Sprite[] favoriteStars; // 즐겨찾기 눌렀을 때 별 Sprite
 
     [Header("Input")] [Space(5)]
-    [SerializeField] private TMP_InputField searchInput;
-    [SerializeField] private GameObject warningLog;
-    private bool isSearchProfile = false;
+    [SerializeField] private TMP_InputField searchInput; // 검색 Input
+    [SerializeField] private GameObject warningLog; // 검색 실패시 뜨는 ErrorLog
+    private bool isSearchProfile = false; // 서치 성공 했는지 아닌지
 
-    private Coroutine warningLogCoroutine;
+    private Coroutine warningLogCoroutine; // 검색 실패시 뜨는 Log Coroutine
 
     #region Unity Callback
     private void Awake()
@@ -95,13 +95,13 @@ public class Favorite : MonoBehaviour
     }
 
     private void OnlineListSet()
-    {
-        ConnectList = SQL_Manager.instance.SQL_ConnectListSet(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+    { // 접속중인 Profile List 세팅하는 메소드
+        connectList = SQL_Manager.instance.SQL_ConnectListSet(ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
         profilePanels.Clear();
 
-        if (ConnectList.Count > 0)
+        if (connectList.Count > 0)
         {
-            for(int i = 0; i < ConnectList.Count; i++)
+            for(int i = 0; i < connectList.Count; i++)
             {
                 // Network Manager에게 건네받은 profileList만큼 profilePanel 생성
                 GameObject profile = Instantiate(networkProfile);
@@ -114,7 +114,7 @@ public class Favorite : MonoBehaviour
 
                 // 각 profilePanel이 들고있는 infomation을 세팅
                 NetworkProfileInfo network = profile.GetComponent<NetworkProfileInfo>();
-                network.profile = ConnectList[i];
+                network.profile = connectList[i];
                 network.favorite = this;
                 network.moamoa = moamoa;
                 network.PrintInfomation();
@@ -158,8 +158,7 @@ public class Favorite : MonoBehaviour
         for(int i = 0; i < profilePanels.Count; i++)
         {
             if(searchInput.text.Equals(profilePanels[i].profile.name))
-            {
-                // 검색 칸에 입력한 텍스트와 profile 네임이 같으면 최상단으로 오브젝트 순서 변경
+            { // 검색 칸에 입력한 텍스트와 profile 네임이 같으면 최상단으로 오브젝트 순서 변경
                 isSearchProfile = true;
                 profilePanels[i].gameObject.transform.SetAsFirstSibling();
             }
@@ -172,6 +171,8 @@ public class Favorite : MonoBehaviour
             }
             warningLogCoroutine = StartCoroutine(WarningLog());
         }
+
+        // 설정 완료 후 검색 인풋 초기화 
         searchInput.text = string.Empty;
     }
     

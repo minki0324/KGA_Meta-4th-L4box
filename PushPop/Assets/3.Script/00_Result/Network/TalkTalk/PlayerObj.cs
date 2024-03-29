@@ -11,7 +11,6 @@ public class MyEvent : UnityEvent<PlayerObj.PlayerState>
 
 }
 
-[ExecuteInEditMode]
 public class PlayerObj : NetworkBehaviour
 {
     private PlayerManager playerManager;
@@ -63,7 +62,7 @@ public class PlayerObj : NetworkBehaviour
                 Debug.Log("NetworkIdentity가 존재하지않습니다. NetworkManager에 playerPrefab을 추가했는지 확인해주세요. 또는 NetworkIdentity 를 확인하세요.");
             }
             playerManager.ConnectPrefabs = myIdentity;
-            playerManager._nowObj = this;
+            playerManager.NowObj = this;
         }
         ChangeScale = playerNameText.transform.localScale;
         _stateChanged.AddListener(PlayStateAnimation);

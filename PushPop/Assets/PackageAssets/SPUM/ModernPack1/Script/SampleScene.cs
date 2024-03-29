@@ -16,11 +16,11 @@ public class SampleScene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_playerManagers._nowObj!=null)
+        if(_playerManagers.NowObj!=null)
         {
-            if(_nowObj != _playerManagers._nowObj)
+            if(_nowObj != _playerManagers.NowObj)
             {
-                _nowObj =  _playerManagers._nowObj;
+                _nowObj =  _playerManagers.NowObj;
                 SetMoveState(_moveStateSave);
             }
         }
@@ -28,24 +28,24 @@ public class SampleScene : MonoBehaviour
     //무브 스테이트 설정.
     public void SetMoveState (int num)
     {
-        if(_playerManagers._nowObj==null) return;
+        if(_playerManagers.NowObj==null) return;
         _moveStateSave = num;
-        Animator tAnim = _playerManagers._nowObj._prefabs._anim;
+        Animator tAnim = _playerManagers.NowObj._prefabs._anim;
 
         switch(num)
         {
             case 0:
-            _playerManagers._nowObj._charMS = 5f;
+            _playerManagers.NowObj._charMS = 5f;
             tAnim.SetFloat("RunNumber",0);
             break;
 
             case 1:
-            _playerManagers._nowObj._charMS = 8f;
+            _playerManagers.NowObj._charMS = 8f;
             tAnim.SetFloat("RunNumber",0.5f);
             break;
 
             case 2:
-            _playerManagers._nowObj._charMS = 10f;
+            _playerManagers.NowObj._charMS = 10f;
             tAnim.SetFloat("RunNumber",1f);
             break;
         }
@@ -53,8 +53,8 @@ public class SampleScene : MonoBehaviour
 
     public void SetAnim(int num)
     {
-        if(_playerManagers._nowObj==null) return;
-        Animator tAnim = _playerManagers._nowObj._prefabs._anim;
+        if(_playerManagers.NowObj==null) return;
+        Animator tAnim = _playerManagers.NowObj._prefabs._anim;
 
         switch(num)
         {

@@ -5,10 +5,6 @@ using UnityEngine.UI;
 using Mirror;
 public class Emotion : NetworkBehaviour
 { //Emotion 관리와 실행 관련 스크립트
-
-    //public static Emotion instance;
-
-    //각로컬마다 각 PlayerEmotion을 player가 접속할때 start 에서 할당해줌
     public PlayerEmotionControl playerEmotion; 
     private bool isExpend = false; //감정표현 패널이 활성화 되있는지?
     [SerializeField] private GameObject emojiPanel;
@@ -17,19 +13,16 @@ public class Emotion : NetworkBehaviour
     // *주의* PlayerEmotionControl 스크립트의 GameObject[] emojis;  와 순서 동일하게 둘것
     public Sprite[] sprites;
     public Button[] emojiBtns;
-    //private void Awake()
-    //{
-    //    instance = this;
-    //}
+
     private void Start()
     {
         InitEmojiBtn();
     }
+
     [Client]
     public void onEmotion(int index)
     {
         AudioManager.Instance.SetTalkTalkAudioClic_SFX(0, false);
-        //spriterenderer.sprite = emotions[index];
         playerEmotion.PlayEmotion(index);
     }
     //감정표현 버튼에 onClick등록 되있음.

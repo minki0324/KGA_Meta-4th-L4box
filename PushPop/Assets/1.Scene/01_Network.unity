@@ -18335,8 +18335,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  _prefabObj: {fileID: 2264593362713716666, guid: 4fd99ad1026eb4676b6ed98658f868a9, type: 3}
-  _savedUnitList:
+  SavedUnitList:
   - {fileID: 5943614974645569585, guid: 12ffb41e190dd1c48a915d3073eb56b2, type: 3}
   - {fileID: 4194811697348572505, guid: a41cb74410b4e55448a3b89f1b4e4102, type: 3}
   - {fileID: 7187541970187034796, guid: 17aa431aa4cb16145a5176a0a47a3722, type: 3}
@@ -18437,120 +18436,11 @@ MonoBehaviour:
   - {fileID: 6100473297523850485, guid: ba2727a786da12f41b0e272906b3afe5, type: 3}
   - {fileID: 8087735074270097130, guid: e7325c377cee56c45a13659d56685fc0, type: 3}
   - {fileID: 4600767153618237384, guid: 93cc215cb7495c744bd6f594c8e01733, type: 3}
-  _startPos: {x: -3, y: -4, z: 0}
-  _columnNum: 10
   ConnectPrefabs: {fileID: 0}
-  playersAvatarIdentity: []
-  _playerPool: {fileID: 0}
-  _playerList:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  _nowObj: {fileID: 0}
-  _playerObjCircle: {fileID: 1892379614}
-  _goalObjCircle: {fileID: 95055850}
+  NowObj: {fileID: 0}
+  playerObjCircle: {fileID: 1892379614}
+  goalObjCircle: {fileID: 95055850}
   AvatarBoundary: {fileID: 1606268368}
-  OverUICamera: {fileID: 0}
-  _generate: 0
-  isMouseOnUI: 0
-  tempScale: 0
 --- !u!4 &760071151
 Transform:
   m_ObjectHideFlags: 0
@@ -25955,8 +25845,8 @@ MonoBehaviour:
   networkProfile: {fileID: 1837251545422407552, guid: 3ca1914c7fa78844cbf5b9430bda60f5, type: 3}
   infoText: {fileID: 1378550040}
   favoriteStars:
-  - {fileID: 21300000, guid: 200140ec023d07b499bd3290ab6ac1e3, type: 3}
-  - {fileID: 21300000, guid: d1f5a55f7092b1144aa63d38139d41b8, type: 3}
+  - {fileID: 21300000, guid: c867f77a93058b54c9962db4a0bb8446, type: 3}
+  - {fileID: 21300000, guid: 718a0be38dc1dd447897615144851246, type: 3}
   searchInput: {fileID: 1484919885}
   warningLog: {fileID: 765047612}
 --- !u!4 &1088352960
@@ -39177,7 +39067,7 @@ GameObject:
   - component: {fileID: 1632240686}
   - component: {fileID: 1632240685}
   m_Layer: 0
-  m_Name: MoaMoaManager
+  m_Name: MoaMoa Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49239,7 +49129,7 @@ GameObject:
   - component: {fileID: 1973483375787422769}
   - component: {fileID: 1038905095171004125}
   m_Layer: 0
-  m_Name: EmotionManager
+  m_Name: Emotion Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
