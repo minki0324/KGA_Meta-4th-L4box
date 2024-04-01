@@ -112,7 +112,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bubbleRectTrans: {fileID: 8925204162082192839}
   TouchCount: 0
-  currentSpeed: 0
   decelOverTime:
     serializedVersion: 2
     m_Curve:
@@ -137,5 +136,3 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  decel: 250
-  speedRate: 10

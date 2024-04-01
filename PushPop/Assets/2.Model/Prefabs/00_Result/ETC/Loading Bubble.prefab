@@ -90,7 +90,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b45a87df6ae0d443b3fa22b3d0fc027, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveMode: 0
+  MoveMode: 0
+  UpSpeed: 3
+  UpSpeedMin: 0
+  UpSpeedMax: 0
+  MoveRangeMin: 0
+  MoveRangeMax: 0
+  SizeRandomMin: 0
+  SizeRandomMax: 0
 --- !u!212 &-5314184165852996152
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -111,7 +118,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -130,7 +137,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 410250969
-  m_SortingLayer: 2
+  m_SortingLayer: -1
   m_SortingOrder: 100
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
