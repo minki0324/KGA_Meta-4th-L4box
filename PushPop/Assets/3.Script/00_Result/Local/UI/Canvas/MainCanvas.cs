@@ -11,6 +11,7 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] private SpeedCanvas speedCanvas = null;
     [SerializeField] private MemoryCanvas memoryCanvas = null;
     [SerializeField] private MultiCanvas multiCanvas = null;
+    [SerializeField] private InfinityCanvas infinityCanvas = null;
 
     public bool isChangeProfile = false;
 
@@ -30,6 +31,7 @@ public class MainCanvas : MonoBehaviour
     public GameObject NetworkButton = null;
 
     [Header("Panel")]
+    [SerializeField] private GameObject warningPanel = null;
     [SerializeField] private GameObject shutdownPanel = null;
     [SerializeField] private GameObject timeSettingPanel = null;
     [SerializeField] private GameObject optionPanel = null;
@@ -79,6 +81,11 @@ public class MainCanvas : MonoBehaviour
         profileCanvas.BlockPanel.SetActive(true);
         profileCanvas.BackButton.SetActive(true);
         profileCanvas.gameObject.SetActive(true);
+    }
+
+    public void InfinityButton()
+    {
+        infinityCanvas.gameObject.SetActive(true);
     }
 
     public void MusicOptionButton()
