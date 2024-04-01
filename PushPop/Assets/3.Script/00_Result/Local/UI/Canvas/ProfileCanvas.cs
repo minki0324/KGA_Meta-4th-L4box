@@ -101,6 +101,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             mainCanvas.MemoryButton.SetActive(false);
             mainCanvas.MultiButton.SetActive(false);
             mainCanvas.NetworkButton.SetActive(false);
+            mainCanvas.PracticeButton.SetActive(false);
         }
     }
 
@@ -330,6 +331,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             mainCanvas.MemoryButton.SetActive(true);
             mainCanvas.MultiButton.SetActive(true);
             mainCanvas.NetworkButton.SetActive(true);
+            mainCanvas.PracticeButton.SetActive(true);
         }
 
         mainCanvas.CaptureImage.sprite = ProfileManager.Instance.PlayerInfo[(int)Player.Player1].profileImage;

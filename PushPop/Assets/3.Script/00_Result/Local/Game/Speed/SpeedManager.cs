@@ -233,9 +233,13 @@ public class SpeedManager : MonoBehaviour, IGame
                 }
                 PushPop.Instance.activePos.Clear();
             }
-            for (int i = 0; i < PushPop.Instance.pushPopButton.Count; i++)
+            if (!PushPop.Instance.pushPopButton.Count.Equals(0))
             {
-                PushPop.Instance.pushPopButton[i].SetActive(false);
+                for (int i = 0; i < PushPop.Instance.pushPopButton.Count; i++)
+                {
+                    Destroy(PushPop.Instance.pushPopButton[i]);
+                }
+                PushPop.Instance.pushPopButton.Clear();
             }
 
             BoardTurningAnimation();

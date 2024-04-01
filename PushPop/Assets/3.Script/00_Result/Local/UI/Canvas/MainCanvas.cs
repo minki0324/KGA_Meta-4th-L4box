@@ -11,7 +11,7 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] private SpeedCanvas speedCanvas = null;
     [SerializeField] private MemoryCanvas memoryCanvas = null;
     [SerializeField] private MultiCanvas multiCanvas = null;
-    [SerializeField] private InfinityCanvas infinityCanvas = null;
+    [SerializeField] private PracticeCanvas practiveCanvas = null;
 
     public bool isChangeProfile = false;
 
@@ -29,6 +29,7 @@ public class MainCanvas : MonoBehaviour
     public GameObject MemoryButton = null;
     public GameObject MultiButton = null;
     public GameObject NetworkButton = null;
+    public GameObject PracticeButton = null;
 
     [Header("Panel")]
     [SerializeField] private GameObject warningPanel = null;
@@ -81,11 +82,6 @@ public class MainCanvas : MonoBehaviour
         profileCanvas.BlockPanel.SetActive(true);
         profileCanvas.BackButton.SetActive(true);
         profileCanvas.gameObject.SetActive(true);
-    }
-
-    public void InfinityButton()
-    {
-        infinityCanvas.gameObject.SetActive(true);
     }
 
     public void MusicOptionButton()
@@ -186,6 +182,29 @@ public class MainCanvas : MonoBehaviour
     { // 옵션 - 창 닫기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         optionPanel.SetActive(false);
+    }
+    #endregion
+    #region Practice mode
+    public void PracticeModeButton()
+    { // 연습 모드 버튼
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        warningPanel.SetActive(true);
+    }
+
+    public void PracticeOkButton()
+    { // 연습 모드 - 확인
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        GameManager.Instance.GameMode = GameMode.Speed; // practice와 같이 사용
+        LoadingPanel.Instance.gameObject.SetActive(true);
+        practiveCanvas.gameObject.SetActive(true);
+        warningPanel.SetActive(false);
+        gameObject.SetActive(false);
+    }
+
+    public void PracticeCancelButton()
+    { // 연습 모드 - 나가기
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        warningPanel.SetActive(false);
     }
     #endregion
 }

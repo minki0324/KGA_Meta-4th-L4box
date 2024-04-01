@@ -34,8 +34,8 @@ public class PushPop : MonoBehaviour
 
     [Header("Grid Setting")]
     private Vector2 grid = Vector2.zero;
-    [HideInInspector] public float Percentage = 0; // gameobject에 따른 gird 비율
-    [HideInInspector] public Vector2 ButtonSize = Vector2.zero; // x, y 동일
+    public float Percentage = 0; // gameobject에 따른 gird 비율
+    public Vector2 ButtonSize = Vector2.zero; // x, y 동일
     [SerializeField] private GameObject posPrefab = null; // grid에 지정할 pos prefab
     private List<GameObject> pos = new List<GameObject>(); // grid 배치된 posPrefab
 
@@ -46,7 +46,6 @@ public class PushPop : MonoBehaviour
     [SerializeField] private Sprite[] pushPopBtnSprites;
     [HideInInspector] public bool Turning = false;
     [HideInInspector] public int PushCount = 0; // only pushpush mode, 버튼눌렀을때 + 되는 카운트, 버튼리스트.Count 비교해서 동일시 클리어 판정(GameManager)
-    private GameObject pushPopAni;
 
     private void Awake()
     {
@@ -128,7 +127,6 @@ public class PushPop : MonoBehaviour
         GameObject pushPopBoard = Instantiate(BoardPrefabUI, parent);
         pushPopBoard.GetComponent<Image>().sprite = BoardSprite;
         PopParent = pushPopBoard;
-        pushPopAni = pushPopBoard;
 
         // board size setting
         boardSizeUI = pushPopBoard.GetComponent<RectTransform>();
