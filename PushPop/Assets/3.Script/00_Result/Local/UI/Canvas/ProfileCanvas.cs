@@ -156,6 +156,10 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             if (!ProfileManager.Instance.isUpdate)
             { // 프로필 생성 시
                 Select.SetActive(true);
+                if (!GameManager.Instance.GameMode.Equals(GameMode.Title))
+                {
+                    BackButton.SetActive(true);
+                }
             }
             else
             { // 프로필 수정 시
@@ -172,7 +176,6 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            Debug.Log("프로필 아이콘 선택 등록 실패");
             return;
         }
     }
