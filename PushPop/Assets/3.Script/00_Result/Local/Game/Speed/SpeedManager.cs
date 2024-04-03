@@ -13,31 +13,31 @@ public enum Difficulty // Only Speed Mode
 public class SpeedManager : MonoBehaviour, IGame
 { // speed game
     [Header("Canvas")]
-    [SerializeField] private SpeedCanvas speedCanvas = null;
+    [SerializeField] private SpeedCanvas speedCanvas;
 
     [Header("Panel")]
-    [SerializeField] private GameObject resultPanel = null;
-    [SerializeField] private GameObject warningPanel = null;
-    [SerializeField] private GameObject titleText = null;
+    [SerializeField] private GameObject resultPanel;
+    [SerializeField] private GameObject warningPanel;
+    [SerializeField] private GameObject titleText;
 
     [Header("Game Info")]
     [HideInInspector] public Difficulty Difficulty = Difficulty.Easy;
     private float difficultyCount = 0;
-    [SerializeField] private Transform boardTrans = null;
-    [SerializeField] private Transform buttonTrans = null;
-    private GameObject touchBubble = null;
+    [SerializeField] private Transform boardTrans;
+    [SerializeField] private Transform buttonTrans;
+    private GameObject touchBubble;
     private bool isFirstSetting = true; // 버블 터트릴 때 true, 터트린 이후에 false
     private Vector2[] bubblePos = { new Vector2(0f, 0f), new Vector2(0f, -20f) };
 
     [Header("Game Result")]
-    [SerializeField] private TMP_Text resultTitle = null;
-    [SerializeField] private Image resultImage = null;
-    [SerializeField] private TMP_Text resultMassageText = null;
-    [SerializeField] private TMP_Text resultScoreText = null;
+    [SerializeField] private TMP_Text resultTitle;
+    [SerializeField] private Image resultImage;
+    [SerializeField] private TMP_Text resultMassageText;
+    [SerializeField] private TMP_Text resultScoreText;
 
     [Header("Timer And Count")]
-    [SerializeField] private GameTimer gameTimer = null;
-    [SerializeField] private Slider countSlider = null;
+    [SerializeField] private GameTimer gameTimer;
+    [SerializeField] private Slider countSlider;
 
     private int clearMessage = 0; // 점수 비교시 필요한 index
     private bool isEndGame = false; // 게임 종료시 true

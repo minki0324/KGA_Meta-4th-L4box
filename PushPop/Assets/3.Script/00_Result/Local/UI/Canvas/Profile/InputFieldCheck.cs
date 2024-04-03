@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class InputFieldCheck : MonoBehaviour
 { // Create Name InputField Check
-    [SerializeField] private TMP_InputField ProfileNameInputField = null;
-    public TMP_Text WarningLog = null;
+    [SerializeField] private TMP_InputField ProfileNameInputField;
+    public TMP_Text WarningLog;
 
     private void OnEnable()
     {

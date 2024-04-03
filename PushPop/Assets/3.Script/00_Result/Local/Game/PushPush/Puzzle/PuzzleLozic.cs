@@ -9,8 +9,8 @@ using System;
 public class PuzzleLozic : MonoBehaviour
 { // puzzle Prefab
     [Header("Prefab")]
-    [SerializeField] private GameObject frameObject = null;
-    [SerializeField] private GameObject pieceObject = null;
+    [SerializeField] private GameObject frameObject;
+    [SerializeField] private GameObject pieceObject;
 
     [Header("Puzzle Mode Info")] 
     [SerializeField] private List<PuzzleData> puzzles = new List<PuzzleData>(); // puzzle scriptableObject list

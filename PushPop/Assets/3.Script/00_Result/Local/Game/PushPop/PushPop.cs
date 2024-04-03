@@ -6,18 +6,18 @@ using UnityEngine.UI;
 public class PushPop : MonoBehaviour
 {
     public static PushPop Instance = null;
-    public GameObject PopParent = null; // 민기 추가 Bomb모드에서 필요
+    public GameObject PopParent; // multi
 
     [Header("PushPop Canvas")]
-    public GameObject PushPopButtonPrefab = null; // PushPop Button Prefab
-    public GameObject BoardPrefabUI = null; // PushPop Board Canvas Prefab
+    public GameObject PushPopButtonPrefab; // PushPop Button Prefab
+    public GameObject BoardPrefabUI; // PushPop Board Canvas Prefab
     [HideInInspector] public Vector2 BoardSize = Vector2.zero;
     [HideInInspector] public Vector2 BoardPos = Vector2.zero;
     [HideInInspector] public List<GameObject> PushPopBoardUIObject = new List<GameObject>(); // mode에 따라 개수 달라짐, pushPopBoard UI상 GameObject List
     private RectTransform boardSizeUI;
 
     [Header("PushPush")]
-    public PushPushManager PushpushManager = null;
+    public PushPushManager PushpushManager;
     public Stack<GameObject> StackPops = new Stack<GameObject>(); // UI상 보이는 버튼담는 스택
     public Stack<GameObject> StackFakePops = new Stack<GameObject>(); // OverLap 검사를 하기위한 gameObject 스택
 
@@ -26,8 +26,8 @@ public class PushPop : MonoBehaviour
     [HideInInspector] public List<GameObject> popButtonList2P = new List<GameObject>(); // 2P 의 Pushpop List
 
     [Header("PushPop GameObject")]
-    [SerializeField] private GameObject boardPrefab = null; // PushPop Prefab
-    [HideInInspector] public Sprite BoardSprite = null;
+    [SerializeField] private GameObject boardPrefab; // PushPop Prefab
+    [HideInInspector] public Sprite BoardSprite;
     private Vector3 boardObjectSize;
     private PolygonCollider2D boardCollider;
     [HideInInspector] public List<GameObject> PushPopBoardObject = new List<GameObject>(); // pushPopBoard의 GameObject List
@@ -36,7 +36,7 @@ public class PushPop : MonoBehaviour
     private Vector2 grid = Vector2.zero;
     public float Percentage = 0; // gameobject에 따른 gird 비율
     public Vector2 ButtonSize = Vector2.zero; // x, y 동일
-    [SerializeField] private GameObject posPrefab = null; // grid에 지정할 pos prefab
+    [SerializeField] private GameObject posPrefab; // grid에 지정할 pos prefab
     private List<GameObject> pos = new List<GameObject>(); // grid 배치된 posPrefab
 
     [HideInInspector] public List<GameObject> pushPopButton = new List<GameObject>(); // object pooling 때문에 필요

@@ -9,51 +9,49 @@ using UnityEngine.UI;
 public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 {
     [Header("Other Component")]
-    [SerializeField] private SavePoint savePoint = null;
-    [SerializeField] private MemoryManager memoryManager = null;
+    [SerializeField] private SavePoint savePoint;
+    [SerializeField] private MemoryManager memoryManager;
     
     [Header("Canvas")]
-    [SerializeField] private MainCanvas mainCanvas = null;
-    [SerializeField] private MultiCanvas multiCanvas = null;
+    [SerializeField] private MainCanvas mainCanvas;
+    [SerializeField] private MultiCanvas multiCanvas;
 
     [Header("Profile Panel")]
-    [SerializeField] private GameObject createName = null;
-    [SerializeField] private GameObject createImage = null;
-    [SerializeField] private GameObject profileIconSelect = null;
-    [SerializeField] private GameObject captureCheck = null;
-    public GameObject BlockPanel = null;
-    public GameObject Select = null;
-    public GameObject CurrentProfile = null;
+    [SerializeField] private GameObject createName;
+    [SerializeField] private GameObject createImage;
+    [SerializeField] private GameObject profileIconSelect;
+    [SerializeField] private GameObject captureCheck;
+    public GameObject BlockPanel;
+    public GameObject Select;
+    public GameObject CurrentProfile;
 
     [Header("Select")]
-    public GameObject ProfileLoadingPanel = null;
-    [SerializeField] private ScrollRect selectScrollView = null;
-    [SerializeField] private Button resetButton = null; // delete... todo
-    public Button CreateButton = null;
-    public Button DeleteButton = null;
-    public Transform SelectScrollViewContent = null;
-    private Coroutine resetCoroutine = null; // delete... todo
+    public GameObject ProfileLoadingPanel;
+    [SerializeField] private ScrollRect selectScrollView;
+    public Button CreateButton;
+    public Button DeleteButton;
+    public Transform SelectScrollViewContent;
 
     [Header("Create Name")]
-    [SerializeField] private InputFieldCheck inputFieldCheck = null;
+    [SerializeField] private InputFieldCheck inputFieldCheck;
 
     [Header("Create Image")]
-    [SerializeField] private CameraManager cameraManager = null;
-    [SerializeField] private Image captureImage = null;
+    [SerializeField] private CameraManager cameraManager;
+    [SerializeField] private Image captureImage;
 
     [Header("ProfileIcon Select")]
-    [SerializeField] private SelectProfileIcon selectProfileIcon = null;
+    [SerializeField] private SelectProfileIcon selectProfileIcon;
 
     [Header("Current Profile")]
-    public Image ProfileImage = null;
-    public TMP_Text ProfileText = null;
+    public Image ProfileImage;
+    public TMP_Text ProfileText;
 
     [Header("Exit Button")]
-    [SerializeField] private GameObject quitButton = null;
-    public GameObject BackButton = null;
+    [SerializeField] private GameObject quitButton;
+    public GameObject BackButton;
 
     [Header("Delete Panel")]
-    public GameObject DeletePanel = null;
+    public GameObject DeletePanel;
 
     private void OnEnable()
     {
@@ -359,7 +357,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
         try
         {
-        GameManager.Instance.myMeomoryStageInfo = savePoint.completedStageList.FirstOrDefault(stage => stage.profileName == ProfileManager.Instance.myProfile.name);
+            GameManager.Instance.myMeomoryStageInfo = savePoint.completedStageList.FirstOrDefault(stage => stage.profileName == ProfileManager.Instance.myProfile.name);
         }
         catch (System.Exception)
         {
@@ -429,21 +427,5 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     {
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         gameObject.SetActive(false);
-    }
-
-    public void ProfileResetButton()
-    {
-        AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        if (resetCoroutine != null) return;
-        resetCoroutine = StartCoroutine(ProfileResetButton_co());
-    }
-
-    public IEnumerator ProfileResetButton_co()
-    {
-        resetButton.interactable = false;
-        ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
-        yield return new WaitForSeconds(5f);
-        resetButton.interactable = true;
-        resetCoroutine = null;
     }
 }

@@ -14,31 +14,31 @@ public class ReadyProfileSetting : MonoBehaviour
     [HideInInspector] public int PlayerScore = 0; // score & time
 
     [Header("Profile 1P Info")]
-    [SerializeField] private Image profileImage1P = null;
-    [SerializeField] private TMP_Text profileName1P = null;
-    [SerializeField] private TMP_Text profileScore = null; // score & time
+    [SerializeField] private Image profileImage1P;
+    [SerializeField] private TMP_Text profileName1P;
+    [SerializeField] private TMP_Text profileScore; // score & time
 
     [Header("Only Speed, Memory Mode")]
     [Header("Rank Info")] // only memory mode
-    [SerializeField] private Image[] rankFrameImage = null;
-    [SerializeField] private Image[] rankImage = null;
-    [SerializeField] private TMP_Text[] rankProfileName = null;
-    [SerializeField] private TMP_Text[] rankScoreText = null;
+    [SerializeField] private Image[] rankFrameImage;
+    [SerializeField] private Image[] rankImage;
+    [SerializeField] private TMP_Text[] rankProfileName;
+    [SerializeField] private TMP_Text[] rankScoreText;
 
     [Header("Only Multi Mode")]
     [Header("Profile 2P Info")] // only multi mode
-    public Image ProfileImage2P = null;
-    public TMP_Text ProfileName2P = null;
+    public Image ProfileImage2P;
+    public TMP_Text ProfileName2P;
 
     [Header("Rank Win Info")] // only multi mode
-    [SerializeField] private Image[] winLankImage = null;
-    [SerializeField] private TMP_Text[] winProfileName = null;
-    [SerializeField] private Image[] winFrameImage = null;
+    [SerializeField] private Image[] winLankImage;
+    [SerializeField] private TMP_Text[] winProfileName;
+    [SerializeField] private Image[] winFrameImage;
 
     [Header("Rank Lose Info")] // only multi mode
-    [SerializeField] private Image[] loseLankImage = null;
-    [SerializeField] private TMP_Text[] loseProfileName = null;
-    [SerializeField] private Image[] loseFrameImage = null;
+    [SerializeField] private Image[] loseLankImage;
+    [SerializeField] private TMP_Text[] loseProfileName;
+    [SerializeField] private Image[] loseFrameImage;
 
     private void OnEnable()
     {

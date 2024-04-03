@@ -7,38 +7,38 @@ using TMPro;
 public class MemoryManager : MonoBehaviour, IGame
 {
     [Header("Other Component")]
-    [SerializeField] private SavePoint savePoint = null;
+    [SerializeField] private SavePoint savePoint;
     
     [Header("Canvas")]
-    [SerializeField] private MemoryCanvas memoryCanvas = null;
+    [SerializeField] private MemoryCanvas memoryCanvas;
 
     [Header("Panel")]
-    [SerializeField] private GameObject resultPanel = null;
-    [SerializeField] private GameObject warningPanel = null;   
-    [SerializeField] public GameObject hintGuidePanel = null;
+    [SerializeField] private GameObject resultPanel;
+    [SerializeField] private GameObject warningPanel;   
+    [SerializeField] public GameObject hintGuidePanel;
 
     [Header("Game Info")]
     public TMP_Text StageText = null;
     [SerializeField] private Transform SapwnPos; // Board 생성 위치
     [SerializeField] private MemoryStageData[] stages; // Stage ScriptableObjects
-    [SerializeField] private Animator stageStartImage = null; // animation 없어지면 gameObject로 받을 것... todo
-    [SerializeField] private TMP_Text stageStartText = null;
+    [SerializeField] private Animator stageStartImage; // animation 없어지면 gameObject로 받을 것... todo
+    [SerializeField] private TMP_Text stageStartText;
     [SerializeField] private GameObject[] lifeObject; // 목숨 나타내는 하트오브젝트 배열
     [HideInInspector] public MemoryBoard CurrentBoard;
     [HideInInspector] public int CurrentStage = 1;
     [HideInInspector] public int EndStageIndex = 0; // Stage 전체 개수
     [HideInInspector] public int Life = 3;
     [HideInInspector] public int Score = 0;
-    [SerializeField] private TMP_Text currentScoreText = null;
+    [SerializeField] private TMP_Text currentScoreText;
 
     [Header("Game Result")]
-    [SerializeField] private TMP_Text profileName = null;
-    [SerializeField] private Image profileImage = null;
-    [SerializeField] private TMP_Text resultMassageText = null;
-    [SerializeField] private TMP_Text resultScoreText = null;
+    [SerializeField] private TMP_Text profileName;
+    [SerializeField] private Image profileImage;
+    [SerializeField] private TMP_Text resultMassageText;
+    [SerializeField] private TMP_Text resultScoreText;
 
     [Header("Button")]
-    public GameObject BackButton = null;
+    public GameObject BackButton;
     [SerializeField] public Button Hintbutton;//힌트버튼
 
     public int saveStage;

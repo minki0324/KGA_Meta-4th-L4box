@@ -49,9 +49,7 @@ public class AudioOption : MonoBehaviour
     }
 
     public void SetVolume(bool _isBgm)
-    {//Slider들의 onValueChange에 호출될 함수,
-     //음량 조절 함수
-
+    { // Slider들의 onValueChange에 호출될 함수, 음량 조절 함수
         float volume = 0f;
         string soundType = "BGM";
         if (_isBgm)
@@ -80,6 +78,7 @@ public class AudioOption : MonoBehaviour
 
     public void VolumeOffButton(bool _isBgm)
     {//볼륨 끄는 버튼 함수
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         if (_isBgm)
         {
             bgm_Slider.value = minSound;
@@ -97,6 +96,7 @@ public class AudioOption : MonoBehaviour
 
     public void VolumeOnButton(bool _isBgm)
     {//볼륨 켜는 버튼 함수
+        AudioManager.Instance.SetCommonAudioClip_SFX(3);
         if (_isBgm)
         {
             bgm_Slider.value = maxSound;
@@ -111,28 +111,4 @@ public class AudioOption : MonoBehaviour
         }
         PlayerPrefs.Save();
     }
-    /*public void SetVolume(float volume, string soundtype)
-    {
-        switch (soundtype)
-        {
-            case "BGM":
-                volume = BGM_Slider.value;
-                PlayerPrefs.SetFloat("BGMVolume", volume);
-                break;
-            case "SFX":
-                volume = SFX_Slider.value;
-                PlayerPrefs.SetFloat("SFXVolume", volume);
-                break;
-        }
-        PlayerPrefs.Save();
-
-        if (volume.Equals(minSound))
-        {
-            AudioManager.Instance.audioMixer.SetFloat(soundtype, -80f);
-        }
-        else
-        {
-            AudioManager.Instance.audioMixer.SetFloat(soundtype, volume);
-        }
-    }*/
 }

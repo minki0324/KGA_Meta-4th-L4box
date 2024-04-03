@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class GameReadyPanelClick : MonoBehaviour, IPointerDownHandler
 {
-    [SerializeField] private GameObject onPanel = null;
+    [SerializeField] private GameObject onPanel;
 
     public void OnPointerDown(PointerEventData eventData)
     {

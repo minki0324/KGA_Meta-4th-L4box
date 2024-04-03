@@ -40,9 +40,9 @@ public class ProfileManager : MonoBehaviour
     public PlayerInfo[] PlayerInfo = new PlayerInfo[2]; // Player1, Player2
 
     [Header("Profile Component")]
-    public Sprite[] ProfileImages = null; // ProfileImage Sprites
+    public Sprite[] ProfileImages; // ProfileImage Sprites
     public Sprite NoneBackground = null; // Profile None Sprite
-    public GameObject ProfilePanel = null; // Profile Panel
+    public GameObject ProfilePanel; // Profile Panel
     [HideInInspector] public List<GameObject> ProfilePanelList = new List<GameObject>(); // Profile Panel List
 
     [Header("Other Request")]

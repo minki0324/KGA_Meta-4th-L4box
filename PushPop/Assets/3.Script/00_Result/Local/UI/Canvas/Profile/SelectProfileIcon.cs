@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SelectProfileIcon : MonoBehaviour, IPointerClickHandler
 {
-    public TMP_Text WarningLog = null;
+    public TMP_Text WarningLog;
 
     public void OnPointerClick(PointerEventData eventData)
     {

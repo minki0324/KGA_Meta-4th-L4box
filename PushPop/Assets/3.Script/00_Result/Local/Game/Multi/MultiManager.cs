@@ -20,15 +20,15 @@ public enum Turn
 public class MultiManager : MonoBehaviour, IGame
 { // multi game
     [Header("Canvas")]
-    [SerializeField] private MultiCanvas multiCanvas = null;
+    [SerializeField] private MultiCanvas multiCanvas;
 
     [Header("Panel")]
-    [SerializeField] private GameObject warningPanel = null;
-    [SerializeField] private GameObject resultPanel = null;
+    [SerializeField] private GameObject warningPanel;
+    [SerializeField] private GameObject resultPanel;
 
     [Header("Player Info")]
-    [SerializeField] private Image[] profileImage = null;
-    [SerializeField] private TMP_Text[] profileName = null;
+    [SerializeField] private Image[] profileImage;
+    [SerializeField] private TMP_Text[] profileName;
     private bool[] quitButtonClick = { false, false }; // 1P, 2P 뒤로가기 버튼 클릭 시 true
 
     [Header("Game Info")]
@@ -59,9 +59,9 @@ public class MultiManager : MonoBehaviour, IGame
     private bool isEndGame = false;
 
     [Header("Timer")]
-    [SerializeField] private GameTimer gameTimer = null;
+    [SerializeField] private GameTimer gameTimer;
     private float upperTimer = 12f;
-    [SerializeField] private TMP_Text feverText = null;
+    [SerializeField] private TMP_Text feverText;
 
     [Header("Quit")]
     [SerializeField] private Button[] quitButton;  // 나가기 버튼
@@ -72,7 +72,6 @@ public class MultiManager : MonoBehaviour, IGame
     private float rotationZ = 0f; // 현재 Z 축 회전 각도
     private Coroutine upperBubbleCoroutine = null; // 물 차오르는 코루틴
     private Coroutine bottomBubbleCoroutine = null; // 물 차오르는 코루틴
-    private Coroutine feverCoroutine = null;
     private bool isGameStart = false;
 
 
@@ -86,7 +85,7 @@ public class MultiManager : MonoBehaviour, IGame
         if (isEndGame) return;
         if(gameTimer.isTenCount && !isFever)
         {
-            feverCoroutine = StartCoroutine(FeverMode());
+            StartCoroutine(FeverMode());
         }
         GameEnd();
     }
@@ -445,7 +444,6 @@ public class MultiManager : MonoBehaviour, IGame
             upperBubbleObject.transform.localPosition = upperPos[(int)playerTurn] + shakePos;
             yield return null;
         }
-        feverCoroutine = null;
     }
     #endregion
     #region UpperBubble

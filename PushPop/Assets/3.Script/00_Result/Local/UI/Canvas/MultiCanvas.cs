@@ -5,33 +5,33 @@ using UnityEngine;
 public class MultiCanvas : MonoBehaviour
 {
     [Header("Canvas")]
-    [SerializeField] private MainCanvas mainCanvas = null;
-    [SerializeField] private ProfileCanvas profileCanvas = null;
+    [SerializeField] private MainCanvas mainCanvas;
+    [SerializeField] private ProfileCanvas profileCanvas;
 
     [Header("Side Panel")]
-    public GameObject BackButton = null;
-    public GameObject HelpButton = null;
+    public GameObject BackButton;
+    public GameObject HelpButton;
 
     [Header("Ready")]
-    public GameObject Ready = null;
-    public ReadyProfileSetting ReadyProfileSetting = null;
-    public GameObject ProfileSelectText = null;
+    public GameObject Ready;
+    public ReadyProfileSetting ReadyProfileSetting;
+    public GameObject ProfileSelectText;
 
     [Header("Profile Info")]
-    public GameObject MaskImage = null;
-    public GameObject SelectButton = null;
-    public GameObject ChangeButton = null;
+    public GameObject MaskImage;
+    public GameObject SelectButton;
+    public GameObject ChangeButton;
 
     [Header("Multi Game")]
-    public GameObject MultiGame = null;
-    [SerializeField] private MultiManager multiManager = null;
+    public GameObject MultiGame;
+    [SerializeField] private MultiManager multiManager;
 
     [Header("Panel")]
-    public GameObject HelpPanel = null;
-    public GameObject GameReadyPanel = null;
+    public GameObject HelpPanel;
+    public GameObject GameReadyPanel;
 
     [Header("Game Ready Panel")]
-    public TMP_Text GameReadyPanelText = null; // warning, ready 공용
+    public TMP_Text GameReadyPanelText; // warning, ready 공용
 
     private void OnDisable()
     {
