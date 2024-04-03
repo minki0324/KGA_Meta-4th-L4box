@@ -30,9 +30,9 @@ public class ProfileManager : MonoBehaviour
     public static ProfileManager Instance = null;
     public Profile myProfile;
 
-    [Header("UID")] 
+    [Header("UID")]
     private string uniqueID = string.Empty; // PlayerPrefs에 저장되는 고유 GUID;
-     [HideInInspector] public int UID = 0; // 기기별 고유 번호 > SQL과 연동
+    [HideInInspector] public int UID = 0; // 기기별 고유 번호 > SQL과 연동
 
     [Header("Player Info")]
     [HideInInspector] public Player SelectPlayer = Player.Player1;
@@ -51,12 +51,14 @@ public class ProfileManager : MonoBehaviour
     [HideInInspector] public bool isImageSelect = false; // Profile Image Icon 선택 시 true, 아닐 시 false
     [HideInInspector] public bool isProfileSelected = false; // is Profile Select ?
 
-    [Header("Temp Info")] 
+    [Header("Temp Info")]
     [HideInInspector] public int TempImageIndex = 0; // profile 등록 시 이미지 고르기에서 선택한 index
     [HideInInspector] public int TempUserIndex = -1; // Profile 등록할 때 사용할 임시 ProfileIndex
     [HideInInspector] public string TempProfileName = string.Empty; // Profile 등록할 때 사용할 임시 ProfileName
     [HideInInspector] public bool TempImageMode = true; // profile 이미지 등록 시 true, 사진 찍기 시 false
 
+    private ProfileCanvas profileCanvas;
+    public bool isImageUpdate = true; // 프로필 생성 시작 시 false, 이미지 등록 완료되었을 시 true
 
     #region Unity Callback
     private void Awake()
@@ -71,6 +73,7 @@ public class ProfileManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        profileCanvas = FindObjectOfType<ProfileCanvas>();
     }
     #endregion
 
@@ -95,7 +98,7 @@ public class ProfileManager : MonoBehaviour
             //DebugLog.instance.Adding_Message(uniqueID);
             SQL_Manager.instance.SQL_AddUser(uniqueID);
         }
-       catch(Exception e)
+        catch (Exception e)
         {
             Debug.Log("LoadOrCreateGUID : " + e.Message);
         }
@@ -135,6 +138,14 @@ public class ProfileManager : MonoBehaviour
 
     public IEnumerator PrintProfileList_Co(Transform parent)
     { // scroll view output
+        profileCanvas.CreateButton.enabled = false;
+        profileCanvas.DeleteButton.enabled = false;
+        profileCanvas.ProfileLoadingPanel.SetActive(true);
+        while (true)
+        {
+            if (isImageUpdate) break;
+            yield return null;
+        }
         // DB에 UID별로 저장되어있는 Profile들을 SQL_Manager에 List Up 해놓음
         SQL_Manager.instance.SQL_ProfileListSet();
 
@@ -166,6 +177,10 @@ public class ProfileManager : MonoBehaviour
             SQL_Manager.instance.PrintProfileImage(info.ProfileImage, SQL_Manager.instance.ProfileList[i].imageMode, SQL_Manager.instance.ProfileList[i].index);
             info.ProfileName.text = SQL_Manager.instance.ProfileList[i].name;
         }
+
+        profileCanvas.ProfileLoadingPanel.SetActive(false);
+        profileCanvas.CreateButton.enabled = true;
+        profileCanvas.DeleteButton.enabled = true;
     }
 
     private void DuplicateProfileDelete()
@@ -184,14 +199,12 @@ public class ProfileManager : MonoBehaviour
         }
     }
 
-    public bool ImageSet(bool _isIconMode, TMP_Text _nameLog = null, Transform _parent = null)
+    public bool ImageSet(bool _isIconMode, TMP_Text _nameLog = null)
     { // Profile에 넣을 Image Setting
         // _player bool값에 따라 1P를 설정하는지 2P를 설정하는지 결정
         if (!_isIconMode)
         { // 사진 찍기 버튼 클릭 시
-            // 비동기 시작
-            // SetActive(true) loading창
-            Task.Run(() => AddProfileImage());
+            AddProfileImage();
             return true;
         }
         else
@@ -218,6 +231,7 @@ public class ProfileManager : MonoBehaviour
                     SQL_Manager.instance.SQL_UpdateProfile(TempUserIndex, TempProfileName, UID, TempImageIndex); // 전달받은 profile Index로 Profile Image 수정
                 }
 
+                isImageUpdate = true;
                 return true;
             }
         }
@@ -225,16 +239,23 @@ public class ProfileManager : MonoBehaviour
     private void AddProfileImage()
     {
         imagePath = $"{Application.persistentDataPath}/Profile/{UID}_{TempUserIndex}.png";
-
+        Debug.Log(imagePath);
         if (!isUpdate)
         { // 첫 등록일 때
-            SQL_Manager.instance.SQL_AddProfileImage(imagePath, UID, TempUserIndex);
+            Task.Run(() =>
+            {
+                SQL_Manager.instance.SQL_AddProfileImage(imagePath, UID, TempUserIndex);
+                isImageUpdate = true;
+            });
         }
         else
         { // 수정모드 일 때
-            SQL_Manager.instance.SQL_UpdateProfile(TempUserIndex, TempProfileName, UID, imagePath);
+            Task.Run(() =>
+            {
+                SQL_Manager.instance.SQL_UpdateProfile(TempUserIndex, TempProfileName, UID, imagePath);
+                isImageUpdate = true;
+            });
         }
-       
     }
 
     /// <summary>

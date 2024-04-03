@@ -9,7 +9,6 @@ using UnityEngine.UI;
 public class CameraManager : MonoBehaviour
 {
     private Texture2D captureTexture; // Create Image
-    [SerializeField] private ProfileCanvas profileCanvas = null;
 
     public void CameraOpen(Image _captureImage) // Camera Open method
     {
@@ -20,7 +19,6 @@ public class CameraManager : MonoBehaviour
     private void TakePicture(Image _captureImage)
     {
         string _filePath = $"{Application.persistentDataPath}/Profile";
-        Debug.Log(_filePath);
         if (!File.Exists(_filePath))
         { // 해당 Directory 없을 시 생성
             Directory.CreateDirectory(_filePath);
@@ -29,10 +27,11 @@ public class CameraManager : MonoBehaviour
         // Camera
         NativeCamera.Permission permission = NativeCamera.TakePicture((path) =>
         {
+            Debug.Log("Path: " + path);
             if (path != null)
             {
                 // Create Image
-                Texture2D texture = NativeCamera.LoadImageAtPath(path, 2048);
+                Texture2D texture = NativeCamera.LoadImageAtPath(path, 512);
                 if (texture == null)
                 {
                     Debug.Log("Couldn't load texture from " + path);
@@ -72,20 +71,11 @@ public class CameraManager : MonoBehaviour
                 {
                     Debug.LogError($"File save error: {e.Message}");
                 }
-
-                // Image Setting
-                if (GameManager.Instance.GameMode.Equals(GameMode.Multi))
-                { // Second Player
-                    ProfileManager.Instance.ImageSet(false, null, profileCanvas.SelectScrollViewContent);
-                }
-                else
-                { // First Player
-                    ProfileManager.Instance.ImageSet(false, null, profileCanvas.SelectScrollViewContent);
-                }
-
+                ProfileManager.Instance.ImageSet(false, null);
                 Destroy(quad, 5f);
             }
-        }, 2048, true, NativeCamera.PreferredCamera.Front);
+        }, 512, true, NativeCamera.PreferredCamera.Front);
+        Debug.Log("Enum: " + permission);
     }
 
     private Texture2D GetReadableTexture(Texture2D source)

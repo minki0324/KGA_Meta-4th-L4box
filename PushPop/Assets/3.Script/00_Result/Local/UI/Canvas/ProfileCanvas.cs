@@ -26,10 +26,13 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     public GameObject CurrentProfile = null;
 
     [Header("Select")]
+    public GameObject ProfileLoadingPanel = null;
     [SerializeField] private ScrollRect selectScrollView = null;
-    [SerializeField] private Button resetButton = null;
+    [SerializeField] private Button resetButton = null; // delete... todo
+    public Button CreateButton = null;
+    public Button DeleteButton = null;
     public Transform SelectScrollViewContent = null;
-    private Coroutine resetCoroutine = null;
+    private Coroutine resetCoroutine = null; // delete... todo
 
     [Header("Create Name")]
     [SerializeField] private InputFieldCheck inputFieldCheck = null;
@@ -123,6 +126,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     { // 프로필 선택 창 - 프로필 생성
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.isUpdate = false;
+        ProfileManager.Instance.isImageUpdate = false;
 
         BackButton.SetActive(false);
         createName.SetActive(true);
@@ -138,6 +142,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             bool active = ProfileManager.Instance.ProfilePanelList[0].GetComponent<ProfileInfo>().DeleteButton.activeSelf;
             for (int i = 0; i < ProfileManager.Instance.ProfilePanelList.Count; i++)
             {
+                ProfileManager.Instance.ProfilePanelList[i].GetComponent<Button>().enabled = active;
                 ProfileManager.Instance.ProfilePanelList[i].GetComponent<ProfileInfo>().DeleteButton.SetActive(!active);
             }
         }
@@ -147,10 +152,10 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     public void ProfileIconSelectOkButton()
     { // 프로필 아이콘 선택 - 선택
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
-        if (ProfileManager.Instance.ImageSet(true, selectProfileIcon.WarningLog, SelectScrollViewContent))
+        if (ProfileManager.Instance.ImageSet(true, selectProfileIcon.WarningLog))
         {
+            ProfileManager.Instance.isImageSelect = false;
             ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
             if (!ProfileManager.Instance.isUpdate)
@@ -172,7 +177,6 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             }
             
             profileIconSelect.SetActive(false);
-            ProfileManager.Instance.isImageSelect = false;
         }
         else
         {
@@ -210,7 +214,6 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         
         ProfileManager.Instance.TempImageMode = true;
-
         ProfileManager.Instance.isImageSelect = false;
         profileIconSelect.SetActive(true);
         createImage.SetActive(false);
@@ -228,8 +231,6 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     public void CaptureImageSelect()
     { // 사진 찍은 후 - 확인
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
-
         captureImage.sprite = null;
 
         if (!ProfileManager.Instance.isUpdate)
@@ -247,6 +248,8 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             CurrentProfile.SetActive(true);
             captureCheck.SetActive(false);
         }
+
+        ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
     }
 
     public void AgainTakePicture()
@@ -273,6 +276,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     public void CreateNameBackButton()
     { // 이름 입력하기 - 뒤로가기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        ProfileManager.Instance.isImageUpdate = true;
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
         StopAllCoroutines();
 
