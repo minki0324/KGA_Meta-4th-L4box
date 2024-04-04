@@ -465,7 +465,7 @@ public class SQL_Manager : MonoBehaviour
                 Debug.Log("데이터베이스 연결 실패");
                 return;
             }
-
+            Debug.Log("AddProfile");
             byte[] ImageData;
             fileStream = new FileStream(filename, FileMode.Open, FileAccess.Read);
             binaryReader = new BinaryReader(fileStream);
@@ -484,6 +484,7 @@ public class SQL_Manager : MonoBehaviour
             cmd.Parameters.Add("@ImageData", MySqlDbType.MediumBlob).Value = ImageData; // 이미지 데이터를 Blob 타입으로 명시적으로 추가
 
             cmd.ExecuteNonQuery();
+            Debug.Log("AddProfile after");
         }
         catch (Exception e)
         {

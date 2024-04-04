@@ -5,7 +5,7 @@ using TMPro;
 
 public class GameTimer : MonoBehaviour
 { // speed, multi game timer
-    public TMP_Text TimerText = null;
+    public TMP_Text TimerText;
     [HideInInspector] public float CurrentTime = 60f; // 현재 시간
     [HideInInspector] public bool isTenCount = false; // 남은 시간이 10초 이하일 때 true
     [HideInInspector] public bool isEndTimer = false; // 게임 종료시 true

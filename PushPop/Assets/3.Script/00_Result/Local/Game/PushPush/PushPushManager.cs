@@ -8,15 +8,15 @@ using UnityEngine.UI;
 public class PushPushManager : MonoBehaviour, IGame
 { // pushpush game
     [Header("Canvas")]
-    [SerializeField] private PushPushCanvas pushpushCanvas = null;
+    [SerializeField] private PushPushCanvas pushpushCanvas;
 
     [Header("Panel")]
-    [SerializeField] private GameObject resultPanel = null;
-    [SerializeField] private GameObject warningPanel = null;
+    [SerializeField] private GameObject resultPanel;
+    [SerializeField] private GameObject warningPanel;
 
     [Header("Game Info")]
-    public CustomPushpopManager customManager = null;
-    public PuzzleLozic puzzleManager = null;
+    public CustomPushpopManager customManager;
+    public PuzzleLozic puzzleManager;
 
     [Header("PushPop Object")]
     [SerializeField] private FramePuzzle frame;

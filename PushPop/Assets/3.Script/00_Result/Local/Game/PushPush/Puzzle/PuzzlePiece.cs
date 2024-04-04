@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PuzzlePiece : MonoBehaviour
 { // puzzle object prefabs
-    public PuzzleObject Puzzle = null;
+    public PuzzleObject Puzzle;
     private bool isGround = false;
     private float speed = 5f;
     private float centerPos = 0f;

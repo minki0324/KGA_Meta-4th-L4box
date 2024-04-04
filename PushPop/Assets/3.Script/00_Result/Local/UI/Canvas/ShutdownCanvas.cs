@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class ShutdownCanvas : MonoBehaviour
 {
-    [SerializeField] private TMP_Text gameReadyPanelText = null;
-    [SerializeField] private GameObject gameReadyPanel = null;
+    [SerializeField] private TMP_Text gameReadyPanelText;
+    [SerializeField] private GameObject gameReadyPanel;
 
     private void Start()
     {

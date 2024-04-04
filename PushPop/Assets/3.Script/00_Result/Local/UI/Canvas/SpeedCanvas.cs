@@ -8,29 +8,29 @@ using UnityEngine.UI;
 public class SpeedCanvas : MonoBehaviour
 {
     [Header("Canvas")]
-    [SerializeField] private GameObject mainCanvas = null;
+    [SerializeField] private GameObject mainCanvas;
 
     [Header("Side Panel")]
-    public GameObject BackButton = null;
-    public GameObject HelpButton = null;
+    public GameObject BackButton;
+    public GameObject HelpButton;
 
     [Header("Select Panel")]
-    [SerializeField] private GameObject selectDifficultyPanel = null;
-    [SerializeField] private ScrollRect selectCategoryPanelScrollView = null;
-    public SelectListSetting SelectListSetting = null;
-    public GameObject SelectCategoryPanel = null;
+    [SerializeField] private GameObject selectDifficultyPanel;
+    [SerializeField] private ScrollRect selectCategoryPanelScrollView;
+    public SelectListSetting SelectListSetting;
+    public GameObject SelectCategoryPanel;
 
     [Header("Speed Game")]
-    [SerializeField] private SpeedManager speedManager = null;
-    [SerializeField] private GameObject speedGame = null;
+    [SerializeField] private SpeedManager speedManager;
+    [SerializeField] private GameObject speedGame;
 
     [Header("Panel")]
-    [SerializeField] private GameObject warningPanel = null;
-    [SerializeField] private GameObject helpPanel = null;
+    [SerializeField] private GameObject warningPanel;
+    [SerializeField] private GameObject helpPanel;
 
     [Header("Game Ready Panel")]
-    public GameObject GameReadyPanel = null;
-    public TMP_Text GameReadyPanelText = null;
+    public GameObject GameReadyPanel;
+    public TMP_Text GameReadyPanelText;
 
     private void OnDisable()
     {

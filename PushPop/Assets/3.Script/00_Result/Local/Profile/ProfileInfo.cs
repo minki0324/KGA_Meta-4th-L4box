@@ -4,10 +4,10 @@ using UnityEngine.UI;
 
 public class ProfileInfo : MonoBehaviour
 { // player profile prefab
-    private ProfileCanvas profileCanvas = null;
-    public TMP_Text ProfileName = null;
-    public Image ProfileImage = null;
-    public GameObject DeleteButton = null;
+    private ProfileCanvas profileCanvas;
+    public TMP_Text ProfileName;
+    public Image ProfileImage;
+    public GameObject DeleteButton;
 
     public int ReceiveIndex()
     { // 본인이 몇번째 자식인지 확인하는 Method

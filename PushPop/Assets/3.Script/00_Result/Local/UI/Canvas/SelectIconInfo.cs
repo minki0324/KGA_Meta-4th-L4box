@@ -6,7 +6,7 @@ using TMPro;
 
 public class SelectIconInfo : MonoBehaviour
 { // SelectIcon prefabs
-    public Button IconButton = null;
-    public Image IconImage = null;
-    public TMP_Text IconText = null;
+    public Button IconButton;
+    public Image IconImage;
+    public TMP_Text IconText;
 }

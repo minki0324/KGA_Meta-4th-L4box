@@ -9,48 +9,49 @@ using UnityEngine.UI;
 public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 {
     [Header("Other Component")]
-    [SerializeField] private SavePoint savePoint = null;
-    [SerializeField] private MemoryManager memoryManager = null;
+    [SerializeField] private SavePoint savePoint;
+    [SerializeField] private MemoryManager memoryManager;
     
     [Header("Canvas")]
-    [SerializeField] private MainCanvas mainCanvas = null;
-    [SerializeField] private MultiCanvas multiCanvas = null;
+    [SerializeField] private MainCanvas mainCanvas;
+    [SerializeField] private MultiCanvas multiCanvas;
 
     [Header("Profile Panel")]
-    [SerializeField] private GameObject createName = null;
-    [SerializeField] private GameObject createImage = null;
-    [SerializeField] private GameObject profileIconSelect = null;
-    [SerializeField] private GameObject captureCheck = null;
-    public GameObject BlockPanel = null;
-    public GameObject Select = null;
-    public GameObject CurrentProfile = null;
+    [SerializeField] private GameObject createName;
+    [SerializeField] private GameObject createImage;
+    [SerializeField] private GameObject profileIconSelect;
+    [SerializeField] private GameObject captureCheck;
+    public GameObject BlockPanel;
+    public GameObject Select;
+    public GameObject CurrentProfile;
 
     [Header("Select")]
-    [SerializeField] private ScrollRect selectScrollView = null;
-    [SerializeField] private Button resetButton = null;
-    public Transform SelectScrollViewContent = null;
-    private Coroutine resetCoroutine = null;
+    public GameObject ProfileLoadingPanel;
+    [SerializeField] private ScrollRect selectScrollView;
+    public Button CreateButton;
+    public Button DeleteButton;
+    public Transform SelectScrollViewContent;
 
     [Header("Create Name")]
-    [SerializeField] private InputFieldCheck inputFieldCheck = null;
+    [SerializeField] private InputFieldCheck inputFieldCheck;
 
     [Header("Create Image")]
-    [SerializeField] private CameraManager cameraManager = null;
-    [SerializeField] private Image captureImage = null;
+    [SerializeField] private CameraManager cameraManager;
+    [SerializeField] private Image captureImage;
 
     [Header("ProfileIcon Select")]
-    [SerializeField] private SelectProfileIcon selectProfileIcon = null;
+    [SerializeField] private SelectProfileIcon selectProfileIcon;
 
     [Header("Current Profile")]
-    public Image ProfileImage = null;
-    public TMP_Text ProfileText = null;
+    public Image ProfileImage;
+    public TMP_Text ProfileText;
 
     [Header("Exit Button")]
-    [SerializeField] private GameObject quitButton = null;
-    public GameObject BackButton = null;
+    [SerializeField] private GameObject quitButton;
+    public GameObject BackButton;
 
     [Header("Delete Panel")]
-    public GameObject DeletePanel = null;
+    public GameObject DeletePanel;
 
     private void OnEnable()
     {
@@ -123,6 +124,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     { // 프로필 선택 창 - 프로필 생성
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         ProfileManager.Instance.isUpdate = false;
+        ProfileManager.Instance.isImageUpdate = false;
 
         BackButton.SetActive(false);
         createName.SetActive(true);
@@ -138,6 +140,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             bool active = ProfileManager.Instance.ProfilePanelList[0].GetComponent<ProfileInfo>().DeleteButton.activeSelf;
             for (int i = 0; i < ProfileManager.Instance.ProfilePanelList.Count; i++)
             {
+                ProfileManager.Instance.ProfilePanelList[i].GetComponent<Button>().enabled = active;
                 ProfileManager.Instance.ProfilePanelList[i].GetComponent<ProfileInfo>().DeleteButton.SetActive(!active);
             }
         }
@@ -147,10 +150,10 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     public void ProfileIconSelectOkButton()
     { // 프로필 아이콘 선택 - 선택
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
-        if (ProfileManager.Instance.ImageSet(true, selectProfileIcon.WarningLog, SelectScrollViewContent))
+        if (ProfileManager.Instance.ImageSet(true, selectProfileIcon.WarningLog))
         {
+            ProfileManager.Instance.isImageSelect = false;
             ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
 
             if (!ProfileManager.Instance.isUpdate)
@@ -172,7 +175,6 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             }
             
             profileIconSelect.SetActive(false);
-            ProfileManager.Instance.isImageSelect = false;
         }
         else
         {
@@ -210,7 +212,6 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         
         ProfileManager.Instance.TempImageMode = true;
-
         ProfileManager.Instance.isImageSelect = false;
         profileIconSelect.SetActive(true);
         createImage.SetActive(false);
@@ -228,8 +229,6 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     public void CaptureImageSelect()
     { // 사진 찍은 후 - 확인
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
-
         captureImage.sprite = null;
 
         if (!ProfileManager.Instance.isUpdate)
@@ -247,6 +246,8 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
             CurrentProfile.SetActive(true);
             captureCheck.SetActive(false);
         }
+
+        ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
     }
 
     public void AgainTakePicture()
@@ -273,6 +274,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     public void CreateNameBackButton()
     { // 이름 입력하기 - 뒤로가기
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
+        ProfileManager.Instance.isImageUpdate = true;
         ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
         StopAllCoroutines();
 
@@ -355,7 +357,7 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
 
         try
         {
-        GameManager.Instance.myMeomoryStageInfo = savePoint.completedStageList.FirstOrDefault(stage => stage.profileName == ProfileManager.Instance.myProfile.name);
+            GameManager.Instance.myMeomoryStageInfo = savePoint.completedStageList.FirstOrDefault(stage => stage.profileName == ProfileManager.Instance.myProfile.name);
         }
         catch (System.Exception)
         {
@@ -425,21 +427,5 @@ public class ProfileCanvas : MonoBehaviour, IPointerClickHandler
     {
         AudioManager.Instance.SetCommonAudioClip_SFX(3);
         gameObject.SetActive(false);
-    }
-
-    public void ProfileResetButton()
-    {
-        AudioManager.Instance.SetCommonAudioClip_SFX(3);
-        if (resetCoroutine != null) return;
-        resetCoroutine = StartCoroutine(ProfileResetButton_co());
-    }
-
-    public IEnumerator ProfileResetButton_co()
-    {
-        resetButton.interactable = false;
-        ProfileManager.Instance.PrintProfileList(SelectScrollViewContent);
-        yield return new WaitForSeconds(5f);
-        resetButton.interactable = true;
-        resetCoroutine = null;
     }
 }

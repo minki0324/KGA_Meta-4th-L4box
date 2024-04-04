@@ -8,13 +8,13 @@ using UnityEngine.UI;
 public class CustomPushpopManager : MonoBehaviour
 {
     [Header("Custom Mode")]
-    public GameObject CustomMode = null;
-    public TMP_Text StageTitle = null;
+    public GameObject CustomMode;
+    public TMP_Text StageTitle;
     [SerializeField] private GameObject overlabCheckPushPop; // OverLap검사하는 푸시팝(gameObject)
     [SerializeField] private GameObject rectPushPop; // UI 푸시팝
-    [SerializeField] private GameObject reDecoButton = null;
-    [SerializeField] private GameObject decoPanel = null;
-    [SerializeField] private RectTransform customAreaRectTrans = null;
+    [SerializeField] private GameObject reDecoButton;
+    [SerializeField] private GameObject decoPanel;
+    [SerializeField] private RectTransform customAreaRectTrans;
     private float customPosX = 0f;
     private Vector3 selectPositon; //카메라에서보이는 world 포지션 저장할 Vector
     private Coroutine buttonDownCoroutine;

@@ -8,25 +8,25 @@ public class SelectListSetting : MonoBehaviour
     public Sprite BoardIcon { get; private set; }
 
     [Header("Prefab")]
-    [SerializeField] private GameObject selectIconObject = null;
+    [SerializeField] private GameObject selectIconObject;
 
     [Header("Category Select Panel")]
-    [SerializeField] private TMP_Text categorySelectTitle = null;
-    [SerializeField] private GameObject selectCategoryScrollView = null;
+    [SerializeField] private TMP_Text categorySelectTitle;
+    [SerializeField] private GameObject selectCategoryScrollView;
     [SerializeField] private ScrollRect selectRect;
 
     [Header("Ready (Selected List Panel)")]
     public GameObject Ready = null;
-    [SerializeField] private ReadyProfileSetting readyProfileSetting = null;
-    [SerializeField] private TMP_Text selectCategory = null;
-    [SerializeField] private Image selectIconImage = null;
-    [SerializeField] private TMP_Text selectIconText = null;
+    [SerializeField] private ReadyProfileSetting readyProfileSetting;
+    [SerializeField] private TMP_Text selectCategory;
+    [SerializeField] private Image selectIconImage;
+    [SerializeField] private TMP_Text selectIconText;
 
     [Header("PushPush Icon List")]
     private int maxPage = 0; // category list count
     private int currentPage = 1; // category list current count
-    [SerializeField] private TMP_Text pageText = null;
-    [SerializeField] private List<Sprite> categoryIconList = null;
+    [SerializeField] private TMP_Text pageText;
+    [SerializeField] private List<Sprite> categoryIconList;
     private List<Sprite> selectIcon = null;
     public List<Sprite> IconList10 = null;
     public List<Sprite> IconList11 = null;

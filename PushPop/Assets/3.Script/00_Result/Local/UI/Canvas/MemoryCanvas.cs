@@ -5,30 +5,30 @@ using UnityEngine.UI;
 public class MemoryCanvas : MonoBehaviour
 {
     [Header("Canvas")]
-    [SerializeField] private GameObject mainCanvas = null;
+    [SerializeField] private GameObject mainCanvas;
 
 
     [Header("Side Panel")]
-    public GameObject HelpButton = null;
+    public GameObject HelpButton;
 
     [Header("Ready")]
-    public GameObject Ready = null;
+    public GameObject Ready;
 
     [Header("Memory Game")]
-    public GameObject MemoryGame = null;
-    [SerializeField] private MemoryManager memoryManager = null;
+    public GameObject MemoryGame;
+    [SerializeField] private MemoryManager memoryManager;
 
     [Header("Panel")]
-    public GameObject WarningPanel = null;
-    public GameObject GameReadyPanel = null;
-    public GameObject HelpPanel = null;
+    public GameObject WarningPanel;
+    public GameObject GameReadyPanel;
+    public GameObject HelpPanel;
 
     [Header("Game Ready Panel")]
-    public TMP_Text GameReadyPanelText = null;
+    public TMP_Text GameReadyPanelText;
 
     [Header("Continue")]
     public Button[] stagebtns;
-    public GameObject ContinuePanel = null;
+    public GameObject ContinuePanel;
 
     private void OnDisable()
     {

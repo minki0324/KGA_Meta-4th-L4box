@@ -5,7 +5,7 @@ using UnityEngine;
 public class CustomColorSet : MonoBehaviour
 {
     public GameObject[] Ring;
-    [SerializeField] private CustomPushpopManager customPushpopManager = null;
+    [SerializeField] private CustomPushpopManager customPushpopManager;
 
     public void ChildActive(int _index)
     {

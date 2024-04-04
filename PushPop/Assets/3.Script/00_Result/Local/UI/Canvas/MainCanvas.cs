@@ -6,39 +6,39 @@ using UnityEngine.UI;
 public class MainCanvas : MonoBehaviour
 {
     [Header("Canvas")]
-    [SerializeField] private ProfileCanvas profileCanvas = null;
-    [SerializeField] private PushPushCanvas pushpushCanvas = null;
-    [SerializeField] private SpeedCanvas speedCanvas = null;
-    [SerializeField] private MemoryCanvas memoryCanvas = null;
-    [SerializeField] private MultiCanvas multiCanvas = null;
-    [SerializeField] private PracticeCanvas practiveCanvas = null;
+    [SerializeField] private ProfileCanvas profileCanvas;
+    [SerializeField] private PushPushCanvas pushpushCanvas;
+    [SerializeField] private SpeedCanvas speedCanvas;
+    [SerializeField] private MemoryCanvas memoryCanvas;
+    [SerializeField] private MultiCanvas multiCanvas;
+    [SerializeField] private PracticeCanvas practiveCanvas;
 
     public bool isChangeProfile = false;
 
     [Header("Side Panel")]
-    public GameObject TitleText = null;
-    public GameObject OptionButton = null;
-    public GameObject ProfileButton = null;
+    public GameObject TitleText;
+    public GameObject OptionButton;
+    public GameObject ProfileButton;
 
     [Header("Profile")]
-    public Image CaptureImage = null;
+    public Image CaptureImage;
 
     [Header("GameMode Panel")]
-    public GameObject PushpushButton = null;
-    public GameObject SpeedButton = null;
-    public GameObject MemoryButton = null;
-    public GameObject MultiButton = null;
-    public GameObject NetworkButton = null;
-    public GameObject PracticeButton = null;
+    public GameObject PushpushButton;
+    public GameObject SpeedButton;
+    public GameObject MemoryButton;
+    public GameObject MultiButton;
+    public GameObject NetworkButton;
+    public GameObject PracticeButton;
 
     [Header("Panel")]
-    [SerializeField] private GameObject warningPanel = null;
-    [SerializeField] private GameObject shutdownPanel = null;
-    [SerializeField] private GameObject timeSettingPanel = null;
-    [SerializeField] private GameObject optionPanel = null;
+    [SerializeField] private GameObject warningPanel;
+    [SerializeField] private GameObject shutdownPanel;
+    [SerializeField] private GameObject timeSettingPanel;
+    [SerializeField] private GameObject optionPanel;
 
     [Header("TimeSetting Panel")]
-    [SerializeField] private TMP_Text timeText = null;
+    [SerializeField] private TMP_Text timeText;
 
     private void OnEnable()
     {

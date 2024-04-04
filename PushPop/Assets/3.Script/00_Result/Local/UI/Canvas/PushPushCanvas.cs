@@ -4,26 +4,26 @@ using UnityEngine;
 public class PushPushCanvas : MonoBehaviour
 {
     [Header("Canvas")]
-    [SerializeField] private MainCanvas mainCanvas = null;
+    [SerializeField] private MainCanvas mainCanvas;
 
     [Header("Side Panel")]
-    public GameObject BackButton = null;
-    public GameObject HelpButton = null;
+    public GameObject BackButton;
+    public GameObject HelpButton;
 
     [Header("PushPush Game")]
-    [SerializeField] private PushPushManager pushpushManager = null;
-    [SerializeField] private SelectListSetting selectListSetting = null;
-    [SerializeField] private GameObject pushpushGame = null;
+    [SerializeField] private PushPushManager pushpushManager;
+    [SerializeField] private SelectListSetting selectListSetting;
+    [SerializeField] private GameObject pushpushGame;
 
     [Header("Select Panel")]
-    [SerializeField] private GameObject selectBoardPanel = null;
-    public GameObject SelectCategoryPanel = null;
+    [SerializeField] private GameObject selectBoardPanel;
+    public GameObject SelectCategoryPanel;
 
     [Header("Panel")]
-    [SerializeField] private GameObject warningPanel = null;
-    [SerializeField] private GameObject helpPanel = null;
-    public GameObject GameReadyPanel = null;
-    public TMP_Text GameReadyPanelText = null;
+    [SerializeField] private GameObject warningPanel;
+    [SerializeField] private GameObject helpPanel;
+    public GameObject GameReadyPanel;
+    public TMP_Text GameReadyPanelText;
 
     private void OnDisable()
     {
