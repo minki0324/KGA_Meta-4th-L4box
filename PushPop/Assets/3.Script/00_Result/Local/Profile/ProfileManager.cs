@@ -85,6 +85,7 @@ public class ProfileManager : MonoBehaviour
             if (PlayerPrefs.HasKey("DeviceGUID"))
             { // 기존 GUID가 있는 경우 해당 GUID를 변수에 담아줌
                 uniqueID = PlayerPrefs.GetString("DeviceGUID");
+                Debug.Log("First Connect GUID : " + uniqueID);
             }
             else
             { // 첫 접속시 GUID를 부여하고 해당 GUID를 변수에 담아줌

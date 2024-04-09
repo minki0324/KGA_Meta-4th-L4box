@@ -62,10 +62,26 @@ public class Favorite : MonoBehaviour
         }
     }
 
+    private void OnApplicationPause(bool pause)
+    {
+        if (ProfileManager.Instance.PlayerInfo[(int)Player.Player1] != null && pause)
+        { // 홈버튼이나 오버뷰 버튼을 눌러서 어플을 종료했을 땐 false
+            // SQL에 favoriteList 저장하는 메소드 호출
+            SQL_Manager.instance.SQL_UpdateFavoriteList(favoriteLists, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+
+            // 네트워크 접속중인 기록을 false로 변경
+            SQL_Manager.instance.SQL_ConnectCheck(false, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+        }
+        else if(!pause)
+        { // 다시 접속했을 때는 접속중으로 표기
+            SQL_Manager.instance.SQL_ConnectCheck(true, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
+        }
+    }
+
     private void OnApplicationQuit()
     {
         if (ProfileManager.Instance.PlayerInfo[(int)Player.Player1] != null)
-        {
+        { 
             // SQL에 favoriteList 저장하는 메소드 호출
             SQL_Manager.instance.SQL_UpdateFavoriteList(favoriteLists, ProfileManager.Instance.PlayerInfo[(int)Player.Player1].playerIndex);
 
