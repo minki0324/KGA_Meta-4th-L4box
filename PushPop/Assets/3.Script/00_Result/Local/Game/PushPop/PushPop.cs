@@ -120,7 +120,7 @@ public class PushPop : MonoBehaviour
 
     // Sprite 모양에 따른 Polygon collider setting
     public void CreatePushPopBoard(Transform parent)
-    { // bomb mode일 때는 2회 호출
+    {
         if (BoardSprite == null) return;
 
         // canvas setting
